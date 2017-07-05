@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <!--<include-->
+    <!--android:id="@+id/home_toolbar"-->
+    <!--layout="@layout/toolbar_custom" />-->
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:background="@color/colorPrimary">
+
+            <ImageView
+                android:id="@+id/back_arrow"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:onClick="onBack"
+                android:padding="4dp"
+                app:srcCompat="@mipmap/back_arrow" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginStart="8dp"
+                android:layout_toEndOf="@+id/back_arrow"
+                android:text="发布好页"
+                android:textColor="@color/textPrimary"
+                android:textSize="18sp" />
+
+            <Button
+                android:id="@+id/publish"
+                style="@style/Widget.AppCompat.Button.Borderless"
+                android:layout_width="64dp"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:layout_margin="8dp"
+                android:layout_marginEnd="12dp"
+                android:background="@drawable/transparent_btn"
+                android:text="完成"
+                android:textColor="@color/textPrimary" />
+        </RelativeLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/border_gray"/>
+    </LinearLayout>
+</RelativeLayout>

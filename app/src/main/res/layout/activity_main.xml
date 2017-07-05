@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <com.donutcn.widgetlib.NoScrollViewPager
+        android:id="@+id/main_viewpager"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/divide_line"
+        android:background="@android:color/white" />
+
+    <View
+        android:id="@+id/divide_line"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_above="@+id/main_bottom_view"
+        android:background="@color/border_gray" />
+
+    <LinearLayout
+        android:id="@+id/main_bottom_view"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:layout_alignParentBottom="true"
+        android:background="@color/background_gray"
+        android:orientation="horizontal">
+
+        <com.donutcn.widgetlib.CheckableImageButton
+            android:id="@+id/main_bottom_home"
+            style="@android:style/Widget.DeviceDefault.Button.Borderless"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="2"
+            app:isChecked="true"
+            android:padding="8dp"
+            android:scaleType="centerInside"
+            app:srcCompat="@drawable/home_selector" />
+
+        <com.donutcn.widgetlib.CheckableImageButton
+            android:id="@+id/main_bottom_pub"
+            style="@android:style/Widget.DeviceDefault.Button.Borderless"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_margin="2dp"
+            android:layout_weight="1"
+            android:background="@drawable/publish_bg"
+            android:padding="8dp"
+            android:scaleType="centerInside"
+            app:srcCompat="@drawable/publish" />
+
+        <com.donutcn.widgetlib.CheckableImageButton
+            android:id="@+id/main_bottom_dis"
+            style="@android:style/Widget.DeviceDefault.Button.Borderless"
+            android:layout_width="0dp"
+            android:padding="8dp"
+            android:layout_height="match_parent"
+            android:layout_weight="2"
+            android:scaleType="centerInside"
+            app:srcCompat="@drawable/discover_selector" />
+    </LinearLayout>
+</RelativeLayout>
