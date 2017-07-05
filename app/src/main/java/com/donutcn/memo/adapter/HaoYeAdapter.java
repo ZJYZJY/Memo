@@ -71,7 +71,7 @@ public class HaoYeAdapter extends SwipeMenuAdapter<HaoYeAdapter.DefaultViewHolde
             mTime = (TextView) itemView.findViewById(R.id.tv_publish_time);
             mUpvote = (TextView) itemView.findViewById(R.id.tv_upvote);
             mComment = (TextView) itemView.findViewById(R.id.tv_comment);
-            mType.setBackgroundResource(R.drawable.bg_green);
+//            mType.setBackgroundResource(R.drawable.bg_green);
         }
 
         public void setData() {

@@ -5,6 +5,7 @@
     <color name="colorPrimaryDark">#efefef</color>
     <color name="colorAccent">#43BD4B</color>
 
+    <color name="background_blank">#fafafa</color>
     <color name="background_gray">#ebebeb</color>
     <color name="border_gray">#dadada</color>
 

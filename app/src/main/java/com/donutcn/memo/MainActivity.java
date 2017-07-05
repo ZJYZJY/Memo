@@ -51,12 +51,12 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
             case R.id.main_bottom_home:
                 home.setChecked(true);
                 discover.setChecked(false);
-                viewPager.setCurrentItem(0);
+                viewPager.setCurrentItem(0, false);
                 break;
             case R.id.main_bottom_dis:
                 home.setChecked(false);
                 discover.setChecked(true);
-                viewPager.setCurrentItem(1);
+                viewPager.setCurrentItem(1, false);
                 break;
             case R.id.main_bottom_pub:
                 startActivity(new Intent(this, PublishActivity.class));

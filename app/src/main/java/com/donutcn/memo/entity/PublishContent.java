@@ -146,7 +146,7 @@ public class PublishContent implements Parcelable {
     }
 
     public void setMyPublish(boolean myPublish) {
-        isMyPublish = myPublish;
+        this.isMyPublish = myPublish;
     }
 
     public String getUserName() {
