@@ -101,7 +101,7 @@ public class MenuFragment extends Fragment {
             // 添加左侧的，如果不添加，则左侧不会出现菜单。
             {
                 SwipeMenuItem addItem = new SwipeMenuItem(mContext)
-                        .setBackgroundDrawable(R.drawable.selector_green)// 点击的背景。
+                        .setBackgroundDrawable(R.drawable.selector_blue)// 点击的背景。
                         .setImage(R.mipmap.ic_launcher) // 图标。
                         .setWidth(width) // 宽度。
                         .setHeight(height); // 高度。

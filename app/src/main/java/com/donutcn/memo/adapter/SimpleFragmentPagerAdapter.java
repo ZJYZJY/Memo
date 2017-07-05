@@ -5,8 +5,9 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
+import com.donutcn.memo.fragment.discover.FriendsFragment;
+import com.donutcn.memo.fragment.discover.RecommendFragment;
 import com.donutcn.memo.fragment.home.HaoYeFragment;
-import com.donutcn.memo.fragment.MenuFragment;
 import com.donutcn.memo.fragment.home.MessageFragment;
 
 /**
@@ -37,9 +38,9 @@ public class SimpleFragmentPagerAdapter extends FragmentPagerAdapter {
                 return new MessageFragment();
         }else {
             if (position == 0)
-                return new MenuFragment();
+                return new RecommendFragment();
             else
-                return new MessageFragment();
+                return new FriendsFragment();
         }
     }
 

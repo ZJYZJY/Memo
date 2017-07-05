@@ -3,12 +3,9 @@
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <include
-        android:id="@+id/dis_toolbar"
-        layout="@layout/toolbar_custom" />
-
-    <com.donutcn.widgetlib.NoScrollViewPager
-        android:id="@+id/dis_viewpager"
+    <TextView
+        android:id="@+id/textView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="wrap_content"
+        android:text="我的好友圈" />
 </LinearLayout>

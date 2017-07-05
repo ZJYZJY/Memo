@@ -1,4 +1,4 @@
-package com.donutcn.memo.fragment.home;
+package com.donutcn.memo.fragment.discover;
 
 import android.content.Context;
 import android.graphics.Color;
@@ -10,12 +10,13 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 import android.widget.Toast;
 
-import com.donutcn.memo.view.ListViewDecoration;
 import com.donutcn.memo.R;
 import com.donutcn.memo.adapter.HaoYeAdapter;
 import com.donutcn.memo.listener.OnItemClickListener;
+import com.donutcn.memo.view.ListViewDecoration;
 import com.yanzhenjie.recyclerview.swipe.Closeable;
 import com.yanzhenjie.recyclerview.swipe.OnSwipeMenuItemClickListener;
 import com.yanzhenjie.recyclerview.swipe.SwipeMenu;
@@ -26,13 +27,15 @@ import com.yanzhenjie.recyclerview.swipe.SwipeMenuRecyclerView;
 import java.util.ArrayList;
 import java.util.List;
 
-public class HaoYeFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener {
+public class RecommendFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener, View.OnClickListener {
 
     private Context mContext;
 
     private SwipeMenuRecyclerView mHaoYe_rv;
 
     private SwipeRefreshLayout mRefreshLayout;
+
+    private TextView mSearch_tv;
 
     @Override
     public void onAttach(Context context) {
@@ -48,14 +51,16 @@ public class HaoYeFragment extends Fragment implements SwipeRefreshLayout.OnRefr
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_haoye, container, false);
+        return inflater.inflate(R.layout.fragment_recommend, container, false);
     }
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         mHaoYe_rv = (SwipeMenuRecyclerView) view.findViewById(R.id.recycler_view);
         mRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipe_layout);
+        mSearch_tv = (TextView) view.findViewById(R.id.recommend_search);
         mRefreshLayout.setOnRefreshListener(this);
+        mSearch_tv.setOnClickListener(this);
     }
 
     @Override
@@ -77,7 +82,8 @@ public class HaoYeFragment extends Fragment implements SwipeRefreshLayout.OnRefr
         adapter.setOnItemClickListener(mOnItemClickListener);
 
         mHaoYe_rv.setLayoutManager(new LinearLayoutManager(mContext));
-        mHaoYe_rv.addItemDecoration(new ListViewDecoration(getContext(), R.dimen.item_decoration, LinearLayoutManager.VERTICAL));
+        mHaoYe_rv.addItemDecoration(new ListViewDecoration(getContext(),
+                R.dimen.item_decoration, LinearLayoutManager.VERTICAL));
 
         // set up swipe menu.
         mHaoYe_rv.setSwipeMenuCreator(mSwipeMenuCreator);
@@ -112,24 +118,6 @@ public class HaoYeFragment extends Fragment implements SwipeRefreshLayout.OnRefr
                         .setWidth(width)
                         .setHeight(height);
                 swipeRightMenu.addMenuItem(editItem);
-
-                SwipeMenuItem shareItem = new SwipeMenuItem(mContext)
-                        .setBackgroundDrawable(R.drawable.selector_blue)
-                        .setText("编辑")
-                        .setTextColor(Color.WHITE)
-                        .setTextSize(16)
-                        .setWidth(width)
-                        .setHeight(height);
-                swipeRightMenu.addMenuItem(shareItem);
-
-                SwipeMenuItem delItem = new SwipeMenuItem(mContext)
-                        .setBackgroundDrawable(R.drawable.selector_red)
-                        .setText("删除")
-                        .setTextColor(Color.WHITE)
-                        .setTextSize(16)
-                        .setWidth(width)
-                        .setHeight(height);
-                swipeRightMenu.addMenuItem(delItem);
             }
         }
     };
@@ -140,6 +128,15 @@ public class HaoYeFragment extends Fragment implements SwipeRefreshLayout.OnRefr
             Toast.makeText(mContext, "我是第" + position + "条。", Toast.LENGTH_SHORT).show();
         }
     };
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()){
+            case R.id.recommend_search:
+                Toast.makeText(getContext(), "搜索好页", Toast.LENGTH_SHORT).show();
+                break;
+        }
+    }
 
     /**
      * Menu onClickListener
