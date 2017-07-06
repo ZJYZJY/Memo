@@ -1,3 +1,27 @@
 <resources>
     <string name="app_name">Memo</string>
+
+    <!--title-->
+    <string name="title_activity_publish">发布好页</string>
+
+    <!--placeholder-->
+    <string name="placeholder_default_publish_type">请选择发布类型（默认为 文章）</string>
+    <string name="placeholder_publish_type">发布类型：</string>
+
+    <!--hint-->
+    <string name="hint_publish_title">输入标题</string>
+    <string name="hint_publish_content">输入正文</string>
+    <string name="hint_publish_link_dialog">http://</string>
+
+    <!--button-->
+    <string name="btn_publish_finish">完成</string>
+    <string name="btn_publish_pic">图片</string>
+    <string name="btn_publish_type">排版</string>
+    <string name="btn_publish_template">模版</string>
+    <string name="btn_publish_voice">语音输入</string>
+    <string name="btn_dialog_ok">确定</string>
+    <string name="btn_dialog_cancel">取消</string>
+
+    <!--dialog-->
+    <string name="dialog_publish_title">插入链接</string>
 </resources>
