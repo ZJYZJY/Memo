@@ -5,10 +5,6 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <!--<include-->
-    <!--android:id="@+id/home_toolbar"-->
-    <!--layout="@layout/toolbar_custom" />-->
-
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
@@ -21,6 +17,7 @@
             android:background="@color/colorPrimary">
 
             <ImageView
+                android:background="?android:selectableItemBackground"
                 android:id="@+id/back_arrow"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
@@ -36,7 +33,7 @@
                 android:layout_marginStart="8dp"
                 android:layout_toEndOf="@+id/back_arrow"
                 android:layout_toRightOf="@+id/back_arrow"
-                android:text="发布好页"
+                android:text="@string/title_activity_publish"
                 android:textColor="@color/textPrimaryDark"
                 android:textSize="18sp" />
 
@@ -52,7 +49,7 @@
                 android:layout_marginEnd="12dp"
                 android:layout_marginRight="12dp"
                 android:background="@drawable/transparent_btn"
-                android:text="完成"
+                android:text="@string/btn_publish_finish"
                 android:textColor="@color/textPrimaryDark" />
         </RelativeLayout>
 
@@ -64,6 +61,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:background="@color/background_blank"
             android:focusableInTouchMode="true"
             android:orientation="vertical"
             android:padding="8dp">
@@ -75,7 +73,7 @@
                 android:background="@drawable/search_box_bg"
                 android:gravity="center_vertical"
                 android:paddingLeft="8dp"
-                android:text="请选择发布类型（默认为 文章）"
+                android:text="@string/placeholder_default_publish_type"
                 android:textColor="@color/textPrimary" />
 
             <EditText
@@ -84,7 +82,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
                 android:background="@drawable/edit_text_bg"
-                android:hint="输入标题"
+                android:hint="@string/hint_publish_title"
                 android:lineSpacingExtra="4dp"
                 android:maxLines="2"
                 android:padding="8dp"
@@ -96,13 +94,13 @@
                 android:layout_height="1dp"
                 android:background="@color/border_gray" />
 
-            <EditText
+            <io.github.mthli.knife.KnifeText
                 android:id="@+id/et_publish_content"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:background="@drawable/edit_text_bg"
                 android:gravity="start"
-                android:hint="输入正文"
+                android:hint="@string/hint_publish_content"
                 android:lineSpacingExtra="4dp"
                 android:padding="8dp"
                 android:textColor="@color/textPrimaryDark"
@@ -111,107 +109,202 @@
         </LinearLayout>
     </LinearLayout>
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="@color/border_gray" />
-
     <LinearLayout
-        android:id="@+id/publish_bottom_view"
         android:layout_width="match_parent"
-        android:layout_height="42dp"
-        android:background="@color/colorPrimary"
-        android:orientation="horizontal">
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <HorizontalScrollView
+            android:id="@+id/type_setting_tools"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:scrollbars="none"
+            android:visibility="gone">
+
+            <LinearLayout
+                android:background="@color/colorPrimary"
+                android:layout_width="wrap_content"
+                android:layout_height="36dp"
+                android:orientation="horizontal">
+
+                <ImageButton
+                    android:id="@+id/bold"
+                    android:layout_width="48dp"
+                    android:layout_height="match_parent"
+                    android:background="?android:selectableItemBackground"
+                    android:contentDescription="@null"
+                    android:scaleType="centerInside"
+                    android:src="@drawable/ic_format_bold"/>
+
+                <ImageButton
+                    android:id="@+id/italic"
+                    android:layout_width="48dp"
+                    android:layout_height="match_parent"
+                    android:background="?android:selectableItemBackground"
+                    android:contentDescription="@null"
+                    android:scaleType="center"
+                    android:src="@drawable/ic_format_italic"/>
+
+                <ImageButton
+                    android:id="@+id/underline"
+                    android:layout_width="48dp"
+                    android:layout_height="match_parent"
+                    android:background="?android:selectableItemBackground"
+                    android:contentDescription="@null"
+                    android:scaleType="center"
+                    android:src="@drawable/ic_format_underline"/>
+
+                <ImageButton
+                    android:id="@+id/strikethrough"
+                    android:layout_width="48dp"
+                    android:layout_height="match_parent"
+                    android:background="?android:selectableItemBackground"
+                    android:contentDescription="@null"
+                    android:scaleType="center"
+                    android:src="@drawable/ic_format_strikethrough"/>
+
+                <ImageButton
+                    android:id="@+id/bullet"
+                    android:layout_width="48dp"
+                    android:layout_height="match_parent"
+                    android:background="?android:selectableItemBackground"
+                    android:contentDescription="@null"
+                    android:scaleType="center"
+                    android:src="@drawable/ic_format_bullet"/>
+
+                <ImageButton
+                    android:id="@+id/quote"
+                    android:layout_width="48dp"
+                    android:layout_height="match_parent"
+                    android:background="?android:selectableItemBackground"
+                    android:contentDescription="@null"
+                    android:scaleType="center"
+                    android:src="@drawable/ic_format_quote"/>
+
+                <ImageButton
+                    android:id="@+id/link"
+                    android:layout_width="48dp"
+                    android:layout_height="match_parent"
+                    android:background="?android:selectableItemBackground"
+                    android:contentDescription="@null"
+                    android:scaleType="center"
+                    android:src="@drawable/ic_insert_link"/>
+
+                <ImageButton
+                    android:id="@+id/clear"
+                    android:layout_width="48dp"
+                    android:layout_height="match_parent"
+                    android:background="?android:selectableItemBackground"
+                    android:contentDescription="@null"
+                    android:scaleType="center"
+                    android:src="@drawable/ic_format_clear"/>
+            </LinearLayout>
+        </HorizontalScrollView>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/border_gray" />
 
         <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_weight="3"
-            android:id="@+id/pub_add_pic"
-            android:orientation="horizontal">
-
-            <ImageView
-                android:layout_width="42dp"
-                android:layout_height="42dp"
-                android:padding="8dp"
-                android:src="@drawable/pub_add_pictures" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:gravity="center_vertical"
-                android:text="图片" />
-        </LinearLayout>
-
-
-        <LinearLayout
-            android:id="@+id/pub_type_setting"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_weight="3"
-            android:orientation="horizontal">
-
-            <ImageView
-                android:layout_width="42dp"
-                android:layout_height="42dp"
-                android:padding="8dp"
-                android:src="@drawable/pub_type_setting" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:gravity="center_vertical"
-                android:text="排版" />
-        </LinearLayout>
-
-
-        <LinearLayout
-            android:id="@+id/pub_template"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_weight="3"
-            android:orientation="horizontal">
-
-            <ImageView
-                android:layout_width="42dp"
-                android:layout_height="42dp"
-                android:padding="8dp"
-                android:src="@drawable/pub_template" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:gravity="center_vertical"
-                android:text="模版" />
-        </LinearLayout>
-
-
-        <LinearLayout
-            android:id="@+id/pub_speech_input"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_weight="4"
-            android:orientation="horizontal">
-
-            <ImageView
-                android:layout_width="42dp"
-                android:layout_height="42dp"
-                android:padding="8dp"
-                android:src="@drawable/pub_speech_input" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:gravity="center_vertical"
-                android:text="语音输入" />
-        </LinearLayout>
-
-        <ImageView
-            android:id="@+id/pub_keyboard_toggle"
-            android:layout_width="42dp"
+            android:id="@+id/publish_bottom_view"
+            android:layout_width="match_parent"
             android:layout_height="42dp"
-            android:layout_weight="2"
-            android:padding="8dp"
-            android:src="@drawable/pub_keyboard" />
+            android:background="@color/colorPrimary"
+            android:orientation="horizontal">
+
+            <LinearLayout
+                android:background="?android:selectableItemBackground"
+                android:id="@+id/pub_add_pic"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_weight="3"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:layout_width="42dp"
+                    android:layout_height="42dp"
+                    android:padding="8dp"
+                    android:src="@drawable/pub_add_pictures" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:gravity="center_vertical"
+                    android:text="@string/btn_publish_pic" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:background="?android:selectableItemBackground"
+                android:id="@+id/pub_type_setting"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_weight="3"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:layout_width="42dp"
+                    android:layout_height="42dp"
+                    android:padding="8dp"
+                    android:src="@drawable/pub_type_setting" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:gravity="center_vertical"
+                    android:text="@string/btn_publish_type" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:background="?android:selectableItemBackground"
+                android:id="@+id/pub_template"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_weight="3"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:layout_width="42dp"
+                    android:layout_height="42dp"
+                    android:padding="8dp"
+                    android:src="@drawable/pub_template" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:gravity="center_vertical"
+                    android:text="@string/btn_publish_template" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:background="?android:selectableItemBackground"
+                android:id="@+id/pub_speech_input"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_weight="4"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:layout_width="42dp"
+                    android:layout_height="42dp"
+                    android:padding="8dp"
+                    android:src="@drawable/pub_speech_input" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:gravity="center_vertical"
+                    android:text="@string/btn_publish_voice" />
+            </LinearLayout>
+
+            <ImageView
+                android:background="?android:selectableItemBackground"
+                android:id="@+id/pub_keyboard_toggle"
+                android:layout_width="42dp"
+                android:layout_height="42dp"
+                android:layout_weight="2"
+                android:padding="8dp"
+                android:src="@drawable/pub_keyboard" />
+        </LinearLayout>
     </LinearLayout>
 </LinearLayout>
