@@ -33,7 +33,7 @@ public class PublishActivity extends AppCompatActivity implements View.OnClickLi
     private ImageView mKeyboard;
 
     private final String[] mContentTypes = {"文章", "相册", "问答", "活动", "投票", "招聘", "预订"};
-    private String mSelectedType = "文章";
+    private String mSelectedType = mContentTypes[0];
     private String mTitleStr = "";
     private String mContentStr = "";
 

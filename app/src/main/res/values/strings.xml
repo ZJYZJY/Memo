@@ -32,7 +32,7 @@
     <!--dialog-->
     <string name="dialog_publish_title">插入链接</string>
 
-
+    <!--share type-->
     <string name="social_share_title">分享到社交网络</string>
     <string name="social_share_tip">此信息阅读权限为公开浏览</string>
     <string name="social_share_wei_friend">微信好友</string>
@@ -43,4 +43,13 @@
     <string name="social_share_picture">生成图片分享</string>
     <string name="social_share_copy_link">复制链接</string>
     <string name="social_share_more">更多</string>
+
+    <!--interactive type-->
+    <string name="interactive_comment">我要留言</string>
+    <string name="interactive_enroll">我要报名</string>
+    <string name="interactive_vote">我要投票</string>
+    <string name="interactive_resume">投递简历</string>
+    <string name="interactive_answer">我要回答</string>
+    <string name="interactive_reserve">我要预订</string>
+    <string name="interactive_buy">我要购买</string>
 </resources>

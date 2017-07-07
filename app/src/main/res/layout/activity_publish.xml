@@ -41,7 +41,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
-                android:background="@drawable/edit_text_bg"
+                android:background="@drawable/edit_text_blank_bg"
                 android:hint="@string/hint_publish_title"
                 android:lineSpacingExtra="4dp"
                 android:maxLines="2"
@@ -58,7 +58,7 @@
             <!--android:id="@+id/et_publish_content"-->
             <!--android:layout_width="match_parent"-->
             <!--android:layout_height="match_parent"-->
-            <!--android:background="@drawable/edit_text_bg"-->
+            <!--android:background="@drawable/edit_text_blank_bg"-->
             <!--android:gravity="start"-->
             <!--android:hint="@string/hint_publish_content"-->
             <!--android:lineSpacingExtra="4dp"-->
@@ -71,7 +71,7 @@
                 android:id="@+id/et_publish_content"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:background="@drawable/edit_text_bg"
+                android:background="@drawable/edit_text_blank_bg"
                 android:gravity="start"
                 android:hint="@string/hint_publish_content"
                 android:lineSpacingExtra="4dp"

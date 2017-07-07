@@ -100,7 +100,7 @@
             <ImageView
                 android:layout_width="16dp"
                 android:layout_height="16dp"
-                android:src="@drawable/upvote_fill" />
+                android:src="@drawable/ic_upvote_fill" />
 
             <TextView
                 android:id="@+id/tv_upvote"
