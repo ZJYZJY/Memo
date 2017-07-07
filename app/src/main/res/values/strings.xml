@@ -3,6 +3,7 @@
 
     <!--title-->
     <string name="title_activity_publish">发布好页</string>
+    <string name="title_activity_share">信息发布成功！</string>
 
     <!--placeholder-->
     <string name="placeholder_default_publish_type">请选择发布类型（默认为 文章）</string>
@@ -19,9 +20,27 @@
     <string name="btn_publish_type">排版</string>
     <string name="btn_publish_template">模版</string>
     <string name="btn_publish_voice">语音输入</string>
+
+    <string name="btn_share_homepage">首页</string>
+    <string name="btn_swipe_share">分享</string>
+    <string name="btn_swipe_edit">编辑</string>
+    <string name="btn_swipe_delete">删除</string>
+
     <string name="btn_dialog_ok">确定</string>
     <string name="btn_dialog_cancel">取消</string>
 
     <!--dialog-->
     <string name="dialog_publish_title">插入链接</string>
+
+
+    <string name="social_share_title">分享到社交网络</string>
+    <string name="social_share_tip">此信息阅读权限为公开浏览</string>
+    <string name="social_share_wei_friend">微信好友</string>
+    <string name="social_share_wei">微信朋友圈</string>
+    <string name="social_share_qq_friend">QQ好友</string>
+    <string name="social_share_qzone">QQ空间</string>
+    <string name="social_share_weibo">新浪微博</string>
+    <string name="social_share_picture">生成图片分享</string>
+    <string name="social_share_copy_link">复制链接</string>
+    <string name="social_share_more">更多</string>
 </resources>

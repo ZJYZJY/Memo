@@ -6,7 +6,7 @@
 
     <include
         android:id="@+id/home_toolbar"
-        layout="@layout/toolbar_custom" />
+        layout="@layout/toolbar_main" />
 
     <com.donutcn.widgetlib.NoScrollViewPager
         android:id="@+id/home_viewpager"

@@ -61,6 +61,14 @@ public class RecommendFragment extends Fragment implements SwipeRefreshLayout.On
         mSearch_tv = (TextView) view.findViewById(R.id.recommend_search);
         mRefreshLayout.setOnRefreshListener(this);
         mSearch_tv.setOnClickListener(this);
+
+        mHaoYe_rv.setLayoutManager(new LinearLayoutManager(mContext));
+        mHaoYe_rv.addItemDecoration(new ListViewDecoration(getContext(),
+                R.dimen.item_decoration, LinearLayoutManager.VERTICAL));
+
+        // set up swipe menu.
+        mHaoYe_rv.setSwipeMenuCreator(mSwipeMenuCreator);
+        mHaoYe_rv.setSwipeMenuItemClickListener(mHaoYeItemClickListener);
     }
 
     @Override
@@ -80,14 +88,6 @@ public class RecommendFragment extends Fragment implements SwipeRefreshLayout.On
         }
         HaoYeAdapter adapter = new HaoYeAdapter(dataList);
         adapter.setOnItemClickListener(mOnItemClickListener);
-
-        mHaoYe_rv.setLayoutManager(new LinearLayoutManager(mContext));
-        mHaoYe_rv.addItemDecoration(new ListViewDecoration(getContext(),
-                R.dimen.item_decoration, LinearLayoutManager.VERTICAL));
-
-        // set up swipe menu.
-        mHaoYe_rv.setSwipeMenuCreator(mSwipeMenuCreator);
-        mHaoYe_rv.setSwipeMenuItemClickListener(mHaoYeItemClickListener);
 
         mHaoYe_rv.setAdapter(adapter);
 
@@ -112,7 +112,7 @@ public class RecommendFragment extends Fragment implements SwipeRefreshLayout.On
             {
                 SwipeMenuItem editItem = new SwipeMenuItem(mContext)
                         .setBackgroundDrawable(R.drawable.selector_gray)
-                        .setText("分享")
+                        .setText(getResources().getString(R.string.btn_swipe_share))
                         .setTextColor(Color.WHITE)
                         .setTextSize(16)
                         .setWidth(width)

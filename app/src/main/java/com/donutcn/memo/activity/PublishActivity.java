@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
@@ -18,14 +17,15 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.donutcn.memo.R;
+import com.donutcn.memo.utils.WindowUtils;
 
-import io.github.mthli.knife.KnifeText;
+import jp.wasabeef.richeditor.RichEditor;
 
 public class PublishActivity extends AppCompatActivity implements View.OnClickListener {
 
     private TextView mPublishType;
     private EditText mTitle;
-    private KnifeText mContent;
+    private RichEditor mContent;
     private Button mPublishBtn;
 
     private LinearLayout mAddPic, mTypeSet, mTemplate, mSpeech;
@@ -41,16 +41,18 @@ public class PublishActivity extends AppCompatActivity implements View.OnClickLi
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_publish);
-
+        WindowUtils.setToolBarTitle(this, R.string.title_activity_publish);
+        WindowUtils.setToolBarButton(this, R.string.btn_publish_finish);
+        WindowUtils.setStatusBarColor(this, R.color.colorPrimary);
         initView();
         setUpRichTextEditor();
     }
 
     public void initView() {
-        mPublishBtn = (Button) findViewById(R.id.publish);
+        mPublishBtn = (Button) findViewById(R.id.toolbar_with_btn);
         mPublishType = (TextView) findViewById(R.id.publish_spinner);
         mTitle = (EditText) findViewById(R.id.et_publish_title);
-        mContent = (KnifeText) findViewById(R.id.et_publish_content);
+        mContent = (RichEditor) findViewById(R.id.et_publish_content);
 
         mAddPic = (LinearLayout) findViewById(R.id.pub_add_pic);
         mTypeSet = (LinearLayout) findViewById(R.id.pub_type_setting);
@@ -80,7 +82,10 @@ public class PublishActivity extends AppCompatActivity implements View.OnClickLi
     }
 
     public void setUpRichTextEditor() {
-
+        mContent.setPlaceholder(getResources().getString(R.string.hint_publish_content));
+        mContent.setPadding(8, 8, 8, 8);
+        mContent.setEditorFontSize(16);
+        mContent.setEditorFontColor(getResources().getColor(R.color.textPrimaryDark));
     }
 
     public void onBack(View view) {
@@ -90,10 +95,9 @@ public class PublishActivity extends AppCompatActivity implements View.OnClickLi
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.publish:
+            case R.id.toolbar_with_btn:
                 Toast.makeText(this, "完成", Toast.LENGTH_SHORT).show();
-                Log.e("hdu", mContent.getText().toString());
-                Log.e("hdu", mContent.toHtml());
+                Log.e("hdu", mContent.getHtml() + "");
                 break;
             case R.id.publish_spinner:
                 new AlertDialog.Builder(PublishActivity.this)
@@ -108,6 +112,7 @@ public class PublishActivity extends AppCompatActivity implements View.OnClickLi
                 break;
             case R.id.pub_add_pic:
                 Toast.makeText(this, "图片", Toast.LENGTH_SHORT).show();
+                mContent.insertImage("https://raw.githubusercontent.com/wasabeef/art/master/twitter.png", "twitter");
                 break;
             case R.id.pub_type_setting:
                 mTools.setVisibility(mTools.getVisibility() == View.VISIBLE ? View.GONE : View.VISIBLE);
@@ -123,62 +128,77 @@ public class PublishActivity extends AppCompatActivity implements View.OnClickLi
                 break;
             // type setting tools onClick listener.
             case R.id.bold:
-                mContent.bold(!mContent.contains(KnifeText.FORMAT_BOLD));
+                mContent.setBold();
+//                mContent.bold(!mContent.contains(KnifeText.FORMAT_BOLD));
                 break;
             case R.id.italic:
-                mContent.italic(!mContent.contains(KnifeText.FORMAT_ITALIC));
+                mContent.setItalic();
+//                mContent.italic(!mContent.contains(KnifeText.FORMAT_ITALIC));
                 break;
             case R.id.underline:
-                mContent.underline(!mContent.contains(KnifeText.FORMAT_UNDERLINED));
+                mContent.setUnderline();
+//                mContent.underline(!mContent.contains(KnifeText.FORMAT_UNDERLINED));
                 break;
             case R.id.strikethrough:
-                mContent.strikethrough(!mContent.contains(KnifeText.FORMAT_STRIKETHROUGH));
+                mContent.setStrikeThrough();
+//                mContent.strikethrough(!mContent.contains(KnifeText.FORMAT_STRIKETHROUGH));
                 break;
             case R.id.bullet:
-                mContent.bullet(!mContent.contains(KnifeText.FORMAT_BULLET));
+                mContent.setBullets();
+//                mContent.bullet(!mContent.contains(KnifeText.FORMAT_BULLET));
                 break;
             case R.id.quote:
-                mContent.quote(!mContent.contains(KnifeText.FORMAT_QUOTE));
+                mContent.setBlockquote();
+//                mContent.quote(!mContent.contains(KnifeText.FORMAT_QUOTE));
                 break;
             case R.id.link:
+                mContent.insertLink("http://www.baidu.com", null);
                 showLinkDialog();
                 break;
             case R.id.clear:
-                mContent.clearFormats();
+//                mContent.clearFormats();
                 break;
         }
     }
 
     private void showLinkDialog() {
-        final int start = mContent.getSelectionStart();
-        final int end = mContent.getSelectionEnd();
-
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setCancelable(false);
-
-        View view = getLayoutInflater().inflate(R.layout.dialog_publish_link, null, false);
-        final EditText editText = (EditText) view.findViewById(R.id.publish_link_dialog);
-        builder.setView(view)
-                .setTitle(R.string.dialog_publish_title)
-                .setPositiveButton(R.string.btn_dialog_ok, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        String link = editText.getText().toString().trim();
-                        if (TextUtils.isEmpty(link)) {
-                            return;
-                        }
-                        link = getResources().getText(R.string.hint_publish_link_dialog) + link;
-                        // When KnifeText lose focus, use this method
-                        mContent.link(link, start, end);
-                    }
-                })
-                .setNegativeButton(R.string.btn_dialog_cancel, null)
-                .create()
-                .show();
+//        final int start = mContent.getSelectionStart();
+//        final int end = mContent.getSelectionEnd();
+//
+//        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+//        builder.setCancelable(false);
+//
+//        View view = getLayoutInflater().inflate(R.layout.dialog_publish_link, null, false);
+//        final EditText editText = (EditText) view.findViewById(R.id.publish_link_dialog);
+//        builder.setView(view)
+//                .setTitle(R.string.dialog_publish_title)
+//                .setPositiveButton(R.string.btn_dialog_ok, new DialogInterface.OnClickListener() {
+//                    @Override
+//                    public void onClick(DialogInterface dialog, int which) {
+//                        String link = editText.getText().toString().trim();
+//                        if (TextUtils.isEmpty(link)) {
+//                            return;
+//                        }
+//                        link = getResources().getText(R.string.hint_publish_link_dialog) + link;
+//                        // When KnifeText lose focus, use this method
+//                        mContent.link(link, start, end);
+//                    }
+//                })
+//                .setNegativeButton(R.string.btn_dialog_cancel, null)
+//                .create()
+//                .show();
     }
 
     private void toggleKeyboard() {
         InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.toggleSoftInput(0, InputMethodManager.HIDE_NOT_ALWAYS);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        mContent.clearCache(true);
+        mContent.clearHistory();
+        mContent.destroy();
     }
 }

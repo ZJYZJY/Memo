@@ -10,6 +10,7 @@ import com.donutcn.memo.activity.PublishActivity;
 import com.donutcn.memo.adapter.ViewPagerAdapter;
 import com.donutcn.memo.fragment.discover.DiscoverFragment;
 import com.donutcn.memo.fragment.home.HomeFragment;
+import com.donutcn.memo.utils.WindowUtils;
 import com.donutcn.widgetlib.CheckableImageButton;
 
 public class MainActivity extends AppCompatActivity implements ViewPager.OnPageChangeListener, View.OnClickListener {
@@ -22,6 +23,7 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        WindowUtils.setStatusBarColor(this, R.color.colorPrimary);
 
         viewPager = (ViewPager) findViewById(R.id.main_viewpager);
         home = (CheckableImageButton) findViewById(R.id.main_bottom_home);

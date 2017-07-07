@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
     android:orientation="vertical">
 
     <LinearLayout
@@ -11,47 +11,7 @@
         android:layout_weight="1"
         android:orientation="vertical">
 
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="48dp"
-            android:background="@color/colorPrimary">
-
-            <ImageView
-                android:background="?android:selectableItemBackground"
-                android:id="@+id/back_arrow"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:onClick="onBack"
-                android:padding="4dp"
-                app:srcCompat="@mipmap/back_arrow" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:layout_marginLeft="8dp"
-                android:layout_marginStart="8dp"
-                android:layout_toEndOf="@+id/back_arrow"
-                android:layout_toRightOf="@+id/back_arrow"
-                android:text="@string/title_activity_publish"
-                android:textColor="@color/textPrimaryDark"
-                android:textSize="18sp" />
-
-            <Button
-                android:id="@+id/publish"
-                style="@style/Widget.AppCompat.Button.Borderless"
-                android:layout_width="56dp"
-                android:layout_height="wrap_content"
-                android:layout_alignParentEnd="true"
-                android:layout_alignParentRight="true"
-                android:layout_centerVertical="true"
-                android:layout_margin="8dp"
-                android:layout_marginEnd="12dp"
-                android:layout_marginRight="12dp"
-                android:background="@drawable/transparent_btn"
-                android:text="@string/btn_publish_finish"
-                android:textColor="@color/textPrimaryDark" />
-        </RelativeLayout>
+        <include layout="@layout/toolbar_with_btn" />
 
         <View
             android:layout_width="match_parent"
@@ -94,7 +54,20 @@
                 android:layout_height="1dp"
                 android:background="@color/border_gray" />
 
-            <io.github.mthli.knife.KnifeText
+            <!--<io.github.mthli.knife.KnifeText-->
+            <!--android:id="@+id/et_publish_content"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="match_parent"-->
+            <!--android:background="@drawable/edit_text_bg"-->
+            <!--android:gravity="start"-->
+            <!--android:hint="@string/hint_publish_content"-->
+            <!--android:lineSpacingExtra="4dp"-->
+            <!--android:padding="8dp"-->
+            <!--android:textColor="@color/textPrimaryDark"-->
+            <!--android:textColorHint="@color/textPrimary"-->
+            <!--android:textSize="14sp" />-->
+
+            <jp.wasabeef.richeditor.RichEditor
                 android:id="@+id/et_publish_content"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
@@ -122,9 +95,9 @@
             android:visibility="gone">
 
             <LinearLayout
-                android:background="@color/colorPrimary"
                 android:layout_width="wrap_content"
                 android:layout_height="36dp"
+                android:background="@color/colorPrimary"
                 android:orientation="horizontal">
 
                 <ImageButton
@@ -134,7 +107,7 @@
                     android:background="?android:selectableItemBackground"
                     android:contentDescription="@null"
                     android:scaleType="centerInside"
-                    android:src="@drawable/ic_format_bold"/>
+                    android:src="@drawable/ic_format_bold" />
 
                 <ImageButton
                     android:id="@+id/italic"
@@ -143,7 +116,7 @@
                     android:background="?android:selectableItemBackground"
                     android:contentDescription="@null"
                     android:scaleType="center"
-                    android:src="@drawable/ic_format_italic"/>
+                    android:src="@drawable/ic_format_italic" />
 
                 <ImageButton
                     android:id="@+id/underline"
@@ -152,7 +125,7 @@
                     android:background="?android:selectableItemBackground"
                     android:contentDescription="@null"
                     android:scaleType="center"
-                    android:src="@drawable/ic_format_underline"/>
+                    android:src="@drawable/ic_format_underline" />
 
                 <ImageButton
                     android:id="@+id/strikethrough"
@@ -161,7 +134,7 @@
                     android:background="?android:selectableItemBackground"
                     android:contentDescription="@null"
                     android:scaleType="center"
-                    android:src="@drawable/ic_format_strikethrough"/>
+                    android:src="@drawable/ic_format_strikethrough" />
 
                 <ImageButton
                     android:id="@+id/bullet"
@@ -170,7 +143,7 @@
                     android:background="?android:selectableItemBackground"
                     android:contentDescription="@null"
                     android:scaleType="center"
-                    android:src="@drawable/ic_format_bullet"/>
+                    android:src="@drawable/ic_format_bullet" />
 
                 <ImageButton
                     android:id="@+id/quote"
@@ -179,7 +152,7 @@
                     android:background="?android:selectableItemBackground"
                     android:contentDescription="@null"
                     android:scaleType="center"
-                    android:src="@drawable/ic_format_quote"/>
+                    android:src="@drawable/ic_format_quote" />
 
                 <ImageButton
                     android:id="@+id/link"
@@ -188,7 +161,7 @@
                     android:background="?android:selectableItemBackground"
                     android:contentDescription="@null"
                     android:scaleType="center"
-                    android:src="@drawable/ic_insert_link"/>
+                    android:src="@drawable/ic_insert_link" />
 
                 <ImageButton
                     android:id="@+id/clear"
@@ -197,7 +170,7 @@
                     android:background="?android:selectableItemBackground"
                     android:contentDescription="@null"
                     android:scaleType="center"
-                    android:src="@drawable/ic_format_clear"/>
+                    android:src="@drawable/ic_format_clear" />
             </LinearLayout>
         </HorizontalScrollView>
 
@@ -214,11 +187,11 @@
             android:orientation="horizontal">
 
             <LinearLayout
-                android:background="?android:selectableItemBackground"
                 android:id="@+id/pub_add_pic"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_weight="3"
+                android:background="?android:selectableItemBackground"
                 android:orientation="horizontal">
 
                 <ImageView
@@ -235,11 +208,11 @@
             </LinearLayout>
 
             <LinearLayout
-                android:background="?android:selectableItemBackground"
                 android:id="@+id/pub_type_setting"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_weight="3"
+                android:background="?android:selectableItemBackground"
                 android:orientation="horizontal">
 
                 <ImageView
@@ -256,11 +229,11 @@
             </LinearLayout>
 
             <LinearLayout
-                android:background="?android:selectableItemBackground"
                 android:id="@+id/pub_template"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_weight="3"
+                android:background="?android:selectableItemBackground"
                 android:orientation="horizontal">
 
                 <ImageView
@@ -277,11 +250,11 @@
             </LinearLayout>
 
             <LinearLayout
-                android:background="?android:selectableItemBackground"
                 android:id="@+id/pub_speech_input"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_weight="4"
+                android:background="?android:selectableItemBackground"
                 android:orientation="horizontal">
 
                 <ImageView
@@ -298,11 +271,11 @@
             </LinearLayout>
 
             <ImageView
-                android:background="?android:selectableItemBackground"
                 android:id="@+id/pub_keyboard_toggle"
                 android:layout_width="42dp"
                 android:layout_height="42dp"
                 android:layout_weight="2"
+                android:background="?android:selectableItemBackground"
                 android:padding="8dp"
                 android:src="@drawable/pub_keyboard" />
         </LinearLayout>

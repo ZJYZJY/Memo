@@ -56,6 +56,14 @@ public class HaoYeFragment extends Fragment implements SwipeRefreshLayout.OnRefr
         mHaoYe_rv = (SwipeMenuRecyclerView) view.findViewById(R.id.recycler_view);
         mRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipe_layout);
         mRefreshLayout.setOnRefreshListener(this);
+
+        mHaoYe_rv.setLayoutManager(new LinearLayoutManager(mContext));
+        mHaoYe_rv.addItemDecoration(new ListViewDecoration(getContext(),
+                R.dimen.item_decoration, LinearLayoutManager.VERTICAL));
+
+        // set up swipe menu.
+        mHaoYe_rv.setSwipeMenuCreator(mSwipeMenuCreator);
+        mHaoYe_rv.setSwipeMenuItemClickListener(mHaoYeItemClickListener);
     }
 
     @Override
@@ -75,13 +83,6 @@ public class HaoYeFragment extends Fragment implements SwipeRefreshLayout.OnRefr
         }
         HaoYeAdapter adapter = new HaoYeAdapter(dataList);
         adapter.setOnItemClickListener(mOnItemClickListener);
-
-        mHaoYe_rv.setLayoutManager(new LinearLayoutManager(mContext));
-        mHaoYe_rv.addItemDecoration(new ListViewDecoration(getContext(), R.dimen.item_decoration, LinearLayoutManager.VERTICAL));
-
-        // set up swipe menu.
-        mHaoYe_rv.setSwipeMenuCreator(mSwipeMenuCreator);
-        mHaoYe_rv.setSwipeMenuItemClickListener(mHaoYeItemClickListener);
 
         mHaoYe_rv.setAdapter(adapter);
 
@@ -106,7 +107,7 @@ public class HaoYeFragment extends Fragment implements SwipeRefreshLayout.OnRefr
             {
                 SwipeMenuItem editItem = new SwipeMenuItem(mContext)
                         .setBackgroundDrawable(R.drawable.selector_gray)
-                        .setText("分享")
+                        .setText(getResources().getString(R.string.btn_swipe_share))
                         .setTextColor(Color.WHITE)
                         .setTextSize(16)
                         .setWidth(width)
@@ -115,7 +116,7 @@ public class HaoYeFragment extends Fragment implements SwipeRefreshLayout.OnRefr
 
                 SwipeMenuItem shareItem = new SwipeMenuItem(mContext)
                         .setBackgroundDrawable(R.drawable.selector_blue)
-                        .setText("编辑")
+                        .setText(getResources().getString(R.string.btn_swipe_edit))
                         .setTextColor(Color.WHITE)
                         .setTextSize(16)
                         .setWidth(width)
@@ -124,7 +125,7 @@ public class HaoYeFragment extends Fragment implements SwipeRefreshLayout.OnRefr
 
                 SwipeMenuItem delItem = new SwipeMenuItem(mContext)
                         .setBackgroundDrawable(R.drawable.selector_red)
-                        .setText("删除")
+                        .setText(getResources().getString(R.string.btn_swipe_delete))
                         .setTextColor(Color.WHITE)
                         .setTextSize(16)
                         .setWidth(width)

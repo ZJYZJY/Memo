@@ -2,7 +2,8 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true">
 
     <com.donutcn.widgetlib.NoScrollViewPager
         android:id="@+id/main_viewpager"
@@ -32,9 +33,9 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="2"
-            app:isChecked="true"
             android:padding="8dp"
             android:scaleType="centerInside"
+            app:isChecked="true"
             app:srcCompat="@drawable/home_selector" />
 
         <com.donutcn.widgetlib.CheckableImageButton
@@ -53,9 +54,9 @@
             android:id="@+id/main_bottom_dis"
             style="@android:style/Widget.DeviceDefault.Button.Borderless"
             android:layout_width="0dp"
-            android:padding="8dp"
             android:layout_height="match_parent"
             android:layout_weight="2"
+            android:padding="8dp"
             android:scaleType="centerInside"
             app:srcCompat="@drawable/discover_selector" />
     </LinearLayout>
