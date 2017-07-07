@@ -1,6 +1,7 @@
 package com.donutcn.memo.fragment.home;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -12,6 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import com.donutcn.memo.activity.InteractivePage;
 import com.donutcn.memo.view.ListViewDecoration;
 import com.donutcn.memo.R;
 import com.donutcn.memo.adapter.HaoYeAdapter;
@@ -139,6 +141,7 @@ public class HaoYeFragment extends Fragment implements SwipeRefreshLayout.OnRefr
         @Override
         public void onItemClick(int position) {
             Toast.makeText(mContext, "我是第" + position + "条。", Toast.LENGTH_SHORT).show();
+            startActivity(new Intent(getContext(), InteractivePage.class));
         }
     };
 

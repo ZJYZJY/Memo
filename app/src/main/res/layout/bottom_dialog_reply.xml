@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/ly_interactive_detail"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="8dp">
+
+    <EditText
+        android:id="@+id/et_interactive_reply"
+        android:layout_width="match_parent"
+        android:layout_height="96dp"
+        android:background="@drawable/edit_text_box_bg"
+        android:gravity="start"
+        android:hint="请输入..."
+        android:padding="8dp"
+        android:textSize="16sp" />
+
+    <Button
+        android:layout_below="@+id/et_interactive_reply"
+        android:layout_marginTop="8dp"
+        android:layout_alignEnd="@+id/et_interactive_reply"
+        android:layout_alignRight="@+id/et_interactive_reply"
+        android:id="@+id/interactive_reply_submit"
+        android:layout_width="wrap_content"
+        android:layout_height="32dp"
+        android:text="确 定"
+        android:textColor="@android:color/white"
+        android:background="@drawable/selector_green_btn" />
+</RelativeLayout>

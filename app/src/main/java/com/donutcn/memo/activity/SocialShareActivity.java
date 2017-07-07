@@ -2,15 +2,15 @@ package com.donutcn.memo.activity;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.SwitchCompat;
 import android.view.View;
 
 import com.donutcn.memo.R;
 import com.donutcn.memo.utils.WindowUtils;
+import com.donutcn.widgetlib.SwitchView;
 
 public class SocialShareActivity extends AppCompatActivity {
 
-    private SwitchCompat mSwith;
+    private SwitchView mSwith;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -20,7 +20,7 @@ public class SocialShareActivity extends AppCompatActivity {
         WindowUtils.setToolBarButton(this, R.string.btn_share_homepage);
         WindowUtils.setStatusBarColor(this, R.color.colorPrimary);
 
-        mSwith = (SwitchCompat) findViewById(R.id.social_content_private);
+        mSwith = (SwitchView) findViewById(R.id.social_content_private);
     }
 
     public void onBack(View view){

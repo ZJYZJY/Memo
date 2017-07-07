@@ -41,7 +41,6 @@ public class DiscoverFragment extends Fragment implements OnTabSelectListener {
             @Override
             public void onClick(View v) {
                 Toast.makeText(getContext(), "个人中心", Toast.LENGTH_SHORT).show();
-                startActivity(new Intent(getContext(), InteractivePage.class));
             }
         });
         mPagerAdapter = new SimpleFragmentPagerAdapter(getActivity().getSupportFragmentManager(), getContext(), 1);

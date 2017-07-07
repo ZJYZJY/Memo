@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
@@ -15,13 +16,17 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:gravity="center"
+        android:orientation="vertical"
+        android:padding="32dp">
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="88dp"
             android:gravity="center"
+            android:paddingBottom="24dp"
+            android:paddingLeft="24dp"
+            android:paddingRight="24dp"
             android:text="@string/social_share_title"
             android:textColor="@color/textPrimaryDark"
             android:textSize="18sp" />
@@ -29,9 +34,7 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="42dp"
-            android:layout_marginRight="42dp"
-            android:layout_marginTop="42dp">
+            android:padding="8dp">
 
             <TextView
                 android:layout_width="match_parent"
@@ -43,29 +46,28 @@
                 android:textColor="@color/textPrimary"
                 android:textSize="15sp" />
 
-            <android.support.v7.widget.SwitchCompat
+            <com.donutcn.widgetlib.SwitchView
                 android:id="@+id/social_content_private"
-                android:layout_width="wrap_content"
+                android:layout_width="42dp"
                 android:layout_height="wrap_content"
                 android:layout_alignParentEnd="true"
                 android:layout_alignParentRight="true"
-                android:checked="true" />
+                app:hasShadow="false"
+                app:isOpened="true" />
         </RelativeLayout>
 
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:layout_marginBottom="24dp"
-            android:layout_marginLeft="42dp"
-            android:layout_marginRight="42dp"
-            android:layout_marginTop="8dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="8dp"
             android:background="@color/border_gray" />
 
         <TableLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="32dp"
-            android:layout_marginRight="32dp">
+            android:paddingBottom="32dp"
+            android:paddingTop="24dp">
 
             <TableRow>
 

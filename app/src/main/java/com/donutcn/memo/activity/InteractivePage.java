@@ -1,13 +1,9 @@
 package com.donutcn.memo.activity;
 
-import android.support.annotation.NonNull;
 import android.support.design.widget.BottomSheetBehavior;
 import android.support.design.widget.BottomSheetDialog;
-import android.support.design.widget.CoordinatorLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
@@ -27,6 +23,7 @@ public class InteractivePage extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_interactive_page);
+
 //        WindowUtils.setToolBarTitle(this, R.string.title_activity_publish);
 //        WindowUtils.setToolBarButton(this, R.string.btn_publish_finish);
         WindowUtils.setStatusBarColor(this, R.color.colorPrimary);
@@ -55,7 +52,8 @@ public class InteractivePage extends AppCompatActivity {
      */
     private void showBSDialog() {
         dialog = new BottomSheetDialog(this);
-        final View view = LayoutInflater.from(this).inflate(R.layout.interactive_bottom_dialog, null);
+        final View view = LayoutInflater.from(this).inflate(R.layout.bottom_dialog_info, null);
+//        final View view = LayoutInflater.from(this).inflate(R.layout.bottom_dialog_reply, null);
         dialog.setContentView(view);
         View parent = (View) view.getParent();
         behavior = BottomSheetBehavior.from(parent);
