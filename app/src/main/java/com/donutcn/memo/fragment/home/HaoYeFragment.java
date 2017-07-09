@@ -14,6 +14,7 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.donutcn.memo.activity.InteractivePage;
+import com.donutcn.memo.type.ItemLayoutType;
 import com.donutcn.memo.view.ListViewDecoration;
 import com.donutcn.memo.R;
 import com.donutcn.memo.adapter.HaoYeAdapter;
@@ -60,7 +61,7 @@ public class HaoYeFragment extends Fragment implements SwipeRefreshLayout.OnRefr
         mRefreshLayout.setOnRefreshListener(this);
 
         mHaoYe_rv.setLayoutManager(new LinearLayoutManager(mContext));
-        mHaoYe_rv.addItemDecoration(new ListViewDecoration(getContext(),
+        mHaoYe_rv.addItemDecoration(new ListViewDecoration(mContext,
                 R.dimen.item_decoration, LinearLayoutManager.VERTICAL));
 
         // set up swipe menu.
@@ -83,7 +84,7 @@ public class HaoYeFragment extends Fragment implements SwipeRefreshLayout.OnRefr
         for (int i = 0; i < 30; i++) {
             dataList.add("我是第" + i + "个。");
         }
-        HaoYeAdapter adapter = new HaoYeAdapter(dataList);
+        HaoYeAdapter adapter = new HaoYeAdapter(dataList, ItemLayoutType.TYPE_IMG);
         adapter.setOnItemClickListener(mOnItemClickListener);
 
         mHaoYe_rv.setAdapter(adapter);

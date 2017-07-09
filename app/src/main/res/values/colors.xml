@@ -11,6 +11,9 @@
 
     <color name="textPrimary">#939393</color>
     <color name="textPrimaryDark">#4f4f4f</color>
+    <color name="text_red">#d42714</color>
+    <color name="text_black">#181818</color>
+    <color name="text_blue">#4a74a7</color>
 
     <color name="red_normal">#eb4e3d</color>
     <color name="red_pressed">#c74133</color>

@@ -19,7 +19,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:padding="16dp">
+                android:padding="12dp">
 
                 <RelativeLayout
                     android:layout_width="match_parent"
@@ -50,7 +50,8 @@
                     android:layout_marginTop="16dp"
                     android:background="@drawable/edit_text_box_bg"
                     android:hint="姓名"
-                    android:padding="8dp" />
+                    android:padding="6dp"
+                    android:textSize="16sp" />
 
                 <EditText
                     android:layout_width="match_parent"
@@ -58,7 +59,8 @@
                     android:layout_marginTop="16dp"
                     android:background="@drawable/edit_text_box_bg"
                     android:hint="手机号"
-                    android:padding="8dp" />
+                    android:padding="6dp"
+                    android:textSize="16sp" />
 
                 <EditText
                     android:layout_width="match_parent"
@@ -66,7 +68,8 @@
                     android:layout_marginTop="16dp"
                     android:background="@drawable/edit_text_box_bg"
                     android:hint="微信号"
-                    android:padding="8dp" />
+                    android:padding="6dp"
+                    android:textSize="16sp" />
 
                 <EditText
                     android:layout_width="match_parent"
@@ -74,7 +77,8 @@
                     android:layout_marginTop="16dp"
                     android:background="@drawable/edit_text_box_bg"
                     android:hint="邮箱"
-                    android:padding="8dp" />
+                    android:padding="6dp"
+                    android:textSize="16sp" />
             </LinearLayout>
         </android.support.v4.widget.NestedScrollView>
 

@@ -10,6 +10,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
 import com.donutcn.memo.R;
+import com.donutcn.memo.type.ItemLayoutType;
 import com.donutcn.memo.utils.DensityUtils;
 import com.yanzhenjie.recyclerview.swipe.ResCompat;
 
@@ -19,9 +20,18 @@ public class ListViewDecoration extends RecyclerView.ItemDecoration {
     private final int mSize;
     private final int mOrientation;
     private Context mContext;
+    private int layoutType = ItemLayoutType.TYPE_IMG;
 
     public ListViewDecoration(Context context, @DimenRes int size, int orientation) {
         this.mContext = context;
+        mDivider = ResCompat.getDrawable(context, R.drawable.divider_recycler);
+        mSize = context.getResources().getDimensionPixelSize(size);
+        mOrientation = orientation;
+    }
+
+    public ListViewDecoration(Context context, @ItemLayoutType int layoutType, @DimenRes int size, int orientation) {
+        this.mContext = context;
+        this.layoutType = layoutType;
         mDivider = ResCompat.getDrawable(context, R.drawable.divider_recycler);
         mSize = context.getResources().getDimensionPixelSize(size);
         mOrientation = orientation;
@@ -47,8 +57,13 @@ public class ListViewDecoration extends RecyclerView.ItemDecoration {
                 mDivider.draw(c);
             }
         } else {
-            left = parent.getPaddingLeft() + DensityUtils.dp2px(mContext, 84);
-            right = parent.getWidth() - parent.getPaddingRight() - DensityUtils.dp2px(mContext, 12);
+            if(layoutType == ItemLayoutType.NO_IMG){
+                left = parent.getPaddingLeft() + DensityUtils.dp2px(mContext, 8);
+                right = parent.getWidth() - parent.getPaddingRight() - DensityUtils.dp2px(mContext, 8);
+            }else {
+                left = parent.getPaddingLeft() + DensityUtils.dp2px(mContext, 84);
+                right = parent.getWidth() - parent.getPaddingRight() - DensityUtils.dp2px(mContext, 8);
+            }
             final int childCount = parent.getChildCount();
             for (int i = 0; i < childCount - 1; i++) {
                 final View child = parent.getChildAt(i);

@@ -1,5 +1,6 @@
 package com.donutcn.memo.activity;
 
+import android.support.annotation.LayoutRes;
 import android.support.design.widget.BottomSheetBehavior;
 import android.support.design.widget.BottomSheetDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -13,7 +14,7 @@ import com.donutcn.memo.R;
 import com.donutcn.memo.utils.DensityUtils;
 import com.donutcn.memo.utils.WindowUtils;
 
-public class InteractivePage extends AppCompatActivity {
+public class InteractivePage extends AppCompatActivity implements View.OnClickListener {
 
     private BottomSheetBehavior behavior;
     private BottomSheetDialog dialog;
@@ -25,7 +26,6 @@ public class InteractivePage extends AppCompatActivity {
         setContentView(R.layout.activity_interactive_page);
 
 //        WindowUtils.setToolBarTitle(this, R.string.title_activity_publish);
-//        WindowUtils.setToolBarButton(this, R.string.btn_publish_finish);
         WindowUtils.setStatusBarColor(this, R.color.colorPrimary);
 
         mInteractive = (Button) findViewById(R.id.interactive);
@@ -34,9 +34,11 @@ public class InteractivePage extends AppCompatActivity {
         mInteractive.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                showBSDialog();
+                showBSDialog(R.layout.bottom_dialog_info);
             }
         });
+
+        findViewById(R.id.interactive_bottom_comment).setOnClickListener(this);
     }
 
     public void onCloseDialog(View view){
@@ -50,16 +52,26 @@ public class InteractivePage extends AppCompatActivity {
     /**
      * create a bottom sheet dialog.
      */
-    private void showBSDialog() {
+    private void showBSDialog(@LayoutRes int layout) {
         dialog = new BottomSheetDialog(this);
-        final View view = LayoutInflater.from(this).inflate(R.layout.bottom_dialog_info, null);
-//        final View view = LayoutInflater.from(this).inflate(R.layout.bottom_dialog_reply, null);
+        final View view = LayoutInflater.from(this).inflate(layout, null);
         dialog.setContentView(view);
         View parent = (View) view.getParent();
         behavior = BottomSheetBehavior.from(parent);
         behavior.setPeekHeight(DensityUtils.dp2px(this, 512));
-        ((TextView)parent.findViewById(R.id.interactive_type)).setText(getResources().getString(R.string.interactive_enroll));
+        if(layout == R.layout.bottom_dialog_info){
+            ((TextView)parent.findViewById(R.id.interactive_type)).setText(getResources().getString(R.string.interactive_enroll));
+        }
 
         dialog.show();
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()){
+            case R.id.interactive_bottom_comment:
+                showBSDialog(R.layout.bottom_dialog_reply);
+                break;
+        }
     }
 }

@@ -9,6 +9,7 @@ import android.widget.TextView;
 
 import com.donutcn.memo.R;
 import com.donutcn.memo.listener.OnItemClickListener;
+import com.donutcn.memo.type.ItemLayoutType;
 import com.yanzhenjie.recyclerview.swipe.SwipeMenuAdapter;
 
 import java.util.List;
@@ -16,11 +17,13 @@ import java.util.List;
 public class HaoYeAdapter extends SwipeMenuAdapter<HaoYeAdapter.DefaultViewHolder> {
 
     private List<String> titles;
+    private int layoutType;
 
     private OnItemClickListener mOnItemClickListener;
 
-    public HaoYeAdapter(List<String> titles) {
+    public HaoYeAdapter(List<String> titles, @ItemLayoutType int layoutType) {
         this.titles = titles;
+        this.layoutType = layoutType;
     }
 
     public void setOnItemClickListener(OnItemClickListener onItemClickListener) {
@@ -34,6 +37,16 @@ public class HaoYeAdapter extends SwipeMenuAdapter<HaoYeAdapter.DefaultViewHolde
 
     @Override
     public View onCreateContentView(ViewGroup parent, int viewType) {
+        switch (layoutType){
+            case ItemLayoutType.NO_IMG:
+                View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_home_haoye, parent, false);
+                view.findViewById(R.id.iv_content_icon).setVisibility(View.GONE);
+                return view;
+            case ItemLayoutType.TYPE_IMG:
+                return LayoutInflater.from(parent.getContext()).inflate(R.layout.item_home_haoye, parent, false);
+            case ItemLayoutType.AVATAR_IMG:
+                return LayoutInflater.from(parent.getContext()).inflate(R.layout.item_home_haoye, parent, false);
+        }
         return LayoutInflater.from(parent.getContext()).inflate(R.layout.item_home_haoye, parent, false);
     }
 
@@ -63,7 +76,7 @@ public class HaoYeAdapter extends SwipeMenuAdapter<HaoYeAdapter.DefaultViewHolde
         public DefaultViewHolder(View itemView) {
             super(itemView);
             itemView.setOnClickListener(this);
-            mType = (ImageView) itemView.findViewById(R.id.iv_content_type);
+            mType = (ImageView) itemView.findViewById(R.id.iv_content_icon);
             mContentPic1 = (ImageView) itemView.findViewById(R.id.iv_one);
             mContentPic2 = (ImageView) itemView.findViewById(R.id.iv_two);
             mTitle = (TextView) itemView.findViewById(R.id.tv_title);

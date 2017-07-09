@@ -1,6 +1,7 @@
 package com.donutcn.memo.fragment.discover;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -14,8 +15,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.donutcn.memo.R;
+import com.donutcn.memo.activity.ArticlePage;
 import com.donutcn.memo.adapter.HaoYeAdapter;
 import com.donutcn.memo.listener.OnItemClickListener;
+import com.donutcn.memo.type.ItemLayoutType;
 import com.donutcn.memo.view.ListViewDecoration;
 import com.yanzhenjie.recyclerview.swipe.Closeable;
 import com.yanzhenjie.recyclerview.swipe.OnSwipeMenuItemClickListener;
@@ -86,7 +89,7 @@ public class RecommendFragment extends Fragment implements SwipeRefreshLayout.On
         for (int i = 0; i < 30; i++) {
             dataList.add("我是第" + i + "个。");
         }
-        HaoYeAdapter adapter = new HaoYeAdapter(dataList);
+        HaoYeAdapter adapter = new HaoYeAdapter(dataList, ItemLayoutType.TYPE_IMG);
         adapter.setOnItemClickListener(mOnItemClickListener);
 
         mHaoYe_rv.setAdapter(adapter);
@@ -126,6 +129,7 @@ public class RecommendFragment extends Fragment implements SwipeRefreshLayout.On
         @Override
         public void onItemClick(int position) {
             Toast.makeText(mContext, "我是第" + position + "条。", Toast.LENGTH_SHORT).show();
+            startActivity(new Intent(getContext(), ArticlePage.class));
         }
     };
 

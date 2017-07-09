@@ -4,16 +4,16 @@
     android:layout_height="wrap_content"
     android:orientation="horizontal"
     android:background="?selectableItemBackground"
-    android:padding="12dp">
+    android:padding="8dp">
 
     <ImageView
-        android:id="@+id/iv_content_type"
+        android:id="@+id/iv_content_icon"
         android:layout_width="@dimen/item_height"
         android:layout_height="@dimen/item_height"
         android:background="@drawable/bg_blue"
         android:contentDescription="@string/app_name"
         android:padding="16dp"
-        android:src="@drawable/type_recruit" />
+        android:src="@drawable/type_recruit"/>
 
     <TextView
         android:id="@+id/tv_title"
@@ -22,8 +22,8 @@
         android:layout_alignParentTop="true"
         android:layout_marginLeft="12dp"
         android:layout_marginStart="12dp"
-        android:layout_toEndOf="@+id/iv_content_type"
-        android:layout_toRightOf="@+id/iv_content_type"
+        android:layout_toEndOf="@+id/iv_content_icon"
+        android:layout_toRightOf="@+id/iv_content_icon"
         android:text="360智能软件工程师等你来"
         android:textColor="@color/textPrimaryDark"
         android:textSize="17sp" />
@@ -75,7 +75,7 @@
     <RelativeLayout
         android:id="@+id/foot_view"
         android:layout_width="match_parent"
-        android:layout_height="16dp"
+        android:layout_height="14dp"
         android:layout_alignLeft="@+id/tv_title"
         android:layout_alignStart="@+id/tv_title"
         android:layout_below="@+id/iv_container"
@@ -87,7 +87,8 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:text="3小时前"
-            android:textColor="@color/textPrimary" />
+            android:textColor="@color/textPrimary"
+            android:textSize="12sp" />
 
         <LinearLayout
             android:layout_width="wrap_content"
@@ -98,36 +99,39 @@
             android:orientation="horizontal">
 
             <ImageView
-                android:layout_width="16dp"
-                android:layout_height="16dp"
+                android:layout_width="14dp"
+                android:layout_height="14dp"
                 android:src="@drawable/ic_upvote_fill" />
 
             <TextView
                 android:id="@+id/tv_upvote"
-                android:layout_width="32dp"
+                android:layout_width="24dp"
                 android:layout_height="wrap_content"
+                android:layout_gravity="center"
                 android:layout_marginLeft="4dp"
                 android:layout_marginStart="4dp"
-                android:layout_gravity="center_vertical"
                 android:text="20"
-                android:textColor="@color/textPrimary" />
+                android:textColor="@color/textPrimary"
+                android:textSize="12sp" />
 
             <ImageView
-                android:layout_width="16dp"
-                android:layout_height="16dp"
+                android:layout_width="12dp"
+                android:layout_height="12dp"
                 android:layout_marginLeft="4dp"
                 android:layout_marginStart="4dp"
+                android:layout_gravity="center"
                 android:src="@drawable/comment_fill" />
 
             <TextView
                 android:id="@+id/tv_comment"
-                android:layout_width="32dp"
+                android:layout_width="24dp"
                 android:layout_height="wrap_content"
+                android:layout_gravity="center"
                 android:layout_marginLeft="4dp"
                 android:layout_marginStart="4dp"
-                android:layout_gravity="center_vertical"
                 android:text="20"
-                android:textColor="@color/textPrimary" />
+                android:textColor="@color/textPrimary"
+                android:textSize="12sp" />
         </LinearLayout>
     </RelativeLayout>
 

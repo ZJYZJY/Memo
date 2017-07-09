@@ -76,6 +76,9 @@ public class WindowUtils {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
             window.setStatusBarColor(activity.getResources().getColor(color));
+
+            MIUISetStatusBarLightMode(window, true);
+            FlymeSetStatusBarLightMode(window, true);
         } else if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             //使用SystemBarTint库使4.4版本状态栏变色，需要先将状态栏设置为透明
 //            transparencyBar(activity);
@@ -88,8 +91,6 @@ public class WindowUtils {
             activity.getWindow().getDecorView().setSystemUiVisibility(
                     View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN | View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
         }
-        MIUISetStatusBarLightMode(window, true);
-        FlymeSetStatusBarLightMode(window, true);
     }
 
     /**

@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout android:layout_width="match_parent"
+    android:layout_height="48dp"
+    android:background="@color/colorPrimary"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <ImageView
+        android:background="?android:selectableItemBackground"
+        android:id="@+id/back_arrow"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:onClick="onBack"
+        android:padding="4dp"
+        android:src="@mipmap/back_arrow" />
+
+    <TextView
+        android:id="@+id/toolbar_with_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_toEndOf="@+id/back_arrow"
+        android:layout_toRightOf="@+id/back_arrow"
+        android:textColor="@color/textPrimaryDark"
+        android:textSize="18sp" />
+</RelativeLayout>

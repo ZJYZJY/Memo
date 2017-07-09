@@ -13,6 +13,7 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.donutcn.memo.R;
+import com.donutcn.memo.activity.AuthorPage;
 import com.donutcn.memo.activity.InteractivePage;
 import com.donutcn.memo.adapter.SimpleFragmentPagerAdapter;
 import com.flyco.tablayout.SlidingTabLayout;
@@ -41,6 +42,7 @@ public class DiscoverFragment extends Fragment implements OnTabSelectListener {
             @Override
             public void onClick(View v) {
                 Toast.makeText(getContext(), "个人中心", Toast.LENGTH_SHORT).show();
+                startActivity(new Intent(getContext(), AuthorPage.class));
             }
         });
         mPagerAdapter = new SimpleFragmentPagerAdapter(getActivity().getSupportFragmentManager(), getContext(), 1);
