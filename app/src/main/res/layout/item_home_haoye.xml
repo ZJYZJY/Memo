@@ -6,13 +6,12 @@
     android:background="?selectableItemBackground"
     android:padding="8dp">
 
-    <ImageView
+    <com.donutcn.widgetlib.CircleImageView
         android:id="@+id/iv_content_icon"
         android:layout_width="@dimen/item_height"
         android:layout_height="@dimen/item_height"
         android:background="@drawable/bg_blue"
         android:contentDescription="@string/app_name"
-        android:padding="16dp"
         android:src="@drawable/type_recruit"/>
 
     <TextView

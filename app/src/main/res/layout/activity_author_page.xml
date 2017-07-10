@@ -11,13 +11,11 @@
         android:layout_height="wrap_content"
         android:padding="16dp">
 
-        <ImageView
+        <com.donutcn.widgetlib.CircleImageView
             android:id="@+id/author_icon"
             android:layout_width="64dp"
             android:layout_height="64dp"
-            android:background="@drawable/bg_green"
-            android:padding="16dp"
-            android:src="@drawable/type_article" />
+            android:src="@mipmap/user_icon" />
 
         <LinearLayout
             android:id="@+id/author_status"
@@ -124,8 +122,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
-                android:textColor="@color/btn_green_normal"
-                android:text="私信" />
+                android:text="私信"
+                android:textColor="@color/btn_green_normal" />
         </LinearLayout>
     </RelativeLayout>
 
