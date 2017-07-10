@@ -62,7 +62,7 @@ public class HaoYeFragment extends Fragment implements SwipeRefreshLayout.OnRefr
 
         mHaoYe_rv.setLayoutManager(new LinearLayoutManager(mContext));
         mHaoYe_rv.addItemDecoration(new ListViewDecoration(mContext,
-                R.dimen.item_decoration, LinearLayoutManager.VERTICAL));
+                R.dimen.item_decoration, 84, 8));
 
         // set up swipe menu.
         mHaoYe_rv.setSwipeMenuCreator(mSwipeMenuCreator);

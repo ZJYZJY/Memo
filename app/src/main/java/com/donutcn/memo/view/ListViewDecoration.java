@@ -8,9 +8,9 @@ import android.support.annotation.DimenRes;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import android.widget.LinearLayout;
 
 import com.donutcn.memo.R;
-import com.donutcn.memo.type.ItemLayoutType;
 import com.donutcn.memo.utils.DensityUtils;
 import com.yanzhenjie.recyclerview.swipe.ResCompat;
 
@@ -18,22 +18,20 @@ public class ListViewDecoration extends RecyclerView.ItemDecoration {
 
     private final Drawable mDivider;
     private final int mSize;
-    private final int mOrientation;
     private Context mContext;
-    private int layoutType = ItemLayoutType.TYPE_IMG;
+    private final int mOrientation;
+    private int mLeft, mRight;
 
-    public ListViewDecoration(Context context, @DimenRes int size, int orientation) {
-        this.mContext = context;
-        mDivider = ResCompat.getDrawable(context, R.drawable.divider_recycler);
-        mSize = context.getResources().getDimensionPixelSize(size);
-        mOrientation = orientation;
+    public ListViewDecoration(Context context, @DimenRes int size, int left, int right) {
+        this(context, size, left, right, LinearLayout.VERTICAL);
     }
 
-    public ListViewDecoration(Context context, @ItemLayoutType int layoutType, @DimenRes int size, int orientation) {
+    public ListViewDecoration(Context context, @DimenRes int size, int left, int right, int orientation) {
         this.mContext = context;
-        this.layoutType = layoutType;
         mDivider = ResCompat.getDrawable(context, R.drawable.divider_recycler);
         mSize = context.getResources().getDimensionPixelSize(size);
+        mLeft = left;
+        mRight = right;
         mOrientation = orientation;
     }
 
@@ -57,13 +55,8 @@ public class ListViewDecoration extends RecyclerView.ItemDecoration {
                 mDivider.draw(c);
             }
         } else {
-            if(layoutType == ItemLayoutType.NO_IMG){
-                left = parent.getPaddingLeft() + DensityUtils.dp2px(mContext, 8);
-                right = parent.getWidth() - parent.getPaddingRight() - DensityUtils.dp2px(mContext, 8);
-            }else {
-                left = parent.getPaddingLeft() + DensityUtils.dp2px(mContext, 84);
-                right = parent.getWidth() - parent.getPaddingRight() - DensityUtils.dp2px(mContext, 8);
-            }
+            left = parent.getPaddingLeft() + DensityUtils.dp2px(mContext, mLeft);
+            right = parent.getWidth() - parent.getPaddingRight() - DensityUtils.dp2px(mContext, mRight);
             final int childCount = parent.getChildCount();
             for (int i = 0; i < childCount - 1; i++) {
                 final View child = parent.getChildAt(i);

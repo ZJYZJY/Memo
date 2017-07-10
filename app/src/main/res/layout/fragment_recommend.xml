@@ -9,7 +9,7 @@
         android:layout_width="match_parent"
         android:layout_height="32dp"
         android:layout_margin="8dp"
-        android:background="@drawable/search_box_bg"
+        android:background="@drawable/text_box_bg"
         android:gravity="center_vertical"
         android:paddingLeft="8dp"
         android:text="搜索 好页 里的信息" />

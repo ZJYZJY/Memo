@@ -16,6 +16,7 @@ import android.widget.Toast;
 
 import com.donutcn.memo.R;
 import com.donutcn.memo.activity.ArticlePage;
+import com.donutcn.memo.activity.SearchActivity;
 import com.donutcn.memo.adapter.HaoYeAdapter;
 import com.donutcn.memo.listener.OnItemClickListener;
 import com.donutcn.memo.type.ItemLayoutType;
@@ -67,7 +68,7 @@ public class RecommendFragment extends Fragment implements SwipeRefreshLayout.On
 
         mHaoYe_rv.setLayoutManager(new LinearLayoutManager(mContext));
         mHaoYe_rv.addItemDecoration(new ListViewDecoration(getContext(),
-                R.dimen.item_decoration, LinearLayoutManager.VERTICAL));
+                R.dimen.item_decoration, 84, 8));
 
         // set up swipe menu.
         mHaoYe_rv.setSwipeMenuCreator(mSwipeMenuCreator);
@@ -137,7 +138,7 @@ public class RecommendFragment extends Fragment implements SwipeRefreshLayout.On
     public void onClick(View v) {
         switch (v.getId()){
             case R.id.recommend_search:
-                Toast.makeText(getContext(), "搜索好页", Toast.LENGTH_SHORT).show();
+                startActivity(new Intent(getContext(), SearchActivity.class));
                 break;
         }
     }

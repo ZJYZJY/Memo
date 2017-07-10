@@ -63,7 +63,7 @@ public class HaoYeAdapter extends SwipeMenuAdapter<HaoYeAdapter.DefaultViewHolde
     }
 
     static class DefaultViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-        ImageView mType;
+        ImageView mImage;
         ImageView mContentPic1;
         ImageView mContentPic2;
         TextView mTitle;
@@ -76,7 +76,7 @@ public class HaoYeAdapter extends SwipeMenuAdapter<HaoYeAdapter.DefaultViewHolde
         public DefaultViewHolder(View itemView) {
             super(itemView);
             itemView.setOnClickListener(this);
-            mType = (ImageView) itemView.findViewById(R.id.iv_content_icon);
+            mImage = (ImageView) itemView.findViewById(R.id.iv_content_icon);
             mContentPic1 = (ImageView) itemView.findViewById(R.id.iv_one);
             mContentPic2 = (ImageView) itemView.findViewById(R.id.iv_two);
             mTitle = (TextView) itemView.findViewById(R.id.tv_title);
@@ -84,7 +84,7 @@ public class HaoYeAdapter extends SwipeMenuAdapter<HaoYeAdapter.DefaultViewHolde
             mTime = (TextView) itemView.findViewById(R.id.tv_publish_time);
             mUpvote = (TextView) itemView.findViewById(R.id.tv_upvote);
             mComment = (TextView) itemView.findViewById(R.id.tv_comment);
-//            mType.setBackgroundResource(R.drawable.bg_green);
+//            mImage.setBackgroundResource(R.drawable.bg_green);
         }
 
         public void setData() {

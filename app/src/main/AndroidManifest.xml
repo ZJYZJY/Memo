@@ -11,7 +11,9 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme_NoActionBar">
-        <activity android:name=".activity.MainActivity">
+        <activity
+            android:name=".activity.MainActivity"
+            android:launchMode="singleTask">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -26,7 +28,8 @@
             android:name=".activity.InteractivePage"
             android:windowSoftInputMode="adjustResize" />
         <activity android:name=".activity.ArticlePage" />
-        <activity android:name=".activity.AuthorPage"/>
+        <activity android:name=".activity.AuthorPage" />
+        <activity android:name=".activity.SearchActivity" />
     </application>
 
 </manifest>

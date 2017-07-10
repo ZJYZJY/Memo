@@ -1,24 +1,10 @@
-/*
- * Copyright 2016 Yan Zhenjie
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
 package com.donutcn.memo.adapter;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.donutcn.memo.R;
@@ -27,16 +13,13 @@ import com.yanzhenjie.recyclerview.swipe.SwipeMenuAdapter;
 
 import java.util.List;
 
-/**
- * Created by YOLANDA on 2016/7/22.
- */
-public class MenuAdapter extends SwipeMenuAdapter<MenuAdapter.DefaultViewHolder> {
+public class SearchListAdapter extends SwipeMenuAdapter<SearchListAdapter.DefaultViewHolder> {
 
     private List<String> titles;
 
     private OnItemClickListener mOnItemClickListener;
 
-    public MenuAdapter(List<String> titles) {
+    public SearchListAdapter(List<String> titles) {
         this.titles = titles;
     }
 
@@ -51,33 +34,49 @@ public class MenuAdapter extends SwipeMenuAdapter<MenuAdapter.DefaultViewHolder>
 
     @Override
     public View onCreateContentView(ViewGroup parent, int viewType) {
-        return LayoutInflater.from(parent.getContext()).inflate(R.layout.item_menu, parent, false);
+        return LayoutInflater.from(parent.getContext()).inflate(R.layout.item_search_list, parent, false);
     }
 
     @Override
-    public MenuAdapter.DefaultViewHolder onCompatCreateViewHolder(View realContentView, int viewType) {
+    public SearchListAdapter.DefaultViewHolder onCompatCreateViewHolder(View realContentView, int viewType) {
         DefaultViewHolder viewHolder = new DefaultViewHolder(realContentView);
         viewHolder.mOnItemClickListener = mOnItemClickListener;
         return viewHolder;
     }
 
     @Override
-    public void onBindViewHolder(MenuAdapter.DefaultViewHolder holder, int position) {
-        holder.setData(titles.get(position));
+    public void onBindViewHolder(SearchListAdapter.DefaultViewHolder holder, int position) {
+        holder.setData();
     }
 
     static class DefaultViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
-        TextView tvTitle;
+        ImageView mContentPic1;
+        ImageView mContentPic2;
+        TextView mTitle;
+        TextView mAuthor;
+        TextView mDate;
+        TextView mContent;
+        TextView mReadCount;
+        TextView mCommentCount;
+        TextView mLikeCount;
         OnItemClickListener mOnItemClickListener;
 
         public DefaultViewHolder(View itemView) {
             super(itemView);
             itemView.setOnClickListener(this);
-            tvTitle = (TextView) itemView.findViewById(R.id.tv_title);
+            mContentPic1 = (ImageView) itemView.findViewById(R.id.iv_one);
+            mContentPic2 = (ImageView) itemView.findViewById(R.id.iv_two);
+            mTitle = (TextView) itemView.findViewById(R.id.tv_title);
+            mAuthor = (TextView) itemView.findViewById(R.id.tv_author);
+            mDate = (TextView) itemView.findViewById(R.id.tv_date);
+            mContent = (TextView) itemView.findViewById(R.id.tv_content);
+            mReadCount = (TextView) itemView.findViewById(R.id.tv_read_count);
+            mCommentCount = (TextView) itemView.findViewById(R.id.tv_comment_count);
+            mLikeCount = (TextView) itemView.findViewById(R.id.tv_like_count);
         }
 
-        public void setData(String title) {
-            this.tvTitle.setText(title);
+        public void setData() {
+
         }
 
         @Override

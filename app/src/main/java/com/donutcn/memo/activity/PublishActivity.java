@@ -3,6 +3,7 @@ package com.donutcn.memo.activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -96,7 +97,21 @@ public class PublishActivity extends AppCompatActivity implements View.OnClickLi
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.toolbar_with_btn:
-                Toast.makeText(this, "完成", Toast.LENGTH_SHORT).show();
+                if(mSelectedType == mContentTypes[0]){
+                    startActivity(new Intent(this, SocialShareActivity.class));
+                } else if(mSelectedType == mContentTypes[1]){
+
+                }else if(mSelectedType == mContentTypes[2]){
+
+                }else if(mSelectedType == mContentTypes[3]){
+
+                }else if(mSelectedType == mContentTypes[4]){
+
+                }else if(mSelectedType == mContentTypes[5]){
+
+                }else if(mSelectedType == mContentTypes[6]){
+
+                }
                 Log.e("hdu", mContent.getHtml() + "");
                 break;
             case R.id.publish_spinner:

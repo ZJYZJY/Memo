@@ -41,7 +41,7 @@ public class HomeFragment extends Fragment implements OnTabSelectListener {
             @Override
             public void onClick(View v) {
                 Toast.makeText(getContext(), "个人中心", Toast.LENGTH_SHORT).show();
-                startActivity(new Intent(getContext(), SocialShareActivity.class));
+//                startActivity(new Intent(getContext(), SocialShareActivity.class));
             }
         });
 

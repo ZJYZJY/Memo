@@ -43,8 +43,7 @@ public class AuthorPage extends AppCompatActivity implements OnItemClickListener
             dataList.add("我是第" + i + "个。");
         }
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
-        mRecyclerView.addItemDecoration(new ListViewDecoration(this, ItemLayoutType.NO_IMG,
-                R.dimen.item_decoration, LinearLayoutManager.VERTICAL));
+        mRecyclerView.addItemDecoration(new ListViewDecoration(this, R.dimen.item_decoration, 8, 8));
         HaoYeAdapter adapter = new HaoYeAdapter(dataList, ItemLayoutType.NO_IMG);
         adapter.setOnItemClickListener(this);
         mRecyclerView.setAdapter(adapter);

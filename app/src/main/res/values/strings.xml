@@ -13,6 +13,8 @@
     <string name="hint_publish_title">输入标题</string>
     <string name="hint_publish_content">输入正文</string>
     <string name="hint_publish_link_dialog">http://</string>
+    <string name="hint_search">搜索...</string>
+    <string name="hint_search_cancel">取消</string>
 
     <!--button-->
     <string name="btn_publish_finish">完成</string>
