@@ -13,8 +13,21 @@
     <string name="hint_publish_title">输入标题</string>
     <string name="hint_publish_content">输入正文</string>
     <string name="hint_publish_link_dialog">http://</string>
+    <string name="hint_input">请输入...</string>
     <string name="hint_search">搜索...</string>
     <string name="hint_search_cancel">取消</string>
+
+    <string name="hint_completing_time">活动时间</string>
+    <string name="hint_completing_place">举办地点</string>
+    <string name="hint_completing_vote">投票项</string>
+    <string name="hint_completing_job">招聘职位</string>
+    <string name="hint_completing_salary">薪水待遇</string>
+    <string name="hint_completing_work_place">工作地址</string>
+    <string name="hint_completing_reserve_price">预订价格</string>
+    <string name="hint_completing_valid_time">有效时间</string>
+    <string name="hint_completing_sale_stuff">售卖物品</string>
+    <string name="hint_completing_sale_price">售卖价格</string>
+    <string name="hint_completing_sale_way">交易方式</string>
 
     <!--button-->
     <string name="btn_publish_finish">完成</string>
@@ -28,11 +41,21 @@
     <string name="btn_swipe_edit">编辑</string>
     <string name="btn_swipe_delete">删除</string>
 
+    <string name="btn_dialog_big_ok">确 定</string>
     <string name="btn_dialog_ok">确定</string>
     <string name="btn_dialog_cancel">取消</string>
 
     <!--dialog-->
     <string name="dialog_publish_title">插入链接</string>
+
+    <!--checkbox-->
+    <string name="completing_add_item">新增投票项</string>
+    <string name="completing_switch">是否需要报名</string>
+    <string name="completing_name_cb">姓名</string>
+    <string name="completing_phone_cb">手机</string>
+    <string name="completing_wechat_cb">微信</string>
+    <string name="completing_email_cb">邮箱</string>
+    <string name="completing_resume_cb">上传简历</string>
 
     <!--share type-->
     <string name="social_share_title">分享到社交网络</string>
@@ -54,4 +77,17 @@
     <string name="interactive_answer">我要回答</string>
     <string name="interactive_reserve">我要预订</string>
     <string name="interactive_buy">我要购买</string>
+
+    <string name="interactive_want_activity">发布活动</string>
+    <string name="interactive_want_enroll">发布报名</string>
+    <string name="interactive_want_vote">发布投票</string>
+    <string name="interactive_want_recruit">发布招聘</string>
+    <string name="interactive_want_answer">发布问答</string>
+
+    <!--completing text-->
+    <string name="completing_activity_title">完善本次 活动 信息</string>
+    <string name="completing_vote_title">完善本次 投票 信息</string>
+    <string name="completing_recruit_title">完善本次 招聘 信息</string>
+    <string name="completing_reserve_title">完善本次 预订 信息</string>
+    <string name="completing_sale_title">完善本次 二手物品 信息</string>
 </resources>

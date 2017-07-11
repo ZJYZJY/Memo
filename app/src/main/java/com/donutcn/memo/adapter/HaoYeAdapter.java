@@ -17,13 +17,13 @@ import java.util.List;
 public class HaoYeAdapter extends SwipeMenuAdapter<HaoYeAdapter.DefaultViewHolder> {
 
     private List<String> titles;
-    private int layoutType;
+    private int mLayoutType;
 
     private OnItemClickListener mOnItemClickListener;
 
     public HaoYeAdapter(List<String> titles, @ItemLayoutType int layoutType) {
         this.titles = titles;
-        this.layoutType = layoutType;
+        this.mLayoutType = layoutType;
     }
 
     public void setOnItemClickListener(OnItemClickListener onItemClickListener) {
@@ -37,7 +37,7 @@ public class HaoYeAdapter extends SwipeMenuAdapter<HaoYeAdapter.DefaultViewHolde
 
     @Override
     public View onCreateContentView(ViewGroup parent, int viewType) {
-        switch (layoutType){
+        switch (mLayoutType){
             case ItemLayoutType.NO_IMG:
                 View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_home_haoye, parent, false);
                 view.findViewById(R.id.iv_content_icon).setVisibility(View.GONE);

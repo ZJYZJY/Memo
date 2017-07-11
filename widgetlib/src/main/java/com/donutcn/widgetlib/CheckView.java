@@ -23,7 +23,7 @@ import android.widget.Checkable;
  * Checkbox without text.
  *
  */
-class CheckView extends View implements Checkable {
+class CheckView extends android.support.v7.widget.AppCompatCheckBox implements Checkable {
 
     private static final String KEY_INSTANCE_STATE = "InstanceState";
 
@@ -65,11 +65,11 @@ class CheckView extends View implements Checkable {
         init(attrs);
     }
 
-    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
-    public CheckView(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
-        super(context, attrs, defStyleAttr, defStyleRes);
-        init(attrs);
-    }
+//    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
+//    public CheckView(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
+//        super(context, attrs, defStyleAttr, defStyleRes);
+//        init(attrs);
+//    }
 
     private void init(AttributeSet attrs) {
 
@@ -103,11 +103,14 @@ class CheckView extends View implements Checkable {
         mTickPoints[0] = new Point();
         mTickPoints[1] = new Point();
         mTickPoints[2] = new Point();
+        if(isChecked()){
+            setChecked(true);
+        }
 
     }
 
     @Override
-    protected Parcelable onSaveInstanceState() {
+    public Parcelable onSaveInstanceState() {
         Bundle bundle = new Bundle();
         bundle.putParcelable(KEY_INSTANCE_STATE, super.onSaveInstanceState());
         bundle.putBoolean(KEY_INSTANCE_STATE, isChecked());
@@ -115,7 +118,7 @@ class CheckView extends View implements Checkable {
     }
 
     @Override
-    protected void onRestoreInstanceState(Parcelable state) {
+    public void onRestoreInstanceState(Parcelable state) {
         if (state instanceof Bundle) {
             Bundle bundle = (Bundle) state;
             boolean isChecked = bundle.getBoolean(KEY_INSTANCE_STATE);

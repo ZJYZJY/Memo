@@ -46,7 +46,7 @@ public class CheckBox extends LinearLayout {
         TypedArray ta = getContext().obtainStyledAttributes(attrs, R.styleable.CheckBox);
         String text = ta.getString(R.styleable.CheckBox_text);
         int textColor = ta.getColor(R.styleable.CheckBox_textColor, Color.BLACK);
-        float textSize = ta.getDimension(R.styleable.CheckBox_textSize, dp2px(context, 17));
+        float textSize = ta.getDimension(R.styleable.CheckBox_textSize, dp2px(context, 15));
         int middlePadding = ta.getDimensionPixelOffset(R.styleable.CheckBox_middlePadding, mDefaultSize);
         int checkBoxWidth = ta.getDimensionPixelOffset(R.styleable.CheckBox_checkBoxWidth, mDefaultSize * 2);
         int checkBoxHeight = ta.getDimensionPixelOffset(R.styleable.CheckBox_checkBoxHeight, mDefaultSize * 2);

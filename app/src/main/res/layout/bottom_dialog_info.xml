@@ -49,7 +49,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="16dp"
                     android:background="@drawable/edit_text_box_bg"
-                    android:hint="姓名"
+                    android:hint="@string/completing_name_cb"
                     android:padding="6dp"
                     android:textSize="16sp" />
 
@@ -58,7 +58,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="16dp"
                     android:background="@drawable/edit_text_box_bg"
-                    android:hint="手机号"
+                    android:hint="@string/completing_phone_cb"
                     android:padding="6dp"
                     android:textSize="16sp" />
 
@@ -67,7 +67,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="16dp"
                     android:background="@drawable/edit_text_box_bg"
-                    android:hint="微信号"
+                    android:hint="@string/completing_wechat_cb"
                     android:padding="6dp"
                     android:textSize="16sp" />
 
@@ -76,7 +76,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="16dp"
                     android:background="@drawable/edit_text_box_bg"
-                    android:hint="邮箱"
+                    android:hint="@string/completing_email_cb"
                     android:padding="6dp"
                     android:textSize="16sp" />
             </LinearLayout>
@@ -87,7 +87,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@drawable/selector_blue_btn"
-            android:text="确 定"
+            android:text="@string/btn_dialog_big_ok"
             android:textColor="@android:color/white"
             android:textSize="20sp" />
     </LinearLayout>

@@ -30,6 +30,7 @@
         <activity android:name=".activity.ArticlePage" />
         <activity android:name=".activity.AuthorPage" />
         <activity android:name=".activity.SearchActivity" />
+        <activity android:name=".activity.CompletingPage"/>
     </application>
 
 </manifest>

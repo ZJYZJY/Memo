@@ -11,7 +11,7 @@
         android:layout_height="96dp"
         android:background="@drawable/edit_text_box_bg"
         android:gravity="start"
-        android:hint="请输入..."
+        android:hint="@string/hint_input"
         android:padding="8dp"
         android:textSize="16sp" />
 
@@ -23,7 +23,7 @@
         android:id="@+id/interactive_reply_submit"
         android:layout_width="wrap_content"
         android:layout_height="32dp"
-        android:text="确 定"
+        android:text="@string/btn_dialog_big_ok"
         android:textColor="@android:color/white"
-        android:background="@drawable/selector_green_btn" />
+        android:background="@drawable/selector_radius_green_btn" />
 </RelativeLayout>

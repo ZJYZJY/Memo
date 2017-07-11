@@ -5,6 +5,7 @@ import android.os.Parcelable;
 import android.support.annotation.DrawableRes;
 
 import com.donutcn.memo.R;
+import com.donutcn.memo.type.PublishType;
 
 import java.util.ArrayList;
 
@@ -18,7 +19,7 @@ public class PublishContent implements Parcelable {
     /**
      * content type
      */
-    private int type;
+    private PublishType type;
 
     /**
      * whether publish by user himself
@@ -70,7 +71,7 @@ public class PublishContent implements Parcelable {
      */
     private int browseCount;
 
-    public PublishContent(int type, String userName, String userIcon, String publishTime, String title, String content,
+    public PublishContent(PublishType type, String userName, String userIcon, String publishTime, String title, String content,
                           int upvoteCount, int browseCount) {
         this.type = type;
         this.userName = userName;
@@ -83,7 +84,7 @@ public class PublishContent implements Parcelable {
         this.layoutType = 0;
     }
 
-    public PublishContent(int type, String userName, String userIcon, String publishTime, String title, String content,
+    public PublishContent(PublishType type, String userName, String userIcon, String publishTime, String title, String content,
                           int upvoteCount, int browseCount, ArrayList<String> pictures) {
         this.type = type;
         this.userName = userName;
@@ -102,15 +103,14 @@ public class PublishContent implements Parcelable {
      * @param type content type.
      */
     @DrawableRes
-    public int getTypeIcon(int type){
+    public int getTypeIcon(PublishType type){
         switch (type){
-            case 0:return R.drawable.type_article;
-            case 1:return R.drawable.type_album;
-            case 2:return R.drawable.type_activity;
-            case 3:return R.drawable.type_vote;
-            case 4:return R.drawable.type_reserve;
-            case 5:return R.drawable.type_recruit;
-            case 6:return R.drawable.type_sale;
+            case ARTICLE:return R.drawable.type_article;
+            case ALBUM:return R.drawable.type_album;
+            case ACTIVITY:return R.drawable.type_activity;
+            case VOTE:return R.drawable.type_vote;
+            case RESERVE:return R.drawable.type_reserve;
+            case RECRUIT:return R.drawable.type_recruit;
             default:return R.drawable.type_article;
         }
     }
@@ -120,24 +120,23 @@ public class PublishContent implements Parcelable {
      * @param type content type.
      */
     @DrawableRes
-    public int getTypeBackground(int type){
+    public int getTypeBackground(PublishType type){
         switch (type){
-            case 0:
-            case 1:return R.drawable.bg_green;
-            case 2:
-            case 3:
-            case 4:
-            case 5:
-            case 6:return R.drawable.bg_blue;
+            case ARTICLE:
+            case ALBUM:return R.drawable.bg_green;
+            case ACTIVITY:
+            case VOTE:
+            case RESERVE:
+            case RECRUIT:return R.drawable.bg_blue;
             default:return R.drawable.bg_green;
         }
     }
 
-    public int getType() {
+    public PublishType getType() {
         return type;
     }
 
-    public void setType(int type) {
+    public void setType(PublishType type) {
         this.type = type;
     }
 
@@ -229,7 +228,7 @@ public class PublishContent implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeInt(this.type);
+        dest.writeInt(this.type == null ? -1 : this.type.ordinal());
         dest.writeByte(this.isMyPublish ? (byte) 1 : (byte) 0);
         dest.writeString(this.userName);
         dest.writeString(this.userIcon);
@@ -243,7 +242,8 @@ public class PublishContent implements Parcelable {
     }
 
     protected PublishContent(Parcel in) {
-        this.type = in.readInt();
+        int tmpType = in.readInt();
+        this.type = tmpType == -1 ? null : PublishType.values()[tmpType];
         this.isMyPublish = in.readByte() != 0;
         this.userName = in.readString();
         this.userIcon = in.readString();

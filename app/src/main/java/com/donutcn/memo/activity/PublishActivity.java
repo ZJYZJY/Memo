@@ -18,6 +18,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.donutcn.memo.R;
+import com.donutcn.memo.type.PublishType;
 import com.donutcn.memo.utils.WindowUtils;
 
 import jp.wasabeef.richeditor.RichEditor;
@@ -33,7 +34,7 @@ public class PublishActivity extends AppCompatActivity implements View.OnClickLi
     private HorizontalScrollView mTools;
     private ImageView mKeyboard;
 
-    private final String[] mContentTypes = {"文章", "相册", "问答", "活动", "投票", "招聘", "预订"};
+    private final String[] mContentTypes = PublishType.toStringArray();
     private String mSelectedType = mContentTypes[0];
     private String mTitleStr = "";
     private String mContentStr = "";
@@ -97,20 +98,14 @@ public class PublishActivity extends AppCompatActivity implements View.OnClickLi
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.toolbar_with_btn:
-                if(mSelectedType == mContentTypes[0]){
+                // according to the selected type, pass the different parameters to activity.
+                if(mSelectedType == mContentTypes[0] || mSelectedType == mContentTypes[1]){
                     startActivity(new Intent(this, SocialShareActivity.class));
-                } else if(mSelectedType == mContentTypes[1]){
-
-                }else if(mSelectedType == mContentTypes[2]){
-
-                }else if(mSelectedType == mContentTypes[3]){
-
-                }else if(mSelectedType == mContentTypes[4]){
-
-                }else if(mSelectedType == mContentTypes[5]){
-
-                }else if(mSelectedType == mContentTypes[6]){
-
+                } else if(mSelectedType == mContentTypes[2] ||mSelectedType == mContentTypes[3]
+                        || mSelectedType == mContentTypes[4] || mSelectedType == mContentTypes[5]){
+                    Intent intent = new Intent(this, CompletingPage.class);
+                    intent.putExtra("type", PublishType.getType(mSelectedType));
+                    startActivity(intent);
                 }
                 Log.e("hdu", mContent.getHtml() + "");
                 break;
