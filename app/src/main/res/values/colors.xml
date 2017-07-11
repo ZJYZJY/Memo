@@ -7,6 +7,8 @@
 
     <color name="background_blank">#fafafa</color>
     <color name="background_gray">#ebebeb</color>
+    <color name="background_black_light">#41464b</color>
+    <color name="background_black">#252a2f</color>
     <color name="border_gray">#dadada</color>
 
     <color name="textPrimary">#939393</color>

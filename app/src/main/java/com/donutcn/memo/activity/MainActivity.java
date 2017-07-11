@@ -24,7 +24,7 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        WindowUtils.setStatusBarColor(this, R.color.colorPrimary);
+        WindowUtils.setStatusBarColor(this, R.color.colorPrimary, true);
 
         viewPager = (ViewPager) findViewById(R.id.main_viewpager);
         home = (CheckableImageButton) findViewById(R.id.main_bottom_home);

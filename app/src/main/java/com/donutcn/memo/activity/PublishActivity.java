@@ -45,7 +45,7 @@ public class PublishActivity extends AppCompatActivity implements View.OnClickLi
         setContentView(R.layout.activity_publish);
         WindowUtils.setToolBarTitle(this, R.string.title_activity_publish);
         WindowUtils.setToolBarButton(this, R.string.btn_publish_finish);
-        WindowUtils.setStatusBarColor(this, R.color.colorPrimary);
+        WindowUtils.setStatusBarColor(this, R.color.colorPrimary, true);
         initView();
         setUpRichTextEditor();
     }

@@ -6,16 +6,12 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.KeyEvent;
 import android.view.View;
-import android.widget.Button;
 import android.widget.EditText;
-import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.donutcn.memo.R;
-import com.donutcn.memo.adapter.HaoYeAdapter;
 import com.donutcn.memo.adapter.SearchListAdapter;
 import com.donutcn.memo.listener.OnItemClickListener;
-import com.donutcn.memo.type.ItemLayoutType;
 import com.donutcn.memo.utils.WindowUtils;
 import com.donutcn.memo.view.ListViewDecoration;
 
@@ -34,7 +30,7 @@ public class SearchActivity extends AppCompatActivity implements OnItemClickList
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search);
-        WindowUtils.setStatusBarColor(this, R.color.colorPrimary);
+        WindowUtils.setStatusBarColor(this, R.color.colorPrimary, true);
 
         mRecyclerView = (RecyclerView) findViewById(R.id.recycler_view);
         mSearch_et = (EditText) findViewById(R.id.toolbar_search);

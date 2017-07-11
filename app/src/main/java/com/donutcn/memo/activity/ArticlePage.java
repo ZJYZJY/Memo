@@ -25,7 +25,7 @@ public class ArticlePage extends AppCompatActivity {
         setContentView(R.layout.activity_article_page);
 
 //        WindowUtils.setToolBarTitle(this, R.string.title_activity_publish);
-        WindowUtils.setStatusBarColor(this, R.color.colorPrimary);
+        WindowUtils.setStatusBarColor(this, R.color.colorPrimary, true);
 
         String source = "<article class=\"article\">\n" +
                 "      <p>对于汉字，日本人常怀有一种复杂的情感，既觉得汉字伟大，又觉得汉字难学。在日本，“认识多少汉字”某种程度上可以代表一个人的受教育水平，受过良好教育的人可以读懂较多的汉字。然而，现在的日本年轻人能够读懂的汉字已经越来越少，对于中国人的汉字和语言能力，他们内心也是五味陈杂。</p> \n" +

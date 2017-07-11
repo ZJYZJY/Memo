@@ -220,7 +220,6 @@ public class PublishContent implements Parcelable {
         this.browseCount = browseCount;
     }
 
-
     @Override
     public int describeContents() {
         return 0;

@@ -13,6 +13,7 @@ import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.donutcn.memo.R;
+import com.donutcn.memo.activity.PersonalCenterActivity;
 import com.donutcn.memo.activity.SocialShareActivity;
 import com.donutcn.memo.adapter.SimpleFragmentPagerAdapter;
 import com.flyco.tablayout.SlidingTabLayout;
@@ -40,8 +41,7 @@ public class HomeFragment extends Fragment implements OnTabSelectListener {
         mUserCenter_iv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(getContext(), "个人中心", Toast.LENGTH_SHORT).show();
-//                startActivity(new Intent(getContext(), SocialShareActivity.class));
+                startActivity(new Intent(getContext(), PersonalCenterActivity.class));
             }
         });
 

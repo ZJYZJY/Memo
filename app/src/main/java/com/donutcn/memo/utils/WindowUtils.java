@@ -35,6 +35,17 @@ public class WindowUtils {
     }
 
     /**
+     * set custom toolbar title.
+     *
+     * @param context context
+     * @param title   string
+     */
+    public static void setToolBarTitle(Context context, String title) {
+        Activity activity = (Activity) context;
+        ((TextView) activity.findViewById(R.id.toolbar_with_title)).setText(title);
+    }
+
+    /**
      * set toolbar button text.
      *
      * @param context context
@@ -68,7 +79,7 @@ public class WindowUtils {
      * @param context context
      * @param color   color resource id
      */
-    public static void setStatusBarColor(Context context, @ColorRes int color) {
+    public static void setStatusBarColor(Context context, @ColorRes int color, boolean darkMode) {
         Activity activity = (Activity) context;
         Window window = activity.getWindow();
 //        transparencyBar(activity);
@@ -77,8 +88,8 @@ public class WindowUtils {
             window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
             window.setStatusBarColor(activity.getResources().getColor(color));
 
-            MIUISetStatusBarLightMode(window, true);
-            FlymeSetStatusBarLightMode(window, true);
+            MIUISetStatusBarLightMode(window, darkMode);
+            FlymeSetStatusBarLightMode(window, darkMode);
         } else if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             //使用SystemBarTint库使4.4版本状态栏变色，需要先将状态栏设置为透明
 //            transparencyBar(activity);

@@ -32,7 +32,7 @@ public class InteractivePage extends AppCompatActivity implements View.OnClickLi
         setContentView(R.layout.activity_interactive_page);
 
 //        WindowUtils.setToolBarTitle(this, R.string.title_activity_publish);
-        WindowUtils.setStatusBarColor(this, R.color.colorPrimary);
+        WindowUtils.setStatusBarColor(this, R.color.colorPrimary, true);
 
         mInteractive = (Button) findViewById(R.id.interactive);
         mInteractive.setText(getResources().getString(R.string.interactive_enroll));

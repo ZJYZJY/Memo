@@ -16,7 +16,7 @@ public class CompletingPage extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        WindowUtils.setStatusBarColor(this, R.color.colorPrimary);
+        WindowUtils.setStatusBarColor(this, R.color.colorPrimary, true);
 
         mContentType = (PublishType) getIntent().getSerializableExtra("type");
 

@@ -4,6 +4,7 @@
     <!--title-->
     <string name="title_activity_publish">发布好页</string>
     <string name="title_activity_share">信息发布成功！</string>
+    <string name="title_activity_tip_off">举报</string>
 
     <!--placeholder-->
     <string name="placeholder_default_publish_type">请选择发布类型（默认为 文章）</string>
@@ -90,4 +91,11 @@
     <string name="completing_recruit_title">完善本次 招聘 信息</string>
     <string name="completing_reserve_title">完善本次 预订 信息</string>
     <string name="completing_sale_title">完善本次 二手物品 信息</string>
+
+    <!--personal center item-->
+    <string name="personal_center_authentication">身份认证</string>
+    <string name="personal_center_notification_settings">通知设置</string>
+    <string name="personal_center_feedback">意见反馈</string>
+    <string name="personal_center_about">关于</string>
+    <string name="personal_center_sign_out">退出登录</string>
 </resources>

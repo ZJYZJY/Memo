@@ -30,7 +30,9 @@
         <activity android:name=".activity.ArticlePage" />
         <activity android:name=".activity.AuthorPage" />
         <activity android:name=".activity.SearchActivity" />
-        <activity android:name=".activity.CompletingPage"/>
+        <activity android:name=".activity.CompletingPage" />
+        <activity android:name=".activity.PersonalCenterActivity" />
+        <activity android:name=".activity.TipOffActivity"></activity>
     </application>
 
 </manifest>
