@@ -81,13 +81,14 @@
                         android:layout_width="56dp"
                         android:layout_height="56dp"
                         android:layout_centerHorizontal="true"
-                        android:src="@mipmap/ic_launcher" />
+                        android:src="@drawable/share_wechat" />
 
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_below="@+id/share_iv1"
                         android:gravity="center"
+                        android:paddingTop="6dp"
                         android:text="@string/social_share_wei_friend"
                         android:textSize="12sp" />
                 </RelativeLayout>
@@ -103,13 +104,14 @@
                         android:layout_height="56dp"
                         android:layout_centerHorizontal="true"
                         android:gravity="center"
-                        android:src="@mipmap/ic_launcher" />
+                        android:src="@drawable/share_mements" />
 
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_below="@+id/share_iv2"
                         android:gravity="center"
+                        android:paddingTop="6dp"
                         android:text="@string/social_share_wei"
                         android:textSize="12sp" />
                 </RelativeLayout>
@@ -124,13 +126,14 @@
                         android:layout_width="56dp"
                         android:layout_height="56dp"
                         android:layout_centerHorizontal="true"
-                        android:src="@mipmap/ic_launcher" />
+                        android:src="@drawable/share_qq" />
 
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_below="@+id/share_iv3"
                         android:gravity="center"
+                        android:paddingTop="6dp"
                         android:text="@string/social_share_qq_friend"
                         android:textSize="12sp" />
                 </RelativeLayout>
@@ -145,13 +148,14 @@
                         android:layout_width="56dp"
                         android:layout_height="56dp"
                         android:layout_centerHorizontal="true"
-                        android:src="@mipmap/ic_launcher" />
+                        android:src="@drawable/share_qzone" />
 
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_below="@+id/share_iv4"
                         android:gravity="center"
+                        android:paddingTop="6dp"
                         android:text="@string/social_share_qzone"
                         android:textSize="12sp" />
                 </RelativeLayout>
@@ -169,13 +173,14 @@
                         android:layout_width="56dp"
                         android:layout_height="56dp"
                         android:layout_centerHorizontal="true"
-                        android:src="@mipmap/ic_launcher" />
+                        android:src="@drawable/share_weibo" />
 
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_below="@+id/share_iv5"
                         android:gravity="center"
+                        android:paddingTop="6dp"
                         android:text="@string/social_share_weibo"
                         android:textSize="12sp" />
                 </RelativeLayout>
@@ -191,13 +196,14 @@
                         android:layout_height="56dp"
                         android:layout_centerHorizontal="true"
                         android:gravity="center"
-                        android:src="@mipmap/ic_launcher" />
+                        android:src="@drawable/share_picture" />
 
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_below="@+id/share_iv6"
                         android:gravity="center"
+                        android:paddingTop="6dp"
                         android:text="@string/social_share_picture"
                         android:textSize="12sp" />
                 </RelativeLayout>
@@ -212,13 +218,14 @@
                         android:layout_width="56dp"
                         android:layout_height="56dp"
                         android:layout_centerHorizontal="true"
-                        android:src="@mipmap/ic_launcher" />
+                        android:src="@drawable/share_link" />
 
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_below="@+id/share_iv7"
                         android:gravity="center"
+                        android:paddingTop="6dp"
                         android:text="@string/social_share_copy_link"
                         android:textSize="12sp" />
                 </RelativeLayout>
@@ -233,13 +240,14 @@
                         android:layout_width="56dp"
                         android:layout_height="56dp"
                         android:layout_centerHorizontal="true"
-                        android:src="@mipmap/ic_launcher" />
+                        android:src="@drawable/share_more" />
 
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_below="@+id/share_iv8"
                         android:gravity="center"
+                        android:paddingTop="6dp"
                         android:text="@string/social_share_more"
                         android:textSize="12sp" />
                 </RelativeLayout>
