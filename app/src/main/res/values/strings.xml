@@ -46,6 +46,9 @@
     <string name="btn_dialog_ok">确定</string>
     <string name="btn_dialog_cancel">取消</string>
 
+    <string name="btn_dialog_submit">提交</string>
+    <string name="btn_dialog_answer">提交回答</string>
+
     <!--dialog-->
     <string name="dialog_publish_title">插入链接</string>
 
@@ -79,11 +82,22 @@
     <string name="interactive_reserve">我要预订</string>
     <string name="interactive_buy">我要购买</string>
 
+    <string name="interactive_want_article">发布文章</string>
+    <string name="interactive_want_album">发布相册</string>
     <string name="interactive_want_activity">发布活动</string>
-    <string name="interactive_want_enroll">发布报名</string>
     <string name="interactive_want_vote">发布投票</string>
     <string name="interactive_want_recruit">发布招聘</string>
-    <string name="interactive_want_answer">发布问答</string>
+    <string name="interactive_want_answer">我要提问</string>
+    <string name="interactive_want_reserve">发布预订</string>
+    <string name="interactive_want_sale">发布二手</string>
+
+    <string name="interactive_view_comment">查看留言</string>
+    <string name="interactive_view_enroll">查看报名</string>
+    <string name="interactive_view_vote">查看投票</string>
+    <string name="interactive_view_resume">查看简历</string>
+    <string name="interactive_view_answer">查看回答</string>
+    <string name="interactive_view_reserve">查看预订</string>
+    <string name="interactive_view_order">查看订单</string>
 
     <!--completing text-->
     <string name="completing_activity_title">完善本次 活动 信息</string>

@@ -1,5 +1,6 @@
 package com.donutcn.memo.activity;
 
+import android.content.Intent;
 import android.support.annotation.LayoutRes;
 import android.support.design.widget.BottomSheetBehavior;
 import android.support.design.widget.BottomSheetDialog;
@@ -11,6 +12,7 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.donutcn.memo.R;
+import com.donutcn.memo.type.PublishType;
 import com.donutcn.memo.utils.DensityUtils;
 import com.donutcn.memo.utils.WindowUtils;
 import com.zzhoujay.richtext.CacheType;
@@ -22,7 +24,9 @@ public class InteractivePage extends AppCompatActivity implements View.OnClickLi
     private BottomSheetBehavior behavior;
     private BottomSheetDialog dialog;
     private Button mInteractive;
-    private TextView mContent_tv;
+    private TextView mContent_tv, mWant;
+
+    private PublishType mType = PublishType.ACTIVITY;
 
     private String mTitle, mAuthor, mDate, mContent;
 
@@ -34,17 +38,7 @@ public class InteractivePage extends AppCompatActivity implements View.OnClickLi
 //        WindowUtils.setToolBarTitle(this, R.string.title_activity_publish);
         WindowUtils.setStatusBarColor(this, R.color.colorPrimary, true);
 
-        mInteractive = (Button) findViewById(R.id.interactive);
-        mInteractive.setText(getResources().getString(R.string.interactive_enroll));
-        // open the bottom sheet dialog.
-        mInteractive.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                showBSDialog(R.layout.bottom_dialog_info);
-            }
-        });
-
-        findViewById(R.id.interactive_bottom_comment).setOnClickListener(this);
+        initView();
 
         String source = "<article class=\"article\">\n" +
                 "      <p>对于汉字，日本人常怀有一种复杂的情感，既觉得汉字伟大，又觉得汉字难学。在日本，“认识多少汉字”某种程度上可以代表一个人的受教育水平，受过良好教育的人可以读懂较多的汉字。然而，现在的日本年轻人能够读懂的汉字已经越来越少，对于中国人的汉字和语言能力，他们内心也是五味陈杂。</p> \n" +
@@ -106,6 +100,56 @@ public class InteractivePage extends AppCompatActivity implements View.OnClickLi
                 .into(mContent_tv);
     }
 
+    public void initView(){
+        mInteractive = (Button) findViewById(R.id.interactive);
+        mWant = (TextView) findViewById(R.id.interactive_bottom_want);
+
+        findViewById(R.id.interactive_bottom_publish).setOnClickListener(this);
+        findViewById(R.id.interactive_bottom_upvote).setOnClickListener(this);
+        findViewById(R.id.interactive_bottom_comment).setOnClickListener(this);
+
+        switch (mType){
+            case ACTIVITY:
+                mWant.setText(getResources().getString(R.string.interactive_want_activity));
+                mInteractive.setText(getResources().getString(R.string.interactive_enroll));
+                // open the bottom sheet dialog.
+                mInteractive.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        showBSDialog(R.layout.bottom_dialog_info);
+                    }
+                });
+                break;
+            case VOTE:
+                mWant.setText(getResources().getString(R.string.interactive_want_vote));
+                mInteractive.setText(getResources().getString(R.string.interactive_vote));
+                break;
+            case RECRUIT:
+                mWant.setText(getResources().getString(R.string.interactive_want_recruit));
+                mInteractive.setText(getResources().getString(R.string.interactive_resume));
+                break;
+            case QA:
+                mWant.setText(getResources().getString(R.string.interactive_want_answer));
+                mInteractive.setText(getResources().getString(R.string.interactive_answer));
+                // open the bottom sheet dialog.
+                mInteractive.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        showBSDialog(R.layout.bottom_dialog_reply);
+                    }
+                });
+                break;
+            case RESERVE:
+                mWant.setText(getResources().getString(R.string.interactive_want_reserve));
+                mInteractive.setText(getResources().getString(R.string.interactive_reserve));
+                break;
+            case SALE:
+                mWant.setText(getResources().getString(R.string.interactive_want_sale));
+                mInteractive.setText(getResources().getString(R.string.interactive_buy));
+                break;
+        }
+    }
+
     public void onCloseDialog(View view){
         behavior.setState(BottomSheetBehavior.STATE_HIDDEN);
     }
@@ -124,8 +168,11 @@ public class InteractivePage extends AppCompatActivity implements View.OnClickLi
         View parent = (View) view.getParent();
         behavior = BottomSheetBehavior.from(parent);
         behavior.setPeekHeight(DensityUtils.dp2px(this, 512));
+
         if(layout == R.layout.bottom_dialog_info){
             ((TextView)parent.findViewById(R.id.interactive_type)).setText(getResources().getString(R.string.interactive_enroll));
+        } else if(layout == R.layout.bottom_dialog_reply){
+            ((TextView)parent.findViewById(R.id.interactive_reply_submit)).setText(getResources().getString(R.string.btn_dialog_answer));
         }
 
         dialog.show();
@@ -134,8 +181,14 @@ public class InteractivePage extends AppCompatActivity implements View.OnClickLi
     @Override
     public void onClick(View v) {
         switch (v.getId()){
+            case R.id.interactive_bottom_publish:
+                Intent intent = new Intent(this, PublishActivity.class);
+                intent.putExtra("type", mType);
+                startActivity(intent);
+                break;
+            case R.id.interactive_bottom_upvote:
+                break;
             case R.id.interactive_bottom_comment:
-                showBSDialog(R.layout.bottom_dialog_reply);
                 break;
         }
     }

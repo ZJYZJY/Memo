@@ -1,5 +1,6 @@
 package com.donutcn.memo.activity;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -42,6 +43,7 @@ public class PersonalCenterActivity extends AppCompatActivity implements View.On
     public void onClick(View v) {
         switch (v.getId()){
             case R.id.authentication:
+                startActivity(new Intent(this, TipOffActivity.class));
                 break;
             case R.id.notification_settings:
                 break;

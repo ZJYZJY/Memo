@@ -86,4 +86,6 @@
             </RelativeLayout>
         </ScrollView>
     </LinearLayout>
+
+    <include layout="@layout/bottom_bar_interactive"/>
 </LinearLayout>

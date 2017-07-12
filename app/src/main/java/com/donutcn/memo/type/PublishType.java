@@ -13,9 +13,11 @@ public enum PublishType implements Serializable {
     ARTICLE("文章"),
     ALBUM("相册"),
     ACTIVITY("活动"),
+    VOTE("投票"),
     RECRUIT("招聘"),
+    QA("问答"),
     RESERVE("预订"),
-    VOTE("投票");
+    SALE("二手");
 
     private String mType;
 

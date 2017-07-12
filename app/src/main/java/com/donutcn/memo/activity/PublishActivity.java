@@ -48,6 +48,12 @@ public class PublishActivity extends AppCompatActivity implements View.OnClickLi
         WindowUtils.setStatusBarColor(this, R.color.colorPrimary, true);
         initView();
         setUpRichTextEditor();
+        PublishType type = (PublishType) getIntent().getSerializableExtra("type");
+        if(type != null){
+            mSelectedType = type.toString();
+            String text = getResources().getText(R.string.placeholder_publish_type) + mSelectedType;
+            mPublishType.setText(text);
+        }
     }
 
     public void initView() {
@@ -99,10 +105,12 @@ public class PublishActivity extends AppCompatActivity implements View.OnClickLi
         switch (v.getId()) {
             case R.id.toolbar_with_btn:
                 // according to the selected type, pass the different parameters to activity.
-                if(mSelectedType == mContentTypes[0] || mSelectedType == mContentTypes[1]){
+                if(mSelectedType == mContentTypes[0] || mSelectedType == mContentTypes[1]
+                        || mSelectedType == mContentTypes[5]){
                     startActivity(new Intent(this, SocialShareActivity.class));
                 } else if(mSelectedType == mContentTypes[2] ||mSelectedType == mContentTypes[3]
-                        || mSelectedType == mContentTypes[4] || mSelectedType == mContentTypes[5]){
+                        || mSelectedType == mContentTypes[4] || mSelectedType == mContentTypes[6]
+                        || mSelectedType == mContentTypes[7]){
                     Intent intent = new Intent(this, CompletingPage.class);
                     intent.putExtra("type", PublishType.getType(mSelectedType));
                     startActivity(intent);

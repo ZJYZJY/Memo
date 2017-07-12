@@ -64,7 +64,7 @@ public class PublishContent implements Parcelable {
     /**
      * up vote count
      */
-    private int upvoteCount;
+    private int upVoteCount;
 
     /**
      * browse count
@@ -72,27 +72,27 @@ public class PublishContent implements Parcelable {
     private int browseCount;
 
     public PublishContent(PublishType type, String userName, String userIcon, String publishTime, String title, String content,
-                          int upvoteCount, int browseCount) {
+                          int upVoteCount, int browseCount) {
         this.type = type;
         this.userName = userName;
         this.userIcon = userIcon;
         this.publishTime = publishTime;
         this.title = title;
         this.content = content;
-        this.upvoteCount = upvoteCount;
+        this.upVoteCount = upVoteCount;
         this.browseCount = browseCount;
         this.layoutType = 0;
     }
 
     public PublishContent(PublishType type, String userName, String userIcon, String publishTime, String title, String content,
-                          int upvoteCount, int browseCount, ArrayList<String> pictures) {
+                          int upVoteCount, int browseCount, ArrayList<String> pictures) {
         this.type = type;
         this.userName = userName;
         this.userIcon = userIcon;
         this.publishTime = publishTime;
         this.title = title;
         this.content = content;
-        this.upvoteCount = upvoteCount;
+        this.upVoteCount = upVoteCount;
         this.browseCount = browseCount;
         this.pictures = pictures;
         this.layoutType = 1;
@@ -204,12 +204,12 @@ public class PublishContent implements Parcelable {
         this.pictures = pictures;
     }
 
-    public int getUpvoteCount() {
-        return upvoteCount;
+    public int getUpVoteCount() {
+        return upVoteCount;
     }
 
-    public void setUpvoteCount(int upvoteCount) {
-        this.upvoteCount = upvoteCount;
+    public void setUpVoteCount(int upVoteCount) {
+        this.upVoteCount = upVoteCount;
     }
 
     public int getBrowseCount() {
@@ -236,7 +236,7 @@ public class PublishContent implements Parcelable {
         dest.writeString(this.title);
         dest.writeString(this.content);
         dest.writeStringList(this.pictures);
-        dest.writeInt(this.upvoteCount);
+        dest.writeInt(this.upVoteCount);
         dest.writeInt(this.browseCount);
     }
 
@@ -251,7 +251,7 @@ public class PublishContent implements Parcelable {
         this.title = in.readString();
         this.content = in.readString();
         this.pictures = in.createStringArrayList();
-        this.upvoteCount = in.readInt();
+        this.upVoteCount = in.readInt();
         this.browseCount = in.readInt();
     }
 

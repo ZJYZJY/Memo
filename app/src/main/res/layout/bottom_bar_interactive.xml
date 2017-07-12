@@ -19,11 +19,13 @@
             android:src="@drawable/ic_publish" />
 
         <TextView
+            android:id="@+id/interactive_bottom_want"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:gravity="center"
-            android:text="@string/interactive_want_activity"
-            android:textSize="14sp" />
+            android:textSize="14sp"
+            android:paddingRight="8dp"
+            android:paddingEnd="8dp"/>
     </LinearLayout>
 
     <LinearLayout

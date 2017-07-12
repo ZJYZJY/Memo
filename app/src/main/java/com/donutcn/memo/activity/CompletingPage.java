@@ -24,13 +24,16 @@ public class CompletingPage extends AppCompatActivity {
             case ACTIVITY:
                 setContentView(R.layout.completing_page_activity);
                 break;
+            case VOTE:
+                break;
             case RECRUIT:
                 setContentView(R.layout.completing_page_recruit);
                 break;
             case RESERVE:
                 setContentView(R.layout.completing_page_reserve);
                 break;
-            case VOTE:
+            case SALE:
+                setContentView(R.layout.completing_page_sale);
                 break;
         }
     }
