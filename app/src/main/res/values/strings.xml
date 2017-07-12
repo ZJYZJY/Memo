@@ -61,6 +61,16 @@
     <string name="completing_email_cb">邮箱</string>
     <string name="completing_resume_cb">上传简历</string>
 
+    <!--publish content type-->
+    <string name="publish_content_article">文章</string>
+    <string name="publish_content_album">相册</string>
+    <string name="publish_content_activity">活动</string>
+    <string name="publish_content_vote">投票</string>
+    <string name="publish_content_recruit">招聘</string>
+    <string name="publish_content_qa">问答</string>
+    <string name="publish_content_reserve">预订</string>
+    <string name="publish_content_sale">二手</string>
+
     <!--share type-->
     <string name="social_share_title">分享到社交网络</string>
     <string name="social_share_tip">此信息阅读权限为公开浏览</string>

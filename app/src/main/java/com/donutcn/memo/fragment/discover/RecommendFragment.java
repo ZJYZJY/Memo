@@ -90,7 +90,7 @@ public class RecommendFragment extends Fragment implements SwipeRefreshLayout.On
         for (int i = 0; i < 30; i++) {
             dataList.add("我是第" + i + "个。");
         }
-        HaoYeAdapter adapter = new HaoYeAdapter(dataList, ItemLayoutType.TYPE_IMG);
+        HaoYeAdapter adapter = new HaoYeAdapter(dataList, ItemLayoutType.AVATAR_IMG);
         adapter.setOnItemClickListener(mOnItemClickListener);
 
         mHaoYe_rv.setAdapter(adapter);
@@ -109,7 +109,7 @@ public class RecommendFragment extends Fragment implements SwipeRefreshLayout.On
     private SwipeMenuCreator mSwipeMenuCreator = new SwipeMenuCreator() {
         @Override
         public void onCreateMenu(SwipeMenu swipeLeftMenu, SwipeMenu swipeRightMenu, int viewType) {
-            int width = getResources().getDimensionPixelSize(R.dimen.item_width);
+            int width = getResources().getDimensionPixelSize(R.dimen.swipe_menu_item_width);
             int height = ViewGroup.LayoutParams.MATCH_PARENT;
 
             // Add the swipe menu on the right

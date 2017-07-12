@@ -49,7 +49,7 @@ public class AuthorPage extends AppCompatActivity implements OnItemClickListener
         for (int i = 0; i < 6; i++) {
             dataList.add("我是第" + i + "个。");
         }
-        HaoYeAdapter adapter = new HaoYeAdapter(dataList, ItemLayoutType.NO_IMG);
+        HaoYeAdapter adapter = new HaoYeAdapter(dataList, ItemLayoutType.TYPE_TAG);
         adapter.setOnItemClickListener(this);
         mRecyclerView.setAdapter(adapter);
 

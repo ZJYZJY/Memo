@@ -98,22 +98,22 @@ public class PublishContent implements Parcelable {
         this.layoutType = 1;
     }
 
-    /**
-     * set icon for different content type.
-     * @param type content type.
-     */
-    @DrawableRes
-    public int getTypeIcon(PublishType type){
-        switch (type){
-            case ARTICLE:return R.drawable.type_article;
-            case ALBUM:return R.drawable.type_album;
-            case ACTIVITY:return R.drawable.type_activity;
-            case VOTE:return R.drawable.type_vote;
-            case RESERVE:return R.drawable.type_reserve;
-            case RECRUIT:return R.drawable.type_recruit;
-            default:return R.drawable.type_article;
-        }
-    }
+//    /**
+//     * set icon for different content type.
+//     * @param type content type.
+//     */
+//    @DrawableRes
+//    public int getTypeIcon(PublishType type){
+//        switch (type){
+//            case ARTICLE:return R.drawable.type_article;
+//            case ALBUM:return R.drawable.type_album;
+//            case ACTIVITY:return R.drawable.type_activity;
+//            case VOTE:return R.drawable.type_vote;
+//            case RESERVE:return R.drawable.type_reserve;
+//            case RECRUIT:return R.drawable.type_recruit;
+//            default:return R.drawable.type_article;
+//        }
+//    }
 
     /**
      * set Background Resource for different content type.
@@ -123,13 +123,19 @@ public class PublishContent implements Parcelable {
     public int getTypeBackground(PublishType type){
         switch (type){
             case ARTICLE:
-            case ALBUM:return R.drawable.bg_green;
+            case ALBUM:return R.drawable.type_blue_bg;
             case ACTIVITY:
             case VOTE:
-            case RESERVE:
-            case RECRUIT:return R.drawable.bg_blue;
-            default:return R.drawable.bg_green;
+            case QA:return R.drawable.type_green_bg;
+            case SALE:
+            case RECRUIT:
+            case RESERVE:return R.drawable.type_red_bg;
+            default:return R.drawable.type_blue_bg;
         }
+    }
+
+    public String getTypeStr(){
+        return type.toString();
     }
 
     public PublishType getType() {

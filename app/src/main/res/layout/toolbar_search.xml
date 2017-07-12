@@ -18,8 +18,10 @@
         android:layout_width="match_parent"
         android:layout_height="36dp"
         android:layout_centerVertical="true"
+        android:layout_marginBottom="8dp"
         android:layout_marginLeft="8dp"
-        android:layout_marginRight="8dp"
+        android:layout_marginRight="4dp"
+        android:layout_marginTop="8dp"
         android:layout_toEndOf="@+id/back_arrow"
         android:layout_toLeftOf="@+id/search_cancel"
         android:layout_toRightOf="@+id/back_arrow"
@@ -34,12 +36,12 @@
 
     <Button
         android:id="@+id/search_cancel"
-        android:onClick="onCancel"
         style="@style/Widget.AppCompat.Button.Borderless"
         android:layout_width="56dp"
         android:layout_height="match_parent"
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
+        android:onClick="onCancel"
         android:text="@string/hint_search_cancel"
         android:textColor="@color/text_blue"
         android:textSize="16sp" />

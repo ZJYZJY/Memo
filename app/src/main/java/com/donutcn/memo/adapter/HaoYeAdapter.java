@@ -37,15 +37,15 @@ public class HaoYeAdapter extends SwipeMenuAdapter<HaoYeAdapter.DefaultViewHolde
 
     @Override
     public View onCreateContentView(ViewGroup parent, int viewType) {
-        switch (mLayoutType){
-            case ItemLayoutType.NO_IMG:
-                View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_home_haoye, parent, false);
-                view.findViewById(R.id.iv_content_icon).setVisibility(View.GONE);
-                return view;
-            case ItemLayoutType.TYPE_IMG:
+        switch (mLayoutType) {
+            case ItemLayoutType.TYPE_TAG:
                 return LayoutInflater.from(parent.getContext()).inflate(R.layout.item_home_haoye, parent, false);
             case ItemLayoutType.AVATAR_IMG:
-                return LayoutInflater.from(parent.getContext()).inflate(R.layout.item_home_haoye, parent, false);
+                View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_home_haoye, parent, false);
+                view.findViewById(R.id.iv_content_icon).setVisibility(View.VISIBLE);
+                view.findViewById(R.id.tv_publish_author).setVisibility(View.VISIBLE);
+                view.findViewById(R.id.tv_content_type).setVisibility(View.GONE);
+                return view;
         }
         return LayoutInflater.from(parent.getContext()).inflate(R.layout.item_home_haoye, parent, false);
     }

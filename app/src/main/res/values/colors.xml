@@ -10,6 +10,7 @@
     <color name="background_black_light">#41464b</color>
     <color name="background_black">#252a2f</color>
     <color name="border_gray">#dadada</color>
+    <color name="border_dark">#a1a1a1</color>
 
     <color name="textPrimary">#939393</color>
     <color name="textPrimaryDark">#4f4f4f</color>
@@ -28,6 +29,10 @@
     <color name="btn_blue_pressed">#168fd1</color>
     <color name="btn_green_normal">#49bf37</color>
     <color name="btn_green_pressed">#3a9a2c</color>
+
+    <color name="type_red_bg">#cd5654</color>
+    <color name="type_blue_bg">#46a2dd</color>
+    <color name="type_green_bg">#43bd4b</color>
 
     <color name="white">#FFFFFFFF</color>
     <color name="white_pressed">#FFCFCFCF</color>

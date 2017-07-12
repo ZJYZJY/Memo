@@ -62,7 +62,7 @@ public class HaoYeFragment extends Fragment implements SwipeRefreshLayout.OnRefr
 
         mHaoYe_rv.setLayoutManager(new LinearLayoutManager(mContext));
         mHaoYe_rv.addItemDecoration(new ListViewDecoration(mContext,
-                R.dimen.item_decoration, 84, 8));
+                R.dimen.item_decoration, 8, 8));
 
         // set up swipe menu.
         mHaoYe_rv.setSwipeMenuCreator(mSwipeMenuCreator);
@@ -84,7 +84,7 @@ public class HaoYeFragment extends Fragment implements SwipeRefreshLayout.OnRefr
         for (int i = 0; i < 30; i++) {
             dataList.add("我是第" + i + "个。");
         }
-        HaoYeAdapter adapter = new HaoYeAdapter(dataList, ItemLayoutType.TYPE_IMG);
+        HaoYeAdapter adapter = new HaoYeAdapter(dataList, ItemLayoutType.TYPE_TAG);
         adapter.setOnItemClickListener(mOnItemClickListener);
 
         mHaoYe_rv.setAdapter(adapter);
@@ -103,7 +103,7 @@ public class HaoYeFragment extends Fragment implements SwipeRefreshLayout.OnRefr
     private SwipeMenuCreator mSwipeMenuCreator = new SwipeMenuCreator() {
         @Override
         public void onCreateMenu(SwipeMenu swipeLeftMenu, SwipeMenu swipeRightMenu, int viewType) {
-            int width = getResources().getDimensionPixelSize(R.dimen.item_width);
+            int width = getResources().getDimensionPixelSize(R.dimen.swipe_menu_item_width);
             int height = ViewGroup.LayoutParams.MATCH_PARENT;
 
             // Add the swipe menu on the right

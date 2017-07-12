@@ -7,6 +7,11 @@
 
     <include layout="@layout/toolbar_search" />
 
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/border_gray"/>
+
     <com.yanzhenjie.recyclerview.swipe.SwipeMenuRecyclerView
         android:id="@+id/recycler_view"
         android:layout_width="match_parent"
