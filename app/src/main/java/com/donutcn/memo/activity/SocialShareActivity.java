@@ -1,19 +1,31 @@
 package com.donutcn.memo.activity;
 
+import android.content.ClipboardManager;
+import android.content.Context;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Toast;
 
 import com.donutcn.memo.R;
 import com.donutcn.memo.utils.WindowUtils;
 import com.donutcn.widgetlib.SwitchView;
+import com.umeng.socialize.ShareAction;
+import com.umeng.socialize.UMShareAPI;
+import com.umeng.socialize.UMShareListener;
+import com.umeng.socialize.bean.SHARE_MEDIA;
+import com.umeng.socialize.media.UMImage;
+import com.umeng.socialize.media.UMWeb;
 
 public class SocialShareActivity extends AppCompatActivity implements View.OnClickListener {
 
     private SwitchView mSwith;
     private Button mHomePage;
+
+    private UMWeb mUMWeb;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -24,11 +36,21 @@ public class SocialShareActivity extends AppCompatActivity implements View.OnCli
         WindowUtils.setStatusBarColor(this, R.color.colorPrimary, true);
 
         initView();
+        initMedia();
     }
 
     public void initView(){
         mSwith = (SwitchView) findViewById(R.id.social_content_private);
         mHomePage = (Button) findViewById(R.id.toolbar_with_btn);
+
+        findViewById(R.id.share_iv1).setOnClickListener(this);
+        findViewById(R.id.share_iv2).setOnClickListener(this);
+        findViewById(R.id.share_iv3).setOnClickListener(this);
+        findViewById(R.id.share_iv4).setOnClickListener(this);
+        findViewById(R.id.share_iv5).setOnClickListener(this);
+        findViewById(R.id.share_iv6).setOnClickListener(this);
+        findViewById(R.id.share_iv7).setOnClickListener(this);
+        findViewById(R.id.share_iv8).setOnClickListener(this);
 
         mHomePage.setOnClickListener(this);
     }
@@ -39,10 +61,108 @@ public class SocialShareActivity extends AppCompatActivity implements View.OnCli
             case R.id.toolbar_with_btn:
                 startActivity(new Intent(this, MainActivity.class));
                 break;
+            case R.id.share_iv1:
+                new ShareAction(SocialShareActivity.this)
+                        .withMedia(mUMWeb)
+                        .setPlatform(SHARE_MEDIA.WEIXIN)
+                        .setCallback(umShareListener)
+                        .share();
+                break;
+            case R.id.share_iv2:
+                new ShareAction(SocialShareActivity.this)
+                        .withMedia(mUMWeb)
+                        .setPlatform(SHARE_MEDIA.WEIXIN_CIRCLE)
+                        .setCallback(umShareListener)
+                        .share();
+                break;
+            case R.id.share_iv3:
+                new ShareAction(SocialShareActivity.this)
+                        .withMedia(mUMWeb)
+                        .setPlatform(SHARE_MEDIA.QQ)
+                        .setCallback(umShareListener)
+                        .share();
+                break;
+            case R.id.share_iv4:
+                new ShareAction(SocialShareActivity.this)
+                        .withMedia(mUMWeb)
+                        .setPlatform(SHARE_MEDIA.QZONE)
+                        .setCallback(umShareListener)
+                        .share();
+                break;
+            case R.id.share_iv5:
+                new ShareAction(SocialShareActivity.this)
+                        .withText("hello")
+                        .withMedia(mUMWeb)
+                        .setPlatform(SHARE_MEDIA.SINA)
+                        .setCallback(umShareListener)
+                        .share();
+                break;
+            case R.id.share_iv6:
+                break;
+            case R.id.share_iv7:
+                ClipboardManager cm = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
+                cm.setText("复制成功");
+                Toast.makeText(this, "复制成功", Toast.LENGTH_LONG).show();
+                break;
+            case R.id.share_iv8:
+                Intent intent = new Intent(Intent.ACTION_SEND);
+                intent.setType("text/plain");// setType("audio/*");
+                intent.putExtra(Intent.EXTRA_SUBJECT, "share");
+                intent.putExtra(Intent.EXTRA_TEXT, "此处是要分享的内容");
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(Intent.createChooser(intent, getTitle()));
+                break;
         }
+    }
+
+    private UMShareListener umShareListener = new UMShareListener() {
+        @Override
+        public void onStart(SHARE_MEDIA platform) {
+
+        }
+        @Override
+        public void onResult(SHARE_MEDIA platform) {
+            Log.d("plat","platform"+platform);
+
+            Toast.makeText(SocialShareActivity.this, platform + " 分享成功啦", Toast.LENGTH_SHORT).show();
+
+        }
+
+        @Override
+        public void onError(SHARE_MEDIA platform, Throwable t) {
+            Toast.makeText(SocialShareActivity.this,platform + " 分享失败啦", Toast.LENGTH_SHORT).show();
+            if(t!=null){
+                Log.d("throw","throw:"+t.getMessage());
+            }
+        }
+
+        @Override
+        public void onCancel(SHARE_MEDIA platform) {
+            Toast.makeText(SocialShareActivity.this,platform + " 分享取消了", Toast.LENGTH_SHORT).show();
+        }
+    };
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        UMShareAPI.get(this).onActivityResult(requestCode, resultCode, data);
+
+    }
+
+    public void initMedia(){
+        mUMWeb = new UMWeb("http://bbs.umeng.com/");
+        mUMWeb.setTitle("This is web title");
+        mUMWeb.setThumb(new UMImage(this, R.drawable.pub_keyboard));
+        mUMWeb.setDescription("my description");
     }
 
     public void onBack(View view){
         finish();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        UMShareAPI.get(this).release();
     }
 }

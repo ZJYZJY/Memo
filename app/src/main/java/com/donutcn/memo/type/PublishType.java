@@ -1,6 +1,5 @@
 package com.donutcn.memo.type;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 
 /**
@@ -8,7 +7,7 @@ import java.util.ArrayList;
  * Created by 73958 on 2017/7/11.
  */
 
-public enum PublishType implements Serializable {
+public enum PublishType {
 
     ARTICLE("文章"),
     ALBUM("相册"),
