@@ -4,9 +4,11 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
@@ -19,7 +21,24 @@ import android.widget.Toast;
 
 import com.donutcn.memo.R;
 import com.donutcn.memo.type.PublishType;
+import com.donutcn.memo.utils.PermissionCheck;
+import com.donutcn.memo.utils.RecognizerResultParser;
 import com.donutcn.memo.utils.WindowUtils;
+import com.iflytek.cloud.ErrorCode;
+import com.iflytek.cloud.InitListener;
+import com.iflytek.cloud.RecognizerListener;
+import com.iflytek.cloud.RecognizerResult;
+import com.iflytek.cloud.SpeechConstant;
+import com.iflytek.cloud.SpeechError;
+import com.iflytek.cloud.SpeechRecognizer;
+import com.iflytek.cloud.ui.RecognizerDialog;
+import com.iflytek.cloud.ui.RecognizerDialogListener;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.HashMap;
+import java.util.LinkedHashMap;
 
 import jp.wasabeef.richeditor.RichEditor;
 
@@ -33,6 +52,11 @@ public class PublishActivity extends AppCompatActivity implements View.OnClickLi
     private LinearLayout mAddPic, mTypeSet, mTemplate, mSpeech;
     private HorizontalScrollView mTools;
     private ImageView mKeyboard;
+
+    private SpeechRecognizer mIat;
+    private RecognizerDialog mIatDialog;
+    // use HashMap to store the result.
+    private HashMap<String, String> mIatResults = new LinkedHashMap<>();
 
     private final String[] mContentTypes = PublishType.toStringArray();
     private String mSelectedType = mContentTypes[0];
@@ -54,13 +78,28 @@ public class PublishActivity extends AppCompatActivity implements View.OnClickLi
             String text = getResources().getText(R.string.placeholder_publish_type) + mSelectedType;
             mPublishType.setText(text);
         }
+
+        mIat = SpeechRecognizer.createRecognizer(this, mInitListener);
+        mIatDialog = new RecognizerDialog(this, mInitListener);
     }
+
+    private InitListener mInitListener = new InitListener() {
+        @Override
+        public void onInit(int code) {
+            if (code != ErrorCode.SUCCESS) {
+                Toast.makeText(PublishActivity.this, "初始化失败，错误码：" + code, Toast.LENGTH_SHORT).show();
+            }
+        }
+    };
 
     public void initView() {
         mPublishBtn = (Button) findViewById(R.id.toolbar_with_btn);
         mPublishType = (TextView) findViewById(R.id.publish_spinner);
         mTitle = (EditText) findViewById(R.id.et_publish_title);
         mContent = (RichEditor) findViewById(R.id.et_publish_content);
+
+        mContent.setOnTextChangeListener(mContentTextChangeListener);
+        mTitle.addTextChangedListener(mTextWatcher);
 
         mAddPic = (LinearLayout) findViewById(R.id.pub_add_pic);
         mTypeSet = (LinearLayout) findViewById(R.id.pub_type_setting);
@@ -115,7 +154,9 @@ public class PublishActivity extends AppCompatActivity implements View.OnClickLi
                     intent.putExtra("type", PublishType.getType(mSelectedType));
                     startActivity(intent);
                 }
-                Log.e("hdu", mContent.getHtml() + "");
+                Toast.makeText(PublishActivity.this, "type:" + mSelectedType + "\n"
+                        + "title:" + mTitleStr + "\n"
+                        + "content:" + mContentStr, Toast.LENGTH_SHORT).show();
                 break;
             case R.id.publish_spinner:
                 new AlertDialog.Builder(PublishActivity.this)
@@ -139,7 +180,10 @@ public class PublishActivity extends AppCompatActivity implements View.OnClickLi
                 Toast.makeText(this, "模版", Toast.LENGTH_SHORT).show();
                 break;
             case R.id.pub_speech_input:
-                Toast.makeText(this, "语音输入", Toast.LENGTH_SHORT).show();
+                PermissionCheck permissionCheck = new PermissionCheck(this);
+                if(permissionCheck.checkRecordPermission()){
+                    startSpeech();
+                }
                 break;
             case R.id.pub_keyboard_toggle:
                 toggleKeyboard();
@@ -207,6 +251,150 @@ public class PublishActivity extends AppCompatActivity implements View.OnClickLi
 //                .show();
     }
 
+    public void startSpeech(){
+        // set up SpeechRecognizer parameter.
+        setParam();
+        // show the listening dialog.
+        mIatDialog.setListener(mRecognizerDialogListener);
+        mIatDialog.show();
+    }
+
+    /**
+     * RecognizerDialogListener with UI.
+     */
+    private RecognizerDialogListener mRecognizerDialogListener = new RecognizerDialogListener() {
+        public void onResult(RecognizerResult results, boolean isLast) {
+            printResult(results);
+            if(isLast){
+                mContentTextChangeListener.onTextChange(mContent.getHtml());
+            }
+        }
+
+        public void onError(SpeechError error) {
+            Toast.makeText(PublishActivity.this, error.getPlainDescription(true), Toast.LENGTH_SHORT).show();
+        }
+
+    };
+
+    private void printResult(RecognizerResult results) {
+        String text = RecognizerResultParser.parseIatResult(results.getResultString());
+        String sn = null;
+        // read the 'sn' part of the json string.
+        try {
+            JSONObject resultJson = new JSONObject(results.getResultString());
+            sn = resultJson.optString("sn");
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        mIatResults.put(sn, text);
+        StringBuilder resultBuilder = new StringBuilder();
+        for (String key : mIatResults.keySet()) {
+            resultBuilder.append(mIatResults.get(key));
+        }
+
+        if(mContent.isFocused()){
+            StringBuilder builder = new StringBuilder(mContentStr);
+            builder.append(resultBuilder.toString());
+            mContent.setHtml(builder.toString());
+        }
+//        else if(mTitle.isFocused()){
+//            String str = mTitleStr + resultBuilder.toString();
+//            mTitle.setText(str);
+//        }
+    }
+
+    private RichEditor.OnTextChangeListener mContentTextChangeListener = new RichEditor.OnTextChangeListener() {
+        @Override
+        public void onTextChange(String text) {
+            mContentStr = text;
+        }
+    };
+
+    private TextWatcher mTextWatcher = new TextWatcher() {
+        @Override
+        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+        }
+
+        @Override
+        public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+        }
+
+        @Override
+        public void afterTextChanged(Editable s) {
+            mTitleStr = s.toString();
+        }
+    };
+
+    /**
+     * RecognizerListener without UI.
+     */
+    private RecognizerListener mRecognizerListener = new RecognizerListener() {
+        @Override
+        public void onVolumeChanged(final int i, byte[] bytes) {
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    Toast.makeText(PublishActivity.this,"当前音量" + i ,Toast.LENGTH_SHORT).show();
+                }
+            });
+        }
+
+        @Override
+        public void onBeginOfSpeech() {
+            Toast.makeText(PublishActivity.this, "开始了", Toast.LENGTH_SHORT).show();
+        }
+
+        @Override
+        public void onEndOfSpeech() {
+            Toast.makeText(PublishActivity.this, "结束了", Toast.LENGTH_SHORT).show();
+        }
+
+        @Override
+        public void onResult(RecognizerResult recognizerResult, boolean b) {
+            printResult(recognizerResult);
+        }
+
+        @Override
+        public void onError(SpeechError speechError) {
+
+        }
+
+        @Override
+        public void onEvent(int i, int i1, int i2, Bundle bundle) {
+
+        }
+    };
+
+    public void setParam() {
+        // clear parameter.
+        mIat.setParameter(SpeechConstant.PARAMS, null);
+
+        mIat.setParameter(SpeechConstant.ENGINE_TYPE, SpeechConstant.TYPE_CLOUD);
+        mIat.setParameter(SpeechConstant.RESULT_TYPE, "json");
+
+        mIat.setParameter(SpeechConstant.LANGUAGE, "zh_cn");
+        mIat.setParameter(SpeechConstant.ACCENT, "mandarin");
+
+        // set how long the user does not speak as a timeout.
+        mIat.setParameter(SpeechConstant.VAD_BOS, "4000");
+
+        // set how long does the user stop talking and say that they are no longer entered.
+        mIat.setParameter(SpeechConstant.VAD_EOS, "1000");
+
+        // set Punctuation, "0" for false, "1" for true.
+        mIat.setParameter(SpeechConstant.ASR_PTT, "0");
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == PermissionCheck.PERMISSION_RECORD){
+
+        }
+    }
+
     private void toggleKeyboard() {
         InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.toggleSoftInput(0, InputMethodManager.HIDE_NOT_ALWAYS);
@@ -218,5 +406,11 @@ public class PublishActivity extends AppCompatActivity implements View.OnClickLi
         mContent.clearCache(true);
         mContent.clearHistory();
         mContent.destroy();
+
+        if( null != mIat ){
+            // release connection when exit.
+            mIat.cancel();
+            mIat.destroy();
+        }
     }
 }

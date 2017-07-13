@@ -2,6 +2,8 @@ package com.donutcn.memo;
 
 import android.app.Application;
 
+import com.iflytek.cloud.SpeechConstant;
+import com.iflytek.cloud.SpeechUtility;
 import com.umeng.socialize.Config;
 import com.umeng.socialize.PlatformConfig;
 import com.umeng.socialize.UMShareAPI;
@@ -21,7 +23,7 @@ public class App extends Application {
         Config.DEBUG = true;
         UMShareAPI.get(this);
         RichText.initCacheDir(this);
-
+        SpeechUtility.createUtility(this, SpeechConstant.APPID +"=59647377");
     }
 
     {
