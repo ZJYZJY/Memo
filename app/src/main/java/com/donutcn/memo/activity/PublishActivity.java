@@ -37,10 +37,14 @@ import com.iflytek.cloud.ui.RecognizerDialogListener;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
+import java.util.List;
 
 import jp.wasabeef.richeditor.RichEditor;
+import me.iwf.photopicker.PhotoPicker;
+import me.iwf.photopicker.PhotoPreview;
 
 public class PublishActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -57,6 +61,7 @@ public class PublishActivity extends AppCompatActivity implements View.OnClickLi
     private RecognizerDialog mIatDialog;
     // use HashMap to store the result.
     private HashMap<String, String> mIatResults = new LinkedHashMap<>();
+    private ArrayList<String> selectedPhotos = new ArrayList<>();
 
     private final String[] mContentTypes = PublishType.toStringArray();
     private String mSelectedType = mContentTypes[0];
@@ -170,8 +175,13 @@ public class PublishActivity extends AppCompatActivity implements View.OnClickLi
                         }).show();
                 break;
             case R.id.pub_add_pic:
-                Toast.makeText(this, "图片", Toast.LENGTH_SHORT).show();
-                mContent.insertImage("https://raw.githubusercontent.com/wasabeef/art/master/twitter.png", "twitter");
+//                Toast.makeText(this, "图片", Toast.LENGTH_SHORT).show();
+//                mContent.insertImage("https://raw.githubusercontent.com/wasabeef/art/master/twitter.png", "twitter");
+                PhotoPicker.builder()
+                        .setPhotoCount(1)
+                        .setShowCamera(true)
+                        .setPreviewEnabled(false)
+                        .start(this);
                 break;
             case R.id.pub_type_setting:
                 mTools.setVisibility(mTools.getVisibility() == View.VISIBLE ? View.GONE : View.VISIBLE);
@@ -385,6 +395,31 @@ public class PublishActivity extends AppCompatActivity implements View.OnClickLi
 
         // set Punctuation, "0" for false, "1" for true.
         mIat.setParameter(SpeechConstant.ASR_PTT, "0");
+    }
+
+
+    /**
+     * select photo callback.
+     */
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (resultCode == RESULT_OK &&
+                (requestCode == PhotoPicker.REQUEST_CODE || requestCode == PhotoPreview.REQUEST_CODE)) {
+
+            List<String> photos = null;
+            if (data != null) {
+                photos = data.getStringArrayListExtra(PhotoPicker.KEY_SELECTED_PHOTOS);
+            }
+            selectedPhotos.clear();
+
+            if (photos != null) {
+                selectedPhotos.addAll(photos);
+                Toast.makeText(this, selectedPhotos.get(0), Toast.LENGTH_SHORT).show();
+                mContent.insertImage(selectedPhotos.get(0), "twitter");
+            }
+        }
     }
 
     @Override
