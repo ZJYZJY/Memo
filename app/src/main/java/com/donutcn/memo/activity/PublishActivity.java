@@ -134,7 +134,7 @@ public class PublishActivity extends AppCompatActivity implements View.OnClickLi
     }
 
     public void setUpRichTextEditor() {
-        mContent.setPlaceholder(getResources().getString(R.string.hint_publish_content));
+        mContent.setPlaceholder(getString(R.string.hint_publish_content));
         mContent.setPadding(8, 8, 8, 8);
         mContent.setEditorFontSize(16);
         mContent.setEditorFontColor(getResources().getColor(R.color.textPrimaryDark));
@@ -169,14 +169,12 @@ public class PublishActivity extends AppCompatActivity implements View.OnClickLi
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
                                 mSelectedType = mContentTypes[which];
-                                String text = getResources().getText(R.string.placeholder_publish_type) + mSelectedType;
+                                String text = getString(R.string.placeholder_publish_type) + mSelectedType;
                                 mPublishType.setText(text);
                             }
                         }).show();
                 break;
             case R.id.pub_add_pic:
-//                Toast.makeText(this, "图片", Toast.LENGTH_SHORT).show();
-//                mContent.insertImage("https://raw.githubusercontent.com/wasabeef/art/master/twitter.png", "twitter");
                 PhotoPicker.builder()
                         .setPhotoCount(1)
                         .setShowCamera(true)
@@ -201,34 +199,28 @@ public class PublishActivity extends AppCompatActivity implements View.OnClickLi
             // type setting tools onClick listener.
             case R.id.bold:
                 mContent.setBold();
-//                mContent.bold(!mContent.contains(KnifeText.FORMAT_BOLD));
                 break;
             case R.id.italic:
                 mContent.setItalic();
-//                mContent.italic(!mContent.contains(KnifeText.FORMAT_ITALIC));
                 break;
             case R.id.underline:
                 mContent.setUnderline();
-//                mContent.underline(!mContent.contains(KnifeText.FORMAT_UNDERLINED));
                 break;
             case R.id.strikethrough:
                 mContent.setStrikeThrough();
-//                mContent.strikethrough(!mContent.contains(KnifeText.FORMAT_STRIKETHROUGH));
                 break;
             case R.id.bullet:
                 mContent.setBullets();
-//                mContent.bullet(!mContent.contains(KnifeText.FORMAT_BULLET));
                 break;
             case R.id.quote:
                 mContent.setBlockquote();
-//                mContent.quote(!mContent.contains(KnifeText.FORMAT_QUOTE));
                 break;
             case R.id.link:
                 mContent.insertLink("http://www.baidu.com", null);
                 showLinkDialog();
                 break;
             case R.id.clear:
-//                mContent.clearFormats();
+                mContent.removeFormat();
                 break;
         }
     }

@@ -29,6 +29,13 @@
     <string name="hint_completing_sale_stuff">售卖物品</string>
     <string name="hint_completing_sale_price">售卖价格</string>
     <string name="hint_completing_sale_way">交易方式</string>
+    <string name="hint_completing_vote_one">投票项一</string>
+    <string name="hint_completing_vote_two">投票项二</string>
+    <string name="hint_completing_vote_three">投票项三</string>
+    <string name="hint_completing_vote_four">投票项四</string>
+    <string name="hint_completing_vote_five">投票项五</string>
+    <string name="hint_completing_vote_add">➕新增投票项</string>
+    <string name="hint_completing_vote_dec">➖减少投票项</string>
 
     <!--button-->
     <string name="btn_publish_finish">完成</string>

@@ -110,8 +110,8 @@ public class InteractivePage extends AppCompatActivity implements View.OnClickLi
 
         switch (mType){
             case ACTIVITY:
-                mWant.setText(getResources().getString(R.string.interactive_want_activity));
-                mInteractive.setText(getResources().getString(R.string.interactive_enroll));
+                mWant.setText(getString(R.string.interactive_want_activity));
+                mInteractive.setText(getString(R.string.interactive_enroll));
                 // open the bottom sheet dialog.
                 mInteractive.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -121,16 +121,16 @@ public class InteractivePage extends AppCompatActivity implements View.OnClickLi
                 });
                 break;
             case VOTE:
-                mWant.setText(getResources().getString(R.string.interactive_want_vote));
-                mInteractive.setText(getResources().getString(R.string.interactive_vote));
+                mWant.setText(getString(R.string.interactive_want_vote));
+                mInteractive.setText(getString(R.string.interactive_vote));
                 break;
             case RECRUIT:
-                mWant.setText(getResources().getString(R.string.interactive_want_recruit));
-                mInteractive.setText(getResources().getString(R.string.interactive_resume));
+                mWant.setText(getString(R.string.interactive_want_recruit));
+                mInteractive.setText(getString(R.string.interactive_resume));
                 break;
             case QA:
-                mWant.setText(getResources().getString(R.string.interactive_want_answer));
-                mInteractive.setText(getResources().getString(R.string.interactive_answer));
+                mWant.setText(getString(R.string.interactive_want_answer));
+                mInteractive.setText(getString(R.string.interactive_answer));
                 // open the bottom sheet dialog.
                 mInteractive.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -140,12 +140,12 @@ public class InteractivePage extends AppCompatActivity implements View.OnClickLi
                 });
                 break;
             case RESERVE:
-                mWant.setText(getResources().getString(R.string.interactive_want_reserve));
-                mInteractive.setText(getResources().getString(R.string.interactive_reserve));
+                mWant.setText(getString(R.string.interactive_want_reserve));
+                mInteractive.setText(getString(R.string.interactive_reserve));
                 break;
             case SALE:
-                mWant.setText(getResources().getString(R.string.interactive_want_sale));
-                mInteractive.setText(getResources().getString(R.string.interactive_buy));
+                mWant.setText(getString(R.string.interactive_want_sale));
+                mInteractive.setText(getString(R.string.interactive_buy));
                 break;
         }
     }
@@ -170,9 +170,9 @@ public class InteractivePage extends AppCompatActivity implements View.OnClickLi
         behavior.setPeekHeight(DensityUtils.dp2px(this, 512));
 
         if(layout == R.layout.bottom_dialog_info){
-            ((TextView)parent.findViewById(R.id.interactive_type)).setText(getResources().getString(R.string.interactive_enroll));
+            ((TextView)parent.findViewById(R.id.interactive_type)).setText(getString(R.string.interactive_enroll));
         } else if(layout == R.layout.bottom_dialog_reply){
-            ((TextView)parent.findViewById(R.id.interactive_reply_submit)).setText(getResources().getString(R.string.btn_dialog_answer));
+            ((TextView)parent.findViewById(R.id.interactive_reply_submit)).setText(getString(R.string.btn_dialog_answer));
         }
 
         dialog.show();

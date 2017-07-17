@@ -111,12 +111,12 @@ public class ArticlePage extends AppCompatActivity implements View.OnClickListen
 
         switch (mType){
             case ARTICLE:
-                mWant.setText(getResources().getString(R.string.interactive_want_article));
-                mInteractive.setText(getResources().getString(R.string.interactive_comment));
+                mWant.setText(getString(R.string.interactive_want_article));
+                mInteractive.setText(getString(R.string.interactive_comment));
                 break;
             case ALBUM:
-                mWant.setText(getResources().getString(R.string.interactive_want_album));
-                mInteractive.setText(getResources().getString(R.string.interactive_comment));
+                mWant.setText(getString(R.string.interactive_want_album));
+                mInteractive.setText(getString(R.string.interactive_comment));
                 break;
         }
 
@@ -140,7 +140,7 @@ public class ArticlePage extends AppCompatActivity implements View.OnClickListen
         behavior = BottomSheetBehavior.from(parent);
         behavior.setPeekHeight(DensityUtils.dp2px(this, 512));
         // set the submit button text.
-        ((TextView)parent.findViewById(R.id.interactive_reply_submit)).setText(getResources().getString(R.string.btn_dialog_submit));
+        ((TextView)parent.findViewById(R.id.interactive_reply_submit)).setText(getString(R.string.btn_dialog_submit));
         dialog.show();
     }
 
