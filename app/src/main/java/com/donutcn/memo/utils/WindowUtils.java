@@ -2,7 +2,6 @@ package com.donutcn.memo.utils;
 
 import android.app.Activity;
 import android.content.Context;
-import android.graphics.Color;
 import android.os.Build;
 import android.support.annotation.ColorRes;
 import android.support.annotation.StringRes;
@@ -83,24 +82,37 @@ public class WindowUtils {
         Activity activity = (Activity) context;
         Window window = activity.getWindow();
 //        transparencyBar(activity);
-        // API >= 21, set statusBar color.
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-            window.setStatusBarColor(activity.getResources().getColor(color));
-
-            MIUISetStatusBarLightMode(window, darkMode);
-            FlymeSetStatusBarLightMode(window, darkMode);
-        } else if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-            //使用SystemBarTint库使4.4版本状态栏变色，需要先将状态栏设置为透明
-//            transparencyBar(activity);
-//            SystemBarTintManager tintManager = new SystemBarTintManager(activity);
-//            tintManager.setStatusBarTintEnabled(true);
-//            tintManager.setStatusBarTintResource(colorId);
-        }
-        // API >= 23, use android original method to change statusBar text color.
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            activity.getWindow().getDecorView().setSystemUiVisibility(
-                    View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN | View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
+            // API >= 23, use android original method to change statusBar text color.
+            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+//            window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+            if (darkMode){
+                window.getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
+            }else {
+                window.getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
+            }
+            window.setStatusBarColor(activity.getResources().getColor(color));
+        } else if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            if(MIUISetStatusBarLightMode(window, darkMode)
+                    || FlymeSetStatusBarLightMode(window, darkMode)){
+                window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+                window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+                window.getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+                        | View.SYSTEM_UI_FLAG_LAYOUT_STABLE);
+                window.setStatusBarColor(activity.getResources().getColor(color));
+            }
+        } else if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            if(MIUISetStatusBarLightMode(window, darkMode)
+                    || FlymeSetStatusBarLightMode(window, darkMode)){
+                WindowManager.LayoutParams winParams = window.getAttributes();
+                final int bits = WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS;
+                if (true) {
+                    winParams.flags |= bits;
+                } else {
+                    winParams.flags &= ~bits;
+                }
+                window.setAttributes(winParams);
+            }
         }
     }
 
@@ -121,11 +133,7 @@ public class WindowUtils {
                 Field field = layoutParams.getField("EXTRA_FLAG_STATUS_BAR_DARK_MODE");
                 darkModeFlag = field.getInt(layoutParams);
                 Method extraFlagField = clazz.getMethod("setExtraFlags", int.class, int.class);
-                if (dark) {
-                    extraFlagField.invoke(window, darkModeFlag, darkModeFlag);
-                } else {
-                    extraFlagField.invoke(window, 0, darkModeFlag);
-                }
+                extraFlagField.invoke(window, dark ? darkModeFlag : 0, darkModeFlag);
                 result = true;
             } catch (Exception e) {
                 e.printStackTrace();
