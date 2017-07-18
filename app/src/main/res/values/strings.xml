@@ -10,6 +10,9 @@
     <string name="placeholder_default_publish_type">请选择发布类型（默认为 文章）</string>
     <string name="placeholder_publish_type">发布类型：</string>
 
+    <string name="placeholder_message_resume">新增 %1$d 人投递简历，目前已收到 %2$d 份简历！</string>
+    <string name="placeholder_message_enroll">新增 %1$d 人报名参加活动，目前已收到 %2$d 人报名！</string>
+
     <!--hint-->
     <string name="hint_publish_title">输入标题</string>
     <string name="hint_publish_content">输入正文</string>
@@ -115,6 +118,7 @@
     <string name="interactive_view_answer">查看回答</string>
     <string name="interactive_view_reserve">查看预订</string>
     <string name="interactive_view_order">查看订单</string>
+    <string name="interactive_view_reply">回复私信</string>
 
     <!--completing text-->
     <string name="completing_activity_title">完善本次 活动 信息</string>

@@ -81,7 +81,7 @@ public class MessageFragment extends Fragment implements SwipeRefreshLayout.OnRe
         for (int i = 0; i < 8; i++) {
             dataList.add("我是第" + i + "个。");
         }
-        MessageAdapter adapter = new MessageAdapter(dataList, ItemLayoutType.TYPE_TAG);
+        MessageAdapter adapter = new MessageAdapter(mContext, dataList);
         adapter.setOnItemClickListener(mOnItemClickListener);
 
         mMessage_rv.setAdapter(adapter);

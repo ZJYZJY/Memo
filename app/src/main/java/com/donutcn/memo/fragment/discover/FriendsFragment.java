@@ -85,7 +85,7 @@ public class FriendsFragment extends Fragment implements SwipeRefreshLayout.OnRe
         for (int i = 0; i < 30; i++) {
             dataList.add("我是第" + i + "个。");
         }
-        HaoYeAdapter adapter = new HaoYeAdapter(dataList, ItemLayoutType.AVATAR_IMG);
+        HaoYeAdapter adapter = new HaoYeAdapter(mContext, dataList, ItemLayoutType.AVATAR_IMG);
         adapter.setOnItemClickListener(mOnItemClickListener);
 
         mHaoYe_rv.setAdapter(adapter);

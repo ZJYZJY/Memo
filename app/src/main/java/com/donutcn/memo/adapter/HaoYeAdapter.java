@@ -1,5 +1,6 @@
 package com.donutcn.memo.adapter;
 
+import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,6 +11,7 @@ import android.widget.TextView;
 import com.donutcn.memo.R;
 import com.donutcn.memo.listener.OnItemClickListener;
 import com.donutcn.memo.type.ItemLayoutType;
+import com.donutcn.memo.type.PublishType;
 import com.yanzhenjie.recyclerview.swipe.SwipeMenuAdapter;
 
 import java.util.List;
@@ -18,10 +20,12 @@ public class HaoYeAdapter extends SwipeMenuAdapter<HaoYeAdapter.DefaultViewHolde
 
     private List<String> titles;
     private int mLayoutType;
+    private Context mContext;
 
     private OnItemClickListener mOnItemClickListener;
 
-    public HaoYeAdapter(List<String> titles, @ItemLayoutType int layoutType) {
+    public HaoYeAdapter(Context context, List<String> titles, @ItemLayoutType int layoutType) {
+        this.mContext = context;
         this.titles = titles;
         this.mLayoutType = layoutType;
     }
@@ -54,6 +58,46 @@ public class HaoYeAdapter extends SwipeMenuAdapter<HaoYeAdapter.DefaultViewHolde
     public HaoYeAdapter.DefaultViewHolder onCompatCreateViewHolder(View realContentView, int viewType) {
         DefaultViewHolder viewHolder = new DefaultViewHolder(realContentView);
         viewHolder.mOnItemClickListener = mOnItemClickListener;
+
+        if(mLayoutType == ItemLayoutType.TYPE_TAG){
+            PublishType p = PublishType.ARTICLE;
+            String contentType = "";
+            switch (p){
+                case ARTICLE:
+                    contentType = mContext.getString(R.string.publish_content_article);
+                    viewHolder.mContentType.setBackgroundResource(R.drawable.type_blue_bg);
+                    break;
+                case ALBUM:
+                    contentType = mContext.getString(R.string.publish_content_album);
+                    viewHolder.mContentType.setBackgroundResource(R.drawable.type_blue_bg);
+                    break;
+                case ACTIVITY:
+                    contentType = mContext.getString(R.string.publish_content_activity);
+                    viewHolder.mContentType.setBackgroundResource(R.drawable.type_green_bg);
+                    break;
+                case VOTE:
+                    contentType = mContext.getString(R.string.publish_content_vote);
+                    viewHolder.mContentType.setBackgroundResource(R.drawable.type_green_bg);
+                    break;
+                case RECRUIT:
+                    contentType = mContext.getString(R.string.publish_content_recruit);
+                    viewHolder.mContentType.setBackgroundResource(R.drawable.type_red_bg);
+                    break;
+                case QA:
+                    contentType = mContext.getString(R.string.publish_content_qa);
+                    viewHolder.mContentType.setBackgroundResource(R.drawable.type_green_bg);
+                    break;
+                case RESERVE:
+                    contentType = mContext.getString(R.string.publish_content_reserve);
+                    viewHolder.mContentType.setBackgroundResource(R.drawable.type_red_bg);
+                    break;
+                case SALE:
+                    contentType = mContext.getString(R.string.publish_content_sale);
+                    viewHolder.mContentType.setBackgroundResource(R.drawable.type_red_bg);
+                    break;
+            }
+            viewHolder.mContentType.setText(contentType);
+        }
         return viewHolder;
     }
 
@@ -68,6 +112,7 @@ public class HaoYeAdapter extends SwipeMenuAdapter<HaoYeAdapter.DefaultViewHolde
         ImageView mContentPic2;
         TextView mTitle;
         TextView mContent;
+        TextView mContentType;
         TextView mTime;
         TextView mUpvote;
         TextView mComment;
@@ -81,6 +126,7 @@ public class HaoYeAdapter extends SwipeMenuAdapter<HaoYeAdapter.DefaultViewHolde
             mContentPic2 = (ImageView) itemView.findViewById(R.id.iv_two);
             mTitle = (TextView) itemView.findViewById(R.id.tv_title);
             mContent = (TextView) itemView.findViewById(R.id.tv_content);
+            mContentType = (TextView) itemView.findViewById(R.id.tv_content_type);
             mTime = (TextView) itemView.findViewById(R.id.tv_publish_time);
             mUpvote = (TextView) itemView.findViewById(R.id.tv_upvote);
             mComment = (TextView) itemView.findViewById(R.id.tv_comment);

@@ -1,5 +1,6 @@
 package com.donutcn.memo.adapter;
 
+import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,7 +11,7 @@ import android.widget.TextView;
 
 import com.donutcn.memo.R;
 import com.donutcn.memo.listener.OnItemClickListener;
-import com.donutcn.memo.type.ItemLayoutType;
+import com.donutcn.memo.type.PublishType;
 import com.yanzhenjie.recyclerview.swipe.SwipeMenuAdapter;
 
 import java.util.List;
@@ -18,13 +19,13 @@ import java.util.List;
 public class MessageAdapter extends SwipeMenuAdapter<MessageAdapter.DefaultViewHolder> {
 
     private List<String> titles;
-    private int mLayoutType;
+    private Context mContext;
 
     private OnItemClickListener mOnItemClickListener;
 
-    public MessageAdapter(List<String> titles, @ItemLayoutType int layoutType) {
+    public MessageAdapter(Context context, List<String> titles) {
+        this.mContext = context;
         this.titles = titles;
-        this.mLayoutType = layoutType;
     }
 
     public void setOnItemClickListener(OnItemClickListener onItemClickListener) {
@@ -45,6 +46,76 @@ public class MessageAdapter extends SwipeMenuAdapter<MessageAdapter.DefaultViewH
     public MessageAdapter.DefaultViewHolder onCompatCreateViewHolder(View realContentView, int viewType) {
         DefaultViewHolder viewHolder = new DefaultViewHolder(realContentView);
         viewHolder.mOnItemClickListener = mOnItemClickListener;
+
+        PublishType p = PublishType.RECRUIT;
+        String btnText;
+        int background;
+        switch (p){
+            case ARTICLE:
+                viewHolder.mExtra.setVisibility(View.GONE);
+                btnText = mContext.getString(R.string.interactive_view_comment);
+                background = R.drawable.selector_blue_btn;
+                viewHolder.mImage.setBackgroundResource(R.drawable.type_blue_img_bg);
+                viewHolder.mImage.setImageResource(R.drawable.type_article);
+                break;
+            case ALBUM:
+                viewHolder.mExtra.setVisibility(View.GONE);
+                btnText = mContext.getString(R.string.interactive_view_comment);
+                background = R.drawable.selector_blue_btn;
+                viewHolder.mImage.setBackgroundResource(R.drawable.type_blue_img_bg);
+                viewHolder.mImage.setImageResource(R.drawable.type_album);
+                break;
+            case ACTIVITY:
+                viewHolder.mExtra.setVisibility(View.GONE);
+                btnText = mContext.getString(R.string.interactive_view_enroll);
+                background = R.drawable.selector_green_btn;
+                viewHolder.mImage.setBackgroundResource(R.drawable.type_green_img_bg);
+                viewHolder.mImage.setImageResource(R.drawable.type_activity);
+                break;
+            case VOTE:
+                viewHolder.mExtra.setVisibility(View.GONE);
+                btnText = mContext.getString(R.string.interactive_view_vote);
+                background = R.drawable.selector_green_btn;
+                viewHolder.mImage.setBackgroundResource(R.drawable.type_green_img_bg);
+                viewHolder.mImage.setImageResource(R.drawable.type_vote);
+                break;
+            case RECRUIT:
+                viewHolder.mExtra.setVisibility(View.GONE);
+                btnText = mContext.getString(R.string.interactive_view_resume);
+                background = R.drawable.selector_red_btn;
+                viewHolder.mImage.setBackgroundResource(R.drawable.type_red_img_bg);
+                viewHolder.mImage.setImageResource(R.drawable.type_recruit);
+                break;
+            case QA:
+                viewHolder.mExtra.setVisibility(View.GONE);
+                btnText = mContext.getString(R.string.interactive_view_answer);
+                background = R.drawable.selector_green_btn;
+                viewHolder.mImage.setBackgroundResource(R.drawable.type_green_img_bg);
+                viewHolder.mImage.setImageResource(R.drawable.type_article);// lack of resources "type_qa"
+                break;
+            case RESERVE:
+                viewHolder.mExtra.setVisibility(View.GONE);
+                btnText = mContext.getString(R.string.interactive_view_reserve);
+                background = R.drawable.selector_red_btn;
+                viewHolder.mImage.setBackgroundResource(R.drawable.type_red_img_bg);
+                viewHolder.mImage.setImageResource(R.drawable.type_reserve);
+                break;
+            case SALE:
+                viewHolder.mExtra.setVisibility(View.VISIBLE);
+                btnText = mContext.getString(R.string.interactive_view_order);
+                background = R.drawable.selector_red_btn;
+                viewHolder.mImage.setBackgroundResource(R.drawable.type_red_img_bg);
+                viewHolder.mImage.setImageResource(R.drawable.type_sale);
+                break;
+            default:
+                viewHolder.mExtra.setVisibility(View.VISIBLE);
+                btnText = mContext.getString(R.string.interactive_view_reply);
+                background = mContext.getResources().getColor(R.color.background_black_light);
+                viewHolder.mImage.setBackgroundColor(mContext.getResources().getColor(R.color.white));
+                break;
+        }
+        viewHolder.mInteraction.setText(btnText);
+        viewHolder.mInteraction.setBackgroundResource(background);
         return viewHolder;
     }
 

@@ -84,7 +84,7 @@ public class HaoYeFragment extends Fragment implements SwipeRefreshLayout.OnRefr
         for (int i = 0; i < 30; i++) {
             dataList.add("我是第" + i + "个。");
         }
-        HaoYeAdapter adapter = new HaoYeAdapter(dataList, ItemLayoutType.TYPE_TAG);
+        HaoYeAdapter adapter = new HaoYeAdapter(mContext, dataList, ItemLayoutType.TYPE_TAG);
         adapter.setOnItemClickListener(mOnItemClickListener);
 
         mHaoYe_rv.setAdapter(adapter);

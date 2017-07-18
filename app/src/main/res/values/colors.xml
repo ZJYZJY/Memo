@@ -29,6 +29,8 @@
     <color name="btn_blue_pressed">#168fd1</color>
     <color name="btn_green_normal">#49bf37</color>
     <color name="btn_green_pressed">#3a9a2c</color>
+    <color name="btn_red_normal">#eb4e3d</color>
+    <color name="btn_red_pressed">#c74133</color>
 
     <color name="type_red_bg">#cd5654</color>
     <color name="type_blue_bg">#46a2dd</color>
