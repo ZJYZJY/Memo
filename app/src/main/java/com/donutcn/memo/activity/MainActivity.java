@@ -61,21 +61,26 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
         transaction.commit();
         // set flag full screen.
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
-
+        // delay 3s to remove the splash fragment.
         getWindow().getDecorView().postDelayed(new Runnable() {
             @Override
             public void run() {
-                if (splashFragment == null)
-                    return;
-                final FragmentTransaction transaction = getFragmentManager().beginTransaction();
-                transaction.remove(splashFragment);
-                transaction.commit();
-                splashFragment = null;
-                mMainContainer.setVisibility(View.VISIBLE);
-                // clear flag full screen.
-                getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
+                showMainPage();
             }
         }, 3000);
+    }
+
+    private void showMainPage(){
+        if (splashFragment == null)
+            return;
+        // remove splash fragment.
+        final FragmentTransaction transaction = getFragmentManager().beginTransaction();
+        transaction.remove(splashFragment);
+        transaction.commit();
+        splashFragment = null;
+        mMainContainer.setVisibility(View.VISIBLE);
+        // clear flag full screen.
+        getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
     }
 
     private void initViewPager(ViewPager viewPager) {
@@ -105,6 +110,10 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
         }
     }
 
+    public void onSkipSplash(View view) {
+        showMainPage();
+    }
+
     @Override
     public void onBackPressed() {
         if(splashFragment == null){
@@ -132,7 +141,7 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
         if (keyCode == KeyEvent.KEYCODE_BACK
                 && event.getAction() == KeyEvent.ACTION_DOWN
                 && splashFragment == null) {
-            if ((System.currentTimeMillis() - mExitTime) > 1000) {
+            if ((System.currentTimeMillis() - mExitTime) > 2000) {
                 Toast.makeText(MainActivity.this, getString(R.string.toast_exit_double_click), Toast.LENGTH_SHORT).show();
                 mExitTime = System.currentTimeMillis();
             } else {

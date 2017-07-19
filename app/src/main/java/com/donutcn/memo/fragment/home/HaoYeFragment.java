@@ -20,6 +20,8 @@ import com.donutcn.memo.view.ListViewDecoration;
 import com.donutcn.memo.R;
 import com.donutcn.memo.adapter.HaoYeAdapter;
 import com.donutcn.memo.listener.OnItemClickListener;
+import com.donutcn.widgetlib.PullToRefreshLayout;
+import com.donutcn.widgetlib.PullableRecyclerView;
 import com.yanzhenjie.recyclerview.swipe.Closeable;
 import com.yanzhenjie.recyclerview.swipe.OnSwipeMenuItemClickListener;
 import com.yanzhenjie.recyclerview.swipe.SwipeMenu;
@@ -30,15 +32,19 @@ import com.yanzhenjie.recyclerview.swipe.SwipeMenuRecyclerView;
 import java.util.ArrayList;
 import java.util.List;
 
-public class HaoYeFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener {
+public class HaoYeFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener, PullToRefreshLayout.OnRefreshListener {
 
     private Context mContext;
 
-    private SwipeMenuRecyclerView mHaoYe_rv;
+    private PullableRecyclerView mHaoYe_rv;
 
-    private SwipeRefreshLayout mRefreshLayout;
+    private PullToRefreshLayout mRefreshLayout;
+
+    private HaoYeAdapter mAdapter;
 
     private OnReceiveNewMessagesListener mMsgListener;
+
+    private List<String> dataList;
 
     @Override
     public void onAttach(Context context) {
@@ -59,8 +65,8 @@ public class HaoYeFragment extends Fragment implements SwipeRefreshLayout.OnRefr
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-        mHaoYe_rv = (SwipeMenuRecyclerView) view.findViewById(R.id.recycler_view);
-        mRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipe_layout);
+        mHaoYe_rv = (PullableRecyclerView) view.findViewById(R.id.recycler_view);
+        mRefreshLayout = (PullToRefreshLayout) view.findViewById(R.id.swipe_layout);
         mRefreshLayout.setOnRefreshListener(this);
 
         mHaoYe_rv.setLayoutManager(new LinearLayoutManager(mContext));
@@ -83,16 +89,14 @@ public class HaoYeFragment extends Fragment implements SwipeRefreshLayout.OnRefr
     }
 
     public void Refresh() {
-        List<String> dataList = new ArrayList<>();
-        for (int i = 0; i < 30; i++) {
+        dataList = new ArrayList<>();
+        for (int i = 0; i < 10; i++) {
             dataList.add("我是第" + i + "个。");
         }
-        HaoYeAdapter adapter = new HaoYeAdapter(mContext, dataList, ItemLayoutType.TYPE_TAG);
-        adapter.setOnItemClickListener(mOnItemClickListener);
+        mAdapter = new HaoYeAdapter(mContext, dataList, ItemLayoutType.TYPE_TAG);
+        mAdapter.setOnItemClickListener(mOnItemClickListener);
 
-        mHaoYe_rv.setAdapter(adapter);
-
-        mRefreshLayout.setRefreshing(false);
+        mHaoYe_rv.setAdapter(mAdapter);
     }
 
     public void setOnReceiveNewMessagesListener(OnReceiveNewMessagesListener listener) {
@@ -150,7 +154,7 @@ public class HaoYeFragment extends Fragment implements SwipeRefreshLayout.OnRefr
         public void onItemClick(int position) {
             Toast.makeText(mContext, "我是第" + position + "条。", Toast.LENGTH_SHORT).show();
             mMsgListener.onReceiveNewMessage(position, 0);
-            startActivity(new Intent(getContext(), InteractivePage.class));
+            startActivity(new Intent(mContext, InteractivePage.class));
         }
     };
 
@@ -180,5 +184,15 @@ public class HaoYeFragment extends Fragment implements SwipeRefreshLayout.OnRefr
     public void onResume() {
         super.onResume();
         Refresh();
+    }
+
+    @Override
+    public void onRefresh(PullToRefreshLayout pullToRefreshLayout) {
+        pullToRefreshLayout.refreshFinish(PullToRefreshLayout.SUCCEED);
+    }
+
+    @Override
+    public void onLoadMore(PullToRefreshLayout pullToRefreshLayout) {
+        pullToRefreshLayout.loadmoreFinish(PullToRefreshLayout.SUCCEED);
     }
 }
