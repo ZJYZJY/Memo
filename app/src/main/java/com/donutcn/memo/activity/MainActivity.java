@@ -1,14 +1,19 @@
 package com.donutcn.memo.activity;
 
+import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.KeyEvent;
 import android.view.View;
+import android.view.WindowManager;
+import android.widget.LinearLayout;
+import android.widget.Toast;
 
 import com.donutcn.memo.R;
-import com.donutcn.memo.activity.PublishActivity;
 import com.donutcn.memo.adapter.ViewPagerAdapter;
+import com.donutcn.memo.fragment.SplashFragment;
 import com.donutcn.memo.fragment.discover.DiscoverFragment;
 import com.donutcn.memo.fragment.home.HomeFragment;
 import com.donutcn.memo.utils.WindowUtils;
@@ -16,9 +21,13 @@ import com.donutcn.widgetlib.CheckableImageButton;
 
 public class MainActivity extends AppCompatActivity implements ViewPager.OnPageChangeListener, View.OnClickListener {
 
-    private ViewPager viewPager;
-    private ViewPagerAdapter adapter;
-    private CheckableImageButton home, discover, publish;
+    private ViewPager mViewPager;
+    private ViewPagerAdapter mAdapter;
+    private CheckableImageButton mHome, mDiscover, mPublish;
+    private LinearLayout mMainContainer;
+    public SplashFragment splashFragment;
+
+    private long mExitTime = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,44 +35,80 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
         setContentView(R.layout.activity_main);
         WindowUtils.setStatusBarColor(this, R.color.colorPrimary, true);
 
-        viewPager = (ViewPager) findViewById(R.id.main_viewpager);
-        home = (CheckableImageButton) findViewById(R.id.main_bottom_home);
-        publish = (CheckableImageButton) findViewById(R.id.main_bottom_pub);
-        discover = (CheckableImageButton) findViewById(R.id.main_bottom_dis);
+        // show splash fragment.
+        setSplashFragment();
 
-        viewPager.addOnPageChangeListener(this);
-//        viewPager.setOffscreenPageLimit(2);
-        home.setOnClickListener(this);
-        publish.setOnClickListener(this);
-        discover.setOnClickListener(this);
+        mViewPager = (ViewPager) findViewById(R.id.main_viewpager);
+        mHome = (CheckableImageButton) findViewById(R.id.main_bottom_home);
+        mPublish = (CheckableImageButton) findViewById(R.id.main_bottom_pub);
+        mDiscover = (CheckableImageButton) findViewById(R.id.main_bottom_dis);
 
-        initViewPager(viewPager);
+        mViewPager.addOnPageChangeListener(this);
+//        mViewPager.setOffscreenPageLimit(2);
+        mHome.setOnClickListener(this);
+        mPublish.setOnClickListener(this);
+        mDiscover.setOnClickListener(this);
+
+        initViewPager(mViewPager);
+    }
+
+    public void setSplashFragment() {
+        mMainContainer = (LinearLayout) findViewById(R.id.main_container);
+        mMainContainer.setVisibility(View.GONE);
+        splashFragment = new SplashFragment();
+        final FragmentTransaction transaction = getFragmentManager().beginTransaction();
+        transaction.replace(R.id.splash_container, splashFragment);
+        transaction.commit();
+        // set flag full screen.
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
+
+        getWindow().getDecorView().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                if (splashFragment == null)
+                    return;
+                final FragmentTransaction transaction = getFragmentManager().beginTransaction();
+                transaction.remove(splashFragment);
+                transaction.commit();
+                splashFragment = null;
+                mMainContainer.setVisibility(View.VISIBLE);
+                // clear flag full screen.
+                getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
+            }
+        }, 3000);
     }
 
     private void initViewPager(ViewPager viewPager) {
-        adapter = new ViewPagerAdapter(getSupportFragmentManager(), this);
-        adapter.addFragment(new HomeFragment());
-        adapter.addFragment(new DiscoverFragment());
+        mAdapter = new ViewPagerAdapter(getSupportFragmentManager(), this);
+        mAdapter.addFragment(new HomeFragment());
+        mAdapter.addFragment(new DiscoverFragment());
 
-        viewPager.setAdapter(adapter);
+        viewPager.setAdapter(mAdapter);
     }
 
     @Override
     public void onClick(View v) {
-        switch (v.getId()){
+        switch (v.getId()) {
             case R.id.main_bottom_home:
-                home.setChecked(true);
-                discover.setChecked(false);
-                viewPager.setCurrentItem(0, false);
+                mHome.setChecked(true);
+                mDiscover.setChecked(false);
+                mViewPager.setCurrentItem(0, false);
                 break;
             case R.id.main_bottom_dis:
-                home.setChecked(false);
-                discover.setChecked(true);
-                viewPager.setCurrentItem(1, false);
+                mHome.setChecked(false);
+                mDiscover.setChecked(true);
+                mViewPager.setCurrentItem(1, false);
                 break;
             case R.id.main_bottom_pub:
                 startActivity(new Intent(this, PublishActivity.class));
                 break;
+        }
+    }
+
+    @Override
+    public void onBackPressed() {
+        if(splashFragment == null){
+            super.onBackPressed();
         }
     }
 
@@ -74,12 +119,28 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
 
     @Override
     public void onPageSelected(int position) {
-        viewPager.setCurrentItem(position);
-        adapter.update(position);
+        mViewPager.setCurrentItem(position);
+        mAdapter.update(position);
     }
 
     @Override
     public void onPageScrollStateChanged(int state) {
 
+    }
+
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK
+                && event.getAction() == KeyEvent.ACTION_DOWN
+                && splashFragment == null) {
+            if ((System.currentTimeMillis() - mExitTime) > 1000) {
+                Toast.makeText(MainActivity.this, getString(R.string.toast_exit_double_click), Toast.LENGTH_SHORT).show();
+                mExitTime = System.currentTimeMillis();
+            } else {
+                finish();
+                System.exit(0);
+            }
+            return true;
+        }
+        return super.onKeyDown(keyCode, event);
     }
 }

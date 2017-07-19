@@ -15,14 +15,10 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.donutcn.memo.R;
-import com.donutcn.memo.activity.InteractivePage;
-import com.donutcn.memo.adapter.HaoYeAdapter;
 import com.donutcn.memo.adapter.MessageAdapter;
-import com.donutcn.memo.adapter.SimpleFragmentPagerAdapter;
 import com.donutcn.memo.listener.OnItemClickListener;
-import com.donutcn.memo.type.ItemLayoutType;
+import com.donutcn.memo.listener.OnReceiveNewMessagesListener;
 import com.donutcn.memo.view.ListViewDecoration;
-import com.flyco.tablayout.SlidingTabLayout;
 import com.yanzhenjie.recyclerview.swipe.SwipeMenuRecyclerView;
 
 import java.util.ArrayList;
@@ -35,6 +31,8 @@ public class MessageFragment extends Fragment implements SwipeRefreshLayout.OnRe
     private SwipeMenuRecyclerView mMessage_rv;
 
     private SwipeRefreshLayout mRefreshLayout;
+
+    private OnReceiveNewMessagesListener mMsgListener;
 
     @Override
     public void onAttach(Context context) {
@@ -72,11 +70,11 @@ public class MessageFragment extends Fragment implements SwipeRefreshLayout.OnRe
         Refresh();
     }
 
-    public void update(){
+    public void update() {
         Refresh();
     }
 
-    public void Refresh(){
+    public void Refresh() {
         List<String> dataList = new ArrayList<>();
         for (int i = 0; i < 8; i++) {
             dataList.add("我是第" + i + "个。");
@@ -93,8 +91,13 @@ public class MessageFragment extends Fragment implements SwipeRefreshLayout.OnRe
         @Override
         public void onItemClick(int position) {
             Toast.makeText(mContext, "我是第" + position + "条。", Toast.LENGTH_SHORT).show();
+            mMsgListener.onReceiveNewMessage(position, 1);
         }
     };
+
+    public void setOnReceiveNewMessagesListener(OnReceiveNewMessagesListener listener) {
+        this.mMsgListener = listener;
+    }
 
     @Override
     public void onRefresh() {

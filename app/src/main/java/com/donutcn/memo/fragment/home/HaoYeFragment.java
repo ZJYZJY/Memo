@@ -14,6 +14,7 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.donutcn.memo.activity.InteractivePage;
+import com.donutcn.memo.listener.OnReceiveNewMessagesListener;
 import com.donutcn.memo.type.ItemLayoutType;
 import com.donutcn.memo.view.ListViewDecoration;
 import com.donutcn.memo.R;
@@ -36,6 +37,8 @@ public class HaoYeFragment extends Fragment implements SwipeRefreshLayout.OnRefr
     private SwipeMenuRecyclerView mHaoYe_rv;
 
     private SwipeRefreshLayout mRefreshLayout;
+
+    private OnReceiveNewMessagesListener mMsgListener;
 
     @Override
     public void onAttach(Context context) {
@@ -75,11 +78,11 @@ public class HaoYeFragment extends Fragment implements SwipeRefreshLayout.OnRefr
         Refresh();
     }
 
-    public void update(){
+    public void update() {
         Refresh();
     }
 
-    public void Refresh(){
+    public void Refresh() {
         List<String> dataList = new ArrayList<>();
         for (int i = 0; i < 30; i++) {
             dataList.add("我是第" + i + "个。");
@@ -90,6 +93,10 @@ public class HaoYeFragment extends Fragment implements SwipeRefreshLayout.OnRefr
         mHaoYe_rv.setAdapter(adapter);
 
         mRefreshLayout.setRefreshing(false);
+    }
+
+    public void setOnReceiveNewMessagesListener(OnReceiveNewMessagesListener listener) {
+        this.mMsgListener = listener;
     }
 
     @Override
@@ -142,6 +149,7 @@ public class HaoYeFragment extends Fragment implements SwipeRefreshLayout.OnRefr
         @Override
         public void onItemClick(int position) {
             Toast.makeText(mContext, "我是第" + position + "条。", Toast.LENGTH_SHORT).show();
+            mMsgListener.onReceiveNewMessage(position, 0);
             startActivity(new Intent(getContext(), InteractivePage.class));
         }
     };

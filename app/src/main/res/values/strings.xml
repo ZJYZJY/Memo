@@ -6,6 +6,9 @@
     <string name="title_activity_share">信息发布成功！</string>
     <string name="title_activity_tip_off">举报</string>
 
+    <!--toast-->
+    <string name="toast_exit_double_click">再按一次退出程序</string>
+
     <!--placeholder-->
     <string name="placeholder_default_publish_type">请选择发布类型（默认为 文章）</string>
     <string name="placeholder_publish_type">发布类型：</string>

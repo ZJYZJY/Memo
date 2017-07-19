@@ -9,6 +9,7 @@ import com.donutcn.memo.fragment.discover.FriendsFragment;
 import com.donutcn.memo.fragment.discover.RecommendFragment;
 import com.donutcn.memo.fragment.home.HaoYeFragment;
 import com.donutcn.memo.fragment.home.MessageFragment;
+import com.donutcn.memo.listener.OnReceiveNewMessagesListener;
 
 /**
  * com.hdu.waibaotest
@@ -22,6 +23,7 @@ public class SimpleFragmentPagerAdapter extends FragmentPagerAdapter {
     private String tabTitles1[] = new String[]{"推荐", "好友圈"};
     private int type;
     private Context context;
+    private OnReceiveNewMessagesListener mMsgListener;
 
     public SimpleFragmentPagerAdapter(FragmentManager fm, Context context, int type) {
         super(fm);
@@ -29,18 +31,32 @@ public class SimpleFragmentPagerAdapter extends FragmentPagerAdapter {
         this.type = type;
     }
 
+    public void setOnReceiveNewMessages(OnReceiveNewMessagesListener listener) {
+        this.mMsgListener = listener;
+    }
+
     @Override
     public Fragment getItem(int position) {
-        if(type == 0){
-            if (position == 0)
-                return new HaoYeFragment();
-            else
-                return new MessageFragment();
-        }else {
-            if (position == 0)
-                return new RecommendFragment();
-            else
-                return new FriendsFragment();
+        if (type == 0) {
+            if (position == 0) {
+                HaoYeFragment fragment = new HaoYeFragment();
+                fragment.setOnReceiveNewMessagesListener(mMsgListener);
+                return fragment;
+            } else {
+                MessageFragment fragment = new MessageFragment();
+                fragment.setOnReceiveNewMessagesListener(mMsgListener);
+                return fragment;
+            }
+        } else {
+            if (position == 0) {
+                RecommendFragment fragment = new RecommendFragment();
+                fragment.setOnReceiveNewMessagesListener(mMsgListener);
+                return fragment;
+            } else {
+                FriendsFragment fragment = new FriendsFragment();
+                fragment.setOnReceiveNewMessagesListener(mMsgListener);
+                return fragment;
+            }
         }
     }
 

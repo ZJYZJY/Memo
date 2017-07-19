@@ -19,6 +19,7 @@ import com.donutcn.memo.activity.ArticlePage;
 import com.donutcn.memo.activity.SearchActivity;
 import com.donutcn.memo.adapter.HaoYeAdapter;
 import com.donutcn.memo.listener.OnItemClickListener;
+import com.donutcn.memo.listener.OnReceiveNewMessagesListener;
 import com.donutcn.memo.type.ItemLayoutType;
 import com.donutcn.memo.view.ListViewDecoration;
 import com.yanzhenjie.recyclerview.swipe.Closeable;
@@ -40,6 +41,8 @@ public class RecommendFragment extends Fragment implements SwipeRefreshLayout.On
     private SwipeRefreshLayout mRefreshLayout;
 
     private TextView mSearch_tv;
+
+    private OnReceiveNewMessagesListener mMsgListener;
 
     @Override
     public void onAttach(Context context) {
@@ -81,11 +84,11 @@ public class RecommendFragment extends Fragment implements SwipeRefreshLayout.On
         Refresh();
     }
 
-    public void update(){
+    public void update() {
         Refresh();
     }
 
-    public void Refresh(){
+    public void Refresh() {
         List<String> dataList = new ArrayList<>();
         for (int i = 0; i < 30; i++) {
             dataList.add("我是第" + i + "个。");
@@ -96,6 +99,10 @@ public class RecommendFragment extends Fragment implements SwipeRefreshLayout.On
         mHaoYe_rv.setAdapter(adapter);
 
         mRefreshLayout.setRefreshing(false);
+    }
+
+    public void setOnReceiveNewMessagesListener(OnReceiveNewMessagesListener listener) {
+        this.mMsgListener = listener;
     }
 
     @Override
@@ -130,13 +137,14 @@ public class RecommendFragment extends Fragment implements SwipeRefreshLayout.On
         @Override
         public void onItemClick(int position) {
             Toast.makeText(mContext, "我是第" + position + "条。", Toast.LENGTH_SHORT).show();
+            mMsgListener.onReceiveNewMessage(position, 2);
             startActivity(new Intent(getContext(), ArticlePage.class));
         }
     };
 
     @Override
     public void onClick(View v) {
-        switch (v.getId()){
+        switch (v.getId()) {
             case R.id.recommend_search:
                 startActivity(new Intent(getContext(), SearchActivity.class));
                 break;

@@ -10,22 +10,19 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.Toast;
 
 import com.donutcn.memo.R;
 import com.donutcn.memo.activity.AuthorPage;
-import com.donutcn.memo.activity.InteractivePage;
-import com.donutcn.memo.activity.PersonalCenterActivity;
 import com.donutcn.memo.adapter.SimpleFragmentPagerAdapter;
+import com.donutcn.memo.listener.OnReceiveNewMessagesListener;
 import com.flyco.tablayout.SlidingTabLayout;
 import com.flyco.tablayout.listener.OnTabSelectListener;
 
-public class DiscoverFragment extends Fragment implements OnTabSelectListener {
+public class DiscoverFragment extends Fragment implements OnTabSelectListener, OnReceiveNewMessagesListener {
 
     private SimpleFragmentPagerAdapter mPagerAdapter;
     private ViewPager mViewPager;
     private SlidingTabLayout mTabLayout;
-    private Toolbar toolbar;
     private ImageView mUserCenter_iv;
 
     @Override
@@ -47,7 +44,7 @@ public class DiscoverFragment extends Fragment implements OnTabSelectListener {
             }
         });
         mPagerAdapter = new SimpleFragmentPagerAdapter(getActivity().getSupportFragmentManager(), getContext(), 1);
-//        toolbar = (Toolbar) view.findViewById(R.id.dis_toolbar);
+        mPagerAdapter.setOnReceiveNewMessages(this);
         mViewPager = (ViewPager) view.findViewById(R.id.dis_viewpager);
         mViewPager.setAdapter(mPagerAdapter);
         mTabLayout = (SlidingTabLayout) view.findViewById(R.id.sliding_tabs);
@@ -65,20 +62,34 @@ public class DiscoverFragment extends Fragment implements OnTabSelectListener {
     }
 
     @Override
-    public void onTabSelect(int position) {
+    public void onReceiveNewMessage(int msgCount, int msgType) {
+        switch (msgType) {
+            case 2:
+                mTabLayout.showMsg(0, msgCount);
+                break;
+            case 3:
+                mTabLayout.showMsg(1, msgCount);
+                break;
+            default:
+                break;
+        }
+    }
 
+    @Override
+    public void onTabSelect(int position) {
+        mTabLayout.hideMsg(position);
     }
 
     @Override
     public void onTabReselect(int position) {
-
+        mTabLayout.hideMsg(position);
     }
 
-    public void update(){
+    public void update() {
         Refresh();
     }
 
-    public void Refresh(){
+    public void Refresh() {
 
     }
 
