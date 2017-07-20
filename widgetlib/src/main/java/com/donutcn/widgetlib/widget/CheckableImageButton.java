@@ -1,12 +1,11 @@
-package com.donutcn.widgetlib;
+package com.donutcn.widgetlib.widget;
 
 import android.content.Context;
 import android.content.res.TypedArray;
-import android.os.Parcel;
-import android.os.Parcelable;
 import android.util.AttributeSet;
 import android.widget.Checkable;
-import android.widget.ImageButton;
+
+import com.donutcn.widgetlib.R;
 
 /**
  * com.donutcn.widgetlib

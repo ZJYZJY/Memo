@@ -12,7 +12,7 @@ import android.widget.Toast;
 
 import com.donutcn.memo.R;
 import com.donutcn.memo.utils.WindowUtils;
-import com.donutcn.widgetlib.SwitchView;
+import com.donutcn.widgetlib.widget.SwitchView;
 import com.umeng.socialize.ShareAction;
 import com.umeng.socialize.UMShareAPI;
 import com.umeng.socialize.UMShareListener;

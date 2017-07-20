@@ -17,7 +17,7 @@
             android:layout_weight="1"
             android:background="@color/colorPrimary">
 
-            <com.donutcn.widgetlib.CircleImageView
+            <com.donutcn.widgetlib.widget.CircleImageView
                 android:id="@+id/message_item_icon"
                 android:layout_width="42dp"
                 android:layout_height="42dp"

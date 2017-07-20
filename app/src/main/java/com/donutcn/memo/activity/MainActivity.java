@@ -17,7 +17,7 @@ import com.donutcn.memo.fragment.SplashFragment;
 import com.donutcn.memo.fragment.discover.DiscoverFragment;
 import com.donutcn.memo.fragment.home.HomeFragment;
 import com.donutcn.memo.utils.WindowUtils;
-import com.donutcn.widgetlib.CheckableImageButton;
+import com.donutcn.widgetlib.widget.CheckableImageButton;
 
 public class MainActivity extends AppCompatActivity implements ViewPager.OnPageChangeListener, View.OnClickListener {
 

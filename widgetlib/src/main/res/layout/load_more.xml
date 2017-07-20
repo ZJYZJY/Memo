@@ -40,8 +40,8 @@
 
         <ImageView
             android:id="@+id/loadstate_iv"
-            android:layout_width="20dp"
-            android:layout_height="20dp"
+            android:layout_width="12dp"
+            android:layout_height="12dp"
             android:layout_centerVertical="true"
             android:layout_marginRight="8dp"
             android:layout_marginEnd="8dp"

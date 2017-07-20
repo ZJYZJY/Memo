@@ -9,7 +9,7 @@
     android:paddingRight="12dp"
     android:paddingTop="4dp">
 
-    <com.donutcn.widgetlib.CircleImageView
+    <com.donutcn.widgetlib.widget.CircleImageView
         android:id="@+id/iv_content_icon"
         android:layout_width="@dimen/item_user_icon_diameter"
         android:layout_height="@dimen/item_user_icon_diameter"

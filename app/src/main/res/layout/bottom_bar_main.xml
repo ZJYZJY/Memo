@@ -18,7 +18,7 @@
         android:background="@color/colorPrimary"
         android:orientation="horizontal">
 
-        <com.donutcn.widgetlib.CheckableImageButton
+        <com.donutcn.widgetlib.widget.CheckableImageButton
             android:id="@+id/main_bottom_home"
             style="@android:style/Widget.DeviceDefault.Button.Borderless"
             android:layout_width="0dp"
@@ -29,7 +29,7 @@
             app:isChecked="true"
             app:srcCompat="@drawable/home_selector" />
 
-        <com.donutcn.widgetlib.CheckableImageButton
+        <com.donutcn.widgetlib.widget.CheckableImageButton
             android:id="@+id/main_bottom_pub"
             style="@android:style/Widget.DeviceDefault.Button.Borderless"
             android:layout_width="0dp"
@@ -41,7 +41,7 @@
             android:scaleType="centerInside"
             app:srcCompat="@drawable/publish" />
 
-        <com.donutcn.widgetlib.CheckableImageButton
+        <com.donutcn.widgetlib.widget.CheckableImageButton
             android:id="@+id/main_bottom_dis"
             style="@android:style/Widget.DeviceDefault.Button.Borderless"
             android:layout_width="0dp"

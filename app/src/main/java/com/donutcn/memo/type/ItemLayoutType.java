@@ -10,7 +10,13 @@ import android.support.annotation.IntDef;
 @IntDef({ItemLayoutType.TYPE_TAG, ItemLayoutType.AVATAR_IMG})
 public @interface ItemLayoutType {
 
-    int TYPE_TAG = 0;   // publish content type tag in item layout.
+    /**
+     * publish content type tag in item layout.
+     */
+    int TYPE_TAG = 0;
 
-    int AVATAR_IMG = 1; // user icon in item layout.
+    /**
+     * user icon in item layout.
+     */
+    int AVATAR_IMG = 1;
 }

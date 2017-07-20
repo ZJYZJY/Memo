@@ -1,4 +1,4 @@
-package com.donutcn.widgetlib;
+package com.donutcn.widgetlib.widget;
 
 import android.animation.ValueAnimator;
 import android.annotation.TargetApi;
@@ -17,6 +17,8 @@ import android.util.AttributeSet;
 import android.view.View;
 import android.view.animation.LinearInterpolator;
 import android.widget.Checkable;
+
+import com.donutcn.widgetlib.R;
 
 
 /**

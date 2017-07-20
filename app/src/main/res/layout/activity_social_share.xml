@@ -46,7 +46,7 @@
                 android:textColor="@color/textPrimary"
                 android:textSize="15sp" />
 
-            <com.donutcn.widgetlib.SwitchView
+            <com.donutcn.widgetlib.widget.SwitchView
                 android:id="@+id/social_content_private"
                 android:layout_width="42dp"
                 android:layout_height="wrap_content"

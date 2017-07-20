@@ -37,10 +37,7 @@ public class ListViewDecoration extends RecyclerView.ItemDecoration {
 
     @Override
     public void onDraw(Canvas c, RecyclerView parent, RecyclerView.State state) {
-        int left;
-        int right;
-        int top;
-        int bottom;
+        int left, right, top, bottom;
         if (mOrientation == LinearLayoutManager.HORIZONTAL) {
             top = parent.getPaddingTop();
             bottom = parent.getHeight() - parent.getPaddingBottom();

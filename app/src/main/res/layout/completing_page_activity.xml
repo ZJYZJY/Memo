@@ -77,7 +77,7 @@
                     android:textColor="@color/textPrimaryDark"
                     android:textSize="16sp" />
 
-                <com.donutcn.widgetlib.SwitchView
+                <com.donutcn.widgetlib.widget.SwitchView
                     android:layout_width="42dp"
                     android:layout_height="wrap_content"
                     android:layout_alignParentEnd="true"
@@ -92,7 +92,7 @@
                 android:layout_height="wrap_content"
                 android:orientation="horizontal">
 
-                <com.donutcn.widgetlib.CheckBox
+                <com.donutcn.widgetlib.widget.CheckBox
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:checked="true"
@@ -100,7 +100,7 @@
                     app:text="@string/completing_name_cb"
                     app:textColor="@color/textPrimaryDark" />
 
-                <com.donutcn.widgetlib.CheckBox
+                <com.donutcn.widgetlib.widget.CheckBox
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:checked="true"
@@ -108,13 +108,13 @@
                     app:text="@string/completing_phone_cb"
                     app:textColor="@color/textPrimaryDark" />
 
-                <com.donutcn.widgetlib.CheckBox
+                <com.donutcn.widgetlib.widget.CheckBox
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     app:text="@string/completing_wechat_cb"
                     app:textColor="@color/textPrimaryDark" />
 
-                <com.donutcn.widgetlib.CheckBox
+                <com.donutcn.widgetlib.widget.CheckBox
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     app:text="@string/completing_email_cb"

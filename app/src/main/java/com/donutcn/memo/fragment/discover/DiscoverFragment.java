@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
-import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,14 +12,14 @@ import android.widget.ImageView;
 
 import com.donutcn.memo.R;
 import com.donutcn.memo.activity.AuthorPage;
-import com.donutcn.memo.adapter.SimpleFragmentPagerAdapter;
+import com.donutcn.memo.adapter.TabFragmentPagerAdapter;
 import com.donutcn.memo.listener.OnReceiveNewMessagesListener;
 import com.flyco.tablayout.SlidingTabLayout;
 import com.flyco.tablayout.listener.OnTabSelectListener;
 
 public class DiscoverFragment extends Fragment implements OnTabSelectListener, OnReceiveNewMessagesListener {
 
-    private SimpleFragmentPagerAdapter mPagerAdapter;
+    private TabFragmentPagerAdapter mPagerAdapter;
     private ViewPager mViewPager;
     private SlidingTabLayout mTabLayout;
     private ImageView mUserCenter_iv;
@@ -43,7 +42,7 @@ public class DiscoverFragment extends Fragment implements OnTabSelectListener, O
                 startActivity(new Intent(getContext(), AuthorPage.class));
             }
         });
-        mPagerAdapter = new SimpleFragmentPagerAdapter(getActivity().getSupportFragmentManager(), getContext(), 1);
+        mPagerAdapter = new TabFragmentPagerAdapter(getActivity().getSupportFragmentManager(), getContext(), 1);
         mPagerAdapter.setOnReceiveNewMessages(this);
         mViewPager = (ViewPager) view.findViewById(R.id.dis_viewpager);
         mViewPager.setAdapter(mPagerAdapter);

@@ -16,7 +16,7 @@ import com.donutcn.memo.listener.OnReceiveNewMessagesListener;
  * Created by 73958 on 2017/7/4.
  */
 
-public class SimpleFragmentPagerAdapter extends FragmentPagerAdapter {
+public class TabFragmentPagerAdapter extends FragmentPagerAdapter {
 
     final int PAGE_COUNT = 2;
     private String tabTitles0[] = new String[]{"好页", "消息"};
@@ -25,7 +25,7 @@ public class SimpleFragmentPagerAdapter extends FragmentPagerAdapter {
     private Context context;
     private OnReceiveNewMessagesListener mMsgListener;
 
-    public SimpleFragmentPagerAdapter(FragmentManager fm, Context context, int type) {
+    public TabFragmentPagerAdapter(FragmentManager fm, Context context, int type) {
         super(fm);
         this.context = context;
         this.type = type;

@@ -1,4 +1,4 @@
-package com.donutcn.widgetlib;
+package com.donutcn.widgetlib.widget;
 
 import android.content.Context;
 import android.content.res.TypedArray;
@@ -9,6 +9,8 @@ import android.view.Gravity;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
+import com.donutcn.widgetlib.R;
 
 /**
  * Checkbox with text.

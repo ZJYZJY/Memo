@@ -43,7 +43,7 @@
                     android:paddingBottom="12dp"
                     android:orientation="horizontal">
 
-                    <com.donutcn.widgetlib.CircleImageView
+                    <com.donutcn.widgetlib.widget.CircleImageView
                         android:layout_width="36dp"
                         android:layout_height="36dp"
                         android:src="@mipmap/ic_launcher_round"/>

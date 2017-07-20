@@ -27,7 +27,7 @@
                     android:layout_height="wrap_content"
                     android:padding="16dp">
 
-                    <com.donutcn.widgetlib.CircleImageView
+                    <com.donutcn.widgetlib.widget.CircleImageView
                         android:id="@+id/author_icon"
                         android:layout_width="64dp"
                         android:layout_height="64dp"

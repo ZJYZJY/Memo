@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.donutcn.widgetlib;
+package com.donutcn.widgetlib.widget;
 
 import android.content.Context;
 import android.content.res.TypedArray;
@@ -35,6 +35,8 @@ import android.support.annotation.ColorRes;
 import android.support.annotation.DrawableRes;
 import android.util.AttributeSet;
 import android.widget.ImageView;
+
+import com.donutcn.widgetlib.R;
 
 public class CircleImageView extends ImageView {
 

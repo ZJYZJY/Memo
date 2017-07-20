@@ -1,4 +1,4 @@
-package com.donutcn.widgetlib;
+package com.donutcn.widgetlib.widget;
 
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
@@ -18,6 +18,8 @@ import android.util.TypedValue;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.animation.AccelerateInterpolator;
+
+import com.donutcn.widgetlib.R;
 
 /**
  * com.donutcn.widgetlib

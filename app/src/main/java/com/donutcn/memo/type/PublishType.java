@@ -24,6 +24,9 @@ public enum PublishType {
         this.mType = type;
     }
 
+    /**
+     * Get the String[] for all PublishType.
+     */
     public static String[] toStringArray(){
         ArrayList<String> types = new ArrayList<>();
         for(PublishType type : PublishType.values()){
@@ -33,6 +36,11 @@ public enum PublishType {
         return types.toArray(array);
     }
 
+    /**
+     * Get the enum type of the string
+     * @param type type string
+     * @return PublishType
+     */
     public static PublishType getType(String type){
         for(PublishType item : PublishType.values()){
             if(item.toString() == type)

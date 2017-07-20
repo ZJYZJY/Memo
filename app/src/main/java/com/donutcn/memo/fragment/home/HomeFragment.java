@@ -12,14 +12,14 @@ import android.widget.ImageView;
 
 import com.donutcn.memo.R;
 import com.donutcn.memo.activity.PersonalCenterActivity;
-import com.donutcn.memo.adapter.SimpleFragmentPagerAdapter;
+import com.donutcn.memo.adapter.TabFragmentPagerAdapter;
 import com.donutcn.memo.listener.OnReceiveNewMessagesListener;
 import com.flyco.tablayout.SlidingTabLayout;
 import com.flyco.tablayout.listener.OnTabSelectListener;
 
 public class HomeFragment extends Fragment implements OnTabSelectListener, OnReceiveNewMessagesListener {
 
-    private SimpleFragmentPagerAdapter mPagerAdapter;
+    private TabFragmentPagerAdapter mPagerAdapter;
     private ViewPager mViewPager;
     private SlidingTabLayout mTabLayout;
     private ImageView mUserCenter_iv;
@@ -42,7 +42,7 @@ public class HomeFragment extends Fragment implements OnTabSelectListener, OnRec
             }
         });
 
-        mPagerAdapter = new SimpleFragmentPagerAdapter(getActivity().getSupportFragmentManager(), getContext(), 0);
+        mPagerAdapter = new TabFragmentPagerAdapter(getActivity().getSupportFragmentManager(), getContext(), 0);
         mPagerAdapter.setOnReceiveNewMessages(this);
         mViewPager = (ViewPager) view.findViewById(R.id.home_viewpager);
         mViewPager.setAdapter(mPagerAdapter);

@@ -34,7 +34,7 @@
                 android:textSize="18sp" />
         </RelativeLayout>
 
-        <com.donutcn.widgetlib.CircleImageView
+        <com.donutcn.widgetlib.widget.CircleImageView
             android:id="@+id/personal_center_user_icon"
             android:layout_width="72dp"
             android:layout_height="72dp"

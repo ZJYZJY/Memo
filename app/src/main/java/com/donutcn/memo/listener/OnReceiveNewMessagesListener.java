@@ -7,5 +7,10 @@ package com.donutcn.memo.listener;
 
 public interface OnReceiveNewMessagesListener {
 
+    /**
+     * Receive new message listener.
+     * @param msgCount unread message count.
+     * @param msgType new message type.
+     */
     void onReceiveNewMessage(int msgCount, int msgType);
 }

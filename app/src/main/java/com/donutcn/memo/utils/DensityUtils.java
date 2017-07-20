@@ -22,7 +22,6 @@ public class DensityUtils {
                 dpVal, context.getResources().getDisplayMetrics());
     }
 
-
     /**
      * px to dp
      * @param context
