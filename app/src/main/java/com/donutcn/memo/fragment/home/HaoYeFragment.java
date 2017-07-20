@@ -13,7 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
-import com.donutcn.memo.activity.InteractivePage;
+import com.donutcn.memo.activity.ArticlePage;
 import com.donutcn.memo.listener.OnReceiveNewMessagesListener;
 import com.donutcn.memo.type.ItemLayoutType;
 import com.donutcn.memo.view.ListViewDecoration;
@@ -154,7 +154,7 @@ public class HaoYeFragment extends Fragment implements SwipeRefreshLayout.OnRefr
         public void onItemClick(int position) {
             Toast.makeText(mContext, "我是第" + position + "条。", Toast.LENGTH_SHORT).show();
             mMsgListener.onReceiveNewMessage(position, 0);
-            startActivity(new Intent(mContext, InteractivePage.class));
+            startActivity(new Intent(mContext, ArticlePage.class));
         }
     };
 

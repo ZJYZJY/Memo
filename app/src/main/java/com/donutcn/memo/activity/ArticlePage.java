@@ -6,7 +6,6 @@ import android.support.design.widget.BottomSheetBehavior;
 import android.support.design.widget.BottomSheetDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
@@ -24,13 +23,12 @@ public class ArticlePage extends AppCompatActivity implements View.OnClickListen
 
     private BottomSheetBehavior behavior;
     private BottomSheetDialog dialog;
-    private RecyclerView mRecyclerView;
     private Button mInteractive;
     private TextView mContent_tv, mWant;
 
     private PublishType mType = PublishType.ARTICLE;
 
-    private String mTitle, mDate, mAuthor, mReadCount, mContent;
+    private String mTitle, mAuthor, mDate, mContent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,6 +39,7 @@ public class ArticlePage extends AppCompatActivity implements View.OnClickListen
         WindowUtils.setStatusBarColor(this, R.color.colorPrimary, true);
 
         initView();
+
         String source = "<article class=\"article\">\n" +
                 "      <p>对于汉字，日本人常怀有一种复杂的情感，既觉得汉字伟大，又觉得汉字难学。在日本，“认识多少汉字”某种程度上可以代表一个人的受教育水平，受过良好教育的人可以读懂较多的汉字。然而，现在的日本年轻人能够读懂的汉字已经越来越少，对于中国人的汉字和语言能力，他们内心也是五味陈杂。</p> \n" +
                 "<p>昨天，在2CH论坛上一条标题为“中国人既能看懂日本的‘汉字’，又能说英语，他们这不是最强的吗？”的帖子火了。</p> \n" +
@@ -101,7 +100,7 @@ public class ArticlePage extends AppCompatActivity implements View.OnClickListen
                 .into(mContent_tv);
     }
 
-    public void initView(){
+    public void initView() {
         mInteractive = (Button) findViewById(R.id.interactive);
         mWant = (TextView) findViewById(R.id.interactive_bottom_want);
 
@@ -109,24 +108,74 @@ public class ArticlePage extends AppCompatActivity implements View.OnClickListen
         findViewById(R.id.interactive_bottom_upvote).setOnClickListener(this);
         findViewById(R.id.interactive_bottom_comment).setOnClickListener(this);
 
-        switch (mType){
+        switch (mType) {
             case ARTICLE:
                 mWant.setText(getString(R.string.interactive_want_article));
                 mInteractive.setText(getString(R.string.interactive_comment));
+                // open the bottom sheet dialog.
+                mInteractive.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        showBSDialog(R.layout.bottom_dialog_reply);
+                    }
+                });
                 break;
             case ALBUM:
                 mWant.setText(getString(R.string.interactive_want_album));
                 mInteractive.setText(getString(R.string.interactive_comment));
+                mInteractive.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        showBSDialog(R.layout.bottom_dialog_reply);
+                    }
+                });
+                break;
+            case ACTIVITY:
+                mWant.setText(getString(R.string.interactive_want_activity));
+                mInteractive.setText(getString(R.string.interactive_enroll));
+                mInteractive.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        showBSDialog(R.layout.bottom_dialog_info);
+                    }
+                });
+                break;
+            case VOTE:
+                mWant.setText(getString(R.string.interactive_want_vote));
+                mInteractive.setText(getString(R.string.interactive_vote));
+                break;
+            case RECRUIT:
+                mWant.setText(getString(R.string.interactive_want_recruit));
+                mInteractive.setText(getString(R.string.interactive_resume));
+                break;
+            case QA:
+                mWant.setText(getString(R.string.interactive_want_answer));
+                mInteractive.setText(getString(R.string.interactive_answer));
+                // open the bottom sheet dialog.
+                mInteractive.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        showBSDialog(R.layout.bottom_dialog_reply);
+                    }
+                });
+                break;
+            case RESERVE:
+                mWant.setText(getString(R.string.interactive_want_reserve));
+                mInteractive.setText(getString(R.string.interactive_reserve));
+                break;
+            case SALE:
+                mWant.setText(getString(R.string.interactive_want_sale));
+                mInteractive.setText(getString(R.string.interactive_buy));
                 break;
         }
+    }
 
-        // open the bottom sheet dialog.
-        mInteractive.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                showBSDialog(R.layout.bottom_dialog_reply);
-            }
-        });
+    public void onCloseDialog(View view) {
+        behavior.setState(BottomSheetBehavior.STATE_HIDDEN);
+    }
+
+    public void onBack(View view) {
+        finish();
     }
 
     /**
@@ -139,14 +188,26 @@ public class ArticlePage extends AppCompatActivity implements View.OnClickListen
         View parent = (View) view.getParent();
         behavior = BottomSheetBehavior.from(parent);
         behavior.setPeekHeight(DensityUtils.dp2px(this, 512));
-        // set the submit button text.
-        ((TextView)parent.findViewById(R.id.interactive_reply_submit)).setText(getString(R.string.btn_dialog_submit));
+
+        if (layout == R.layout.bottom_dialog_info) {
+            TextView action = (TextView) parent.findViewById(R.id.interactive_type);
+            action.setText(getString(R.string.interactive_enroll));
+        } else if (layout == R.layout.bottom_dialog_reply) {
+            TextView action = (TextView) parent.findViewById(R.id.interactive_reply_submit);
+            if (mType == PublishType.QA) {
+                action.setText(getString(R.string.btn_dialog_answer));
+            } else if (mType == PublishType.ARTICLE || mType == PublishType.ALBUM) {
+                // set the submit button text.
+                action.setText(getString(R.string.btn_dialog_submit));
+            }
+        }
+
         dialog.show();
     }
 
     @Override
     public void onClick(View v) {
-        switch (v.getId()){
+        switch (v.getId()) {
             case R.id.interactive_bottom_publish:
                 Intent intent = new Intent(this, PublishActivity.class);
                 intent.putExtra("type", mType);
@@ -157,10 +218,6 @@ public class ArticlePage extends AppCompatActivity implements View.OnClickListen
             case R.id.interactive_bottom_comment:
                 break;
         }
-    }
-
-    public void onBack(View view){
-        finish();
     }
 
     @Override
