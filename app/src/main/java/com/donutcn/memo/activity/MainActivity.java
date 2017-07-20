@@ -61,6 +61,8 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
         transaction.commit();
         // set flag full screen.
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        // TODO: To determine whether or not to log in. if not logged in, start the LoginActivity.
+
         // delay 3s to remove the splash fragment.
         getWindow().getDecorView().postDelayed(new Runnable() {
             @Override
@@ -146,7 +148,6 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
                 mExitTime = System.currentTimeMillis();
             } else {
                 finish();
-                System.exit(0);
             }
             return true;
         }

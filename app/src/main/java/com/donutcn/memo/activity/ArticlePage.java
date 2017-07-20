@@ -151,7 +151,6 @@ public class ArticlePage extends AppCompatActivity implements View.OnClickListen
             case QA:
                 mWant.setText(getString(R.string.interactive_want_answer));
                 mInteractive.setText(getString(R.string.interactive_answer));
-                // open the bottom sheet dialog.
                 mInteractive.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -168,6 +167,10 @@ public class ArticlePage extends AppCompatActivity implements View.OnClickListen
                 mInteractive.setText(getString(R.string.interactive_buy));
                 break;
         }
+    }
+
+    public void onMore(View view) {
+
     }
 
     public void onCloseDialog(View view) {

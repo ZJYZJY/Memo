@@ -16,6 +16,7 @@ import android.widget.Toast;
 
 import com.donutcn.memo.R;
 import com.donutcn.memo.adapter.MessageAdapter;
+import com.donutcn.memo.fragment.BaseScrollFragment;
 import com.donutcn.memo.listener.OnItemClickListener;
 import com.donutcn.memo.listener.OnReceiveNewMessagesListener;
 import com.donutcn.memo.view.ListViewDecoration;
@@ -24,7 +25,7 @@ import com.yanzhenjie.recyclerview.swipe.SwipeMenuRecyclerView;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MessageFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener {
+public class MessageFragment extends BaseScrollFragment implements SwipeRefreshLayout.OnRefreshListener {
 
     private Context mContext;
 
@@ -55,6 +56,7 @@ public class MessageFragment extends Fragment implements SwipeRefreshLayout.OnRe
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         mMessage_rv = (SwipeMenuRecyclerView) view.findViewById(R.id.recycler_view);
+        setRecyclerView(mMessage_rv);
         mRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipe_layout);
         mRefreshLayout.setOnRefreshListener(this);
 

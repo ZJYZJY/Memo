@@ -18,6 +18,7 @@ import com.donutcn.memo.R;
 import com.donutcn.memo.activity.ArticlePage;
 import com.donutcn.memo.activity.SearchActivity;
 import com.donutcn.memo.adapter.HaoYeAdapter;
+import com.donutcn.memo.fragment.BaseScrollFragment;
 import com.donutcn.memo.listener.OnItemClickListener;
 import com.donutcn.memo.listener.OnReceiveNewMessagesListener;
 import com.donutcn.memo.type.ItemLayoutType;
@@ -32,7 +33,7 @@ import com.yanzhenjie.recyclerview.swipe.SwipeMenuRecyclerView;
 import java.util.ArrayList;
 import java.util.List;
 
-public class RecommendFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener, View.OnClickListener {
+public class RecommendFragment extends BaseScrollFragment implements SwipeRefreshLayout.OnRefreshListener, View.OnClickListener {
 
     private Context mContext;
 
@@ -64,6 +65,7 @@ public class RecommendFragment extends Fragment implements SwipeRefreshLayout.On
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         mHaoYe_rv = (SwipeMenuRecyclerView) view.findViewById(R.id.recycler_view);
+        setRecyclerView(mHaoYe_rv);
         mRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipe_layout);
         mSearch_tv = (TextView) view.findViewById(R.id.recommend_search);
         mRefreshLayout.setOnRefreshListener(this);
