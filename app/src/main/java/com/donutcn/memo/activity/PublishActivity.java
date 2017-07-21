@@ -23,6 +23,7 @@ import com.donutcn.memo.R;
 import com.donutcn.memo.type.PublishType;
 import com.donutcn.memo.utils.PermissionCheck;
 import com.donutcn.memo.utils.RecognizerResultParser;
+import com.donutcn.memo.utils.SpfsUtils;
 import com.donutcn.memo.utils.WindowUtils;
 import com.iflytek.cloud.ErrorCode;
 import com.iflytek.cloud.InitListener;
@@ -64,7 +65,7 @@ public class PublishActivity extends AppCompatActivity implements View.OnClickLi
     private ArrayList<String> selectedPhotos = new ArrayList<>();
 
     private final String[] mContentTypes = PublishType.toStringArray();
-    private String mSelectedType = mContentTypes[0];
+    private String mSelectedType;
     private String mTitleStr = "";
     private String mContentStr = "";
 
@@ -75,13 +76,22 @@ public class PublishActivity extends AppCompatActivity implements View.OnClickLi
         WindowUtils.setToolBarTitle(this, R.string.title_activity_publish);
         WindowUtils.setToolBarButton(this, R.string.btn_publish_finish);
         WindowUtils.setStatusBarColor(this, R.color.colorPrimary, true);
+        mSelectedType = mContentTypes[0];
         initView();
         setUpRichTextEditor();
         PublishType type = (PublishType) getIntent().getSerializableExtra("type");
-        if(type != null){
+        if (type != null) {
             mSelectedType = type.toString();
-            String text = getResources().getText(R.string.placeholder_publish_type) + mSelectedType;
-            mPublishType.setText(text);
+            mPublishType.setText(getString(R.string.placeholder_publish_type, mSelectedType));
+        } else {
+            mSelectedType = SpfsUtils.readString(this, SpfsUtils.CACHE, "publishType", mSelectedType);
+            mTitleStr = SpfsUtils.readString(this, SpfsUtils.CACHE, "publishTitle", "");
+            mContentStr = SpfsUtils.readString(this, SpfsUtils.CACHE, "publishContent", "");
+            if (!isContentEmpty()) {
+                mPublishType.setText(getString(R.string.placeholder_publish_type, mSelectedType));
+                mTitle.setText(mTitleStr);
+                mContent.setHtml(mContentStr);
+            }
         }
 
         mIat = SpeechRecognizer.createRecognizer(this, mInitListener);
@@ -140,21 +150,17 @@ public class PublishActivity extends AppCompatActivity implements View.OnClickLi
         mContent.setEditorFontColor(getResources().getColor(R.color.textPrimaryDark));
     }
 
-    public void onBack(View view) {
-        finish();
-    }
-
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.toolbar_with_btn:
                 // according to the selected type, pass the different parameters to activity.
-                if(mSelectedType == mContentTypes[0] || mSelectedType == mContentTypes[1]
-                        || mSelectedType == mContentTypes[5]){
+                if (mSelectedType == mContentTypes[0] || mSelectedType == mContentTypes[1]
+                        || mSelectedType == mContentTypes[5]) {
                     startActivity(new Intent(this, SocialShareActivity.class));
-                } else if(mSelectedType == mContentTypes[2] ||mSelectedType == mContentTypes[3]
+                } else if (mSelectedType == mContentTypes[2] || mSelectedType == mContentTypes[3]
                         || mSelectedType == mContentTypes[4] || mSelectedType == mContentTypes[6]
-                        || mSelectedType == mContentTypes[7]){
+                        || mSelectedType == mContentTypes[7]) {
                     Intent intent = new Intent(this, CompletingPage.class);
                     intent.putExtra("type", PublishType.getType(mSelectedType));
                     startActivity(intent);
@@ -164,13 +170,12 @@ public class PublishActivity extends AppCompatActivity implements View.OnClickLi
                         + "content:" + mContentStr, Toast.LENGTH_SHORT).show();
                 break;
             case R.id.publish_spinner:
-                new AlertDialog.Builder(PublishActivity.this)
+                new AlertDialog.Builder(this)
                         .setItems(mContentTypes, new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
                                 mSelectedType = mContentTypes[which];
-                                String text = getString(R.string.placeholder_publish_type) + mSelectedType;
-                                mPublishType.setText(text);
+                                mPublishType.setText(getString(R.string.placeholder_publish_type, mSelectedType));
                             }
                         }).show();
                 break;
@@ -189,7 +194,7 @@ public class PublishActivity extends AppCompatActivity implements View.OnClickLi
                 break;
             case R.id.pub_speech_input:
                 PermissionCheck permissionCheck = new PermissionCheck(this);
-                if(permissionCheck.checkRecordPermission()){
+                if (permissionCheck.checkRecordPermission()) {
                     startSpeech();
                 }
                 break;
@@ -253,56 +258,16 @@ public class PublishActivity extends AppCompatActivity implements View.OnClickLi
 //                .show();
     }
 
-    public void startSpeech(){
+    private boolean isContentEmpty(){
+        return mTitleStr == "" && mContentStr == "";
+    }
+
+    public void startSpeech() {
         // set up SpeechRecognizer parameter.
         setParam();
         // show the listening dialog.
         mIatDialog.setListener(mRecognizerDialogListener);
         mIatDialog.show();
-    }
-
-    /**
-     * RecognizerDialogListener with UI.
-     */
-    private RecognizerDialogListener mRecognizerDialogListener = new RecognizerDialogListener() {
-        public void onResult(RecognizerResult results, boolean isLast) {
-            printResult(results);
-            if(isLast){
-                mContentTextChangeListener.onTextChange(mContent.getHtml());
-            }
-        }
-
-        public void onError(SpeechError error) {
-            Toast.makeText(PublishActivity.this, error.getPlainDescription(true), Toast.LENGTH_SHORT).show();
-        }
-
-    };
-
-    private void printResult(RecognizerResult results) {
-        String text = RecognizerResultParser.parseIatResult(results.getResultString());
-        String sn = null;
-        // read the 'sn' part of the json string.
-        try {
-            JSONObject resultJson = new JSONObject(results.getResultString());
-            sn = resultJson.optString("sn");
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        mIatResults.put(sn, text);
-        StringBuilder resultBuilder = new StringBuilder();
-        for (String key : mIatResults.keySet()) {
-            resultBuilder.append(mIatResults.get(key));
-        }
-
-        if(mContent.isFocused()){
-            StringBuilder builder = new StringBuilder(mContentStr);
-            builder.append(resultBuilder.toString());
-            mContent.setHtml(builder.toString());
-        }
-//        else if(mTitle.isFocused()){
-//            String str = mTitleStr + resultBuilder.toString();
-//            mTitle.setText(str);
-//        }
     }
 
     private RichEditor.OnTextChangeListener mContentTextChangeListener = new RichEditor.OnTextChangeListener() {
@@ -330,6 +295,50 @@ public class PublishActivity extends AppCompatActivity implements View.OnClickLi
     };
 
     /**
+     * RecognizerDialogListener with UI.
+     */
+    private RecognizerDialogListener mRecognizerDialogListener = new RecognizerDialogListener() {
+        public void onResult(RecognizerResult results, boolean isLast) {
+            printResult(results);
+            if (isLast) {
+                mContentTextChangeListener.onTextChange(mContent.getHtml());
+            }
+        }
+
+        public void onError(SpeechError error) {
+            Toast.makeText(PublishActivity.this, error.getPlainDescription(true), Toast.LENGTH_SHORT).show();
+        }
+
+    };
+
+    private void printResult(RecognizerResult results) {
+        String text = RecognizerResultParser.parseIatResult(results.getResultString());
+        String sn = null;
+        // read the 'sn' part of the json string.
+        try {
+            JSONObject resultJson = new JSONObject(results.getResultString());
+            sn = resultJson.optString("sn");
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        mIatResults.put(sn, text);
+        StringBuilder resultBuilder = new StringBuilder();
+        for (String key : mIatResults.keySet()) {
+            resultBuilder.append(mIatResults.get(key));
+        }
+
+        if (mContent.isFocused()) {
+            StringBuilder builder = new StringBuilder(mContentStr);
+            builder.append(resultBuilder.toString());
+            mContent.setHtml(builder.toString());
+        }
+//        else if(mTitle.isFocused()){
+//            String str = mTitleStr + resultBuilder.toString();
+//            mTitle.setText(str);
+//        }
+    }
+
+    /**
      * RecognizerListener without UI.
      */
     private RecognizerListener mRecognizerListener = new RecognizerListener() {
@@ -338,7 +347,7 @@ public class PublishActivity extends AppCompatActivity implements View.OnClickLi
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    Toast.makeText(PublishActivity.this,"当前音量" + i ,Toast.LENGTH_SHORT).show();
+                    Toast.makeText(PublishActivity.this, "当前音量" + i, Toast.LENGTH_SHORT).show();
                 }
             });
         }
@@ -408,18 +417,58 @@ public class PublishActivity extends AppCompatActivity implements View.OnClickLi
 
             if (photos != null) {
                 selectedPhotos.addAll(photos);
-                Toast.makeText(this, selectedPhotos.get(0), Toast.LENGTH_SHORT).show();
                 mContent.insertImage(selectedPhotos.get(0), "twitter");
             }
+        }
+    }
+
+    /**
+     * store the draft of publish content before exit this activity.
+     */
+    private void storeDraft() {
+        if (!isContentEmpty()) {
+            new AlertDialog.Builder(this)
+                    .setMessage(getString(R.string.dialog_publish_exit_msg))
+                    .setPositiveButton(getString(R.string.dialog_publish_pos), new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            SpfsUtils.write(PublishActivity.this, SpfsUtils.CACHE, "publishType", mSelectedType);
+                            SpfsUtils.write(PublishActivity.this, SpfsUtils.CACHE, "publishTitle", mTitleStr);
+                            SpfsUtils.write(PublishActivity.this, SpfsUtils.CACHE, "publishContent", mContentStr);
+                            finish();
+                        }
+                    })
+                    .setNegativeButton(getString(R.string.dialog_publish_neg), new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            SpfsUtils.remove(PublishActivity.this, SpfsUtils.CACHE, "publishType");
+                            SpfsUtils.remove(PublishActivity.this, SpfsUtils.CACHE, "publishTitle");
+                            SpfsUtils.remove(PublishActivity.this, SpfsUtils.CACHE, "publishContent");
+                            finish();
+                        }
+                    })
+                    .setCancelable(true)
+                    .show();
+        } else {
+            finish();
         }
     }
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if (requestCode == PermissionCheck.PERMISSION_RECORD){
+        if (requestCode == PermissionCheck.PERMISSION_RECORD) {
 
         }
+    }
+
+    @Override
+    public void onBackPressed() {
+        storeDraft();
+    }
+
+    public void onBack(View view) {
+        storeDraft();
     }
 
     private void toggleKeyboard() {
@@ -434,7 +483,7 @@ public class PublishActivity extends AppCompatActivity implements View.OnClickLi
         mContent.clearHistory();
         mContent.destroy();
 
-        if( null != mIat ){
+        if (null != mIat) {
             // release connection when exit.
             mIat.cancel();
             mIat.destroy();

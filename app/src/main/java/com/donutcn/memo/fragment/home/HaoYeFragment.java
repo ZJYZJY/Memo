@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
@@ -13,15 +14,16 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.donutcn.memo.activity.ArticlePage;
-import com.donutcn.memo.fragment.BaseScrollFragment;
+import com.donutcn.memo.base.BaseScrollFragment;
 import com.donutcn.memo.listener.OnReceiveNewMessagesListener;
 import com.donutcn.memo.type.ItemLayoutType;
 import com.donutcn.memo.view.ListViewDecoration;
 import com.donutcn.memo.R;
 import com.donutcn.memo.adapter.HaoYeAdapter;
 import com.donutcn.memo.listener.OnItemClickListener;
-import com.donutcn.widgetlib.PullToRefreshLayout;
-import com.donutcn.widgetlib.PullableRecyclerView;
+import com.lcodecore.tkrefreshlayout.RefreshListenerAdapter;
+import com.lcodecore.tkrefreshlayout.TwinklingRefreshLayout;
+import com.lcodecore.tkrefreshlayout.header.SinaRefreshView;
 import com.yanzhenjie.recyclerview.swipe.Closeable;
 import com.yanzhenjie.recyclerview.swipe.OnSwipeMenuItemClickListener;
 import com.yanzhenjie.recyclerview.swipe.SwipeMenu;
@@ -33,13 +35,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class HaoYeFragment extends BaseScrollFragment implements
-        SwipeRefreshLayout.OnRefreshListener, PullToRefreshLayout.OnRefreshListener {
+        SwipeRefreshLayout.OnRefreshListener {
 
     private Context mContext;
 
-    private PullableRecyclerView mHaoYe_rv;
+    private SwipeMenuRecyclerView mHaoYe_rv;
 
-    private PullToRefreshLayout mRefreshLayout;
+    private TwinklingRefreshLayout mRefreshLayout;
 
     private HaoYeAdapter mAdapter;
 
@@ -66,10 +68,11 @@ public class HaoYeFragment extends BaseScrollFragment implements
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-        mHaoYe_rv = (PullableRecyclerView) view.findViewById(R.id.recycler_view);
+        mHaoYe_rv = (SwipeMenuRecyclerView) view.findViewById(R.id.recycler_view);
         setRecyclerView(mHaoYe_rv);
-        mRefreshLayout = (PullToRefreshLayout) view.findViewById(R.id.swipe_layout);
-        mRefreshLayout.setOnRefreshListener(this);
+        mRefreshLayout = (TwinklingRefreshLayout) view.findViewById(R.id.swipe_layout);
+        mRefreshLayout.setOnRefreshListener(mRefreshListenerAdapter);
+        mRefreshLayout.setHeaderView(new SinaRefreshView(mContext));
 
         mHaoYe_rv.setLayoutManager(new LinearLayoutManager(mContext));
         mHaoYe_rv.addItemDecoration(new ListViewDecoration(mContext,
@@ -97,6 +100,7 @@ public class HaoYeFragment extends BaseScrollFragment implements
         }
         mAdapter = new HaoYeAdapter(mContext, dataList, ItemLayoutType.TYPE_TAG);
         mAdapter.setOnItemClickListener(mOnItemClickListener);
+        mAdapter.setFooterEnable(true);
 
         mHaoYe_rv.setAdapter(mAdapter);
     }
@@ -109,6 +113,42 @@ public class HaoYeFragment extends BaseScrollFragment implements
     public void onRefresh() {
         Refresh();
     }
+
+    private RefreshListenerAdapter mRefreshListenerAdapter = new RefreshListenerAdapter() {
+        @Override
+        public void onRefresh(TwinklingRefreshLayout refreshLayout) {
+            super.onRefresh(refreshLayout);
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    mRefreshLayout.finishRefreshing();
+                }
+            }, 1000);
+        }
+
+        @Override
+        public void onLoadMore(TwinklingRefreshLayout refreshLayout) {
+            super.onLoadMore(refreshLayout);
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    mRefreshLayout.finishLoadmore();
+                }
+            }, 1000);
+        }
+
+        @Override
+        public void onFinishRefresh() {
+            super.onFinishRefresh();
+            Toast.makeText(getContext(), "onFinishRefresh", Toast.LENGTH_SHORT).show();
+        }
+
+        @Override
+        public void onFinishLoadMore() {
+            super.onFinishLoadMore();
+            Toast.makeText(getContext(), "onFinishLoadMore", Toast.LENGTH_SHORT).show();
+        }
+    };
 
     /**
      * Menu creator. Call when creates the menu.
@@ -186,15 +226,5 @@ public class HaoYeFragment extends BaseScrollFragment implements
     public void onResume() {
         super.onResume();
         Refresh();
-    }
-
-    @Override
-    public void onRefresh(PullToRefreshLayout pullToRefreshLayout) {
-        pullToRefreshLayout.refreshFinish(PullToRefreshLayout.SUCCEED);
-    }
-
-    @Override
-    public void onLoadMore(PullToRefreshLayout pullToRefreshLayout) {
-        pullToRefreshLayout.loadmoreFinish(PullToRefreshLayout.SUCCEED);
     }
 }

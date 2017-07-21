@@ -11,7 +11,7 @@
 
     <!--placeholder-->
     <string name="placeholder_default_publish_type">请选择发布类型（默认为 文章）</string>
-    <string name="placeholder_publish_type">发布类型：</string>
+    <string name="placeholder_publish_type">发布类型：%1$s</string>
 
     <string name="placeholder_message_resume">新增 %1$d 人投递简历，目前已收到 %2$d 份简历！</string>
     <string name="placeholder_message_enroll">新增 %1$d 人报名参加活动，目前已收到 %2$d 人报名！</string>
@@ -64,6 +64,9 @@
 
     <!--dialog-->
     <string name="dialog_publish_title">插入链接</string>
+    <string name="dialog_publish_exit_msg">是否保存草稿</string>
+    <string name="dialog_publish_pos">是</string>
+    <string name="dialog_publish_neg">否</string>
 
     <!--checkbox-->
     <string name="completing_add_item">新增投票项</string>

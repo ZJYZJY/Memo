@@ -4,19 +4,14 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <com.donutcn.widgetlib.PullToRefreshLayout
+    <com.lcodecore.tkrefreshlayout.TwinklingRefreshLayout
         android:id="@+id/swipe_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <include layout="@layout/refresh_head" />
-
-        <com.donutcn.widgetlib.PullableRecyclerView
+        <com.yanzhenjie.recyclerview.swipe.SwipeMenuRecyclerView
             android:id="@+id/recycler_view"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
-
-        <include layout="@layout/load_more" />
-
-    </com.donutcn.widgetlib.PullToRefreshLayout>
+            android:layout_height="match_parent"/>
+    </com.lcodecore.tkrefreshlayout.TwinklingRefreshLayout>
 </LinearLayout>

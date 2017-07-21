@@ -1,4 +1,4 @@
-package com.donutcn.memo.fragment;
+package com.donutcn.memo.base;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;

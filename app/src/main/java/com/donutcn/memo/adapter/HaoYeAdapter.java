@@ -2,21 +2,20 @@ package com.donutcn.memo.adapter;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.donutcn.memo.R;
+import com.donutcn.memo.base.BasePublishAdapter;
 import com.donutcn.memo.listener.OnItemClickListener;
 import com.donutcn.memo.type.ItemLayoutType;
 import com.donutcn.memo.type.PublishType;
-import com.yanzhenjie.recyclerview.swipe.SwipeMenuAdapter;
 
 import java.util.List;
 
-public class HaoYeAdapter extends SwipeMenuAdapter<HaoYeAdapter.DefaultViewHolder> {
+public class HaoYeAdapter extends BasePublishAdapter<HaoYeAdapter.DefaultViewHolder> {
 
     private List<String> titles;
     private int mLayoutType;
@@ -41,25 +40,27 @@ public class HaoYeAdapter extends SwipeMenuAdapter<HaoYeAdapter.DefaultViewHolde
 
     @Override
     public View onCreateContentView(ViewGroup parent, int viewType) {
-        switch (mLayoutType) {
-            case ItemLayoutType.TYPE_TAG:
-                return LayoutInflater.from(parent.getContext()).inflate(R.layout.item_home_haoye, parent, false);
-            case ItemLayoutType.AVATAR_IMG:
-                View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_home_haoye, parent, false);
-                view.findViewById(R.id.iv_content_icon).setVisibility(View.VISIBLE);
-                view.findViewById(R.id.tv_publish_author).setVisibility(View.VISIBLE);
-                view.findViewById(R.id.tv_content_type).setVisibility(View.GONE);
-                return view;
+        if(viewType == ITEM_NORMAL){
+            switch (mLayoutType) {
+                case ItemLayoutType.TYPE_TAG:
+                    return super.onCreateContentView(parent, viewType);
+                case ItemLayoutType.AVATAR_IMG:
+                    View view = super.onCreateContentView(parent, viewType);
+                    view.findViewById(R.id.iv_content_icon).setVisibility(View.VISIBLE);
+                    view.findViewById(R.id.tv_publish_author).setVisibility(View.VISIBLE);
+                    view.findViewById(R.id.tv_content_type).setVisibility(View.GONE);
+                    return view;
+            }
         }
-        return LayoutInflater.from(parent.getContext()).inflate(R.layout.item_home_haoye, parent, false);
+        return super.onCreateContentView(parent, viewType);
     }
 
     @Override
-    public HaoYeAdapter.DefaultViewHolder onCompatCreateViewHolder(View realContentView, int viewType) {
+    public DefaultViewHolder onCompatCreateViewHolder(View realContentView, int viewType) {
         DefaultViewHolder viewHolder = new DefaultViewHolder(realContentView);
         viewHolder.mOnItemClickListener = mOnItemClickListener;
 
-        if(mLayoutType == ItemLayoutType.TYPE_TAG){
+        if(mLayoutType == ItemLayoutType.TYPE_TAG && viewType == ITEM_NORMAL){
             PublishType p = PublishType.ARTICLE;
             String contentType = "";
             switch (p){
@@ -102,7 +103,7 @@ public class HaoYeAdapter extends SwipeMenuAdapter<HaoYeAdapter.DefaultViewHolde
     }
 
     @Override
-    public void onBindViewHolder(HaoYeAdapter.DefaultViewHolder holder, int position) {
+    public void onBindViewHolder(DefaultViewHolder holder, int position) {
         holder.setData();
     }
 
