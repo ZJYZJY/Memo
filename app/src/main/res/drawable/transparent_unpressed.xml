@@ -1,14 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layer-list
-    xmlns:android="http://schemas.android.com/apk/res/android">
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
     <item>
         <shape>
             <solid android:color="#00000000" />
-            <!--四个角都是圆的-->
-            <corners android:radius="10px"/>
+            <corners android:radius="@dimen/radius_text_medium" />
             <stroke
-                android:color="@color/border_gray"
-                android:width="2px" />
+                android:width="@dimen/px_line"
+                android:color="@color/border_gray" />
         </shape>
     </item>
 </layer-list>

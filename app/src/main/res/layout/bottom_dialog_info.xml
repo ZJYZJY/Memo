@@ -12,18 +12,18 @@
 
         <android.support.v4.widget.NestedScrollView
             android:layout_width="match_parent"
-            android:layout_weight="1"
-            android:layout_height="0dp">
+            android:layout_height="0dp"
+            android:layout_weight="1">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:padding="12dp">
+                android:padding="@dimen/padding_large">
 
                 <RelativeLayout
                     android:layout_width="match_parent"
-                    android:layout_height="24dp">
+                    android:layout_height="wrap_content">
 
                     <TextView
                         android:id="@+id/interactive_type"
@@ -36,48 +36,48 @@
 
                     <ImageButton
                         style="@style/Widget.AppCompat.Button.Borderless"
-                        android:layout_width="24dp"
-                        android:layout_height="24dp"
+                        android:layout_width="@dimen/icon_normal_icon"
+                        android:layout_height="@dimen/icon_normal_icon"
                         android:layout_alignParentEnd="true"
                         android:layout_alignParentRight="true"
                         android:onClick="onCloseDialog"
-                        android:src="@drawable/ic_close"/>
+                        android:src="@drawable/ic_close" />
                 </RelativeLayout>
 
                 <EditText
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="16dp"
+                    android:layout_marginTop="@dimen/margin_large"
                     android:background="@drawable/edit_text_box_bg"
                     android:hint="@string/completing_name_cb"
-                    android:padding="6dp"
+                    android:padding="@dimen/padding_small"
                     android:textSize="16sp" />
 
                 <EditText
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="16dp"
+                    android:layout_marginTop="@dimen/margin_large"
                     android:background="@drawable/edit_text_box_bg"
                     android:hint="@string/completing_phone_cb"
-                    android:padding="6dp"
+                    android:padding="@dimen/padding_small"
                     android:textSize="16sp" />
 
                 <EditText
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="16dp"
+                    android:layout_marginTop="@dimen/margin_large"
                     android:background="@drawable/edit_text_box_bg"
                     android:hint="@string/completing_wechat_cb"
-                    android:padding="6dp"
+                    android:padding="@dimen/padding_small"
                     android:textSize="16sp" />
 
                 <EditText
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="16dp"
+                    android:layout_marginTop="@dimen/margin_large"
                     android:background="@drawable/edit_text_box_bg"
                     android:hint="@string/completing_email_cb"
-                    android:padding="6dp"
+                    android:padding="@dimen/padding_small"
                     android:textSize="16sp" />
             </LinearLayout>
         </android.support.v4.widget.NestedScrollView>

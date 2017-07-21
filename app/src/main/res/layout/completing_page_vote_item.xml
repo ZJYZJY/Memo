@@ -5,16 +5,14 @@
     android:orientation="vertical">
 
     <EditText
-        android:id="@+id/vote_4"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/colorPrimary"
-        android:hint="@string/hint_completing_vote_four"
-        android:padding="12dp"
+        android:padding="@dimen/padding_large"
         android:textSize="16sp" />
 
     <View
         android:layout_width="match_parent"
-        android:layout_height="1dp"
+        android:layout_height="@dimen/dp_line"
         android:background="@color/border_gray" />
 </LinearLayout>

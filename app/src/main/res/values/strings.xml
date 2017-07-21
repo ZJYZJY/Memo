@@ -4,6 +4,7 @@
     <!--title-->
     <string name="title_activity_publish">发布好页</string>
     <string name="title_activity_share">信息发布成功！</string>
+    <string name="title_activity_personal_center">个人中心</string>
     <string name="title_activity_tip_off">举报</string>
 
     <!--toast-->
@@ -12,6 +13,11 @@
     <!--placeholder-->
     <string name="placeholder_default_publish_type">请选择发布类型（默认为 文章）</string>
     <string name="placeholder_publish_type">发布类型：%1$s</string>
+
+    <string name="placeholder_author_publish_count">已发布好页（%1$d）</string>
+    <string name="placeholder_article_read_count">阅读 %1$d</string>
+    <string name="placeholder_search_item_info">阅读 %1$d - 评论 %2$d - 喜欢 %3$d</string>
+    <string name="placeholder_search_item_author">%1$s %2$s</string>
 
     <string name="placeholder_message_resume">新增 %1$d 人投递简历，目前已收到 %2$d 份简历！</string>
     <string name="placeholder_message_enroll">新增 %1$d 人报名参加活动，目前已收到 %2$d 人报名！</string>
@@ -49,6 +55,8 @@
     <string name="btn_publish_type">排版</string>
     <string name="btn_publish_template">模版</string>
     <string name="btn_publish_voice">语音输入</string>
+    <string name="btn_author_follow">关注</string>
+    <string name="btn_author_message">私信</string>
 
     <string name="btn_share_homepage">首页</string>
     <string name="btn_swipe_share">分享</string>

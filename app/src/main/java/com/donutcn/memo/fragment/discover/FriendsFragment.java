@@ -67,7 +67,7 @@ public class FriendsFragment extends BaseScrollFragment implements SwipeRefreshL
 
         mHaoYe_rv.setLayoutManager(new LinearLayoutManager(mContext));
         mHaoYe_rv.addItemDecoration(new ListViewDecoration(getContext(),
-                R.dimen.item_decoration, 84, 8));
+                R.dimen.item_decoration_height, 84, 8));
 
         // set up swipe menu.
         mHaoYe_rv.setSwipeMenuCreator(mSwipeMenuCreator);

@@ -36,7 +36,7 @@ public class SearchActivity extends AppCompatActivity implements OnItemClickList
         mSearch_et = (EditText) findViewById(R.id.toolbar_search);
 
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
-        mRecyclerView.addItemDecoration(new ListViewDecoration(this, R.dimen.item_decoration, 8, 8));
+        mRecyclerView.addItemDecoration(new ListViewDecoration(this, R.dimen.item_decoration_height, 8, 8));
 
         mSearch_et.setOnKeyListener(new View.OnKeyListener() {
             @Override
@@ -57,7 +57,7 @@ public class SearchActivity extends AppCompatActivity implements OnItemClickList
         for (int i = 0; i < 6; i++) {
             dataList.add("我是第" + i + "个。");
         }
-        mAdapter = new SearchListAdapter(dataList);
+        mAdapter = new SearchListAdapter(this, dataList);
         mAdapter.setOnItemClickListener(this);
 
         mRecyclerView.setAdapter(mAdapter);

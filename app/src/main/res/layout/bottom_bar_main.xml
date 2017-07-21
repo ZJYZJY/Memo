@@ -1,20 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    android:orientation="vertical">
 
     <View
         android:id="@+id/divide_line"
         android:layout_width="match_parent"
-        android:layout_height="1dp"
+        android:layout_height="@dimen/dp_line"
         android:background="@color/border_gray" />
 
     <LinearLayout
         android:id="@+id/main_bottom_view"
         android:layout_width="match_parent"
-        android:layout_height="48dp"
+        android:layout_height="@dimen/toolbar_height"
         android:background="@color/colorPrimary"
         android:orientation="horizontal">
 
@@ -24,7 +24,7 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="2"
-            android:padding="8dp"
+            android:padding="@dimen/padding_medium"
             android:scaleType="centerInside"
             app:isChecked="true"
             app:srcCompat="@drawable/home_selector" />
@@ -34,10 +34,10 @@
             style="@android:style/Widget.DeviceDefault.Button.Borderless"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_margin="2dp"
+            android:layout_margin="@dimen/margin_micro"
             android:layout_weight="1"
             android:background="@drawable/publish_bg"
-            android:padding="8dp"
+            android:padding="@dimen/padding_medium"
             android:scaleType="centerInside"
             app:srcCompat="@drawable/publish" />
 
@@ -47,7 +47,7 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="2"
-            android:padding="8dp"
+            android:padding="@dimen/padding_medium"
             android:scaleType="centerInside"
             app:srcCompat="@drawable/discover_selector" />
     </LinearLayout>

@@ -10,7 +10,7 @@
 
     <View
         android:layout_width="match_parent"
-        android:layout_height="1dp"
+        android:layout_height="@dimen/dp_line"
         android:background="@color/border_gray" />
 
     <LinearLayout
@@ -18,15 +18,13 @@
         android:layout_height="match_parent"
         android:gravity="center"
         android:orientation="vertical"
-        android:padding="32dp">
+        android:padding="@dimen/padding_container_huge">
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:paddingBottom="24dp"
-            android:paddingLeft="24dp"
-            android:paddingRight="24dp"
+            android:paddingBottom="@dimen/padding_container"
             android:text="@string/social_share_title"
             android:textColor="@color/textPrimaryDark"
             android:textSize="18sp" />
@@ -34,7 +32,7 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="8dp">
+            android:padding="@dimen/padding_medium">
 
             <TextView
                 android:layout_width="match_parent"
@@ -48,7 +46,7 @@
 
             <com.donutcn.widgetlib.widget.SwitchView
                 android:id="@+id/social_content_private"
-                android:layout_width="42dp"
+                android:layout_width="@dimen/small_switch_width"
                 android:layout_height="wrap_content"
                 android:layout_alignParentEnd="true"
                 android:layout_alignParentRight="true"
@@ -58,16 +56,16 @@
 
         <View
             android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:layout_marginLeft="8dp"
-            android:layout_marginRight="8dp"
+            android:layout_height="@dimen/dp_line"
+            android:layout_marginLeft="@dimen/margin_small"
+            android:layout_marginRight="@dimen/margin_small"
             android:background="@color/border_gray" />
 
         <TableLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingBottom="32dp"
-            android:paddingTop="24dp">
+            android:paddingBottom="@dimen/padding_container_huge"
+            android:paddingTop="@dimen/padding_container_huge">
 
             <TableRow>
 
@@ -78,8 +76,8 @@
 
                     <ImageView
                         android:id="@+id/share_iv1"
-                        android:layout_width="56dp"
-                        android:layout_height="56dp"
+                        android:layout_width="@dimen/icon_share"
+                        android:layout_height="@dimen/icon_share"
                         android:layout_centerHorizontal="true"
                         android:src="@drawable/share_wechat" />
 
@@ -88,7 +86,7 @@
                         android:layout_height="wrap_content"
                         android:layout_below="@+id/share_iv1"
                         android:gravity="center"
-                        android:paddingTop="6dp"
+                        android:paddingTop="@dimen/padding_small"
                         android:text="@string/social_share_wei_friend"
                         android:textSize="12sp" />
                 </RelativeLayout>
@@ -100,8 +98,8 @@
 
                     <ImageView
                         android:id="@+id/share_iv2"
-                        android:layout_width="56dp"
-                        android:layout_height="56dp"
+                        android:layout_width="@dimen/icon_share"
+                        android:layout_height="@dimen/icon_share"
                         android:layout_centerHorizontal="true"
                         android:gravity="center"
                         android:src="@drawable/share_mements" />
@@ -111,7 +109,7 @@
                         android:layout_height="wrap_content"
                         android:layout_below="@+id/share_iv2"
                         android:gravity="center"
-                        android:paddingTop="6dp"
+                        android:paddingTop="@dimen/padding_small"
                         android:text="@string/social_share_wei"
                         android:textSize="12sp" />
                 </RelativeLayout>
@@ -123,8 +121,8 @@
 
                     <ImageView
                         android:id="@+id/share_iv3"
-                        android:layout_width="56dp"
-                        android:layout_height="56dp"
+                        android:layout_width="@dimen/icon_share"
+                        android:layout_height="@dimen/icon_share"
                         android:layout_centerHorizontal="true"
                         android:src="@drawable/share_qq" />
 
@@ -133,7 +131,7 @@
                         android:layout_height="wrap_content"
                         android:layout_below="@+id/share_iv3"
                         android:gravity="center"
-                        android:paddingTop="6dp"
+                        android:paddingTop="@dimen/padding_small"
                         android:text="@string/social_share_qq_friend"
                         android:textSize="12sp" />
                 </RelativeLayout>
@@ -145,8 +143,8 @@
 
                     <ImageView
                         android:id="@+id/share_iv4"
-                        android:layout_width="56dp"
-                        android:layout_height="56dp"
+                        android:layout_width="@dimen/icon_share"
+                        android:layout_height="@dimen/icon_share"
                         android:layout_centerHorizontal="true"
                         android:src="@drawable/share_qzone" />
 
@@ -155,13 +153,13 @@
                         android:layout_height="wrap_content"
                         android:layout_below="@+id/share_iv4"
                         android:gravity="center"
-                        android:paddingTop="6dp"
+                        android:paddingTop="@dimen/padding_small"
                         android:text="@string/social_share_qzone"
                         android:textSize="12sp" />
                 </RelativeLayout>
             </TableRow>
 
-            <TableRow android:layout_marginTop="24dp">
+            <TableRow android:layout_marginTop="@dimen/blank_item_divider">
 
                 <RelativeLayout
                     android:layout_width="0dp"
@@ -170,8 +168,8 @@
 
                     <ImageView
                         android:id="@+id/share_iv5"
-                        android:layout_width="56dp"
-                        android:layout_height="56dp"
+                        android:layout_width="@dimen/icon_share"
+                        android:layout_height="@dimen/icon_share"
                         android:layout_centerHorizontal="true"
                         android:src="@drawable/share_weibo" />
 
@@ -180,7 +178,7 @@
                         android:layout_height="wrap_content"
                         android:layout_below="@+id/share_iv5"
                         android:gravity="center"
-                        android:paddingTop="6dp"
+                        android:paddingTop="@dimen/padding_small"
                         android:text="@string/social_share_weibo"
                         android:textSize="12sp" />
                 </RelativeLayout>
@@ -192,8 +190,8 @@
 
                     <ImageView
                         android:id="@+id/share_iv6"
-                        android:layout_width="56dp"
-                        android:layout_height="56dp"
+                        android:layout_width="@dimen/icon_share"
+                        android:layout_height="@dimen/icon_share"
                         android:layout_centerHorizontal="true"
                         android:gravity="center"
                         android:src="@drawable/share_picture" />
@@ -203,7 +201,7 @@
                         android:layout_height="wrap_content"
                         android:layout_below="@+id/share_iv6"
                         android:gravity="center"
-                        android:paddingTop="6dp"
+                        android:paddingTop="@dimen/padding_small"
                         android:text="@string/social_share_picture"
                         android:textSize="12sp" />
                 </RelativeLayout>
@@ -215,8 +213,8 @@
 
                     <ImageView
                         android:id="@+id/share_iv7"
-                        android:layout_width="56dp"
-                        android:layout_height="56dp"
+                        android:layout_width="@dimen/icon_share"
+                        android:layout_height="@dimen/icon_share"
                         android:layout_centerHorizontal="true"
                         android:src="@drawable/share_link" />
 
@@ -225,7 +223,7 @@
                         android:layout_height="wrap_content"
                         android:layout_below="@+id/share_iv7"
                         android:gravity="center"
-                        android:paddingTop="6dp"
+                        android:paddingTop="@dimen/padding_small"
                         android:text="@string/social_share_copy_link"
                         android:textSize="12sp" />
                 </RelativeLayout>
@@ -237,8 +235,8 @@
 
                     <ImageView
                         android:id="@+id/share_iv8"
-                        android:layout_width="56dp"
-                        android:layout_height="56dp"
+                        android:layout_width="@dimen/icon_share"
+                        android:layout_height="@dimen/icon_share"
                         android:layout_centerHorizontal="true"
                         android:src="@drawable/share_more" />
 
@@ -247,7 +245,7 @@
                         android:layout_height="wrap_content"
                         android:layout_below="@+id/share_iv8"
                         android:gravity="center"
-                        android:paddingTop="6dp"
+                        android:paddingTop="@dimen/padding_small"
                         android:text="@string/social_share_more"
                         android:textSize="12sp" />
                 </RelativeLayout>

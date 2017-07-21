@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="48dp"
+    android:layout_height="@dimen/toolbar_height"
     android:background="@color/colorPrimary">
 
     <ImageView
@@ -10,7 +10,7 @@
         android:layout_height="match_parent"
         android:background="?android:selectableItemBackground"
         android:onClick="onBack"
-        android:padding="4dp"
+        android:padding="@dimen/padding_normal_icon"
         android:src="@mipmap/back_arrow" />
 
     <EditText
@@ -18,10 +18,10 @@
         android:layout_width="match_parent"
         android:layout_height="36dp"
         android:layout_centerVertical="true"
-        android:layout_marginBottom="8dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginRight="4dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginBottom="@dimen/padding_medium"
+        android:layout_marginLeft="@dimen/padding_medium"
+        android:layout_marginRight="@dimen/padding_medium"
+        android:layout_marginTop="@dimen/padding_medium"
         android:layout_toEndOf="@+id/back_arrow"
         android:layout_toLeftOf="@+id/search_cancel"
         android:layout_toRightOf="@+id/back_arrow"
@@ -29,15 +29,15 @@
         android:background="@drawable/search_bar_bg"
         android:hint="@string/hint_search"
         android:maxLines="1"
-        android:paddingLeft="12dp"
-        android:paddingRight="12dp"
+        android:paddingLeft="@dimen/padding_large"
+        android:paddingRight="@dimen/padding_large"
         android:textColor="@color/textPrimaryDark"
         android:textSize="16sp" />
 
     <Button
         android:id="@+id/search_cancel"
         style="@style/Widget.AppCompat.Button.Borderless"
-        android:layout_width="56dp"
+        android:layout_width="@dimen/toolbar_top_right_width"
         android:layout_height="match_parent"
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"

@@ -15,7 +15,7 @@ import com.donutcn.memo.utils.WindowUtils;
 
 public class CompletingPage extends AppCompatActivity {
 
-    private EditText mVote1, mVote2, mVote3;
+    private EditText mVote1, mVote2, mVote3, mVote4, mVote5;
     private LinearLayout mVoteSelection;
 
     private PublishType mContentType;
@@ -67,11 +67,13 @@ public class CompletingPage extends AppCompatActivity {
             public void onClick(View v) {
                 View view = getLayoutInflater().inflate(R.layout.completing_page_vote_item, null);
                 if (mViewIndex == 7) {
-                    ((EditText) ((ViewGroup) view).getChildAt(0)).setHint(R.string.hint_completing_vote_four);
+                    mVote4 = (EditText) ((ViewGroup) view).getChildAt(0);
+                    mVote4.setHint(R.string.hint_completing_vote_four);
                     mVoteSelection.addView(view, mViewIndex);
                     mViewIndex++;
                 } else if (mViewIndex == 8) {
-                    ((EditText) ((ViewGroup) view).getChildAt(0)).setHint(R.string.hint_completing_vote_five);
+                    mVote5 = (EditText) ((ViewGroup) view).getChildAt(0);
+                    mVote5.setHint(R.string.hint_completing_vote_five);
                     mVoteSelection.addView(view, mViewIndex);
                     mViewIndex++;
                 } else if (mViewIndex == 9) {

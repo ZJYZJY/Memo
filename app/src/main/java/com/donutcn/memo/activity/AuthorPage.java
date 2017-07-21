@@ -1,7 +1,6 @@
 package com.donutcn.memo.activity;
 
 import android.support.design.widget.CollapsingToolbarLayout;
-import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -41,7 +40,7 @@ public class AuthorPage extends AppCompatActivity implements OnItemClickListener
         mCollapsingToolbar = (CollapsingToolbarLayout) findViewById(R.id.author_collapsing_toolbar);
 
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
-        mRecyclerView.addItemDecoration(new ListViewDecoration(this, R.dimen.item_decoration, 16, 16));
+        mRecyclerView.addItemDecoration(new ListViewDecoration(this, R.dimen.item_decoration_height, 16, 16));
     }
 
     public void Refresh(){
@@ -53,7 +52,8 @@ public class AuthorPage extends AppCompatActivity implements OnItemClickListener
         adapter.setOnItemClickListener(this);
         mRecyclerView.setAdapter(adapter);
 
-        ((TextView)findViewById(R.id.author_article_count)).setText(String.valueOf(adapter.getItemCount()));
+        ((TextView)findViewById(R.id.author_article_count))
+                .setText(getString(R.string.placeholder_author_publish_count, adapter.getItemCount()));
     }
 
     @Override

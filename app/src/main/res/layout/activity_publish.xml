@@ -15,7 +15,7 @@
 
         <View
             android:layout_width="match_parent"
-            android:layout_height="1dp"
+            android:layout_height="@dimen/dp_line"
             android:background="@color/border_gray" />
 
         <LinearLayout
@@ -24,15 +24,15 @@
             android:background="@color/background_blank"
             android:focusableInTouchMode="true"
             android:orientation="vertical"
-            android:padding="8dp">
+            android:padding="@dimen/padding_medium">
 
             <TextView
                 android:id="@+id/publish_spinner"
                 android:layout_width="match_parent"
-                android:layout_height="36dp"
+                android:layout_height="@dimen/publish_type_height"
                 android:background="@drawable/text_box_bg"
                 android:gravity="center_vertical"
-                android:paddingLeft="8dp"
+                android:paddingLeft="@dimen/padding_medium"
                 android:text="@string/placeholder_default_publish_type"
                 android:textColor="@color/textPrimary" />
 
@@ -40,32 +40,19 @@
                 android:id="@+id/et_publish_title"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
+                android:layout_marginTop="@dimen/margin_small"
                 android:background="@drawable/edit_text_blank_bg"
                 android:hint="@string/hint_publish_title"
-                android:lineSpacingExtra="4dp"
+                android:lineSpacingExtra="@dimen/line_space_large"
                 android:maxLines="2"
-                android:padding="8dp"
+                android:padding="@dimen/padding_medium"
                 android:textColor="@color/textPrimaryDark"
                 android:textColorHint="@color/textPrimary" />
 
             <View
                 android:layout_width="match_parent"
-                android:layout_height="1dp"
+                android:layout_height="@dimen/dp_line"
                 android:background="@color/border_gray" />
-
-            <!--<io.github.mthli.knife.KnifeText-->
-            <!--android:id="@+id/et_publish_content"-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="match_parent"-->
-            <!--android:background="@drawable/edit_text_blank_bg"-->
-            <!--android:gravity="start"-->
-            <!--android:hint="@string/hint_publish_content"-->
-            <!--android:lineSpacingExtra="4dp"-->
-            <!--android:padding="8dp"-->
-            <!--android:textColor="@color/textPrimaryDark"-->
-            <!--android:textColorHint="@color/textPrimary"-->
-            <!--android:textSize="14sp" />-->
 
             <jp.wasabeef.richeditor.RichEditor
                 android:id="@+id/et_publish_content"
@@ -74,8 +61,8 @@
                 android:background="@drawable/edit_text_blank_bg"
                 android:gravity="start"
                 android:hint="@string/hint_publish_content"
-                android:lineSpacingExtra="4dp"
-                android:padding="8dp"
+                android:lineSpacingExtra="@dimen/line_space_large"
+                android:padding="@dimen/padding_medium"
                 android:textColor="@color/textPrimaryDark"
                 android:textColorHint="@color/textPrimary"
                 android:textSize="14sp" />
@@ -89,100 +76,108 @@
 
         <HorizontalScrollView
             android:id="@+id/type_setting_tools"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:background="@color/colorPrimary"
             android:scrollbars="none"
             android:visibility="gone">
 
             <LinearLayout
                 android:layout_width="wrap_content"
-                android:layout_height="36dp"
-                android:background="@color/colorPrimary"
+                android:layout_height="@dimen/publish_bottom_toolbar_height"
                 android:orientation="horizontal">
 
                 <ImageButton
                     android:id="@+id/bold"
-                    android:layout_width="48dp"
+                    android:layout_width="@dimen/bottom_item_width"
                     android:layout_height="match_parent"
                     android:background="?android:selectableItemBackground"
                     android:contentDescription="@null"
+                    android:padding="@dimen/padding_medium"
                     android:scaleType="centerInside"
                     android:src="@drawable/ic_format_bold" />
 
                 <ImageButton
                     android:id="@+id/italic"
-                    android:layout_width="48dp"
+                    android:layout_width="@dimen/bottom_item_width"
                     android:layout_height="match_parent"
                     android:background="?android:selectableItemBackground"
                     android:contentDescription="@null"
-                    android:scaleType="center"
+                    android:padding="@dimen/padding_medium"
+                    android:scaleType="centerInside"
                     android:src="@drawable/ic_format_italic" />
 
                 <ImageButton
                     android:id="@+id/underline"
-                    android:layout_width="48dp"
+                    android:layout_width="@dimen/bottom_item_width"
                     android:layout_height="match_parent"
                     android:background="?android:selectableItemBackground"
                     android:contentDescription="@null"
-                    android:scaleType="center"
+                    android:padding="@dimen/padding_medium"
+                    android:scaleType="centerInside"
                     android:src="@drawable/ic_format_underline" />
 
                 <ImageButton
                     android:id="@+id/strikethrough"
-                    android:layout_width="48dp"
+                    android:layout_width="@dimen/bottom_item_width"
                     android:layout_height="match_parent"
                     android:background="?android:selectableItemBackground"
                     android:contentDescription="@null"
-                    android:scaleType="center"
+                    android:padding="@dimen/padding_medium"
+                    android:scaleType="centerInside"
                     android:src="@drawable/ic_format_strikethrough" />
 
                 <ImageButton
                     android:id="@+id/bullet"
-                    android:layout_width="48dp"
+                    android:layout_width="@dimen/bottom_item_width"
                     android:layout_height="match_parent"
                     android:background="?android:selectableItemBackground"
                     android:contentDescription="@null"
-                    android:scaleType="center"
+                    android:padding="@dimen/padding_medium"
+                    android:scaleType="centerInside"
                     android:src="@drawable/ic_format_bullet" />
 
                 <ImageButton
                     android:id="@+id/quote"
-                    android:layout_width="48dp"
+                    android:layout_width="@dimen/bottom_item_width"
                     android:layout_height="match_parent"
                     android:background="?android:selectableItemBackground"
                     android:contentDescription="@null"
-                    android:scaleType="center"
+                    android:padding="@dimen/padding_medium"
+                    android:scaleType="centerInside"
                     android:src="@drawable/ic_format_quote" />
 
                 <ImageButton
                     android:id="@+id/link"
-                    android:layout_width="48dp"
+                    android:layout_width="@dimen/bottom_item_width"
                     android:layout_height="match_parent"
                     android:background="?android:selectableItemBackground"
                     android:contentDescription="@null"
-                    android:scaleType="center"
+                    android:padding="@dimen/padding_medium"
+                    android:scaleType="centerInside"
                     android:src="@drawable/ic_insert_link" />
 
                 <ImageButton
                     android:id="@+id/clear"
-                    android:layout_width="48dp"
+                    android:layout_width="@dimen/bottom_item_width"
                     android:layout_height="match_parent"
                     android:background="?android:selectableItemBackground"
                     android:contentDescription="@null"
-                    android:scaleType="center"
+                    android:padding="@dimen/padding_medium"
+                    android:scaleType="centerInside"
                     android:src="@drawable/ic_format_clear" />
             </LinearLayout>
         </HorizontalScrollView>
 
         <View
             android:layout_width="match_parent"
-            android:layout_height="1dp"
+            android:layout_height="@dimen/dp_line"
             android:background="@color/border_gray" />
 
         <LinearLayout
             android:id="@+id/publish_bottom_view"
             android:layout_width="match_parent"
-            android:layout_height="42dp"
+            android:layout_height="@dimen/publish_bottom_toolbar_height"
             android:background="@color/colorPrimary"
             android:orientation="horizontal">
 
@@ -195,9 +190,9 @@
                 android:orientation="horizontal">
 
                 <ImageView
-                    android:layout_width="42dp"
-                    android:layout_height="42dp"
-                    android:padding="8dp"
+                    android:layout_width="@dimen/bottom_item_width"
+                    android:layout_height="@dimen/bottom_item_width"
+                    android:padding="@dimen/padding_medium"
                     android:src="@drawable/pub_add_pictures" />
 
                 <TextView
@@ -216,9 +211,9 @@
                 android:orientation="horizontal">
 
                 <ImageView
-                    android:layout_width="42dp"
-                    android:layout_height="42dp"
-                    android:padding="8dp"
+                    android:layout_width="@dimen/bottom_item_width"
+                    android:layout_height="@dimen/bottom_item_width"
+                    android:padding="@dimen/padding_medium"
                     android:src="@drawable/pub_type_setting" />
 
                 <TextView
@@ -237,9 +232,9 @@
                 android:orientation="horizontal">
 
                 <ImageView
-                    android:layout_width="42dp"
-                    android:layout_height="42dp"
-                    android:padding="8dp"
+                    android:layout_width="@dimen/bottom_item_width"
+                    android:layout_height="@dimen/bottom_item_width"
+                    android:padding="@dimen/padding_medium"
                     android:src="@drawable/pub_template" />
 
                 <TextView
@@ -258,9 +253,9 @@
                 android:orientation="horizontal">
 
                 <ImageView
-                    android:layout_width="42dp"
-                    android:layout_height="42dp"
-                    android:padding="8dp"
+                    android:layout_width="@dimen/bottom_item_width"
+                    android:layout_height="@dimen/bottom_item_width"
+                    android:padding="@dimen/padding_medium"
                     android:src="@drawable/pub_speech_input" />
 
                 <TextView
@@ -272,11 +267,11 @@
 
             <ImageView
                 android:id="@+id/pub_keyboard_toggle"
-                android:layout_width="42dp"
-                android:layout_height="42dp"
+                android:layout_width="@dimen/bottom_item_width"
+                android:layout_height="@dimen/bottom_item_width"
                 android:layout_weight="2"
                 android:background="?android:selectableItemBackground"
-                android:padding="8dp"
+                android:padding="@dimen/padding_medium"
                 android:src="@drawable/pub_keyboard" />
         </LinearLayout>
     </LinearLayout>

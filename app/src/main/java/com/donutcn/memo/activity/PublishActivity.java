@@ -259,7 +259,7 @@ public class PublishActivity extends AppCompatActivity implements View.OnClickLi
     }
 
     private boolean isContentEmpty(){
-        return mTitleStr == "" && mContentStr == "";
+        return mTitleStr == "" && (mContentStr == "" || mContentStr == "<br>");
     }
 
     public void startSpeech() {

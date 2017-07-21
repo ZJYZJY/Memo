@@ -11,8 +11,8 @@
 
     <com.donutcn.widgetlib.widget.CircleImageView
         android:id="@+id/iv_content_icon"
-        android:layout_width="@dimen/item_user_icon_diameter"
-        android:layout_height="@dimen/item_user_icon_diameter"
+        android:layout_width="@dimen/icon_item_user"
+        android:layout_height="@dimen/icon_item_user"
         android:layout_marginEnd="12dp"
         android:layout_marginRight="12dp"
         android:contentDescription="@string/app_name"

@@ -58,7 +58,7 @@ public class MessageFragment extends BaseScrollFragment implements SwipeRefreshL
 
         mMessage_rv.setLayoutManager(new LinearLayoutManager(mContext));
         mMessage_rv.addItemDecoration(new ListViewDecoration(mContext,
-                R.dimen.item_decoration, 0, 0));
+                R.dimen.item_decoration_height, 0, 0));
     }
 
     @Override

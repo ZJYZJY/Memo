@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout android:layout_width="match_parent"
-    android:layout_height="48dp"
+    android:layout_height="@dimen/toolbar_height"
     android:background="@color/colorPrimary"
     xmlns:android="http://schemas.android.com/apk/res/android">
 
@@ -10,7 +10,7 @@
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:onClick="onBack"
-        android:padding="4dp"
+        android:padding="@dimen/padding_normal_icon"
         android:src="@mipmap/back_arrow" />
 
     <TextView
@@ -18,8 +18,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
-        android:layout_marginLeft="8dp"
-        android:layout_marginStart="8dp"
+        android:layout_marginLeft="@dimen/padding_medium"
+        android:layout_marginStart="@dimen/padding_medium"
         android:layout_toEndOf="@+id/back_arrow"
         android:layout_toRightOf="@+id/back_arrow"
         android:textColor="@color/textPrimaryDark"
@@ -28,14 +28,14 @@
     <Button
         android:id="@+id/toolbar_with_btn"
         style="@style/Widget.AppCompat.Button.Borderless"
-        android:layout_width="56dp"
+        android:layout_width="@dimen/toolbar_top_right_width"
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
         android:layout_centerVertical="true"
-        android:layout_margin="8dp"
-        android:layout_marginEnd="12dp"
-        android:layout_marginRight="12dp"
+        android:layout_margin="@dimen/margin_small"
+        android:layout_marginEnd="@dimen/margin_medium"
+        android:layout_marginRight="@dimen/margin_medium"
         android:background="@drawable/transparent_btn"
         android:textColor="@color/textPrimaryDark" />
 </RelativeLayout>

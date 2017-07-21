@@ -1,9 +1,69 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <dimen name="item_height">60dp</dimen>
-    <dimen name="swipe_menu_item_width">72dp</dimen>
-    <dimen name="item_decoration">2px</dimen>
-    <dimen name="item_margin">10dp</dimen>
+    <dimen name="toolbar_height">48dp</dimen>
+    <dimen name="toolbar_top_right_width">56dp</dimen>
+    <dimen name="bottom_bar_height">48dp</dimen>
+    <dimen name="bottom_item_width">42dp</dimen>
+    <dimen name="publish_bottom_toolbar_height">42dp</dimen>
+    <dimen name="personal_signature_width">192dp</dimen>
+    <dimen name="blank_item_divider">24dp</dimen>
 
-    <dimen name="item_user_icon_diameter">54dp</dimen>
+    <dimen name="line_space_large">4dp</dimen>
+    <dimen name="line_space">2dp</dimen>
+    <dimen name="dp_line">1dp</dimen>
+    <dimen name="px_line">1px</dimen>
+    <!--recycler view-->
+    <dimen name="swipe_menu_item_width">72dp</dimen>
+    <dimen name="item_decoration_height">2px</dimen>
+
+    <!--icon size-->
+    <dimen name="icon_item_user">54dp</dimen>
+    <dimen name="icon_item_img">64dp</dimen>
+    <dimen name="icon_author">64dp</dimen>
+    <dimen name="icon_author_badge">24dp</dimen>
+    <dimen name="icon_toolbar_user">32dp</dimen>
+    <dimen name="icon_toolbar_arrow">14dp</dimen>
+    <dimen name="icon_normal_icon">24dp</dimen>
+    <dimen name="icon_personal_center_user">72dp</dimen>
+    <dimen name="icon_message_user">42dp</dimen>
+    <dimen name="icon_share">56dp</dimen>
+
+    <dimen name="icon_author_btn">16dp</dimen>
+
+    <!--margin & padding-->
+    <dimen name="padding_container_huge">32dp</dimen>
+    <dimen name="padding_container">16dp</dimen>
+    <dimen name="padding_large">12dp</dimen>
+    <dimen name="padding_medium">8dp</dimen>
+    <dimen name="padding_small">6dp</dimen>
+    <dimen name="padding_normal_icon">4dp</dimen>
+    <dimen name="padding_text_large">6dp</dimen>
+    <dimen name="padding_text">4dp</dimen>
+    <dimen name="padding_text_small">2dp</dimen>
+
+    <dimen name="margin_personal_center_img">32dp</dimen>
+    <dimen name="margin_large">16dp</dimen>
+    <dimen name="margin_medium">12dp</dimen>
+    <dimen name="margin_small">8dp</dimen>
+    <dimen name="margin_micro">2dp</dimen>
+
+    <!--height & width-->
+    <dimen name="publish_type_height">36dp</dimen>
+    <dimen name="message_item_height">56dp</dimen>
+    <dimen name="message_item_btn_width">96dp</dimen>
+    <dimen name="search_bar_height">32dp</dimen>
+    <dimen name="completing_title_height">32dp</dimen>
+    <dimen name="completing_okBtn_height">36dp</dimen>
+    <dimen name="completing_okBtn_width">128dp</dimen>
+    <dimen name="completing_okBtn_margin">48dp</dimen>
+    <dimen name="small_switch_width">42dp</dimen>
+    <dimen name="dialog_reply_editor_height">96dp</dimen>
+    <dimen name="dialog_reply_btn_height">32dp</dimen>
+
+    <!--drawable svg-->
+    <dimen name="radius_btn_large">6dp</dimen>
+    <dimen name="radius_btn_medium">4dp</dimen>
+    <dimen name="radius_btn_small">2dp</dimen>
+    <dimen name="radius_text_large">16dp</dimen>
+    <dimen name="radius_text_medium">10px</dimen>
 </resources>

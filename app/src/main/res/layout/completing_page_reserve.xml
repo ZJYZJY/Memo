@@ -10,14 +10,14 @@
 
     <View
         android:layout_width="match_parent"
-        android:layout_height="1px"
+        android:layout_height="@dimen/px_line"
         android:background="@color/border_gray" />
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
-        android:padding="32dp"
+        android:padding="@dimen/completing_title_height"
         android:text="@string/completing_reserve_title"
         android:textColor="@color/text_black"
         android:textSize="18sp" />
@@ -35,7 +35,7 @@
 
             <View
                 android:layout_width="match_parent"
-                android:layout_height="1dp"
+                android:layout_height="@dimen/dp_line"
                 android:background="@color/border_gray" />
 
             <EditText
@@ -43,12 +43,12 @@
                 android:layout_height="wrap_content"
                 android:background="@color/colorPrimary"
                 android:hint="@string/hint_completing_reserve_price"
-                android:padding="12dp"
+                android:padding="@dimen/padding_large"
                 android:textSize="16sp" />
 
             <View
                 android:layout_width="match_parent"
-                android:layout_height="1dp"
+                android:layout_height="@dimen/dp_line"
                 android:background="@color/border_gray" />
 
             <EditText
@@ -56,18 +56,18 @@
                 android:layout_height="wrap_content"
                 android:background="@color/colorPrimary"
                 android:hint="@string/hint_completing_valid_time"
-                android:padding="12dp"
+                android:padding="@dimen/padding_large"
                 android:textSize="16sp" />
 
             <View
                 android:layout_width="match_parent"
-                android:layout_height="1dp"
+                android:layout_height="@dimen/dp_line"
                 android:background="@color/border_gray" />
 
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:padding="12dp">
+                android:padding="@dimen/padding_large">
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -78,7 +78,7 @@
                     android:textSize="16sp" />
 
                 <com.donutcn.widgetlib.widget.SwitchView
-                    android:layout_width="42dp"
+                    android:layout_width="@dimen/small_switch_width"
                     android:layout_height="wrap_content"
                     android:layout_alignParentEnd="true"
                     android:layout_alignParentRight="true"
@@ -123,16 +123,16 @@
 
             <View
                 android:layout_width="match_parent"
-                android:layout_height="1dp"
+                android:layout_height="@dimen/dp_line"
                 android:background="@color/border_gray" />
         </LinearLayout>
 
         <Button
-            android:layout_width="128dp"
-            android:layout_height="36dp"
+            android:layout_width="@dimen/completing_okBtn_width"
+            android:layout_height="@dimen/completing_okBtn_height"
             android:layout_below="@+id/completing_info_container"
             android:layout_centerHorizontal="true"
-            android:layout_marginTop="48dp"
+            android:layout_marginTop="@dimen/completing_okBtn_margin"
             android:background="@drawable/selector_radius_red_btn"
             android:onClick="onFinish"
             android:text="@string/btn_dialog_big_ok"

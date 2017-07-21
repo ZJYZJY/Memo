@@ -1,5 +1,6 @@
 package com.donutcn.memo.adapter;
 
+import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,9 +18,12 @@ public class SearchListAdapter extends SwipeMenuAdapter<SearchListAdapter.Defaul
 
     private List<String> titles;
 
+    private Context mContext;
+
     private OnItemClickListener mOnItemClickListener;
 
-    public SearchListAdapter(List<String> titles) {
+    public SearchListAdapter(Context context, List<String> titles) {
+        this.mContext = context;
         this.titles = titles;
     }
 
@@ -53,12 +57,9 @@ public class SearchListAdapter extends SwipeMenuAdapter<SearchListAdapter.Defaul
         ImageView mContentPic1;
         ImageView mContentPic2;
         TextView mTitle;
-        TextView mAuthor;
-        TextView mDate;
+        TextView mAuthorDate;
         TextView mContent;
-        TextView mReadCount;
-        TextView mCommentCount;
-        TextView mLikeCount;
+        TextView mInfo;
         OnItemClickListener mOnItemClickListener;
 
         public DefaultViewHolder(View itemView) {
@@ -67,12 +68,9 @@ public class SearchListAdapter extends SwipeMenuAdapter<SearchListAdapter.Defaul
             mContentPic1 = (ImageView) itemView.findViewById(R.id.iv_one);
             mContentPic2 = (ImageView) itemView.findViewById(R.id.iv_two);
             mTitle = (TextView) itemView.findViewById(R.id.tv_title);
-            mAuthor = (TextView) itemView.findViewById(R.id.tv_author);
-            mDate = (TextView) itemView.findViewById(R.id.tv_date);
+            mAuthorDate = (TextView) itemView.findViewById(R.id.tv_author_date);
             mContent = (TextView) itemView.findViewById(R.id.tv_content);
-            mReadCount = (TextView) itemView.findViewById(R.id.tv_read_count);
-            mCommentCount = (TextView) itemView.findViewById(R.id.tv_comment_count);
-            mLikeCount = (TextView) itemView.findViewById(R.id.tv_like_count);
+            mInfo = (TextView) itemView.findViewById(R.id.tv_content_info);
         }
 
         public void setData() {

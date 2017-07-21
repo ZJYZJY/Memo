@@ -3,26 +3,26 @@
     android:id="@+id/ly_interactive_detail"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:padding="8dp">
+    android:padding="@dimen/padding_medium">
 
     <EditText
         android:id="@+id/et_interactive_reply"
         android:layout_width="match_parent"
-        android:layout_height="96dp"
+        android:layout_height="@dimen/dialog_reply_editor_height"
         android:background="@drawable/edit_text_box_bg"
         android:gravity="start"
         android:hint="@string/hint_input"
-        android:padding="8dp"
+        android:padding="@dimen/padding_medium"
         android:textSize="16sp" />
 
     <Button
-        android:layout_below="@+id/et_interactive_reply"
-        android:layout_marginTop="8dp"
-        android:layout_alignEnd="@+id/et_interactive_reply"
-        android:layout_alignRight="@+id/et_interactive_reply"
         android:id="@+id/interactive_reply_submit"
         android:layout_width="wrap_content"
-        android:layout_height="32dp"
-        android:textColor="@android:color/white"
-        android:background="@drawable/selector_radius_green_btn" />
+        android:layout_height="@dimen/dialog_reply_btn_height"
+        android:layout_alignEnd="@+id/et_interactive_reply"
+        android:layout_alignRight="@+id/et_interactive_reply"
+        android:layout_below="@+id/et_interactive_reply"
+        android:layout_marginTop="@dimen/margin_small"
+        android:background="@drawable/selector_radius_green_btn"
+        android:textColor="@android:color/white" />
 </RelativeLayout>

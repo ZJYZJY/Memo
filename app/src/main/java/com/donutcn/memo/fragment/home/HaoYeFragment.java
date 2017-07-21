@@ -76,7 +76,7 @@ public class HaoYeFragment extends BaseScrollFragment implements
 
         mHaoYe_rv.setLayoutManager(new LinearLayoutManager(mContext));
         mHaoYe_rv.addItemDecoration(new ListViewDecoration(mContext,
-                R.dimen.item_decoration, 8, 8));
+                R.dimen.item_decoration_height, 8, 8));
 
         // set up swipe menu.
         mHaoYe_rv.setSwipeMenuCreator(mSwipeMenuCreator);

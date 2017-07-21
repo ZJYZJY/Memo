@@ -25,20 +25,20 @@
                 <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:padding="16dp">
+                    android:padding="@dimen/padding_container">
 
                     <com.donutcn.widgetlib.widget.CircleImageView
                         android:id="@+id/author_icon"
-                        android:layout_width="64dp"
-                        android:layout_height="64dp"
+                        android:layout_width="@dimen/icon_author"
+                        android:layout_height="@dimen/icon_author"
                         android:src="@mipmap/user_icon" />
 
                     <LinearLayout
                         android:id="@+id/author_status"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="16dp"
-                        android:layout_marginStart="16dp"
+                        android:layout_marginLeft="@dimen/margin_large"
+                        android:layout_marginStart="@dimen/margin_large"
                         android:layout_toEndOf="@+id/author_icon"
                         android:layout_toRightOf="@+id/author_icon"
                         android:orientation="horizontal">
@@ -53,11 +53,11 @@
                             android:textSize="18sp" />
 
                         <ImageView
-                            android:layout_width="24dp"
-                            android:layout_height="24dp"
+                            android:layout_width="@dimen/icon_author_badge"
+                            android:layout_height="@dimen/icon_author_badge"
                             android:layout_gravity="center_vertical"
-                            android:layout_marginLeft="12dp"
-                            android:layout_marginStart="12dp"
+                            android:layout_marginLeft="@dimen/margin_medium"
+                            android:layout_marginStart="@dimen/margin_medium"
                             android:src="@mipmap/ic_launcher" />
 
                         <TextView
@@ -65,7 +65,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center_vertical"
-                            android:paddingLeft="4dp"
+                            android:paddingLeft="@dimen/padding_text"
                             android:text="CCTV6摄影师"
                             android:textColor="@color/text_red"
                             android:textSize="14sp" />
@@ -80,8 +80,8 @@
                         android:layout_below="@+id/author_status"
                         android:ellipsize="end"
                         android:maxLines="2"
-                        android:paddingBottom="8dp"
-                        android:paddingTop="8dp"
+                        android:paddingBottom="@dimen/padding_medium"
+                        android:paddingTop="@dimen/padding_medium"
                         android:text="混迹于江湖的殷大侠是也！" />
 
                     <LinearLayout
@@ -93,14 +93,14 @@
                         android:layout_below="@+id/author_signature"
                         android:background="@drawable/selector_radius_green_btn"
                         android:orientation="horizontal"
-                        android:paddingBottom="6dp"
-                        android:paddingLeft="12dp"
-                        android:paddingRight="12dp"
-                        android:paddingTop="6dp">
+                        android:paddingBottom="@dimen/padding_medium"
+                        android:paddingLeft="@dimen/padding_large"
+                        android:paddingRight="@dimen/padding_large"
+                        android:paddingTop="@dimen/padding_medium">
 
                         <ImageView
-                            android:layout_width="16dp"
-                            android:layout_height="16dp"
+                            android:layout_width="@dimen/icon_author_btn"
+                            android:layout_height="@dimen/icon_author_btn"
                             android:layout_gravity="center_vertical"
                             android:src="@drawable/author_follow" />
 
@@ -108,8 +108,8 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center_vertical"
-                            android:paddingLeft="4dp"
-                            android:text="关注"
+                            android:paddingLeft="@dimen/padding_text"
+                            android:text="@string/btn_author_follow"
                             android:textColor="@color/white" />
                     </LinearLayout>
 
@@ -118,20 +118,20 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_below="@+id/author_signature"
-                        android:layout_marginLeft="8dp"
-                        android:layout_marginStart="8dp"
+                        android:layout_marginLeft="@dimen/margin_small"
+                        android:layout_marginStart="@dimen/margin_small"
                         android:layout_toEndOf="@+id/author_follow"
                         android:layout_toRightOf="@+id/author_follow"
                         android:background="@drawable/selector_radius_green_hollow_btn"
                         android:orientation="horizontal"
-                        android:paddingBottom="6dp"
-                        android:paddingLeft="12dp"
-                        android:paddingRight="12dp"
-                        android:paddingTop="6dp">
+                        android:paddingBottom="@dimen/padding_medium"
+                        android:paddingLeft="@dimen/padding_large"
+                        android:paddingRight="@dimen/padding_large"
+                        android:paddingTop="@dimen/padding_medium">
 
                         <ImageView
-                            android:layout_width="16dp"
-                            android:layout_height="16dp"
+                            android:layout_width="@dimen/icon_author_btn"
+                            android:layout_height="@dimen/icon_author_btn"
                             android:layout_gravity="center_vertical"
                             android:src="@drawable/author_message" />
 
@@ -139,8 +139,8 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center_vertical"
-                            android:paddingLeft="4dp"
-                            android:text="私信"
+                            android:paddingLeft="@dimen/padding_text"
+                            android:text="@string/btn_author_message"
                             android:textColor="@color/btn_green_normal" />
                     </LinearLayout>
                 </RelativeLayout>
@@ -153,48 +153,17 @@
 
                 <View
                     android:layout_width="match_parent"
-                    android:layout_height="1px"
+                    android:layout_height="@dimen/px_line"
                     android:background="@color/border_gray" />
 
-                <LinearLayout
+                <TextView
+                    android:id="@+id/author_article_count"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="@color/colorPrimary"
-                    android:orientation="horizontal"
-                    android:padding="12dp">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="已发布好页"
-                        android:textColor="@color/textPrimaryDark"
-                        android:textSize="16sp" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:paddingLeft="4dp"
-                        android:paddingRight="4dp"
-                        android:text="("
-                        android:textColor="@color/textPrimary"
-                        android:textSize="16sp" />
-
-                    <TextView
-                        android:id="@+id/author_article_count"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="32"
-                        android:textColor="@color/textPrimary"
-                        android:textSize="16sp" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:paddingLeft="4dp"
-                        android:text=")"
-                        android:textColor="@color/textPrimary"
-                        android:textSize="16sp" />
-                </LinearLayout>
+                    android:padding="@dimen/padding_large"
+                    android:textColor="@color/textPrimary"
+                    android:textSize="16sp" />
             </LinearLayout>
         </android.support.design.widget.AppBarLayout>
 
