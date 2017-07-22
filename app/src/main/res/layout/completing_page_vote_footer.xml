@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <TextView
+        android:id="@+id/vote_add"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/colorPrimary"
+        android:padding="@dimen/padding_large"
+        android:text="@string/hint_completing_vote_add"
+        android:textColor="@color/textPrimaryDark"
+        android:textSize="16sp" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_line"
+        android:layout_below="@+id/vote_add"
+        android:background="@color/border_gray" />
+
+    <Button
+        android:id="@+id/completing_finish"
+        android:layout_width="@dimen/completing_okBtn_width"
+        android:layout_height="@dimen/completing_okBtn_height"
+        android:layout_below="@+id/vote_add"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="@dimen/completing_okBtn_margin"
+        android:background="@drawable/selector_radius_red_btn"
+        android:onClick="onFinish"
+        android:text="@string/btn_dialog_big_ok"
+        android:textColor="@color/white"
+        android:textSize="16sp" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/blank_item_divider"
+        android:layout_below="@+id/completing_finish" />
+</RelativeLayout>

@@ -3,23 +3,21 @@ package com.donutcn.memo.activity;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.EditText;
-import android.widget.LinearLayout;
-import android.widget.TextView;
 
 import com.donutcn.memo.R;
+import com.donutcn.memo.adapter.VoteItemAdapter;
 import com.donutcn.memo.type.PublishType;
 import com.donutcn.memo.utils.WindowUtils;
 
 public class CompletingPage extends AppCompatActivity {
 
-    private EditText mVote1, mVote2, mVote3, mVote4, mVote5;
-    private LinearLayout mVoteSelection;
+    private RecyclerView mRecyclerView;
+    private VoteItemAdapter mVoteItemAdapter;
 
     private PublishType mContentType;
-    private int mViewIndex = 7;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,34 +54,12 @@ public class CompletingPage extends AppCompatActivity {
     }
 
     public void initVoteView() {
-        mVoteSelection = (LinearLayout) findViewById(R.id.completing_info_container);
-        mVote1 = (EditText) findViewById(R.id.vote_1);
-        mVote2 = (EditText) findViewById(R.id.vote_2);
-        mVote3 = (EditText) findViewById(R.id.vote_3);
-
-        final TextView vote_add = (TextView) findViewById(R.id.vote_add);
-        vote_add.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                View view = getLayoutInflater().inflate(R.layout.completing_page_vote_item, null);
-                if (mViewIndex == 7) {
-                    mVote4 = (EditText) ((ViewGroup) view).getChildAt(0);
-                    mVote4.setHint(R.string.hint_completing_vote_four);
-                    mVoteSelection.addView(view, mViewIndex);
-                    mViewIndex++;
-                } else if (mViewIndex == 8) {
-                    mVote5 = (EditText) ((ViewGroup) view).getChildAt(0);
-                    mVote5.setHint(R.string.hint_completing_vote_five);
-                    mVoteSelection.addView(view, mViewIndex);
-                    mViewIndex++;
-                } else if (mViewIndex == 9) {
-                    vote_add.setText(getString(R.string.hint_completing_vote_dec));
-                } else {
-                    mViewIndex = 7;
-                    vote_add.setText(getString(R.string.hint_completing_vote_add));
-                }
-            }
-        });
+        mRecyclerView = (RecyclerView) findViewById(R.id.recycler_view);
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+//        mRecyclerView.addItemDecoration(new ListViewDecoration(this, R.dimen.dp_line, 0, 0));
+        mVoteItemAdapter = new VoteItemAdapter(this);
+        mVoteItemAdapter.setMaxVoteSelection(5);
+        mRecyclerView.setAdapter(mVoteItemAdapter);
     }
 
     public void initRecruitView(){

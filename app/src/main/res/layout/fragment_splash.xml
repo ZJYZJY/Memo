@@ -14,18 +14,19 @@
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
             android:layout_centerVertical="true"
-            android:textColor="@color/textPrimaryDark"
             android:text="Welcome to HaoYe"
+            android:textColor="@color/textPrimaryDark"
             android:textSize="18sp" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:padding="12dp"
             android:layout_below="@+id/textView"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="42dp"
+            android:background="@drawable/transparent_btn"
             android:onClick="onSkipSplash"
+            android:padding="8dp"
             android:text="Skip" />
     </RelativeLayout>
 </LinearLayout>

@@ -5,8 +5,8 @@
             <solid android:color="@color/border_gray" />
             <corners android:radius="@dimen/radius_text_medium" />
             <stroke
-                android:width="@dimen/px_line"
-                android:color="@color/border_gray" />
+                android:width="@dimen/dp_line"
+                android:color="@color/border_dark" />
         </shape>
     </item>
 </layer-list>

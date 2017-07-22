@@ -1,18 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/colorPrimary"
     android:orientation="vertical">
 
-    <EditText
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/colorPrimary"
-        android:padding="@dimen/padding_large"
-        android:textSize="16sp" />
+        android:orientation="horizontal">
+
+        <EditText
+            android:id="@+id/completing_vote_et"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@color/colorPrimary"
+            android:maxLines="2"
+            android:padding="@dimen/padding_large"
+            android:textSize="16sp" />
+
+        <ImageView
+            android:id="@+id/completing_vote_del"
+            android:layout_width="@dimen/icon_vote_del"
+            android:layout_height="@dimen/icon_vote_del"
+            android:layout_gravity="center_vertical"
+            android:paddingLeft="@dimen/padding_medium"
+            android:paddingRight="@dimen/padding_medium"
+            android:src="@drawable/ic_delete" />
+    </LinearLayout>
 
     <View
         android:layout_width="match_parent"
         android:layout_height="@dimen/dp_line"
-        android:background="@color/border_gray" />
+        android:background="@color/border_gray"/>
 </LinearLayout>

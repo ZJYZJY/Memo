@@ -9,6 +9,7 @@
 
     <!--toast-->
     <string name="toast_exit_double_click">再按一次退出程序</string>
+    <string name="toast_min_vote_items">至少有两个投票选项</string>
 
     <!--placeholder-->
     <string name="placeholder_default_publish_type">请选择发布类型（默认为 文章）</string>
@@ -42,12 +43,8 @@
     <string name="hint_completing_sale_price">售卖价格</string>
     <string name="hint_completing_sale_way">交易方式</string>
     <string name="hint_completing_vote_one">投票项一</string>
-    <string name="hint_completing_vote_two">投票项二</string>
-    <string name="hint_completing_vote_three">投票项三</string>
-    <string name="hint_completing_vote_four">投票项四</string>
-    <string name="hint_completing_vote_five">投票项五</string>
+    <string name="hint_completing_vote_count">投票项%1$d</string>
     <string name="hint_completing_vote_add">➕新增投票项</string>
-    <string name="hint_completing_vote_dec">➖减少投票项</string>
 
     <!--button-->
     <string name="btn_publish_finish">完成</string>

@@ -27,6 +27,7 @@
     <dimen name="icon_personal_center_user">72dp</dimen>
     <dimen name="icon_message_user">42dp</dimen>
     <dimen name="icon_share">56dp</dimen>
+    <dimen name="icon_vote_del">42dp</dimen>
 
     <dimen name="icon_author_btn">16dp</dimen>
 
