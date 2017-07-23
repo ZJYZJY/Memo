@@ -8,13 +8,12 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import com.donutcn.memo.R;
 import com.donutcn.memo.adapter.MessageAdapter;
 import com.donutcn.memo.base.BaseScrollFragment;
+import com.donutcn.memo.event.ReceiveNewMessagesEvent;
 import com.donutcn.memo.listener.OnItemClickListener;
-import com.donutcn.memo.listener.OnReceiveNewMessagesListener;
 import com.donutcn.memo.view.ListViewDecoration;
 import com.yanzhenjie.recyclerview.swipe.SwipeMenuRecyclerView;
 
@@ -29,7 +28,7 @@ public class MessageFragment extends BaseScrollFragment implements SwipeRefreshL
 
     private SwipeRefreshLayout mRefreshLayout;
 
-    private OnReceiveNewMessagesListener mMsgListener;
+    private ReceiveNewMessagesEvent receiveNewMessagesEvent;
 
     @Override
     public void onAttach(Context context) {
@@ -64,11 +63,7 @@ public class MessageFragment extends BaseScrollFragment implements SwipeRefreshL
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-
-        Refresh();
-    }
-
-    public void update() {
+        receiveNewMessagesEvent = new ReceiveNewMessagesEvent(mContext, 0);
         Refresh();
     }
 
@@ -88,14 +83,9 @@ public class MessageFragment extends BaseScrollFragment implements SwipeRefreshL
     private OnItemClickListener mOnItemClickListener = new OnItemClickListener() {
         @Override
         public void onItemClick(int position) {
-            Toast.makeText(mContext, "我是第" + position + "条。", Toast.LENGTH_SHORT).show();
-            mMsgListener.onReceiveNewMessage(position, 1);
+            receiveNewMessagesEvent.onReceiveNewMessages(1, position);
         }
     };
-
-    public void setOnReceiveNewMessagesListener(OnReceiveNewMessagesListener listener) {
-        this.mMsgListener = listener;
-    }
 
     @Override
     public void onRefresh() {

@@ -13,11 +13,15 @@ import android.widget.ImageView;
 import com.donutcn.memo.R;
 import com.donutcn.memo.activity.PersonalCenterActivity;
 import com.donutcn.memo.adapter.TabFragmentPagerAdapter;
-import com.donutcn.memo.listener.OnReceiveNewMessagesListener;
+import com.donutcn.memo.event.ReceiveNewMessagesEvent;
 import com.flyco.tablayout.SlidingTabLayout;
 import com.flyco.tablayout.listener.OnTabSelectListener;
 
-public class HomeFragment extends Fragment implements OnTabSelectListener, OnReceiveNewMessagesListener {
+import java.util.Map;
+import java.util.Observable;
+import java.util.Observer;
+
+public class HomeFragment extends Fragment implements OnTabSelectListener, Observer {
 
     private TabFragmentPagerAdapter mPagerAdapter;
     private ViewPager mViewPager;
@@ -43,7 +47,6 @@ public class HomeFragment extends Fragment implements OnTabSelectListener, OnRec
         });
 
         mPagerAdapter = new TabFragmentPagerAdapter(getActivity().getSupportFragmentManager(), getContext(), 0);
-        mPagerAdapter.setOnReceiveNewMessages(this);
         mViewPager = (ViewPager) view.findViewById(R.id.home_viewpager);
         mViewPager.setAdapter(mPagerAdapter);
         mTabLayout = (SlidingTabLayout) view.findViewById(R.id.sliding_tabs);
@@ -58,20 +61,6 @@ public class HomeFragment extends Fragment implements OnTabSelectListener, OnRec
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         Refresh();
-    }
-
-    @Override
-    public void onReceiveNewMessage(int msgCount, int msgType) {
-        switch (msgType) {
-            case 0:
-                mTabLayout.showMsg(0, msgCount);
-                break;
-            case 1:
-                mTabLayout.showMsg(1, msgCount);
-                break;
-            default:
-                break;
-        }
     }
 
     @Override
@@ -96,5 +85,13 @@ public class HomeFragment extends Fragment implements OnTabSelectListener, OnRec
     public void onResume() {
         super.onResume();
         Refresh();
+    }
+
+    @Override
+    public void update(Observable o, Object arg) {
+        if (o instanceof ReceiveNewMessagesEvent) {
+            mTabLayout.showMsg(((Map<String, Integer>)arg).get("msgType")
+                    , ((Map<String, Integer>)arg).get("msgCount"));
+        }
     }
 }

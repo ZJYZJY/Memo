@@ -17,8 +17,8 @@ import com.donutcn.memo.activity.ArticlePage;
 import com.donutcn.memo.activity.SearchActivity;
 import com.donutcn.memo.adapter.HaoYeAdapter;
 import com.donutcn.memo.base.BaseScrollFragment;
+import com.donutcn.memo.event.ReceiveNewMessagesEvent;
 import com.donutcn.memo.listener.OnItemClickListener;
-import com.donutcn.memo.listener.OnReceiveNewMessagesListener;
 import com.donutcn.memo.type.ItemLayoutType;
 import com.donutcn.memo.view.ListViewDecoration;
 import com.yanzhenjie.recyclerview.swipe.Closeable;
@@ -39,7 +39,7 @@ public class FriendsFragment extends BaseScrollFragment implements SwipeRefreshL
 
     private SwipeRefreshLayout mRefreshLayout;
 
-    private OnReceiveNewMessagesListener mMsgListener;
+    private ReceiveNewMessagesEvent receiveNewMessagesEvent;
 
     @Override
     public void onAttach(Context context) {
@@ -77,10 +77,7 @@ public class FriendsFragment extends BaseScrollFragment implements SwipeRefreshL
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        Refresh();
-    }
-
-    public void update() {
+        receiveNewMessagesEvent = new ReceiveNewMessagesEvent(mContext, 1);
         Refresh();
     }
 
@@ -95,10 +92,6 @@ public class FriendsFragment extends BaseScrollFragment implements SwipeRefreshL
         mHaoYe_rv.setAdapter(adapter);
 
         mRefreshLayout.setRefreshing(false);
-    }
-
-    public void setOnReceiveNewMessagesListener(OnReceiveNewMessagesListener listener) {
-        this.mMsgListener = listener;
     }
 
     @Override
@@ -132,8 +125,7 @@ public class FriendsFragment extends BaseScrollFragment implements SwipeRefreshL
     private OnItemClickListener mOnItemClickListener = new OnItemClickListener() {
         @Override
         public void onItemClick(int position) {
-            Toast.makeText(mContext, "我是第" + position + "条。", Toast.LENGTH_SHORT).show();
-            mMsgListener.onReceiveNewMessage(position, 3);
+            receiveNewMessagesEvent.onReceiveNewMessages(1, position);
             startActivity(new Intent(getContext(), ArticlePage.class));
         }
     };

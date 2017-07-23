@@ -15,7 +15,7 @@ import android.widget.Toast;
 
 import com.donutcn.memo.activity.ArticlePage;
 import com.donutcn.memo.base.BaseScrollFragment;
-import com.donutcn.memo.listener.OnReceiveNewMessagesListener;
+import com.donutcn.memo.event.ReceiveNewMessagesEvent;
 import com.donutcn.memo.type.ItemLayoutType;
 import com.donutcn.memo.view.ListViewDecoration;
 import com.donutcn.memo.R;
@@ -24,7 +24,6 @@ import com.donutcn.memo.listener.OnItemClickListener;
 import com.donutcn.memo.view.RefreshHeaderView;
 import com.lcodecore.tkrefreshlayout.RefreshListenerAdapter;
 import com.lcodecore.tkrefreshlayout.TwinklingRefreshLayout;
-import com.lcodecore.tkrefreshlayout.header.SinaRefreshView;
 import com.yanzhenjie.recyclerview.swipe.Closeable;
 import com.yanzhenjie.recyclerview.swipe.OnSwipeMenuItemClickListener;
 import com.yanzhenjie.recyclerview.swipe.SwipeMenu;
@@ -46,9 +45,9 @@ public class HaoYeFragment extends BaseScrollFragment implements
 
     private HaoYeAdapter mAdapter;
 
-    private OnReceiveNewMessagesListener mMsgListener;
-
     private List<String> dataList;
+
+    private ReceiveNewMessagesEvent receiveNewMessagesEvent;
 
     @Override
     public void onAttach(Context context) {
@@ -87,10 +86,7 @@ public class HaoYeFragment extends BaseScrollFragment implements
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        Refresh();
-    }
-
-    public void update() {
+        receiveNewMessagesEvent = new ReceiveNewMessagesEvent(mContext, 0);
         Refresh();
     }
 
@@ -104,10 +100,6 @@ public class HaoYeFragment extends BaseScrollFragment implements
         mAdapter.setFooterEnable(true);
 
         mHaoYe_rv.setAdapter(mAdapter);
-    }
-
-    public void setOnReceiveNewMessagesListener(OnReceiveNewMessagesListener listener) {
-        this.mMsgListener = listener;
     }
 
     @Override
@@ -195,8 +187,7 @@ public class HaoYeFragment extends BaseScrollFragment implements
     private OnItemClickListener mOnItemClickListener = new OnItemClickListener() {
         @Override
         public void onItemClick(int position) {
-            Toast.makeText(mContext, "我是第" + position + "条。", Toast.LENGTH_SHORT).show();
-            mMsgListener.onReceiveNewMessage(position, 0);
+            receiveNewMessagesEvent.onReceiveNewMessages(0, position);
             startActivity(new Intent(mContext, ArticlePage.class));
         }
     };
