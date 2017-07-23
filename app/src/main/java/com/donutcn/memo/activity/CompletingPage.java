@@ -58,7 +58,6 @@ public class CompletingPage extends AppCompatActivity {
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
 //        mRecyclerView.addItemDecoration(new ListViewDecoration(this, R.dimen.dp_line, 0, 0));
         mVoteItemAdapter = new VoteItemAdapter(this);
-        mVoteItemAdapter.setMaxVoteSelection(5);
         mRecyclerView.setAdapter(mVoteItemAdapter);
     }
 

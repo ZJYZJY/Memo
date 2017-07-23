@@ -25,8 +25,8 @@
             android:layout_width="@dimen/icon_vote_del"
             android:layout_height="@dimen/icon_vote_del"
             android:layout_gravity="center_vertical"
-            android:paddingLeft="@dimen/padding_medium"
-            android:paddingRight="@dimen/padding_medium"
+            android:paddingLeft="@dimen/padding_large"
+            android:paddingRight="@dimen/padding_large"
             android:src="@drawable/ic_delete" />
     </LinearLayout>
 

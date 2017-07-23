@@ -21,6 +21,7 @@ import com.donutcn.memo.view.ListViewDecoration;
 import com.donutcn.memo.R;
 import com.donutcn.memo.adapter.HaoYeAdapter;
 import com.donutcn.memo.listener.OnItemClickListener;
+import com.donutcn.memo.view.RefreshHeaderView;
 import com.lcodecore.tkrefreshlayout.RefreshListenerAdapter;
 import com.lcodecore.tkrefreshlayout.TwinklingRefreshLayout;
 import com.lcodecore.tkrefreshlayout.header.SinaRefreshView;
@@ -72,7 +73,7 @@ public class HaoYeFragment extends BaseScrollFragment implements
         setRecyclerView(mHaoYe_rv);
         mRefreshLayout = (TwinklingRefreshLayout) view.findViewById(R.id.swipe_layout);
         mRefreshLayout.setOnRefreshListener(mRefreshListenerAdapter);
-        mRefreshLayout.setHeaderView(new SinaRefreshView(mContext));
+        mRefreshLayout.setHeaderView(new RefreshHeaderView(mContext));
 
         mHaoYe_rv.setLayoutManager(new LinearLayoutManager(mContext));
         mHaoYe_rv.addItemDecoration(new ListViewDecoration(mContext,
