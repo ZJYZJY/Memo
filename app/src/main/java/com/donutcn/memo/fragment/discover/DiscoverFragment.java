@@ -46,7 +46,8 @@ public class DiscoverFragment extends Fragment implements OnTabSelectListener, O
                 startActivity(new Intent(getContext(), AuthorPage.class));
             }
         });
-        mPagerAdapter = new TabFragmentPagerAdapter(getActivity().getSupportFragmentManager(), getContext(), 1);
+        mPagerAdapter = new TabFragmentPagerAdapter(
+                getActivity().getSupportFragmentManager(), getContext(), 1);
         mViewPager = (ViewPager) view.findViewById(R.id.dis_viewpager);
         mViewPager.setAdapter(mPagerAdapter);
         mTabLayout = (SlidingTabLayout) view.findViewById(R.id.sliding_tabs);
@@ -55,6 +56,14 @@ public class DiscoverFragment extends Fragment implements OnTabSelectListener, O
         mTabLayout.showMsg(1, 3);
         mTabLayout.showDot(0);
         return view;
+    }
+
+    public int getCurrentPagePosition(){
+        return mTabLayout.getCurrentTab();
+    }
+
+    public Fragment getPageFragment(int position){
+        return mPagerAdapter.getFragment(position);
     }
 
     @Override

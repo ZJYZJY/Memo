@@ -46,7 +46,8 @@ public class HomeFragment extends Fragment implements OnTabSelectListener, Obser
             }
         });
 
-        mPagerAdapter = new TabFragmentPagerAdapter(getActivity().getSupportFragmentManager(), getContext(), 0);
+        mPagerAdapter = new TabFragmentPagerAdapter(
+                getActivity().getSupportFragmentManager(), getContext(), 0);
         mViewPager = (ViewPager) view.findViewById(R.id.home_viewpager);
         mViewPager.setAdapter(mPagerAdapter);
         mTabLayout = (SlidingTabLayout) view.findViewById(R.id.sliding_tabs);
@@ -55,6 +56,14 @@ public class HomeFragment extends Fragment implements OnTabSelectListener, Obser
         mTabLayout.showMsg(0, 2);
         mTabLayout.showDot(1);
         return view;
+    }
+
+    public int getCurrentPagePosition(){
+        return mTabLayout.getCurrentTab();
+    }
+
+    public Fragment getPageFragment(int position){
+        return mPagerAdapter.getFragment(position);
     }
 
     @Override

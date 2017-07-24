@@ -8,6 +8,7 @@ import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,6 +17,7 @@ import android.widget.Toast;
 import com.donutcn.memo.activity.ArticlePage;
 import com.donutcn.memo.base.BaseScrollFragment;
 import com.donutcn.memo.event.ReceiveNewMessagesEvent;
+import com.donutcn.memo.event.RequestRefreshEvent;
 import com.donutcn.memo.type.ItemLayoutType;
 import com.donutcn.memo.view.ListViewDecoration;
 import com.donutcn.memo.R;
@@ -33,21 +35,22 @@ import com.yanzhenjie.recyclerview.swipe.SwipeMenuRecyclerView;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Observable;
+import java.util.Observer;
 
-public class HaoYeFragment extends BaseScrollFragment implements
-        SwipeRefreshLayout.OnRefreshListener {
+public class HaoYeFragment extends BaseScrollFragment implements Observer {
 
     private Context mContext;
 
     private SwipeMenuRecyclerView mHaoYe_rv;
 
-    private TwinklingRefreshLayout mRefreshLayout;
+    public TwinklingRefreshLayout mRefreshLayout;
 
     private HaoYeAdapter mAdapter;
 
     private List<String> dataList;
 
-    private ReceiveNewMessagesEvent receiveNewMessagesEvent;
+    private ReceiveNewMessagesEvent mReceiveNewMessagesEvent;
 
     @Override
     public void onAttach(Context context) {
@@ -86,8 +89,8 @@ public class HaoYeFragment extends BaseScrollFragment implements
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        receiveNewMessagesEvent = new ReceiveNewMessagesEvent(mContext, 0);
-        Refresh();
+        mReceiveNewMessagesEvent = new ReceiveNewMessagesEvent(mContext, 0);
+        mRefreshLayout.startRefresh();
     }
 
     public void Refresh() {
@@ -100,11 +103,6 @@ public class HaoYeFragment extends BaseScrollFragment implements
         mAdapter.setFooterEnable(true);
 
         mHaoYe_rv.setAdapter(mAdapter);
-    }
-
-    @Override
-    public void onRefresh() {
-        Refresh();
     }
 
     private RefreshListenerAdapter mRefreshListenerAdapter = new RefreshListenerAdapter() {
@@ -187,7 +185,7 @@ public class HaoYeFragment extends BaseScrollFragment implements
     private OnItemClickListener mOnItemClickListener = new OnItemClickListener() {
         @Override
         public void onItemClick(int position) {
-            receiveNewMessagesEvent.onReceiveNewMessages(0, position);
+            mReceiveNewMessagesEvent.onReceiveNewMessages(0, position);
             startActivity(new Intent(mContext, ArticlePage.class));
         }
     };
@@ -195,7 +193,8 @@ public class HaoYeFragment extends BaseScrollFragment implements
     /**
      * Menu onClickListener
      */
-    private OnSwipeMenuItemClickListener mHaoYeItemClickListener = new OnSwipeMenuItemClickListener() {
+    private OnSwipeMenuItemClickListener mHaoYeItemClickListener
+            = new OnSwipeMenuItemClickListener() {
         /**
          * @param closeable       Used for close the menu
          * @param adapterPosition position of recyclerView item
@@ -209,7 +208,8 @@ public class HaoYeFragment extends BaseScrollFragment implements
             closeable.smoothCloseMenu();
 
             if (direction == SwipeMenuRecyclerView.RIGHT_DIRECTION) {
-                Toast.makeText(mContext, "list第" + adapterPosition + "; 右侧菜单第" + menuPosition, Toast.LENGTH_SHORT).show();
+                Toast.makeText(mContext, "list第" + adapterPosition + "; 右侧菜单第" + menuPosition,
+                        Toast.LENGTH_SHORT).show();
             }
         }
     };
@@ -218,5 +218,19 @@ public class HaoYeFragment extends BaseScrollFragment implements
     public void onResume() {
         super.onResume();
         Refresh();
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        mReceiveNewMessagesEvent.deleteObservers();
+    }
+
+    @Override
+    public void update(Observable o, Object arg) {
+        if (o instanceof RequestRefreshEvent && (int) arg == 0) {
+            mHaoYe_rv.scrollToPosition(0);
+            mRefreshLayout.startRefresh();
+        }
     }
 }

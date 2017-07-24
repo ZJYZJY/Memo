@@ -10,11 +10,6 @@ import com.donutcn.memo.fragment.discover.RecommendFragment;
 import com.donutcn.memo.fragment.home.HaoYeFragment;
 import com.donutcn.memo.fragment.home.MessageFragment;
 
-/**
- * com.hdu.waibaotest
- * Created by 73958 on 2017/7/4.
- */
-
 public class TabFragmentPagerAdapter extends FragmentPagerAdapter {
 
     final int PAGE_COUNT = 2;
@@ -23,10 +18,18 @@ public class TabFragmentPagerAdapter extends FragmentPagerAdapter {
     private int type;
     private Context context;
 
+    private FragmentManager mFragmentManager;
+
     public TabFragmentPagerAdapter(FragmentManager fm, Context context, int type) {
         super(fm);
+        mFragmentManager = fm;
         this.context = context;
         this.type = type;
+    }
+
+    public Fragment getFragment(int position){
+        // "+2" is for skip the HomeFragment and DiscoverFragment.
+        return mFragmentManager.getFragments().get(position + 2);
     }
 
     @Override

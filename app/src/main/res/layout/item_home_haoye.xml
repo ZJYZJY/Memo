@@ -4,17 +4,14 @@
     android:layout_height="wrap_content"
     android:background="?selectableItemBackground"
     android:orientation="horizontal"
-    android:paddingBottom="4dp"
-    android:paddingLeft="12dp"
-    android:paddingRight="12dp"
-    android:paddingTop="4dp">
+    android:padding="@dimen/padding_large">
 
     <com.donutcn.widgetlib.widget.CircleImageView
         android:id="@+id/iv_content_icon"
         android:layout_width="@dimen/icon_item_user"
         android:layout_height="@dimen/icon_item_user"
-        android:layout_marginEnd="12dp"
-        android:layout_marginRight="12dp"
+        android:layout_marginEnd="@dimen/margin_medium"
+        android:layout_marginRight="@dimen/margin_medium"
         android:contentDescription="@string/app_name"
         android:src="@mipmap/user_icon"
         android:visibility="gone" />
@@ -37,9 +34,9 @@
         android:layout_alignLeft="@+id/tv_title"
         android:layout_alignStart="@+id/tv_title"
         android:layout_below="@+id/tv_title"
-        android:layout_marginTop="6dp"
+        android:layout_marginTop="@dimen/margin_small"
         android:ellipsize="end"
-        android:lineSpacingExtra="4dp"
+        android:lineSpacingExtra="@dimen/line_space_large"
         android:maxLines="2"
         android:text="每年在全国各大高校招聘应届毕业生数百名，该项目旨在为有全职求职意愿的大大的阿斯顿阿斯顿为发达省份挖饿发生的父亲为绯闻情妇"
         android:textColor="@color/textPrimary" />
@@ -53,7 +50,7 @@
         android:layout_below="@+id/tv_content"
         android:layout_marginEnd="32dp"
         android:layout_marginRight="32dp"
-        android:layout_marginTop="6dp"
+        android:layout_marginTop="@dimen/margin_small"
         android:orientation="horizontal"
         android:visibility="gone">
 
@@ -68,8 +65,8 @@
             android:id="@+id/iv_two"
             android:layout_width="64dp"
             android:layout_height="64dp"
-            android:layout_marginLeft="16dp"
-            android:layout_marginStart="16dp"
+            android:layout_marginLeft="@dimen/margin_large"
+            android:layout_marginStart="@dimen/margin_large"
             android:layout_weight="1"
             android:src="@mipmap/ic_launcher" />
     </LinearLayout>
@@ -97,8 +94,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_gravity="center_vertical"
-                android:layout_marginEnd="10dp"
-                android:layout_marginRight="10dp"
+                android:layout_marginEnd="@dimen/margin_medium"
+                android:layout_marginRight="@dimen/margin_medium"
                 android:background="@drawable/type_red_bg"
                 android:gravity="center_vertical"
                 android:paddingLeft="2dp"
@@ -121,22 +118,12 @@
                 android:visibility="gone" />
 
             <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_gravity="center_vertical"
-                android:gravity="center_vertical"
-                android:paddingRight="4dp"
-                android:text="发布于"
-                android:textColor="@color/textPrimary"
-                android:textSize="12sp" />
-
-            <TextView
                 android:id="@+id/tv_publish_time"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_gravity="center_vertical"
                 android:gravity="center_vertical"
-                android:text="3小时前"
+                android:text="发布于 3小时前"
                 android:textColor="@color/textPrimary"
                 android:textSize="12sp" />
         </LinearLayout>
@@ -186,5 +173,4 @@
                 android:textSize="12sp" />
         </LinearLayout>
     </RelativeLayout>
-
 </RelativeLayout>

@@ -14,7 +14,7 @@ import com.yanzhenjie.recyclerview.swipe.SwipeMenuAdapter;
 
 import java.util.List;
 
-public class SearchListAdapter extends SwipeMenuAdapter<SearchListAdapter.DefaultViewHolder> {
+public class SearchListAdapter extends SwipeMenuAdapter<SearchListAdapter.ViewHolder> {
 
     private List<String> titles;
 
@@ -38,22 +38,23 @@ public class SearchListAdapter extends SwipeMenuAdapter<SearchListAdapter.Defaul
 
     @Override
     public View onCreateContentView(ViewGroup parent, int viewType) {
-        return LayoutInflater.from(parent.getContext()).inflate(R.layout.item_search_list, parent, false);
+        return LayoutInflater.from(parent.getContext())
+                .inflate(R.layout.item_search_list, parent, false);
     }
 
     @Override
-    public SearchListAdapter.DefaultViewHolder onCompatCreateViewHolder(View realContentView, int viewType) {
-        DefaultViewHolder viewHolder = new DefaultViewHolder(realContentView);
+    public ViewHolder onCompatCreateViewHolder(View realContentView, int viewType) {
+        ViewHolder viewHolder = new ViewHolder(realContentView);
         viewHolder.mOnItemClickListener = mOnItemClickListener;
         return viewHolder;
     }
 
     @Override
-    public void onBindViewHolder(SearchListAdapter.DefaultViewHolder holder, int position) {
+    public void onBindViewHolder(ViewHolder holder, int position) {
         holder.setData();
     }
 
-    static class DefaultViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+    static class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         ImageView mContentPic1;
         ImageView mContentPic2;
         TextView mTitle;
@@ -62,7 +63,7 @@ public class SearchListAdapter extends SwipeMenuAdapter<SearchListAdapter.Defaul
         TextView mInfo;
         OnItemClickListener mOnItemClickListener;
 
-        public DefaultViewHolder(View itemView) {
+        public ViewHolder(View itemView) {
             super(itemView);
             itemView.setOnClickListener(this);
             mContentPic1 = (ImageView) itemView.findViewById(R.id.iv_one);

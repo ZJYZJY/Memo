@@ -24,7 +24,8 @@ import java.util.ArrayList;
  * Created by 73958 on 2017/7/21.
  */
 
-public class VoteItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> implements OnTextChangerListener {
+public class VoteItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
+        implements OnTextChangerListener {
 
     private static final int ITEM_HEADER = 10000;
     private static final int ITEM_NORMAL = 20000;
@@ -63,16 +64,20 @@ public class VoteItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         View view;
         switch (viewType) {
             case ITEM_HEADER:
-                view = LayoutInflater.from(mContext).inflate(R.layout.completing_page_vote_header, parent, false);
+                view = LayoutInflater.from(mContext)
+                        .inflate(R.layout.completing_page_vote_header, parent, false);
                 return new VoteItemAdapter.HeaderViewHolder(view);
             case ITEM_NORMAL:
-                view = LayoutInflater.from(mContext).inflate(R.layout.completing_page_vote_item, parent, false);
+                view = LayoutInflater.from(mContext)
+                        .inflate(R.layout.completing_page_vote_item, parent, false);
                 return new VoteItemAdapter.ViewHolder(view);
             case ITEM_FOOTER:
-                view = LayoutInflater.from(mContext).inflate(R.layout.completing_page_vote_footer, parent, false);
+                view = LayoutInflater.from(mContext)
+                        .inflate(R.layout.completing_page_vote_footer, parent, false);
                 return new FooterViewHolder(view);
             default:
-                view = LayoutInflater.from(mContext).inflate(R.layout.completing_page_vote_item, parent, false);
+                view = LayoutInflater.from(mContext)
+                        .inflate(R.layout.completing_page_vote_item, parent, false);
                 return new VoteItemAdapter.ViewHolder(view);
         }
     }

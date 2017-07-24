@@ -53,7 +53,8 @@ public class ViewPagerAdapter extends FragmentPagerAdapter {
     }
 
     public void update(int item){
-        Fragment fragment = ((AppCompatActivity)context).getSupportFragmentManager().findFragmentByTag(tagList.get(item));
+        Fragment fragment = ((AppCompatActivity)context)
+                .getSupportFragmentManager().findFragmentByTag(tagList.get(item));
         if(fragment != null){
             switch (item) {
                 case 0:

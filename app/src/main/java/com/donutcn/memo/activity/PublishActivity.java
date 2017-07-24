@@ -102,7 +102,8 @@ public class PublishActivity extends AppCompatActivity implements View.OnClickLi
         @Override
         public void onInit(int code) {
             if (code != ErrorCode.SUCCESS) {
-                Toast.makeText(PublishActivity.this, "初始化失败，错误码：" + code, Toast.LENGTH_SHORT).show();
+                Toast.makeText(PublishActivity.this, "初始化失败，错误码：" + code,
+                        Toast.LENGTH_SHORT).show();
             }
         }
     };
@@ -187,7 +188,8 @@ public class PublishActivity extends AppCompatActivity implements View.OnClickLi
                         .start(this);
                 break;
             case R.id.pub_type_setting:
-                mTools.setVisibility(mTools.getVisibility() == View.VISIBLE ? View.GONE : View.VISIBLE);
+                mTools.setVisibility(mTools.getVisibility() == View.VISIBLE
+                        ? View.GONE : View.VISIBLE);
                 break;
             case R.id.pub_template:
                 Toast.makeText(this, "模版", Toast.LENGTH_SHORT).show();
@@ -306,7 +308,8 @@ public class PublishActivity extends AppCompatActivity implements View.OnClickLi
         }
 
         public void onError(SpeechError error) {
-            Toast.makeText(PublishActivity.this, error.getPlainDescription(true), Toast.LENGTH_SHORT).show();
+            Toast.makeText(PublishActivity.this, error.getPlainDescription(true),
+                    Toast.LENGTH_SHORT).show();
         }
 
     };
@@ -432,18 +435,24 @@ public class PublishActivity extends AppCompatActivity implements View.OnClickLi
                     .setPositiveButton(getString(R.string.dialog_publish_pos), new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
-                            SpfsUtils.write(PublishActivity.this, SpfsUtils.CACHE, "publishType", mSelectedType);
-                            SpfsUtils.write(PublishActivity.this, SpfsUtils.CACHE, "publishTitle", mTitleStr);
-                            SpfsUtils.write(PublishActivity.this, SpfsUtils.CACHE, "publishContent", mContentStr);
+                            SpfsUtils.write(PublishActivity.this,
+                                    SpfsUtils.CACHE, "publishType", mSelectedType);
+                            SpfsUtils.write(PublishActivity.this,
+                                    SpfsUtils.CACHE, "publishTitle", mTitleStr);
+                            SpfsUtils.write(PublishActivity.this,
+                                    SpfsUtils.CACHE, "publishContent", mContentStr);
                             finish();
                         }
                     })
                     .setNegativeButton(getString(R.string.dialog_publish_neg), new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
-                            SpfsUtils.remove(PublishActivity.this, SpfsUtils.CACHE, "publishType");
-                            SpfsUtils.remove(PublishActivity.this, SpfsUtils.CACHE, "publishTitle");
-                            SpfsUtils.remove(PublishActivity.this, SpfsUtils.CACHE, "publishContent");
+                            SpfsUtils.remove(PublishActivity.this,
+                                    SpfsUtils.CACHE, "publishType");
+                            SpfsUtils.remove(PublishActivity.this,
+                                    SpfsUtils.CACHE, "publishTitle");
+                            SpfsUtils.remove(PublishActivity.this,
+                                    SpfsUtils.CACHE, "publishContent");
                             finish();
                         }
                     })
@@ -455,7 +464,8 @@ public class PublishActivity extends AppCompatActivity implements View.OnClickLi
     }
 
     @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
+                                           @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         if (requestCode == PermissionCheck.PERMISSION_RECORD) {
 

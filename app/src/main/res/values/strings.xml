@@ -19,6 +19,8 @@
     <string name="placeholder_article_read_count">阅读 %1$d</string>
     <string name="placeholder_search_item_info">阅读 %1$d - 评论 %2$d - 喜欢 %3$d</string>
     <string name="placeholder_search_item_author">%1$s %2$s</string>
+    <string name="placeholder_publish_author_time">%1$s 发布于 %2$d小时前</string>
+    <string name="placeholder_publish_time">发布于 %1$d小时前</string>
 
     <string name="placeholder_message_resume">新增 %1$d 人投递简历，目前已收到 %2$d 份简历！</string>
     <string name="placeholder_message_enroll">新增 %1$d 人报名参加活动，目前已收到 %2$d 人报名！</string>

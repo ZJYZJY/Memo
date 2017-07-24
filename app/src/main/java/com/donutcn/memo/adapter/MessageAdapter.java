@@ -16,7 +16,7 @@ import com.yanzhenjie.recyclerview.swipe.SwipeMenuAdapter;
 
 import java.util.List;
 
-public class MessageAdapter extends SwipeMenuAdapter<MessageAdapter.DefaultViewHolder> {
+public class MessageAdapter extends SwipeMenuAdapter<MessageAdapter.ViewHolder> {
 
     private List<String> titles;
     private Context mContext;
@@ -39,12 +39,13 @@ public class MessageAdapter extends SwipeMenuAdapter<MessageAdapter.DefaultViewH
 
     @Override
     public View onCreateContentView(ViewGroup parent, int viewType) {
-        return LayoutInflater.from(parent.getContext()).inflate(R.layout.item_message, parent, false);
+        return LayoutInflater.from(parent.getContext())
+                .inflate(R.layout.item_message, parent, false);
     }
 
     @Override
-    public MessageAdapter.DefaultViewHolder onCompatCreateViewHolder(View realContentView, int viewType) {
-        DefaultViewHolder viewHolder = new DefaultViewHolder(realContentView);
+    public ViewHolder onCompatCreateViewHolder(View realContentView, int viewType) {
+        ViewHolder viewHolder = new ViewHolder(realContentView);
         viewHolder.mOnItemClickListener = mOnItemClickListener;
 
         PublishType p = PublishType.RECRUIT;
@@ -120,11 +121,11 @@ public class MessageAdapter extends SwipeMenuAdapter<MessageAdapter.DefaultViewH
     }
 
     @Override
-    public void onBindViewHolder(MessageAdapter.DefaultViewHolder holder, int position) {
+    public void onBindViewHolder(ViewHolder holder, int position) {
         holder.setData();
     }
 
-    static class DefaultViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+    static class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         ImageView mImage;
         TextView mTitle;
         TextView mTime;
@@ -133,7 +134,7 @@ public class MessageAdapter extends SwipeMenuAdapter<MessageAdapter.DefaultViewH
         TextView mExtra;
         OnItemClickListener mOnItemClickListener;
 
-        public DefaultViewHolder(View itemView) {
+        public ViewHolder(View itemView) {
             super(itemView);
             itemView.setOnClickListener(this);
             mImage = (ImageView) itemView.findViewById(R.id.message_item_icon);

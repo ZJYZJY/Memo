@@ -13,21 +13,31 @@ import android.widget.Toast;
 
 import com.donutcn.memo.R;
 import com.donutcn.memo.adapter.ViewPagerAdapter;
+import com.donutcn.memo.event.RequestRefreshEvent;
 import com.donutcn.memo.fragment.SplashFragment;
 import com.donutcn.memo.fragment.discover.DiscoverFragment;
+import com.donutcn.memo.fragment.home.HaoYeFragment;
 import com.donutcn.memo.fragment.home.HomeFragment;
 import com.donutcn.memo.utils.WindowUtils;
 import com.donutcn.widgetlib.widget.CheckableImageButton;
 
-public class MainActivity extends AppCompatActivity implements ViewPager.OnPageChangeListener, View.OnClickListener {
+import java.util.Observer;
+
+public class MainActivity extends AppCompatActivity implements
+        ViewPager.OnPageChangeListener, View.OnClickListener {
 
     private ViewPager mViewPager;
     private ViewPagerAdapter mAdapter;
     private CheckableImageButton mHome, mDiscover, mPublish;
     private LinearLayout mMainContainer;
     public SplashFragment splashFragment;
+    private HomeFragment mHomeFragment;
+    private DiscoverFragment mDiscoverFragment;
+
+    private RequestRefreshEvent mRequestRefreshEvent;
 
     private long mExitTime = 0;
+    private boolean isFirstSet = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,7 +54,6 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
         mDiscover = (CheckableImageButton) findViewById(R.id.main_bottom_dis);
 
         mViewPager.addOnPageChangeListener(this);
-//        mViewPager.setOffscreenPageLimit(2);
         mHome.setOnClickListener(this);
         mPublish.setOnClickListener(this);
         mDiscover.setOnClickListener(this);
@@ -60,7 +69,8 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
         transaction.replace(R.id.splash_container, splashFragment);
         transaction.commit();
         // set flag full screen.
-        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
+                WindowManager.LayoutParams.FLAG_FULLSCREEN);
         // TODO: To determine whether or not to log in. if not logged in, start the LoginActivity.
 
         // delay 3s to remove the splash fragment.
@@ -87,24 +97,37 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
 
     private void initViewPager(ViewPager viewPager) {
         mAdapter = new ViewPagerAdapter(getSupportFragmentManager(), this);
-        mAdapter.addFragment(new HomeFragment());
-        mAdapter.addFragment(new DiscoverFragment());
-
+        mHomeFragment = new HomeFragment();
+        mDiscoverFragment = new DiscoverFragment();
+        mAdapter.addFragment(mHomeFragment);
+        mAdapter.addFragment(mDiscoverFragment);
         viewPager.setAdapter(mAdapter);
     }
 
     @Override
     public void onClick(View v) {
+        if(isFirstSet){
+            // init RequestRefreshEvent and add observers.
+            mRequestRefreshEvent = new RequestRefreshEvent(this);
+        }
         switch (v.getId()) {
             case R.id.main_bottom_home:
-                mHome.setChecked(true);
-                mDiscover.setChecked(false);
-                mViewPager.setCurrentItem(0, false);
+                if(mHome.isChecked()){
+                    mRequestRefreshEvent.requestRefresh(mHomeFragment.getCurrentPagePosition());
+                }else {
+                    mHome.setChecked(true);
+                    mDiscover.setChecked(false);
+                    mViewPager.setCurrentItem(0, false);
+                }
                 break;
             case R.id.main_bottom_dis:
-                mHome.setChecked(false);
-                mDiscover.setChecked(true);
-                mViewPager.setCurrentItem(1, false);
+                if(mDiscover.isChecked()){
+                    mRequestRefreshEvent.requestRefresh(mDiscoverFragment.getCurrentPagePosition() + 2);
+                }else {
+                    mHome.setChecked(false);
+                    mDiscover.setChecked(true);
+                    mViewPager.setCurrentItem(1, false);
+                }
                 break;
             case R.id.main_bottom_pub:
                 startActivity(new Intent(this, PublishActivity.class));
@@ -137,6 +160,12 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
     @Override
     public void onPageScrollStateChanged(int state) {
 
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        mRequestRefreshEvent.deleteObservers();
     }
 
     public boolean onKeyDown(int keyCode, KeyEvent event) {
