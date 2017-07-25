@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import com.donutcn.memo.R;
+import com.donutcn.memo.activity.MainActivity;
 import com.donutcn.memo.activity.PersonalCenterActivity;
 import com.donutcn.memo.adapter.TabFragmentPagerAdapter;
 import com.donutcn.memo.event.ReceiveNewMessagesEvent;
@@ -80,6 +81,8 @@ public class HomeFragment extends Fragment implements OnTabSelectListener, Obser
     @Override
     public void onTabReselect(int position) {
         mTabLayout.hideMsg(position);
+        ((MainActivity)getContext()).mRequestRefreshEvent
+                .requestRefresh(getCurrentPagePosition());
     }
 
     public void update() {

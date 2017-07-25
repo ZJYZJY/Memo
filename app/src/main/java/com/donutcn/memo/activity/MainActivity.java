@@ -16,15 +16,11 @@ import com.donutcn.memo.adapter.ViewPagerAdapter;
 import com.donutcn.memo.event.RequestRefreshEvent;
 import com.donutcn.memo.fragment.SplashFragment;
 import com.donutcn.memo.fragment.discover.DiscoverFragment;
-import com.donutcn.memo.fragment.home.HaoYeFragment;
 import com.donutcn.memo.fragment.home.HomeFragment;
 import com.donutcn.memo.utils.WindowUtils;
 import com.donutcn.widgetlib.widget.CheckableImageButton;
 
-import java.util.Observer;
-
-public class MainActivity extends AppCompatActivity implements
-        ViewPager.OnPageChangeListener, View.OnClickListener {
+public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
     private ViewPager mViewPager;
     private ViewPagerAdapter mAdapter;
@@ -34,7 +30,7 @@ public class MainActivity extends AppCompatActivity implements
     private HomeFragment mHomeFragment;
     private DiscoverFragment mDiscoverFragment;
 
-    private RequestRefreshEvent mRequestRefreshEvent;
+    public RequestRefreshEvent mRequestRefreshEvent;
 
     private long mExitTime = 0;
     private boolean isFirstSet = true;
@@ -53,7 +49,6 @@ public class MainActivity extends AppCompatActivity implements
         mPublish = (CheckableImageButton) findViewById(R.id.main_bottom_pub);
         mDiscover = (CheckableImageButton) findViewById(R.id.main_bottom_dis);
 
-        mViewPager.addOnPageChangeListener(this);
         mHome.setOnClickListener(this);
         mPublish.setOnClickListener(this);
         mDiscover.setOnClickListener(this);
@@ -109,6 +104,7 @@ public class MainActivity extends AppCompatActivity implements
         if(isFirstSet){
             // init RequestRefreshEvent and add observers.
             mRequestRefreshEvent = new RequestRefreshEvent(this);
+            isFirstSet = false;
         }
         switch (v.getId()) {
             case R.id.main_bottom_home:
@@ -147,25 +143,16 @@ public class MainActivity extends AppCompatActivity implements
     }
 
     @Override
-    public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-
+    protected void onRestart() {
+        super.onRestart();
+        mRequestRefreshEvent = new RequestRefreshEvent(this);
     }
 
     @Override
-    public void onPageSelected(int position) {
-        mViewPager.setCurrentItem(position);
-        mAdapter.update(position);
-    }
-
-    @Override
-    public void onPageScrollStateChanged(int state) {
-
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        mRequestRefreshEvent.deleteObservers();
+    protected void onStop() {
+        super.onStop();
+        if(mRequestRefreshEvent != null)
+            mRequestRefreshEvent.deleteObservers();
     }
 
     public boolean onKeyDown(int keyCode, KeyEvent event) {

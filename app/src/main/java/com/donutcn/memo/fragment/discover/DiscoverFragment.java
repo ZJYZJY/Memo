@@ -12,6 +12,7 @@ import android.widget.ImageView;
 
 import com.donutcn.memo.R;
 import com.donutcn.memo.activity.AuthorPage;
+import com.donutcn.memo.activity.MainActivity;
 import com.donutcn.memo.adapter.TabFragmentPagerAdapter;
 import com.donutcn.memo.event.ReceiveNewMessagesEvent;
 import com.flyco.tablayout.SlidingTabLayout;
@@ -80,6 +81,9 @@ public class DiscoverFragment extends Fragment implements OnTabSelectListener, O
     @Override
     public void onTabReselect(int position) {
         mTabLayout.hideMsg(position);
+        // TODO: click top button before bottom button will crash.
+        ((MainActivity)getContext()).mRequestRefreshEvent
+                .requestRefresh(getCurrentPagePosition() + 2);
     }
 
     public void update() {

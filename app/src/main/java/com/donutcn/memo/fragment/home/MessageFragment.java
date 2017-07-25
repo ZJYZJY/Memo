@@ -2,12 +2,13 @@ package com.donutcn.memo.fragment.home;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.Nullable;
-import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.donutcn.memo.R;
 import com.donutcn.memo.adapter.MessageAdapter;
@@ -16,6 +17,9 @@ import com.donutcn.memo.event.ReceiveNewMessagesEvent;
 import com.donutcn.memo.event.RequestRefreshEvent;
 import com.donutcn.memo.listener.OnItemClickListener;
 import com.donutcn.memo.view.ListViewDecoration;
+import com.donutcn.memo.view.RefreshHeaderView;
+import com.lcodecore.tkrefreshlayout.RefreshListenerAdapter;
+import com.lcodecore.tkrefreshlayout.TwinklingRefreshLayout;
 import com.yanzhenjie.recyclerview.swipe.SwipeMenuRecyclerView;
 
 import java.util.ArrayList;
@@ -23,14 +27,13 @@ import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
 
-public class MessageFragment extends BaseScrollFragment implements
-        SwipeRefreshLayout.OnRefreshListener, Observer {
+public class MessageFragment extends BaseScrollFragment implements Observer {
 
     private Context mContext;
 
     private SwipeMenuRecyclerView mMessage_rv;
 
-    private SwipeRefreshLayout mRefreshLayout;
+    private TwinklingRefreshLayout mRefreshLayout;
 
     private ReceiveNewMessagesEvent mReceiveNewMessagesEvent;
 
@@ -56,8 +59,9 @@ public class MessageFragment extends BaseScrollFragment implements
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         mMessage_rv = (SwipeMenuRecyclerView) view.findViewById(R.id.recycler_view);
         setRecyclerView(mMessage_rv);
-        mRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipe_layout);
-        mRefreshLayout.setOnRefreshListener(this);
+        mRefreshLayout = (TwinklingRefreshLayout) view.findViewById(R.id.swipe_layout);
+        mRefreshLayout.setOnRefreshListener(mRefreshListenerAdapter);
+        mRefreshLayout.setHeaderView(new RefreshHeaderView(mContext));
 
         mMessage_rv.setLayoutManager(new LinearLayoutManager(mContext));
         mMessage_rv.addItemDecoration(new ListViewDecoration(mContext,
@@ -80,8 +84,6 @@ public class MessageFragment extends BaseScrollFragment implements
         adapter.setOnItemClickListener(mOnItemClickListener);
 
         mMessage_rv.setAdapter(adapter);
-
-        mRefreshLayout.setRefreshing(false);
     }
 
     private OnItemClickListener mOnItemClickListener = new OnItemClickListener() {
@@ -91,10 +93,41 @@ public class MessageFragment extends BaseScrollFragment implements
         }
     };
 
-    @Override
-    public void onRefresh() {
-        Refresh();
-    }
+    private RefreshListenerAdapter mRefreshListenerAdapter = new RefreshListenerAdapter() {
+        @Override
+        public void onRefresh(TwinklingRefreshLayout refreshLayout) {
+            super.onRefresh(refreshLayout);
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    mRefreshLayout.finishRefreshing();
+                }
+            }, 1000);
+        }
+
+        @Override
+        public void onLoadMore(TwinklingRefreshLayout refreshLayout) {
+            super.onLoadMore(refreshLayout);
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    mRefreshLayout.finishLoadmore();
+                }
+            }, 1000);
+        }
+
+        @Override
+        public void onFinishRefresh() {
+            super.onFinishRefresh();
+            Toast.makeText(getContext(), "onFinishRefresh", Toast.LENGTH_SHORT).show();
+        }
+
+        @Override
+        public void onFinishLoadMore() {
+            super.onFinishLoadMore();
+            Toast.makeText(getContext(), "onFinishLoadMore", Toast.LENGTH_SHORT).show();
+        }
+    };
 
     @Override
     public void onResume() {
@@ -110,9 +143,9 @@ public class MessageFragment extends BaseScrollFragment implements
 
     @Override
     public void update(Observable o, Object arg) {
-        if (o instanceof RequestRefreshEvent && (int) arg == 0) {
-//            mMessage_rv.scrollToPosition(0);
-//            mRefreshLayout.startRefresh();
+        if (o instanceof RequestRefreshEvent && (int) arg == 1) {
+            mMessage_rv.scrollToPosition(0);
+            mRefreshLayout.startRefresh();
         }
     }
 }

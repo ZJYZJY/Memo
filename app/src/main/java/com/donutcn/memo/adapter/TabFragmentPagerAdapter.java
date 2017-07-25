@@ -29,7 +29,10 @@ public class TabFragmentPagerAdapter extends FragmentPagerAdapter {
 
     public Fragment getFragment(int position){
         // "+2" is for skip the HomeFragment and DiscoverFragment.
-        return mFragmentManager.getFragments().get(position + 2);
+        if(type == 0)
+            return mFragmentManager.getFragments().get(position + 2);
+        else
+            return mFragmentManager.getFragments().get(position + 4);
     }
 
     @Override
