@@ -2,6 +2,7 @@ package com.donutcn.memo.activity;
 
 import android.app.FragmentTransaction;
 import android.content.Intent;
+import android.os.Handler;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -20,6 +21,8 @@ import com.donutcn.memo.fragment.home.HomeFragment;
 import com.donutcn.memo.utils.WindowUtils;
 import com.donutcn.widgetlib.widget.CheckableImageButton;
 
+import org.greenrobot.eventbus.EventBus;
+
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
     private ViewPager mViewPager;
@@ -30,10 +33,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private HomeFragment mHomeFragment;
     private DiscoverFragment mDiscoverFragment;
 
-    public RequestRefreshEvent mRequestRefreshEvent;
+    private Handler mSplashHandler = new Handler();
 
     private long mExitTime = 0;
-    private boolean isFirstSet = true;
+    private int mDefaultItem;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,8 +44,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         setContentView(R.layout.activity_main);
         WindowUtils.setStatusBarColor(this, R.color.colorPrimary, true);
 
-        // show splash fragment.
-        setSplashFragment();
+        mDefaultItem = getIntent().getIntExtra("defaultItem", 0);
+        if(getIntent().getBooleanExtra("showSplash", true)){
+            // show splash fragment.
+            showSplashFragment();
+        }
 
         mViewPager = (ViewPager) findViewById(R.id.main_viewpager);
         mHome = (CheckableImageButton) findViewById(R.id.main_bottom_home);
@@ -53,10 +59,22 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         mPublish.setOnClickListener(this);
         mDiscover.setOnClickListener(this);
 
-        initViewPager(mViewPager);
+        initViewPager();
     }
 
-    public void setSplashFragment() {
+    private Runnable showMainPage = new Runnable(){
+        @Override
+        public void run() {
+            if(true){
+                startActivity(new Intent(MainActivity.this, LoginActivity.class));
+                finish();
+            }else {
+                removeSplashFragment();
+            }
+        }
+    };
+
+    public void showSplashFragment() {
         mMainContainer = (LinearLayout) findViewById(R.id.main_container);
         mMainContainer.setVisibility(View.GONE);
         splashFragment = new SplashFragment();
@@ -69,15 +87,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         // TODO: To determine whether or not to log in. if not logged in, start the LoginActivity.
 
         // delay 3s to remove the splash fragment.
-        getWindow().getDecorView().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                showMainPage();
-            }
-        }, 3000);
+        mSplashHandler.postDelayed(showMainPage, 3000);
     }
 
-    private void showMainPage(){
+    private void removeSplashFragment(){
         if (splashFragment == null)
             return;
         // remove splash fragment.
@@ -90,26 +103,27 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
     }
 
-    private void initViewPager(ViewPager viewPager) {
+    private void initViewPager() {
         mAdapter = new ViewPagerAdapter(getSupportFragmentManager(), this);
         mHomeFragment = new HomeFragment();
         mDiscoverFragment = new DiscoverFragment();
         mAdapter.addFragment(mHomeFragment);
         mAdapter.addFragment(mDiscoverFragment);
-        viewPager.setAdapter(mAdapter);
+        mViewPager.setAdapter(mAdapter);
+        if(mDefaultItem != 0){
+            mHome.setChecked(false);
+            mDiscover.setChecked(true);
+            mViewPager.setCurrentItem(mDefaultItem, false);
+        }
     }
 
     @Override
     public void onClick(View v) {
-        if(isFirstSet){
-            // init RequestRefreshEvent and add observers.
-            mRequestRefreshEvent = new RequestRefreshEvent(this);
-            isFirstSet = false;
-        }
         switch (v.getId()) {
             case R.id.main_bottom_home:
                 if(mHome.isChecked()){
-                    mRequestRefreshEvent.requestRefresh(mHomeFragment.getCurrentPagePosition());
+                    EventBus.getDefault().post(new RequestRefreshEvent(
+                            mHomeFragment.getCurrentPagePosition()));
                 }else {
                     mHome.setChecked(true);
                     mDiscover.setChecked(false);
@@ -118,7 +132,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 break;
             case R.id.main_bottom_dis:
                 if(mDiscover.isChecked()){
-                    mRequestRefreshEvent.requestRefresh(mDiscoverFragment.getCurrentPagePosition() + 2);
+                    EventBus.getDefault().post(new RequestRefreshEvent(
+                            mDiscoverFragment.getCurrentPagePosition() + 2));
                 }else {
                     mHome.setChecked(false);
                     mDiscover.setChecked(true);
@@ -132,7 +147,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     public void onSkipSplash(View view) {
-        showMainPage();
+        mSplashHandler.removeCallbacks(showMainPage);
+        getWindow().getDecorView().post(showMainPage);
     }
 
     @Override
@@ -140,19 +156,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         if(splashFragment == null){
             super.onBackPressed();
         }
-    }
-
-    @Override
-    protected void onRestart() {
-        super.onRestart();
-        mRequestRefreshEvent = new RequestRefreshEvent(this);
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-        if(mRequestRefreshEvent != null)
-            mRequestRefreshEvent.deleteObservers();
     }
 
     public boolean onKeyDown(int keyCode, KeyEvent event) {

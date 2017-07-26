@@ -1,0 +1,184 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingBottom="@dimen/padding_container"
+    android:paddingLeft="@dimen/padding_container_huge"
+    android:paddingRight="@dimen/padding_container_huge"
+    android:paddingTop="@dimen/padding_container_huge">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <ImageView
+            android:id="@+id/logo"
+            android:layout_width="256dp"
+            android:layout_height="64dp"
+            android:layout_gravity="center_horizontal"
+            android:background="@color/border_dark" />
+
+        <TextView
+            android:id="@+id/slogan"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:padding="@dimen/padding_medium"
+            android:text="人人都需要信息发布工具"
+            android:textColor="@color/textPrimary" />
+
+        <RadioGroup
+            android:id="@+id/login_or_register"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="40dp"
+            android:orientation="horizontal">
+
+            <RadioButton
+                android:id="@+id/switch_to_login"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:button="@null"
+                android:checked="true"
+                android:padding="@dimen/padding_large"
+                android:text="登录"
+                android:textColor="@color/text_blue"
+                android:textSize="16sp" />
+
+            <RadioButton
+                android:id="@+id/switch_to_register"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/margin_large"
+                android:layout_marginStart="@dimen/margin_large"
+                android:button="@null"
+                android:padding="@dimen/padding_large"
+                android:text="注册"
+                android:textSize="16sp" />
+        </RadioGroup>
+
+        <LinearLayout
+            android:id="@+id/login_et"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_medium"
+            android:orientation="vertical">
+
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/edit_text_box_top_bg"
+                android:hint="手机号码"
+                android:padding="@dimen/padding_large" />
+
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/edit_text_box_bottom_bg"
+                android:hint="密码"
+                android:padding="@dimen/padding_large" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/register_et"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_medium"
+            android:orientation="vertical"
+            android:visibility="gone">
+
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/edit_text_box_top_bg"
+                android:hint="手机号码"
+                android:padding="@dimen/padding_large" />
+
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/edit_text_box_mid_bg"
+                android:hint="短信验证码"
+                android:padding="@dimen/padding_large" />
+
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/edit_text_box_bottom_bg"
+                android:hint="密码"
+                android:padding="@dimen/padding_large" />
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/login_btn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_medium"
+            android:background="@drawable/selector_radius_blue_btn"
+            android:text="登陆"
+            android:textColor="@color/white"
+            android:textSize="16sp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/enter_without_login"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:padding="@dimen/padding_large"
+            android:text="其他登录方式" />
+
+        <LinearLayout
+            android:id="@+id/login_with_wechat"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/selector_radius_green_btn"
+            android:gravity="center"
+            android:orientation="horizontal"
+            android:padding="@dimen/padding_medium">
+
+            <ImageView
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:src="@drawable/ic_wechat" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="@dimen/padding_small"
+                android:text="微信快捷登录"
+                android:textColor="@color/white"
+                android:textSize="16sp" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/enter_without_login"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/margin_small"
+        android:padding="@dimen/padding_small"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:gravity="center"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="随便看看" />
+
+        <ImageView
+            android:layout_width="12dp"
+            android:layout_height="12dp"
+            android:src="@drawable/forward_arrow"/>
+    </LinearLayout>
+</RelativeLayout>

@@ -12,17 +12,16 @@ import android.widget.ImageView;
 
 import com.donutcn.memo.R;
 import com.donutcn.memo.activity.AuthorPage;
-import com.donutcn.memo.activity.MainActivity;
 import com.donutcn.memo.adapter.TabFragmentPagerAdapter;
 import com.donutcn.memo.event.ReceiveNewMessagesEvent;
+import com.donutcn.memo.event.RequestRefreshEvent;
 import com.flyco.tablayout.SlidingTabLayout;
 import com.flyco.tablayout.listener.OnTabSelectListener;
 
-import java.util.Map;
-import java.util.Observable;
-import java.util.Observer;
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
 
-public class DiscoverFragment extends Fragment implements OnTabSelectListener, Observer {
+public class DiscoverFragment extends Fragment implements OnTabSelectListener {
 
     private TabFragmentPagerAdapter mPagerAdapter;
     private ViewPager mViewPager;
@@ -63,13 +62,10 @@ public class DiscoverFragment extends Fragment implements OnTabSelectListener, O
         return mTabLayout.getCurrentTab();
     }
 
-    public Fragment getPageFragment(int position){
-        return mPagerAdapter.getFragment(position);
-    }
-
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        EventBus.getDefault().register(this);
         Refresh();
     }
 
@@ -81,9 +77,7 @@ public class DiscoverFragment extends Fragment implements OnTabSelectListener, O
     @Override
     public void onTabReselect(int position) {
         mTabLayout.hideMsg(position);
-        // TODO: click top button before bottom button will crash.
-        ((MainActivity)getContext()).mRequestRefreshEvent
-                .requestRefresh(getCurrentPagePosition() + 2);
+        EventBus.getDefault().post(new RequestRefreshEvent(getCurrentPagePosition() + 2));
     }
 
     public void update() {
@@ -101,10 +95,15 @@ public class DiscoverFragment extends Fragment implements OnTabSelectListener, O
     }
 
     @Override
-    public void update(Observable o, Object arg) {
-        if (o instanceof ReceiveNewMessagesEvent) {
-            mTabLayout.showMsg(((Map<String, Integer>)arg).get("msgType")
-                    , ((Map<String, Integer>)arg).get("msgCount"));
+    public void onDestroy() {
+        super.onDestroy();
+        EventBus.getDefault().unregister(this);
+    }
+
+    @Subscribe
+    public void onReceiveNewMessagesEvent(ReceiveNewMessagesEvent event){
+        if(event.getMessagePos() >= 2){
+            mTabLayout.showMsg(event.getMessagePos() - 2, event.getMessageCount());
         }
     }
 }

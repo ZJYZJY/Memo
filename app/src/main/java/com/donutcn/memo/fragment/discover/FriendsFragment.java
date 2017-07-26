@@ -32,20 +32,19 @@ import com.yanzhenjie.recyclerview.swipe.SwipeMenuCreator;
 import com.yanzhenjie.recyclerview.swipe.SwipeMenuItem;
 import com.yanzhenjie.recyclerview.swipe.SwipeMenuRecyclerView;
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Observable;
-import java.util.Observer;
 
-public class FriendsFragment extends BaseScrollFragment implements View.OnClickListener, Observer {
+public class FriendsFragment extends BaseScrollFragment implements View.OnClickListener {
 
     private Context mContext;
 
     private SwipeMenuRecyclerView mHaoYe_rv;
 
     private TwinklingRefreshLayout mRefreshLayout;
-
-    private ReceiveNewMessagesEvent mReceiveNewMessagesEvent;
 
     @Override
     public void onAttach(Context context) {
@@ -84,7 +83,7 @@ public class FriendsFragment extends BaseScrollFragment implements View.OnClickL
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        mReceiveNewMessagesEvent = new ReceiveNewMessagesEvent(mContext, 1);
+        EventBus.getDefault().register(this);
         Refresh();
     }
 
@@ -161,7 +160,7 @@ public class FriendsFragment extends BaseScrollFragment implements View.OnClickL
     private OnItemClickListener mOnItemClickListener = new OnItemClickListener() {
         @Override
         public void onItemClick(int position) {
-            mReceiveNewMessagesEvent.onReceiveNewMessages(1, position);
+            EventBus.getDefault().post(new ReceiveNewMessagesEvent(3, position));
             startActivity(new Intent(getContext(), ArticlePage.class));
         }
     };
@@ -208,12 +207,12 @@ public class FriendsFragment extends BaseScrollFragment implements View.OnClickL
     @Override
     public void onDestroy() {
         super.onDestroy();
-        mReceiveNewMessagesEvent.deleteObservers();
+        EventBus.getDefault().unregister(this);
     }
 
-    @Override
-    public void update(Observable o, Object arg) {
-        if (o instanceof RequestRefreshEvent && (int) arg == 3) {
+    @Subscribe
+    public void onRequestRefreshEvent(RequestRefreshEvent event){
+        if(event.getRefreshPosition() == 3){
             mHaoYe_rv.scrollToPosition(0);
             mRefreshLayout.startRefresh();
         }

@@ -22,20 +22,19 @@ import com.lcodecore.tkrefreshlayout.RefreshListenerAdapter;
 import com.lcodecore.tkrefreshlayout.TwinklingRefreshLayout;
 import com.yanzhenjie.recyclerview.swipe.SwipeMenuRecyclerView;
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Observable;
-import java.util.Observer;
 
-public class MessageFragment extends BaseScrollFragment implements Observer {
+public class MessageFragment extends BaseScrollFragment {
 
     private Context mContext;
 
     private SwipeMenuRecyclerView mMessage_rv;
 
     private TwinklingRefreshLayout mRefreshLayout;
-
-    private ReceiveNewMessagesEvent mReceiveNewMessagesEvent;
 
     @Override
     public void onAttach(Context context) {
@@ -71,7 +70,7 @@ public class MessageFragment extends BaseScrollFragment implements Observer {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        mReceiveNewMessagesEvent = new ReceiveNewMessagesEvent(mContext, 0);
+        EventBus.getDefault().register(this);
         Refresh();
     }
 
@@ -89,7 +88,7 @@ public class MessageFragment extends BaseScrollFragment implements Observer {
     private OnItemClickListener mOnItemClickListener = new OnItemClickListener() {
         @Override
         public void onItemClick(int position) {
-            mReceiveNewMessagesEvent.onReceiveNewMessages(1, position);
+            EventBus.getDefault().post(new ReceiveNewMessagesEvent(1, position));
         }
     };
 
@@ -138,12 +137,12 @@ public class MessageFragment extends BaseScrollFragment implements Observer {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        mReceiveNewMessagesEvent.deleteObservers();
+        EventBus.getDefault().unregister(this);
     }
 
-    @Override
-    public void update(Observable o, Object arg) {
-        if (o instanceof RequestRefreshEvent && (int) arg == 1) {
+    @Subscribe
+    public void onRequestRefreshEvent(RequestRefreshEvent event){
+        if(event.getRefreshPosition() == 1){
             mMessage_rv.scrollToPosition(0);
             mRefreshLayout.startRefresh();
         }

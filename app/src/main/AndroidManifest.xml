@@ -11,7 +11,6 @@
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_LOCATION_EXTRA_COMMANDS" />
-
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
     <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE" />
     <uses-permission android:name="android.permission.READ_CONTACTS" />
@@ -49,21 +48,22 @@
         <activity android:name=".activity.PersonalCenterActivity" />
         <activity android:name=".activity.TipOffActivity" />
 
-        <!--photo picker activity-->
+        <!-- photo picker activity -->
         <activity android:name="me.iwf.photopicker.PhotoPickerActivity" />
         <activity android:name="me.iwf.photopicker.PhotoPagerActivity" />
         <!-- *************************    related to Share START **************************** -->
-        <!--sina weibo-->
+        <!-- sina weibo -->
         <activity
             android:name=".WBShareActivity"
             android:configChanges="keyboardHidden|orientation"
             android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="com.sina.weibo.sdk.action.ACTION_SDK_REQ_ACTIVITY" />
+
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
-        <!-- wechat callback-->
+        <!-- wechat callback -->
         <activity
             android:name=".wxapi.WXEntryActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
@@ -75,7 +75,6 @@
             android:name="com.umeng.qq.tencent.AuthActivity"
             android:launchMode="singleTask"
             android:noHistory="true">
-
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
 
@@ -90,12 +89,12 @@
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Translucent.NoTitleBar" />
-
         <activity
             android:name="com.umeng.socialize.editorpage.ShareActivity"
             android:excludeFromRecents="true"
             android:theme="@style/Theme.UMDefault" />
         <!-- *************************    related to Share END **************************** -->
+        <activity android:name=".activity.LoginActivity"></activity>
     </application>
 
 </manifest>
