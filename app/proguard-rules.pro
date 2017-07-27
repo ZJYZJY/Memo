@@ -24,7 +24,7 @@
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
 
-# umeng config
+# umeng share config
 -dontusemixedcaseclassnames
 	-dontshrink
 	-dontoptimize
@@ -107,6 +107,34 @@
 	-keep class com.linkedin.** { *; }
 	-keepattributes Signature
 
+# umeng share config
+-keepclassmembers class * {
+   public <init> (org.json.JSONObject);
+}
+-keep public class com.donutcn.memo.R$*{
+public static final int *;
+}
+-keepclassmembers enum * {
+    public static **[] values();
+    public static ** valueOf(java.lang.String);
+}
+
 # iflytek config
 -keep class com.iflytek.**{*;}
 -keepattributes Signature
+
+# qiniu cloud
+-keep class com.qiniu.**{*;}
+-keep class com.qiniu.**{public <init>();}
+-ignorewarnings
+
+# EventBus
+-keepattributes *Annotation*
+-keepclassmembers class ** {
+    @org.greenrobot.eventbus.Subscribe <methods>;
+}
+-keep enum org.greenrobot.eventbus.ThreadMode { *; }
+# Only required if you use AsyncExecutor
+-keepclassmembers class * extends org.greenrobot.eventbus.util.ThrowableFailureEvent {
+    <init>(Java.lang.Throwable);
+}

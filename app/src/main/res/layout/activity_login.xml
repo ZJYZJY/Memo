@@ -14,18 +14,18 @@
 
         <ImageView
             android:id="@+id/logo"
-            android:layout_width="256dp"
-            android:layout_height="64dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:background="@color/border_dark" />
+            android:background="@drawable/ic_logo" />
 
         <TextView
             android:id="@+id/slogan"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:padding="@dimen/padding_medium"
-            android:text="人人都需要信息发布工具"
+            android:padding="@dimen/padding_large"
+            android:text="@string/app_slogan"
             android:textColor="@color/textPrimary" />
 
         <RadioGroup
@@ -33,7 +33,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:layout_marginTop="40dp"
+            android:layout_marginTop="@dimen/margin_top_img"
             android:orientation="horizontal">
 
             <RadioButton
@@ -43,7 +43,7 @@
                 android:button="@null"
                 android:checked="true"
                 android:padding="@dimen/padding_large"
-                android:text="登录"
+                android:text="@string/btn_login"
                 android:textColor="@color/text_blue"
                 android:textSize="16sp" />
 
@@ -55,7 +55,7 @@
                 android:layout_marginStart="@dimen/margin_large"
                 android:button="@null"
                 android:padding="@dimen/padding_large"
-                android:text="注册"
+                android:text="@string/btn_register"
                 android:textSize="16sp" />
         </RadioGroup>
 
@@ -66,19 +66,56 @@
             android:layout_marginTop="@dimen/margin_medium"
             android:orientation="vertical">
 
-            <EditText
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@drawable/edit_text_box_top_bg"
-                android:hint="手机号码"
-                android:padding="@dimen/padding_large" />
+                android:orientation="horizontal"
+                android:padding="@dimen/padding_large">
 
-            <EditText
+                <ImageView
+                    android:layout_width="@dimen/icon_normal_icon"
+                    android:layout_height="@dimen/icon_normal_icon"
+                    android:src="@drawable/ic_edit_phone" />
+
+                <EditText
+                    android:id="@+id/login_phone"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/margin_small"
+                    android:layout_marginStart="@dimen/margin_small"
+                    android:background="@color/background_blank"
+                    android:hint="@string/hint_login_phone"
+                    android:maxLines="1"
+                    android:textColorHint="@color/textPrimary"
+                    android:textSize="16sp" />
+            </LinearLayout>
+
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@drawable/edit_text_box_bottom_bg"
-                android:hint="密码"
-                android:padding="@dimen/padding_large" />
+                android:orientation="horizontal"
+                android:padding="@dimen/padding_large">
+
+                <ImageView
+                    android:layout_width="@dimen/icon_normal_icon"
+                    android:layout_height="@dimen/icon_normal_icon"
+                    android:src="@drawable/ic_edit_password" />
+
+                <EditText
+                    android:id="@+id/login_password"
+                    android:inputType="textPassword"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/margin_small"
+                    android:layout_marginStart="@dimen/margin_small"
+                    android:background="@color/background_blank"
+                    android:hint="@string/hint_login_password"
+                    android:maxLines="1"
+                    android:textColorHint="@color/textPrimary"
+                    android:textSize="16sp" />
+            </LinearLayout>
         </LinearLayout>
 
         <LinearLayout
@@ -89,26 +126,99 @@
             android:orientation="vertical"
             android:visibility="gone">
 
-            <EditText
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@drawable/edit_text_box_top_bg"
-                android:hint="手机号码"
-                android:padding="@dimen/padding_large" />
+                android:orientation="horizontal"
+                android:padding="@dimen/padding_large">
 
-            <EditText
+                <ImageView
+                    android:layout_width="@dimen/icon_normal_icon"
+                    android:layout_height="@dimen/icon_normal_icon"
+                    android:src="@drawable/ic_edit_phone" />
+
+                <EditText
+                    android:id="@+id/reg_phone"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/margin_small"
+                    android:layout_marginStart="@dimen/margin_small"
+                    android:background="@color/background_blank"
+                    android:hint="@string/hint_login_phone"
+                    android:maxLines="1"
+                    android:textColorHint="@color/textPrimary"
+                    android:textSize="16sp" />
+            </LinearLayout>
+
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@drawable/edit_text_box_mid_bg"
-                android:hint="短信验证码"
-                android:padding="@dimen/padding_large" />
+                android:orientation="horizontal">
 
-            <EditText
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:orientation="horizontal"
+                    android:padding="@dimen/padding_large">
+
+                    <ImageView
+                        android:layout_width="@dimen/icon_normal_icon"
+                        android:layout_height="@dimen/icon_normal_icon"
+                        android:src="@drawable/ic_edit_code" />
+
+                    <EditText
+                        android:id="@+id/reg_message_code"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/margin_small"
+                        android:layout_marginStart="@dimen/margin_small"
+                        android:background="@color/background_blank"
+                        android:hint="@string/hint_login_message_code"
+                        android:maxLines="1"
+                        android:textColorHint="@color/textPrimary"
+                        android:textSize="16sp" />
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/tv_get_msg_code"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_margin="@dimen/margin_micro"
+                    android:background="@drawable/selector_radius_blue_btn"
+                    android:gravity="center"
+                    android:padding="@dimen/padding_small"
+                    android:text="@string/text_get_message_code"
+                    android:textColor="@color/white" />
+            </LinearLayout>
+
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@drawable/edit_text_box_bottom_bg"
-                android:hint="密码"
-                android:padding="@dimen/padding_large" />
+                android:orientation="horizontal"
+                android:padding="@dimen/padding_large">
+
+                <ImageView
+                    android:layout_width="@dimen/icon_normal_icon"
+                    android:layout_height="@dimen/icon_normal_icon"
+                    android:src="@drawable/ic_edit_password" />
+
+                <EditText
+                    android:id="@+id/reg_password"
+                    android:inputType="textPassword"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/margin_small"
+                    android:layout_marginStart="@dimen/margin_small"
+                    android:background="@color/background_blank"
+                    android:hint="@string/hint_login_password"
+                    android:maxLines="1"
+                    android:textColorHint="@color/textPrimary"
+                    android:textSize="16sp" />
+            </LinearLayout>
         </LinearLayout>
 
         <Button
@@ -117,9 +227,17 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/margin_medium"
             android:background="@drawable/selector_radius_blue_btn"
-            android:text="登陆"
+            android:text="@string/btn_login"
             android:textColor="@color/white"
             android:textSize="16sp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end"
+            android:layout_marginTop="@dimen/margin_medium"
+            android:padding="@dimen/padding_small"
+            android:text="@string/text_forget_password" />
     </LinearLayout>
 
     <LinearLayout
@@ -133,7 +251,7 @@
             android:layout_height="wrap_content"
             android:gravity="center"
             android:padding="@dimen/padding_large"
-            android:text="其他登录方式" />
+            android:text="@string/text_other_way_to_login" />
 
         <LinearLayout
             android:id="@+id/login_with_wechat"
@@ -145,15 +263,15 @@
             android:padding="@dimen/padding_medium">
 
             <ImageView
-                android:layout_width="24dp"
-                android:layout_height="24dp"
+                android:layout_width="@dimen/icon_normal_icon"
+                android:layout_height="@dimen/icon_normal_icon"
                 android:src="@drawable/ic_wechat" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:padding="@dimen/padding_small"
-                android:text="微信快捷登录"
+                android:text="@string/btn_login_with_wechat"
                 android:textColor="@color/white"
                 android:textSize="16sp" />
         </LinearLayout>
@@ -163,22 +281,22 @@
         android:id="@+id/enter_without_login"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/margin_small"
-        android:padding="@dimen/padding_small"
         android:layout_alignParentBottom="true"
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
+        android:layout_marginTop="@dimen/margin_small"
         android:gravity="center"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:padding="@dimen/padding_small">
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="随便看看" />
+            android:text="@string/text_enter_without_login" />
 
         <ImageView
             android:layout_width="12dp"
             android:layout_height="12dp"
-            android:src="@drawable/forward_arrow"/>
+            android:src="@drawable/forward_arrow" />
     </LinearLayout>
 </RelativeLayout>

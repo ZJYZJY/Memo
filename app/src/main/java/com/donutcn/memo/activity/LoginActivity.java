@@ -5,6 +5,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 
@@ -15,8 +16,10 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
     private RadioButton mToLogin, mToRegister;
     private RadioGroup mRadioGroup;
-    private View mWechat, mWithoutLogin;
+    private View mWechat, mWithoutLogin, mMsgCode;
     private Button mLogin;
+    private EditText mPhoneNum, mPassword;
+    private EditText mRegPhone, mRegPassword, mRegCode;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,9 +34,15 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         mToLogin = (RadioButton) findViewById(R.id.switch_to_login);
         mToRegister = (RadioButton) findViewById(R.id.switch_to_register);
         mRadioGroup = (RadioGroup) findViewById(R.id.login_or_register);
+        mPhoneNum = (EditText) findViewById(R.id.login_phone);
+        mPassword = (EditText) findViewById(R.id.login_password);
+        mRegPhone = (EditText) findViewById(R.id.reg_phone);
+        mRegCode = (EditText) findViewById(R.id.reg_message_code);
+        mRegPassword = (EditText) findViewById(R.id.reg_password);
         mLogin = (Button) findViewById(R.id.login_btn);
         mWechat = findViewById(R.id.login_with_wechat);
         mWithoutLogin = findViewById(R.id.enter_without_login);
+        mMsgCode = findViewById(R.id.tv_get_msg_code);
 
         mToLogin.setOnClickListener(this);
         mToRegister.setOnClickListener(this);
@@ -75,6 +84,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 intent.putExtra("defaultItem", 1);
                 startActivity(intent);
                 finish();
+                break;
+            case R.id.tv_get_msg_code:
                 break;
         }
     }

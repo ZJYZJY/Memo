@@ -42,7 +42,7 @@
     <dimen name="padding_text">4dp</dimen>
     <dimen name="padding_text_small">2dp</dimen>
 
-    <dimen name="margin_personal_center_img">32dp</dimen>
+    <dimen name="margin_top_img">32dp</dimen>
     <dimen name="margin_large">16dp</dimen>
     <dimen name="margin_medium">12dp</dimen>
     <dimen name="margin_small">8dp</dimen>

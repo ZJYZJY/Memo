@@ -26,7 +26,7 @@
         android:theme="@style/AppTheme_NoActionBar">
         <meta-data
             android:name="UMENG_APPKEY"
-            android:value="5966db91aed17906c500175f" />
+            android:value="597865ab717c194f69001a86" />
 
         <activity
             android:name=".activity.MainActivity"
@@ -54,12 +54,19 @@
         <!-- *************************    related to Share START **************************** -->
         <!-- sina weibo -->
         <activity
-            android:name=".WBShareActivity"
+            android:name="com.umeng.socialize.media.WBShareCallBackActivity"
             android:configChanges="keyboardHidden|orientation"
-            android:screenOrientation="portrait">
+            android:theme="@android:style/Theme.Translucent.NoTitleBar"
+            android:exported="false"
+            android:screenOrientation="portrait" >
+        </activity>
+
+        <activity
+            android:theme="@android:style/Theme.Translucent.NoTitleBar.Fullscreen"
+            android:launchMode="singleTask"
+            android:name="com.sina.weibo.sdk.share.WbShareTransActivity">
             <intent-filter>
                 <action android:name="com.sina.weibo.sdk.action.ACTION_SDK_REQ_ACTIVITY" />
-
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
@@ -76,12 +83,12 @@
             android:launchMode="singleTask"
             android:noHistory="true">
             <intent-filter>
-                <action android:name="android.intent.action.VIEW" />
+                <action android:name="android.intent.action.VIEW"/>
 
-                <category android:name="android.intent.category.DEFAULT" />
-                <category android:name="android.intent.category.BROWSABLE" />
+                <category android:name="android.intent.category.DEFAULT"/>
+                <category android:name="android.intent.category.BROWSABLE"/>
 
-                <data android:scheme="tencent100424468" />
+                <data android:scheme="tencent1106313160"/>
             </intent-filter>
         </activity>
         <activity
@@ -89,12 +96,12 @@
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Translucent.NoTitleBar" />
-        <activity
-            android:name="com.umeng.socialize.editorpage.ShareActivity"
-            android:excludeFromRecents="true"
-            android:theme="@style/Theme.UMDefault" />
+        <!--<activity-->
+            <!--android:name="com.umeng.socialize.editorpage.ShareActivity"-->
+            <!--android:excludeFromRecents="true"-->
+            <!--android:theme="@style/Theme.UMDefault" />-->
         <!-- *************************    related to Share END **************************** -->
-        <activity android:name=".activity.LoginActivity"></activity>
+        <activity android:name=".activity.LoginActivity"/>
     </application>
 
 </manifest>
