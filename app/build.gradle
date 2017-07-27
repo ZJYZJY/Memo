@@ -67,6 +67,8 @@ dependencies {
     compile project(':richeditor')
     compile 'com.qiniu:qiniu-android-sdk:7.3.8'
     compile 'com.umeng.analytics:analytics:latest.integration'
+    compile 'com.tencent.bugly:crashreport_upgrade:latest.release'
+    compile 'com.tencent.bugly:nativecrashreport:latest.release'
     compile 'com.android.support:appcompat-v7:25.3.1'
     compile 'com.android.support:design:25.3.1'
     compile 'com.android.support:support-v4:25.3.1'
