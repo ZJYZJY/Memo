@@ -77,5 +77,6 @@ dependencies {
     compile 'com.lcodecorex:tkrefreshlayout:1.0.7'
     compile 'com.zzhoujay.richtext:richtext:2.5.2'
     compile 'org.greenrobot:eventbus:3.0.0'
+    compile 'com.github.fodroid:XRadioGroup:v1.1'
     testCompile 'junit:junit:4.12'
 }

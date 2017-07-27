@@ -11,7 +11,7 @@
         android:layout_weight="1"
         android:orientation="vertical">
 
-        <include layout="@layout/toolbar_with_btn" />
+        <include layout="@layout/toolbar_with_selector" />
 
         <View
             android:layout_width="match_parent"
@@ -25,16 +25,6 @@
             android:focusableInTouchMode="true"
             android:orientation="vertical"
             android:padding="@dimen/padding_medium">
-
-            <TextView
-                android:id="@+id/publish_spinner"
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/publish_type_height"
-                android:background="@drawable/text_box_bg"
-                android:gravity="center_vertical"
-                android:paddingLeft="@dimen/padding_medium"
-                android:text="@string/placeholder_default_publish_type"
-                android:textColor="@color/textPrimary" />
 
             <EditText
                 android:id="@+id/et_publish_title"

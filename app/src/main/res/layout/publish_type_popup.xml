@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <me.shihao.library.XRadioGroup
+        android:id="@+id/publish_type_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/margin_large"
+        android:background="@drawable/publish_type_bg"
+        android:elevation="4dp"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:weightSum="4">
+
+            <RadioButton
+                android:id="@+id/publish_type_article"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@drawable/publish_type_selector"
+                android:button="@null"
+                android:checked="true"
+                android:gravity="center"
+                android:padding="@dimen/padding_large"
+                android:text="@string/publish_content_article"
+                android:textColor="@color/white"
+                android:textSize="16sp" />
+
+            <RadioButton
+                android:id="@+id/publish_type_album"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@drawable/publish_type_selector"
+                android:button="@null"
+                android:gravity="center"
+                android:padding="@dimen/padding_large"
+                android:text="@string/publish_content_album"
+                android:textColor="@color/textPrimaryDark"
+                android:textSize="16sp" />
+
+            <RadioButton
+                android:id="@+id/publish_type_activity"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@drawable/publish_type_selector"
+                android:button="@null"
+                android:gravity="center"
+                android:padding="@dimen/padding_large"
+                android:text="@string/publish_content_activity"
+                android:textColor="@color/textPrimaryDark"
+                android:textSize="16sp" />
+
+            <RadioButton
+                android:id="@+id/publish_type_vote"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@drawable/publish_type_selector"
+                android:button="@null"
+                android:gravity="center"
+                android:padding="@dimen/padding_large"
+                android:text="@string/publish_content_vote"
+                android:textColor="@color/textPrimaryDark"
+                android:textSize="16sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:weightSum="4">
+
+            <RadioButton
+                android:id="@+id/publish_type_recruit"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@drawable/publish_type_selector"
+                android:button="@null"
+                android:gravity="center"
+                android:padding="@dimen/padding_large"
+                android:text="@string/publish_content_recruit"
+                android:textColor="@color/textPrimaryDark"
+                android:textSize="16sp" />
+
+            <RadioButton
+                android:id="@+id/publish_type_qa"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@drawable/publish_type_selector"
+                android:button="@null"
+                android:gravity="center"
+                android:padding="@dimen/padding_large"
+                android:text="@string/publish_content_qa"
+                android:textColor="@color/textPrimaryDark"
+                android:textSize="16sp" />
+
+            <RadioButton
+                android:id="@+id/publish_type_reserve"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@drawable/publish_type_selector"
+                android:button="@null"
+                android:gravity="center"
+                android:padding="@dimen/padding_large"
+                android:text="@string/publish_content_reserve"
+                android:textColor="@color/textPrimaryDark"
+                android:textSize="16sp" />
+
+            <RadioButton
+                android:id="@+id/publish_type_sale"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@drawable/publish_type_selector"
+                android:button="@null"
+                android:gravity="center"
+                android:padding="@dimen/padding_large"
+                android:text="@string/publish_content_sale"
+                android:textColor="@color/textPrimaryDark"
+                android:textSize="16sp" />
+        </LinearLayout>
+    </me.shihao.library.XRadioGroup>
+
+</LinearLayout>

@@ -87,7 +87,6 @@ public class HaoYeFragment extends BaseScrollFragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         EventBus.getDefault().register(this);
-        mRefreshLayout.startRefresh();
     }
 
     public void Refresh() {

@@ -49,7 +49,7 @@
     <dimen name="margin_micro">2dp</dimen>
 
     <!--height & width-->
-    <dimen name="publish_type_height">36dp</dimen>
+    <dimen name="publish_type_height">32dp</dimen>
     <dimen name="message_item_height">56dp</dimen>
     <dimen name="message_item_btn_width">96dp</dimen>
     <dimen name="search_bar_height">32dp</dimen>

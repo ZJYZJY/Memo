@@ -4,18 +4,24 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
+import android.support.annotation.IdRes;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.HorizontalScrollView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.PopupWindow;
+import android.widget.RadioButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -46,6 +52,7 @@ import java.util.List;
 import jp.wasabeef.richeditor.RichEditor;
 import me.iwf.photopicker.PhotoPicker;
 import me.iwf.photopicker.PhotoPreview;
+import me.shihao.library.XRadioGroup;
 
 public class PublishActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -53,7 +60,6 @@ public class PublishActivity extends AppCompatActivity implements View.OnClickLi
     private EditText mTitle;
     private RichEditor mContent;
     private Button mPublishBtn;
-
     private LinearLayout mAddPic, mTypeSet, mTemplate, mSpeech;
     private HorizontalScrollView mTools;
     private ImageView mKeyboard;
@@ -73,7 +79,6 @@ public class PublishActivity extends AppCompatActivity implements View.OnClickLi
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_publish);
-        WindowUtils.setToolBarTitle(this, R.string.title_activity_publish);
         WindowUtils.setToolBarButton(this, R.string.btn_publish_finish);
         WindowUtils.setStatusBarColor(this, R.color.colorPrimary, true);
         mSelectedType = mContentTypes[0];
@@ -82,13 +87,13 @@ public class PublishActivity extends AppCompatActivity implements View.OnClickLi
         PublishType type = (PublishType) getIntent().getSerializableExtra("type");
         if (type != null) {
             mSelectedType = type.toString();
-            mPublishType.setText(getString(R.string.placeholder_publish_type, mSelectedType));
+            mPublishType.setText(mSelectedType);
         } else {
             mSelectedType = SpfsUtils.readString(this, SpfsUtils.CACHE, "publishType", mSelectedType);
             mTitleStr = SpfsUtils.readString(this, SpfsUtils.CACHE, "publishTitle", "");
             mContentStr = SpfsUtils.readString(this, SpfsUtils.CACHE, "publishContent", "");
             if (!isContentEmpty()) {
-                mPublishType.setText(getString(R.string.placeholder_publish_type, mSelectedType));
+                mPublishType.setText(mSelectedType);
                 mTitle.setText(mTitleStr);
                 mContent.setHtml(mContentStr);
             }
@@ -124,8 +129,8 @@ public class PublishActivity extends AppCompatActivity implements View.OnClickLi
         mKeyboard = (ImageView) findViewById(R.id.pub_keyboard_toggle);
         mTools = (HorizontalScrollView) findViewById(R.id.type_setting_tools);
 
+        findViewById(R.id.publish_spinner_container).setOnClickListener(this);
         mPublishBtn.setOnClickListener(this);
-        mPublishType.setOnClickListener(this);
 
         mAddPic.setOnClickListener(this);
         mTypeSet.setOnClickListener(this);
@@ -170,15 +175,8 @@ public class PublishActivity extends AppCompatActivity implements View.OnClickLi
                         + "title:" + mTitleStr + "\n"
                         + "content:" + mContentStr, Toast.LENGTH_SHORT).show();
                 break;
-            case R.id.publish_spinner:
-                new AlertDialog.Builder(this)
-                        .setItems(mContentTypes, new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                mSelectedType = mContentTypes[which];
-                                mPublishType.setText(getString(R.string.placeholder_publish_type, mSelectedType));
-                            }
-                        }).show();
+            case R.id.publish_spinner_container:
+                showPopupMenu(v);
                 break;
             case R.id.pub_add_pic:
                 PhotoPicker.builder()
@@ -232,6 +230,41 @@ public class PublishActivity extends AppCompatActivity implements View.OnClickLi
         }
     }
 
+    private void showPopupMenu(View view) {
+        View popWindowView = getLayoutInflater().inflate(R.layout.publish_type_popup, null);
+        XRadioGroup radioGroup = (XRadioGroup) popWindowView.findViewById(R.id.publish_type_container);
+        final View img = findViewById(R.id.ic_drop_arrow);
+        img.setRotation(180f);
+        PopupWindow popupWindow = new PopupWindow(popWindowView,
+                ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT, true);
+        popupWindow.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        // select publish type.
+        radioGroup.setOnCheckedChangeListener(new XRadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(XRadioGroup xRadioGroup, @IdRes int i) {
+                ViewGroup v1 = (ViewGroup) xRadioGroup.getChildAt(0);
+                ViewGroup v2 = (ViewGroup) xRadioGroup.getChildAt(1);
+                for(int j = 0; j < v1.getChildCount(); j++){
+                    ((RadioButton)v1.getChildAt(j)).setTextColor(getResources().getColor(R.color.textPrimaryDark));
+                }
+                for(int j = 0; j < v2.getChildCount(); j++){
+                    ((RadioButton)v2.getChildAt(j)).setTextColor(getResources().getColor(R.color.textPrimaryDark));
+                }
+                RadioButton btn = (RadioButton)xRadioGroup.findViewById(i);
+                mSelectedType = btn.getText().toString();
+                mPublishType.setText(mSelectedType);
+                btn.setTextColor(getResources().getColor(R.color.white));
+            }
+        });
+        popupWindow.setOnDismissListener(new PopupWindow.OnDismissListener() {
+            @Override
+            public void onDismiss() {
+                img.setRotation(0f);
+            }
+        });
+        popupWindow.showAsDropDown(view);
+    }
+
     private void showLinkDialog() {
 //        final int start = mContent.getSelectionStart();
 //        final int end = mContent.getSelectionEnd();
@@ -260,7 +293,7 @@ public class PublishActivity extends AppCompatActivity implements View.OnClickLi
 //                .show();
     }
 
-    private boolean isContentEmpty(){
+    private boolean isContentEmpty() {
         return mTitleStr == "" && (mContentStr == "" || mContentStr == "<br>");
     }
 
