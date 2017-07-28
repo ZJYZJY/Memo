@@ -8,6 +8,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.donutcn.memo.R;
+import com.donutcn.memo.utils.UserStatus;
 import com.donutcn.memo.utils.WindowUtils;
 
 public class PersonalCenterActivity extends AppCompatActivity implements View.OnClickListener {
@@ -29,7 +30,7 @@ public class PersonalCenterActivity extends AppCompatActivity implements View.On
         mNotify = (RelativeLayout) findViewById(R.id.notification_settings);
         mFeedback = (RelativeLayout) findViewById(R.id.feedback);
         mAbout = (RelativeLayout) findViewById(R.id.about);
-        mSignout = (RelativeLayout) findViewById(R.id.sign_out);
+        mSignout = (RelativeLayout) findViewById(R.id.log_out);
         mVersionNum = (TextView) findViewById(R.id.version_number);
 
         mAuth.setOnClickListener(this);
@@ -51,7 +52,9 @@ public class PersonalCenterActivity extends AppCompatActivity implements View.On
                 break;
             case R.id.about:
                 break;
-            case R.id.sign_out:
+            case R.id.log_out:
+                UserStatus.logout(getApplicationContext(),
+                        UserStatus.getCurrentUser().getPhoneNum());
                 break;
         }
     }

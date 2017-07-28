@@ -59,7 +59,9 @@ public class SocialShareActivity extends AppCompatActivity implements View.OnCli
     public void onClick(View v) {
         switch (v.getId()){
             case R.id.toolbar_with_btn:
-                startActivity(new Intent(this, MainActivity.class));
+                Intent intent0 = new Intent(this, MainActivity.class);
+                intent0.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(intent0);
                 break;
             case R.id.share_iv1:
                 new ShareAction(SocialShareActivity.this)

@@ -30,7 +30,6 @@
                 android:id="@+id/et_publish_title"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/margin_small"
                 android:background="@drawable/edit_text_blank_bg"
                 android:hint="@string/hint_publish_title"
                 android:lineSpacingExtra="@dimen/line_space_large"

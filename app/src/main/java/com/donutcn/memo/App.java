@@ -4,6 +4,7 @@ import android.app.Application;
 import android.content.Context;
 import android.text.TextUtils;
 
+import com.donutcn.memo.utils.HttpUtils;
 import com.iflytek.cloud.SpeechConstant;
 import com.iflytek.cloud.SpeechUtility;
 import com.tencent.bugly.Bugly;
@@ -33,7 +34,7 @@ public class App extends Application {
         UMShareAPI.get(this);
         // init Bugly
         initBugly();
-
+        HttpUtils.create(getApplicationContext());
         RichText.initCacheDir(this);
         SpeechUtility.createUtility(this, SpeechConstant.APPID + "=59647377");
     }
