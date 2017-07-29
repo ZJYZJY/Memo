@@ -2,7 +2,6 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical">
 
     <TextView
@@ -15,19 +14,14 @@
         android:paddingLeft="@dimen/padding_medium"
         android:text="@string/hint_search_text_box" />
 
-    <com.lcodecore.tkrefreshlayout.TwinklingRefreshLayout
+    <com.scwang.smartrefresh.layout.SmartRefreshLayout
         android:id="@+id/swipe_layout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:tr_head_height="@dimen/tr_head_height"
-        app:tr_max_head_height="@dimen/tr_max_head_height"
-        app:tr_bottom_height="@dimen/tr_head_height"
-        app:tr_max_bottom_height="@dimen/tr_max_head_height"
-        app:tr_overscroll_top_show="false">
+        android:layout_height="wrap_content">
 
         <com.yanzhenjie.recyclerview.swipe.SwipeMenuRecyclerView
             android:id="@+id/recycler_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
-    </com.lcodecore.tkrefreshlayout.TwinklingRefreshLayout>
+    </com.scwang.smartrefresh.layout.SmartRefreshLayout>
 </LinearLayout>

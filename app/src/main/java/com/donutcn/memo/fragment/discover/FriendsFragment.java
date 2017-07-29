@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.view.LayoutInflater;
@@ -22,9 +21,10 @@ import com.donutcn.memo.event.RequestRefreshEvent;
 import com.donutcn.memo.listener.OnItemClickListener;
 import com.donutcn.memo.type.ItemLayoutType;
 import com.donutcn.memo.view.ListViewDecoration;
-import com.donutcn.memo.view.RefreshHeaderView;
-import com.lcodecore.tkrefreshlayout.RefreshListenerAdapter;
-import com.lcodecore.tkrefreshlayout.TwinklingRefreshLayout;
+import com.scwang.smartrefresh.layout.SmartRefreshLayout;
+import com.scwang.smartrefresh.layout.api.RefreshLayout;
+import com.scwang.smartrefresh.layout.listener.OnLoadmoreListener;
+import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
 import com.yanzhenjie.recyclerview.swipe.Closeable;
 import com.yanzhenjie.recyclerview.swipe.OnSwipeMenuItemClickListener;
 import com.yanzhenjie.recyclerview.swipe.SwipeMenu;
@@ -44,7 +44,7 @@ public class FriendsFragment extends BaseScrollFragment implements View.OnClickL
 
     private SwipeMenuRecyclerView mHaoYe_rv;
 
-    private TwinklingRefreshLayout mRefreshLayout;
+    private SmartRefreshLayout mRefreshLayout;
 
     @Override
     public void onAttach(Context context) {
@@ -67,9 +67,9 @@ public class FriendsFragment extends BaseScrollFragment implements View.OnClickL
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         mHaoYe_rv = (SwipeMenuRecyclerView) view.findViewById(R.id.recycler_view);
         setRecyclerView(mHaoYe_rv);
-        mRefreshLayout = (TwinklingRefreshLayout) view.findViewById(R.id.swipe_layout);
-        mRefreshLayout.setOnRefreshListener(mRefreshListenerAdapter);
-        mRefreshLayout.setHeaderView(new RefreshHeaderView(mContext));
+        mRefreshLayout = (SmartRefreshLayout) view.findViewById(R.id.swipe_layout);
+        mRefreshLayout.setOnRefreshListener(mRefreshListener);
+        mRefreshLayout.setOnLoadmoreListener(mLoadmoreListener);
 
         mHaoYe_rv.setLayoutManager(new LinearLayoutManager(mContext));
         mHaoYe_rv.addItemDecoration(new ListViewDecoration(getContext(),
@@ -98,39 +98,17 @@ public class FriendsFragment extends BaseScrollFragment implements View.OnClickL
         mHaoYe_rv.setAdapter(adapter);
     }
 
-    private RefreshListenerAdapter mRefreshListenerAdapter = new RefreshListenerAdapter() {
+    private OnRefreshListener mRefreshListener = new OnRefreshListener() {
         @Override
-        public void onRefresh(TwinklingRefreshLayout refreshLayout) {
-            super.onRefresh(refreshLayout);
-            new Handler().postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    mRefreshLayout.finishRefreshing();
-                }
-            }, 1000);
+        public void onRefresh(RefreshLayout refreshlayout) {
+            refreshlayout.finishRefresh(1000);
         }
+    };
 
+    private OnLoadmoreListener mLoadmoreListener = new OnLoadmoreListener() {
         @Override
-        public void onLoadMore(TwinklingRefreshLayout refreshLayout) {
-            super.onLoadMore(refreshLayout);
-            new Handler().postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    mRefreshLayout.finishLoadmore();
-                }
-            }, 1000);
-        }
-
-        @Override
-        public void onFinishRefresh() {
-            super.onFinishRefresh();
-            Toast.makeText(getContext(), "onFinishRefresh", Toast.LENGTH_SHORT).show();
-        }
-
-        @Override
-        public void onFinishLoadMore() {
-            super.onFinishLoadMore();
-            Toast.makeText(getContext(), "onFinishLoadMore", Toast.LENGTH_SHORT).show();
+        public void onLoadmore(RefreshLayout refreshlayout) {
+            refreshlayout.finishLoadmore(1000);
         }
     };
 
@@ -214,7 +192,7 @@ public class FriendsFragment extends BaseScrollFragment implements View.OnClickL
     public void onRequestRefreshEvent(RequestRefreshEvent event){
         if(event.getRefreshPosition() == 3){
             mHaoYe_rv.scrollToPosition(0);
-            mRefreshLayout.startRefresh();
+            mRefreshLayout.autoRefresh(0);
         }
     }
 }

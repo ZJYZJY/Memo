@@ -2,13 +2,11 @@ package com.donutcn.memo.fragment.home;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import com.donutcn.memo.R;
 import com.donutcn.memo.adapter.MessageAdapter;
@@ -17,9 +15,10 @@ import com.donutcn.memo.event.ReceiveNewMessagesEvent;
 import com.donutcn.memo.event.RequestRefreshEvent;
 import com.donutcn.memo.listener.OnItemClickListener;
 import com.donutcn.memo.view.ListViewDecoration;
-import com.donutcn.memo.view.RefreshHeaderView;
-import com.lcodecore.tkrefreshlayout.RefreshListenerAdapter;
-import com.lcodecore.tkrefreshlayout.TwinklingRefreshLayout;
+import com.scwang.smartrefresh.layout.SmartRefreshLayout;
+import com.scwang.smartrefresh.layout.api.RefreshLayout;
+import com.scwang.smartrefresh.layout.listener.OnLoadmoreListener;
+import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
 import com.yanzhenjie.recyclerview.swipe.SwipeMenuRecyclerView;
 
 import org.greenrobot.eventbus.EventBus;
@@ -34,7 +33,7 @@ public class MessageFragment extends BaseScrollFragment {
 
     private SwipeMenuRecyclerView mMessage_rv;
 
-    private TwinklingRefreshLayout mRefreshLayout;
+    private SmartRefreshLayout mRefreshLayout;
 
     @Override
     public void onAttach(Context context) {
@@ -50,17 +49,16 @@ public class MessageFragment extends BaseScrollFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_message, container, false);
-        return view;
+        return inflater.inflate(R.layout.fragment_message, container, false);
     }
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         mMessage_rv = (SwipeMenuRecyclerView) view.findViewById(R.id.recycler_view);
         setRecyclerView(mMessage_rv);
-        mRefreshLayout = (TwinklingRefreshLayout) view.findViewById(R.id.swipe_layout);
-        mRefreshLayout.setOnRefreshListener(mRefreshListenerAdapter);
-        mRefreshLayout.setHeaderView(new RefreshHeaderView(mContext));
+        mRefreshLayout = (SmartRefreshLayout) view.findViewById(R.id.swipe_layout);
+        mRefreshLayout.setOnRefreshListener(mRefreshListener);
+        mRefreshLayout.setOnLoadmoreListener(mLoadmoreListener);
 
         mMessage_rv.setLayoutManager(new LinearLayoutManager(mContext));
         mMessage_rv.addItemDecoration(new ListViewDecoration(mContext,
@@ -92,39 +90,17 @@ public class MessageFragment extends BaseScrollFragment {
         }
     };
 
-    private RefreshListenerAdapter mRefreshListenerAdapter = new RefreshListenerAdapter() {
+    private OnRefreshListener mRefreshListener = new OnRefreshListener() {
         @Override
-        public void onRefresh(TwinklingRefreshLayout refreshLayout) {
-            super.onRefresh(refreshLayout);
-            new Handler().postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    mRefreshLayout.finishRefreshing();
-                }
-            }, 1000);
+        public void onRefresh(RefreshLayout refreshlayout) {
+            refreshlayout.finishRefresh(1000);
         }
+    };
 
+    private OnLoadmoreListener mLoadmoreListener = new OnLoadmoreListener() {
         @Override
-        public void onLoadMore(TwinklingRefreshLayout refreshLayout) {
-            super.onLoadMore(refreshLayout);
-            new Handler().postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    mRefreshLayout.finishLoadmore();
-                }
-            }, 1000);
-        }
-
-        @Override
-        public void onFinishRefresh() {
-            super.onFinishRefresh();
-            Toast.makeText(getContext(), "onFinishRefresh", Toast.LENGTH_SHORT).show();
-        }
-
-        @Override
-        public void onFinishLoadMore() {
-            super.onFinishLoadMore();
-            Toast.makeText(getContext(), "onFinishLoadMore", Toast.LENGTH_SHORT).show();
+        public void onLoadmore(RefreshLayout refreshlayout) {
+            refreshlayout.finishLoadmore(1000);
         }
     };
 
@@ -144,7 +120,7 @@ public class MessageFragment extends BaseScrollFragment {
     public void onRequestRefreshEvent(RequestRefreshEvent event){
         if(event.getRefreshPosition() == 1){
             mMessage_rv.scrollToPosition(0);
-            mRefreshLayout.startRefresh();
+            mRefreshLayout.autoRefresh(0);
         }
     }
 }
