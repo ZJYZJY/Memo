@@ -12,6 +12,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
@@ -30,6 +31,7 @@ import com.donutcn.memo.type.PublishType;
 import com.donutcn.memo.utils.PermissionCheck;
 import com.donutcn.memo.utils.RecognizerResultParser;
 import com.donutcn.memo.utils.SpfsUtils;
+import com.donutcn.memo.utils.StringUtil;
 import com.donutcn.memo.utils.WindowUtils;
 import com.iflytek.cloud.ErrorCode;
 import com.iflytek.cloud.InitListener;
@@ -161,12 +163,15 @@ public class PublishActivity extends AppCompatActivity implements View.OnClickLi
         switch (v.getId()) {
             case R.id.toolbar_with_btn:
                 // according to the selected type, pass the different parameters to activity.
-                if (mSelectedType == mContentTypes[0] || mSelectedType == mContentTypes[1]
-                        || mSelectedType == mContentTypes[5]) {
+                if (mSelectedType.equals(mContentTypes[0])
+                        || mSelectedType.equals(mContentTypes[1])
+                        || mSelectedType.equals(mContentTypes[5])) {
                     startActivity(new Intent(this, SocialShareActivity.class));
-                } else if (mSelectedType == mContentTypes[2] || mSelectedType == mContentTypes[3]
-                        || mSelectedType == mContentTypes[4] || mSelectedType == mContentTypes[6]
-                        || mSelectedType == mContentTypes[7]) {
+                } else if (mSelectedType.equals(mContentTypes[2])
+                        || mSelectedType.equals(mContentTypes[3])
+                        || mSelectedType.equals(mContentTypes[4])
+                        || mSelectedType.equals(mContentTypes[6])
+                        || mSelectedType.equals(mContentTypes[7])) {
                     Intent intent = new Intent(this, CompletingPage.class);
                     intent.putExtra("type", PublishType.getType(mSelectedType));
                     startActivity(intent);
@@ -174,6 +179,11 @@ public class PublishActivity extends AppCompatActivity implements View.OnClickLi
                 Toast.makeText(PublishActivity.this, "type:" + mSelectedType + "\n"
                         + "title:" + mTitleStr + "\n"
                         + "content:" + mContentStr, Toast.LENGTH_SHORT).show();
+                selectedPhotos = (ArrayList<String>) StringUtil.getImgSrcList(mContentStr);
+                Log.e("photo", "type:" + mSelectedType + "\n"
+                        + "title:" + mTitleStr + "\n"
+                        + "content:" + mContentStr);
+                Log.e("photo", selectedPhotos.toString());
                 break;
             case R.id.publish_spinner_container:
                 showPopupMenu(v);

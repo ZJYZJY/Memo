@@ -43,7 +43,7 @@ public enum PublishType {
      */
     public static PublishType getType(String type){
         for(PublishType item : PublishType.values()){
-            if(item.toString() == type)
+            if(item.toString().equals(type))
                 return item;
         }
         return null;

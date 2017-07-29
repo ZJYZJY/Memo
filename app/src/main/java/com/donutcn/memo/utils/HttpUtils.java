@@ -2,13 +2,24 @@ package com.donutcn.memo.utils;
 
 import android.content.Context;
 
+import com.donutcn.memo.listener.OnUploadAllListener;
 import com.franmontiel.persistentcookiejar.ClearableCookieJar;
 import com.franmontiel.persistentcookiejar.PersistentCookieJar;
 import com.franmontiel.persistentcookiejar.cache.SetCookieCache;
 import com.franmontiel.persistentcookiejar.persistence.SharedPrefsCookiePersistor;
+import com.qiniu.android.http.ResponseInfo;
+import com.qiniu.android.storage.UpCompletionHandler;
+import com.qiniu.android.storage.UpProgressHandler;
+import com.qiniu.android.storage.UploadManager;
+import com.qiniu.android.storage.UploadOptions;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import okhttp3.OkHttpClient;
 import okhttp3.RequestBody;
@@ -33,9 +44,17 @@ public class HttpUtils {
 
     public static final int FAIL = 400;
 
+    private static String uploadToken = "4AXvKBpu_OIE9RE_18fQnzY8ux-CA9rEnL8HaQ79:II7VbOh0bMKhOMtzpOk6IExUxX0=:eyJzY29wZSI6InJlbnJlbnBhZ2UiLCJkZWFkbGluZSI6MTUwMTMwODc1MX0=";
+
+    private static AtomicInteger uploadCount = new AtomicInteger(0);
+
     private static Retrofit instance;
 
     private static ClearableCookieJar cookieJar;
+
+    private static UploadManager uploadManager;
+
+    private static List<String> fileKeys;
 
     public static synchronized void create(Context context) {
         if (instance == null) {
@@ -58,6 +77,13 @@ public class HttpUtils {
     public static void clearCookies(String phoneNumber){
         cookieJar.clear();
 //        logout(phoneNumber).enqueue(null);
+    }
+
+    private static UploadManager getUpload(){
+        if(uploadManager == null){
+            uploadManager = new UploadManager();
+        }
+        return uploadManager;
     }
 
     /**
@@ -179,5 +205,31 @@ public class HttpUtils {
 
     public static Call<ResponseBody> test(){
         return create().test();
+    }
+
+    public static void upLoadImages(final List<String> paths, final OnUploadAllListener listener){
+        fileKeys = Collections.synchronizedList(new ArrayList<String>());
+        for(String path : paths){
+            getUpload().put(path, null, uploadToken,
+                    new UpCompletionHandler() {
+                        @Override
+                        public void complete(String key, ResponseInfo info, JSONObject response) {
+                            uploadCount.addAndGet(1);
+                            // store the file key.
+                            fileKeys.add(key);
+                            if(uploadCount.get() == paths.size()){
+                                listener.uploadAll(fileKeys);
+                                // reset uploadCount.
+                                uploadCount.getAndSet(0);
+                            }
+                        }
+
+                    }, new UploadOptions(null, null, false, new UpProgressHandler() {
+                        @Override
+                        public void progress(String key, double percent) {
+
+                        }
+                    }, null));
+        }
     }
 }
