@@ -1,6 +1,7 @@
 package com.donutcn.memo.utils;
 
 import android.content.Context;
+import android.util.Log;
 
 import com.donutcn.memo.listener.OnUploadAllListener;
 import com.franmontiel.persistentcookiejar.ClearableCookieJar;
@@ -16,6 +17,7 @@ import com.qiniu.android.storage.UploadOptions;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -25,6 +27,8 @@ import okhttp3.OkHttpClient;
 import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.http.Body;
 import retrofit2.http.POST;
@@ -44,7 +48,7 @@ public class HttpUtils {
 
     public static final int FAIL = 400;
 
-    private static String uploadToken = "4AXvKBpu_OIE9RE_18fQnzY8ux-CA9rEnL8HaQ79:II7VbOh0bMKhOMtzpOk6IExUxX0=:eyJzY29wZSI6InJlbnJlbnBhZ2UiLCJkZWFkbGluZSI6MTUwMTMwODc1MX0=";
+    private static String uploadToken;
 
     private static AtomicInteger uploadCount = new AtomicInteger(0);
 
@@ -79,7 +83,7 @@ public class HttpUtils {
 //        logout(phoneNumber).enqueue(null);
     }
 
-    private static UploadManager getUpload(){
+    private static UploadManager getUploadManager(){
         if(uploadManager == null){
             uploadManager = new UploadManager();
         }
@@ -151,6 +155,12 @@ public class HttpUtils {
         @POST(APIPath.LOGOUT)
         Call<ResponseBody> logout(@Body RequestBody phone);
 
+        /**
+         * get the file upload token.
+         */
+        @POST(APIPath.GET_UPLOAD_TOKEN)
+        Call<ResponseBody> getUploadToken();
+
         @POST("article_api/ceshi")
         Call<ResponseBody> test();
     }
@@ -165,6 +175,8 @@ public class HttpUtils {
         private static final String MODIFY_PASSWORD = "login_api/edituser_api";
 
         private static final String LOGOUT = "login_api/login_out_api";
+
+        private static final String GET_UPLOAD_TOKEN = "";
     }
 
     public static Call<ResponseBody> login(String username, String password){
@@ -203,24 +215,69 @@ public class HttpUtils {
         return create().logout(request);
     }
 
+    public static Call<ResponseBody> getUploadToken(){
+        return create().getUploadToken();
+    }
+
     public static Call<ResponseBody> test(){
         return create().test();
     }
 
+    /**
+     * upload images to qiniu server
+     * @param paths image file path
+     * @param listener {@link OnUploadAllListener}
+     */
     public static void upLoadImages(final List<String> paths, final OnUploadAllListener listener){
+        final OnValidTokenListener onValidTokenListener = new OnValidTokenListener() {
+            @Override
+            public void onValidToken() {
+                doUploadFiles(paths, listener);
+            }
+        };
+        if(uploadToken == null){
+            getUploadToken().enqueue(new Callback<ResponseBody>() {
+                @Override
+                public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                    try {
+                        String res = response.body().string();
+                        if(HttpUtils.stateCode(res) == SUCCESS){
+                            uploadToken = "";
+                            onValidTokenListener.onValidToken();
+                        }
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<ResponseBody> call, Throwable t) {
+                    t.printStackTrace();
+                }
+            });
+        }else {
+            onValidTokenListener.onValidToken();
+        }
+    }
+
+    private static void doUploadFiles(final List<String> paths, final OnUploadAllListener listener){
         fileKeys = Collections.synchronizedList(new ArrayList<String>());
         for(String path : paths){
-            getUpload().put(path, null, uploadToken,
+            getUploadManager().put(path, null, uploadToken,
                     new UpCompletionHandler() {
                         @Override
                         public void complete(String key, ResponseInfo info, JSONObject response) {
-                            uploadCount.addAndGet(1);
-                            // store the file key.
-                            fileKeys.add(key);
-                            if(uploadCount.get() == paths.size()){
-                                listener.uploadAll(fileKeys);
-                                // reset uploadCount.
-                                uploadCount.getAndSet(0);
+                            if(info.isOK()){
+                                uploadCount.addAndGet(1);
+                                // store the file key.
+                                fileKeys.add(key);
+                                if(uploadCount.get() == paths.size()){
+                                    listener.uploadAll(fileKeys);
+                                    // reset uploadCount.
+                                    uploadCount.getAndSet(0);
+                                }
+                            }else {
+                                Log.e("qiniu_upload", info.error);
                             }
                         }
 
@@ -231,5 +288,13 @@ public class HttpUtils {
                         }
                     }, null));
         }
+    }
+
+    private interface OnValidTokenListener {
+
+        /**
+         * get the valid token or exist valid token.
+         */
+        void onValidToken();
     }
 }

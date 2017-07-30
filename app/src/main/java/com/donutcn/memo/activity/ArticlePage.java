@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.donutcn.memo.R;
@@ -25,10 +26,13 @@ public class ArticlePage extends AppCompatActivity implements View.OnClickListen
     private BottomSheetDialog dialog;
     private Button mInteractive;
     private TextView mContent_tv, mWant;
+    private ScrollView mScrollView;
 
     private PublishType mType = PublishType.ARTICLE;
 
     private String mTitle, mAuthor, mDate, mContent;
+    // comment height
+    private int commentHeight;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -103,6 +107,7 @@ public class ArticlePage extends AppCompatActivity implements View.OnClickListen
     public void initView() {
         mInteractive = (Button) findViewById(R.id.interactive);
         mWant = (TextView) findViewById(R.id.interactive_bottom_want);
+        mScrollView = (ScrollView) findViewById(R.id.article_scroll);
 
         findViewById(R.id.interactive_bottom_publish).setOnClickListener(this);
         findViewById(R.id.interactive_bottom_upvote).setOnClickListener(this);
@@ -209,6 +214,13 @@ public class ArticlePage extends AppCompatActivity implements View.OnClickListen
     }
 
     @Override
+    public void onWindowFocusChanged(boolean hasFocus) {
+        super.onWindowFocusChanged(hasFocus);
+        // get the comment layout position.
+        commentHeight = findViewById(R.id.article_content).getTop();
+    }
+
+    @Override
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.interactive_bottom_publish:
@@ -219,6 +231,7 @@ public class ArticlePage extends AppCompatActivity implements View.OnClickListen
             case R.id.interactive_bottom_upvote:
                 break;
             case R.id.interactive_bottom_comment:
+                mScrollView.smoothScrollTo(0, commentHeight);
                 break;
         }
     }
