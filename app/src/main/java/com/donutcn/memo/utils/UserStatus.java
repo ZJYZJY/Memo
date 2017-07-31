@@ -31,8 +31,11 @@ public class UserStatus {
 
     public static void logout(Context context, String phone) {
         USER = null;
+        // clear cookies
         HttpUtils.clearCookies(phone);
+        // remove login flag
         SpfsUtils.remove(context, SpfsUtils.USER, "loginFlag");
+        // go back to LoginActivity
         Intent intent = new Intent(context, LoginActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         intent.putExtra("showSplash", false);

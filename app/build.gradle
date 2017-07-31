@@ -12,7 +12,8 @@ android {
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         ndk {
             // set the supported SO libs
-            abiFilters 'armeabi', 'armeabi-v7a'// 'armeabi-v7a', 'arm64-v8a', 'x86', 'x86_64', 'mips', 'mips64'
+            abiFilters 'armeabi', 'armeabi-v7a'
+// 'armeabi-v7a', 'arm64-v8a', 'x86', 'x86_64', 'mips', 'mips64'
         }
     }
     sourceSets {
@@ -65,6 +66,7 @@ dependencies {
     compile project(':widgetlib')
     compile project(':PhotoPicker')
     compile project(':richeditor')
+    //    compile 'com.scwang.smartrefresh:SmartRefreshHeader:1.0.3-alpha-3'//use custom header
     compile 'com.qiniu:qiniu-android-sdk:7.3.8'
     compile 'com.umeng.analytics:analytics:latest.integration'
     compile 'com.tencent.bugly:crashreport_upgrade:latest.release'
@@ -76,11 +78,13 @@ dependencies {
     compile 'com.yanzhenjie:recyclerview-swipe:1.0.4'
     compile 'com.lcodecorex:tkrefreshlayout:1.0.7'
     compile 'com.scwang.smartrefresh:SmartRefreshLayout:1.0.3-alpha-3'
-//    compile 'com.scwang.smartrefresh:SmartRefreshHeader:1.0.3-alpha-3'//use custom header
     compile 'com.zzhoujay.richtext:richtext:2.5.2'
     compile 'org.greenrobot:eventbus:3.0.0'
     compile 'com.squareup.retrofit2:retrofit:2.3.0'
+    compile 'com.squareup.retrofit2:converter-gson:2.3.0'
     compile 'com.github.fodroid:XRadioGroup:v1.1'
     compile 'com.github.franmontiel:PersistentCookieJar:v1.0.1'
+    compile 'com.android.support.constraint:constraint-layout:1.0.2'
     testCompile 'junit:junit:4.12'
+    testCompile 'org.json:json:20140107'
 }

@@ -41,10 +41,10 @@
 
         <activity
             android:name=".activity.MainActivity"
-            android:launchMode="singleTop"/>
+            android:launchMode="singleTop" />
         <activity
             android:name=".activity.LoginActivity"
-            android:launchMode="singleTop" >
+            android:launchMode="singleTop">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -62,12 +62,12 @@
         <activity android:name=".activity.PersonalCenterActivity" />
         <activity android:name=".activity.TipOffActivity" />
 
-        <!--tencent bugly upgrade-->
+        <!-- tencent bugly upgrade -->
         <activity
             android:name="com.tencent.bugly.beta.ui.BetaActivity"
             android:configChanges="keyboardHidden|orientation|screenSize|locale"
             android:theme="@android:style/Theme.Translucent" />
-        <!--API >= 24 required-->
+        <!-- API >= 24 required -->
         <provider
             android:name="android.support.v4.content.FileProvider"
             android:authorities="${applicationId}.fileProvider"
@@ -87,14 +87,14 @@
             android:configChanges="keyboardHidden|orientation"
             android:exported="false"
             android:screenOrientation="portrait"
-            android:theme="@android:style/Theme.Translucent.NoTitleBar"/>
-
+            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
         <activity
             android:name="com.sina.weibo.sdk.share.WbShareTransActivity"
             android:launchMode="singleTask"
             android:theme="@android:style/Theme.Translucent.NoTitleBar.Fullscreen">
             <intent-filter>
                 <action android:name="com.sina.weibo.sdk.action.ACTION_SDK_REQ_ACTIVITY" />
+
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
@@ -124,11 +124,12 @@
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Translucent.NoTitleBar" />
-        <!--<activity-->
-        <!--android:name="com.umeng.socialize.editorpage.ShareActivity"-->
-        <!--android:excludeFromRecents="true"-->
-        <!--android:theme="@style/Theme.UMDefault" />-->
+        <!-- <activity -->
+        <!-- android:name="com.umeng.socialize.editorpage.ShareActivity" -->
+        <!-- android:excludeFromRecents="true" -->
+        <!-- android:theme="@style/Theme.UMDefault" /> -->
         <!-- *************************    related to Share END **************************** -->
+        <activity android:name=".activity.ResetPasswordPage"></activity>
     </application>
 
 </manifest>

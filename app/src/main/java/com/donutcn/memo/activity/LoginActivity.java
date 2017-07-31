@@ -17,6 +17,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.donutcn.memo.R;
+import com.donutcn.memo.entity.SimpleResponse;
 import com.donutcn.memo.fragment.SplashFragment;
 import com.donutcn.memo.utils.CountDownTimerUtils;
 import com.donutcn.memo.utils.HttpUtils;
@@ -24,9 +25,6 @@ import com.donutcn.memo.utils.SpfsUtils;
 import com.donutcn.memo.utils.UserStatus;
 import com.donutcn.memo.utils.WindowUtils;
 
-import java.io.IOException;
-
-import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -36,7 +34,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     private RadioButton mToLogin, mToRegister;
     private RadioGroup mRadioGroup;
     private View mWechat, mWithoutLogin;
-    private TextView mMsgCode;
+    private TextView mMsgCode, mForget;
     private Button mLogin;
     private EditText mPhoneNum, mPassword;
     private EditText mRegPhone, mRegPassword, mRegCode;
@@ -74,6 +72,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         mWechat = findViewById(R.id.login_with_wechat);
         mWithoutLogin = findViewById(R.id.enter_without_login);
         mMsgCode = (TextView) findViewById(R.id.tv_get_msg_code);
+        mForget = (TextView) findViewById(R.id.forget_password);
         authCodeTimer = new CountDownTimerUtils(mMsgCode, 60*1000, 1000);
 
 
@@ -83,6 +82,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         mWechat.setOnClickListener(this);
         mWithoutLogin.setOnClickListener(this);
         mMsgCode.setOnClickListener(this);
+        mForget.setOnClickListener(this);
     }
 
     private Runnable showMainPage = new Runnable(){
@@ -140,29 +140,23 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             Toast.makeText(this, "密码不能为空", Toast.LENGTH_SHORT).show();
             return;
         }
-        HttpUtils.login(username, password).enqueue(new Callback<ResponseBody>() {
+        HttpUtils.login(username, password).enqueue(new Callback<SimpleResponse>() {
             @Override
-            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                try {
-                    if(response.body() != null){
-                        String res = response.body().string();
-                        if (HttpUtils.stateCode(res) == HttpUtils.SUCCESS) {
-                            Toast.makeText(LoginActivity.this, "登录成功", Toast.LENGTH_SHORT).show();
-                            UserStatus.login(getApplicationContext(), username);
-                            Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-                            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                            startActivity(intent);
-                        } else {
-                            Toast.makeText(LoginActivity.this, "登录失败，"
-                                    + HttpUtils.message(res), Toast.LENGTH_SHORT).show();
-                        }
-                    }
-                } catch (IOException e) {
-                    e.printStackTrace();
+            public void onResponse(Call<SimpleResponse> call, Response<SimpleResponse> response) {
+                if (response.body().isOk()) {
+                    Toast.makeText(LoginActivity.this, "登录成功", Toast.LENGTH_SHORT).show();
+                    UserStatus.login(getApplicationContext(), username);
+                    Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    startActivity(intent);
+                } else {
+                    Toast.makeText(LoginActivity.this, "登录失败，"
+                            + response.body().getMessage(), Toast.LENGTH_SHORT).show();
                 }
             }
+
             @Override
-            public void onFailure(Call<ResponseBody> call, Throwable t) {
+            public void onFailure(Call<SimpleResponse> call, Throwable t) {
                 Toast.makeText(LoginActivity.this, "登录连接失败", Toast.LENGTH_SHORT).show();
                 t.printStackTrace();
             }
@@ -183,31 +177,23 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             Toast.makeText(this, "密码不能为空", Toast.LENGTH_SHORT).show();
             return;
         }
-        HttpUtils.modifyUser(phoneNumber, authCode, password, ACTION_REGISTER).enqueue(new Callback<ResponseBody>() {
+        HttpUtils.modifyUser(phoneNumber, authCode, password, ACTION_REGISTER).enqueue(new Callback<SimpleResponse>() {
             @Override
-            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                try {
-                    if(response.body() != null){
-                        String res = response.body().string();
-                        if (HttpUtils.stateCode(res) == HttpUtils.SUCCESS) {
-//                            attemptToLogin();
-                            Toast.makeText(LoginActivity.this, "注册成功", Toast.LENGTH_SHORT).show();
-                            UserStatus.login(getApplicationContext(), phoneNumber);
-                            Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-                            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                            startActivity(intent);
-                        } else {
-                            Toast.makeText(LoginActivity.this, "注册失败，"
-                                    + HttpUtils.message(res), Toast.LENGTH_SHORT).show();
-                        }
-                    }
-                } catch (IOException e) {
-                    e.printStackTrace();
+            public void onResponse(Call<SimpleResponse> call, Response<SimpleResponse> response) {
+                if(response.body().isOk()){
+                    Toast.makeText(LoginActivity.this, "注册成功", Toast.LENGTH_SHORT).show();
+                    UserStatus.login(getApplicationContext(), phoneNumber);
+                    Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    startActivity(intent);
+                }else {
+                    Toast.makeText(LoginActivity.this, "注册失败，"
+                            + response.body().getMessage(), Toast.LENGTH_SHORT).show();
                 }
             }
 
             @Override
-            public void onFailure(Call<ResponseBody> call, Throwable t) {
+            public void onFailure(Call<SimpleResponse> call, Throwable t) {
                 Toast.makeText(LoginActivity.this, "注册连接失败", Toast.LENGTH_SHORT).show();
                 t.printStackTrace();
             }
@@ -222,29 +208,24 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         }
         mMsgCode.setClickable(false);
         mMsgCode.setBackgroundResource(R.drawable.disabled_gray_btn_bg);
-        HttpUtils.getVerifiedCode(phoneNumber, "register").enqueue(new Callback<ResponseBody>() {
+        HttpUtils.getVerifiedCode(phoneNumber, "register").enqueue(new Callback<SimpleResponse>() {
             @Override
-            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                try {
-                    if(response.body() != null){
-                        String res = response.body().string();
-                        if (HttpUtils.stateCode(res) == HttpUtils.SUCCESS) {
-                            authCodeTimer.start();
-                            Toast.makeText(LoginActivity.this, "验证码发送成功", Toast.LENGTH_SHORT).show();
-                        } else {
-                            mMsgCode.setClickable(true);
-                            mMsgCode.setBackgroundResource(R.drawable.selector_radius_blue_btn);
-                            Toast.makeText(LoginActivity.this, "验证码发送失败，"
-                                    + HttpUtils.message(res), Toast.LENGTH_SHORT).show();
-                        }
-                    }
-                } catch (IOException e) {
-                    e.printStackTrace();
+            public void onResponse(Call<SimpleResponse> call, Response<SimpleResponse> response) {
+                if(response.body().isOk()){
+                    authCodeTimer.start();
+                    Toast.makeText(LoginActivity.this, "验证码发送成功", Toast.LENGTH_SHORT).show();
+                }else {
+                    mMsgCode.setClickable(true);
+                    mMsgCode.setBackgroundResource(R.drawable.selector_radius_blue_btn);
+                    Toast.makeText(LoginActivity.this, "验证码发送失败，"
+                            + response.body().getMessage(), Toast.LENGTH_SHORT).show();
                 }
             }
 
             @Override
-            public void onFailure(Call<ResponseBody> call, Throwable t) {
+            public void onFailure(Call<SimpleResponse> call, Throwable t) {
+                mMsgCode.setClickable(true);
+                mMsgCode.setBackgroundResource(R.drawable.selector_radius_blue_btn);
                 Toast.makeText(LoginActivity.this, "获取验证码连接失败", Toast.LENGTH_SHORT).show();
                 t.printStackTrace();
             }
@@ -282,6 +263,9 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 break;
             case R.id.tv_get_msg_code:
                 requestForAuthCode();
+                break;
+            case R.id.forget_password:
+                startActivity(new Intent(this, ResetPasswordPage.class));
                 break;
         }
     }

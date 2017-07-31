@@ -3,11 +3,14 @@ package com.donutcn.memo.utils;
 import android.content.Context;
 import android.util.Log;
 
+import com.donutcn.memo.entity.SimpleResponse;
 import com.donutcn.memo.listener.OnUploadAllListener;
 import com.franmontiel.persistentcookiejar.ClearableCookieJar;
 import com.franmontiel.persistentcookiejar.PersistentCookieJar;
 import com.franmontiel.persistentcookiejar.cache.SetCookieCache;
 import com.franmontiel.persistentcookiejar.persistence.SharedPrefsCookiePersistor;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.qiniu.android.http.ResponseInfo;
 import com.qiniu.android.storage.UpCompletionHandler;
 import com.qiniu.android.storage.UpProgressHandler;
@@ -30,6 +33,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 import retrofit2.http.Body;
 import retrofit2.http.POST;
 
@@ -64,11 +68,11 @@ public class HttpUtils {
         if (instance == null) {
             cookieJar = new PersistentCookieJar(
                     new SetCookieCache(), new SharedPrefsCookiePersistor(context));
-            OkHttpClient okHttpClient = new OkHttpClient.Builder()
-                    .cookieJar(cookieJar)
-                    .build();
+            OkHttpClient okHttpClient = new OkHttpClient.Builder().cookieJar(cookieJar).build();
+            Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
             instance = new Retrofit.Builder()
                     .client(okHttpClient)
+                    .addConverterFactory(GsonConverterFactory.create(gson))
                     .baseUrl(PATH)
                     .build();
         }
@@ -104,20 +108,6 @@ public class HttpUtils {
         return FAIL;
     }
 
-    /**
-     * get the response message.
-     * @param str response string
-     */
-    public static String message(String str){
-        try {
-            JSONObject json = new JSONObject(str);
-            return json.getString("message");
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        return "null";
-    }
-
     public interface RRPageService {
 
         /**
@@ -125,41 +115,41 @@ public class HttpUtils {
          * @param user user info
          */
         @POST(APIPath.LOGIN)
-        Call<ResponseBody> login(@Body RequestBody user);
+        Call<SimpleResponse> login(@Body RequestBody user);
 
         /**
          * request for message Verification Code.
          * @param phone phone number
          */
         @POST(APIPath.GET_AUTH_CODE)
-        Call<ResponseBody> getVerifiedCode(@Body RequestBody phone);
+        Call<SimpleResponse> getVerifiedCode(@Body RequestBody phone);
 
         /**
          * user register.
          * @param phone user info
          */
         @POST(APIPath.REGISTER)
-        Call<ResponseBody> register(@Body RequestBody phone);
+        Call<SimpleResponse> register(@Body RequestBody phone);
 
         /**
          * modify user password
          * @param phone user info
          */
         @POST(APIPath.MODIFY_PASSWORD)
-        Call<ResponseBody> modifyPassword(@Body RequestBody phone);
+        Call<SimpleResponse> modifyPassword(@Body RequestBody phone);
 
         /**
          * user logout
          * @param phone phone number
          */
         @POST(APIPath.LOGOUT)
-        Call<ResponseBody> logout(@Body RequestBody phone);
+        Call<SimpleResponse> logout(@Body RequestBody phone);
 
         /**
          * get the file upload token.
          */
         @POST(APIPath.GET_UPLOAD_TOKEN)
-        Call<ResponseBody> getUploadToken();
+        Call<SimpleResponse> getUploadToken();
 
         @POST("article_api/ceshi")
         Call<ResponseBody> test();
@@ -179,7 +169,7 @@ public class HttpUtils {
         private static final String GET_UPLOAD_TOKEN = "";
     }
 
-    public static Call<ResponseBody> login(String username, String password){
+    public static Call<SimpleResponse> login(String username, String password){
         String str = "{\"username\":\"" + username + "\"," +
                 "\"password\":\"" + password + "\"}";
         RequestBody request = RequestBody
@@ -187,7 +177,7 @@ public class HttpUtils {
         return create().login(request);
     }
 
-    public static Call<ResponseBody> getVerifiedCode(String phoneNumber, String action){
+    public static Call<SimpleResponse> getVerifiedCode(String phoneNumber, String action){
         String str = "{\"tel_number\":\"" + phoneNumber + "\"," +
                 "\"action\":\"" + action + "\"}";
         RequestBody request = RequestBody
@@ -195,7 +185,7 @@ public class HttpUtils {
         return create().getVerifiedCode(request);
     }
 
-    public static Call<ResponseBody> modifyUser(String phoneNumber, String authCode,
+    public static Call<SimpleResponse> modifyUser(String phoneNumber, String authCode,
                                               String password, int action){
         String str = "{\"tel_number\":\"" + phoneNumber + "\"," +
                         "\"authcode\":\"" + authCode + "\"," +
@@ -208,15 +198,11 @@ public class HttpUtils {
             return create().modifyPassword(request);
     }
 
-    public static Call<ResponseBody> logout(String phoneNumber){
+    public static Call<SimpleResponse> logout(String phoneNumber){
         String str = "{\"username\":\"" + phoneNumber  + "\"}";
         RequestBody request = RequestBody
                 .create(okhttp3.MediaType.parse("application/json; charset=utf-8"), str);
         return create().logout(request);
-    }
-
-    public static Call<ResponseBody> getUploadToken(){
-        return create().getUploadToken();
     }
 
     public static Call<ResponseBody> test(){
@@ -225,33 +211,34 @@ public class HttpUtils {
 
     /**
      * upload images to qiniu server
+     * @param context context
      * @param paths image file path
      * @param listener {@link OnUploadAllListener}
      */
-    public static void upLoadImages(final List<String> paths, final OnUploadAllListener listener){
+    public static void upLoadImages(Context context, final List<String> paths, final OnUploadAllListener listener){
         final OnValidTokenListener onValidTokenListener = new OnValidTokenListener() {
             @Override
             public void onValidToken() {
                 doUploadFiles(paths, listener);
             }
+
+            @Override
+            public void onInvalidToken() {
+
+            }
         };
         if(uploadToken == null){
-            getUploadToken().enqueue(new Callback<ResponseBody>() {
+            create().getUploadToken().enqueue(new Callback<SimpleResponse>() {
                 @Override
-                public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                    try {
-                        String res = response.body().string();
-                        if(HttpUtils.stateCode(res) == SUCCESS){
-                            uploadToken = "";
-                            onValidTokenListener.onValidToken();
-                        }
-                    } catch (IOException e) {
-                        e.printStackTrace();
+                public void onResponse(Call<SimpleResponse> call, Response<SimpleResponse> response) {
+                    if(response.body().isOk()){
+                        uploadToken = "";
+                        onValidTokenListener.onValidToken();
                     }
                 }
 
                 @Override
-                public void onFailure(Call<ResponseBody> call, Throwable t) {
+                public void onFailure(Call<SimpleResponse> call, Throwable t) {
                     t.printStackTrace();
                 }
             });
@@ -296,5 +283,10 @@ public class HttpUtils {
          * get the valid token or exist valid token.
          */
         void onValidToken();
+
+        /**
+         * can't get the valid token or doesn't exist valid token.
+         */
+        void onInvalidToken();
     }
 }
