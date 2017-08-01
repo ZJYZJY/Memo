@@ -56,4 +56,9 @@ public abstract class Response {
     public Object getData(){
         return data;
     }
+
+    @Override
+    public String toString() {
+        return result.toString();
+    }
 }

@@ -11,8 +11,8 @@ import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.Editable;
+import android.text.TextUtils;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
@@ -27,7 +27,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.donutcn.memo.R;
+import com.donutcn.memo.entity.SimpleResponse;
+import com.donutcn.memo.listener.OnUploadAllListener;
 import com.donutcn.memo.type.PublishType;
+import com.donutcn.memo.utils.HttpUtils;
 import com.donutcn.memo.utils.PermissionCheck;
 import com.donutcn.memo.utils.RecognizerResultParser;
 import com.donutcn.memo.utils.SpfsUtils;
@@ -55,6 +58,9 @@ import jp.wasabeef.richeditor.RichEditor;
 import me.iwf.photopicker.PhotoPicker;
 import me.iwf.photopicker.PhotoPreview;
 import me.shihao.library.XRadioGroup;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class PublishActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -76,6 +82,8 @@ public class PublishActivity extends AppCompatActivity implements View.OnClickLi
     private String mSelectedType;
     private String mTitleStr = "";
     private String mContentStr = "";
+    private static final String HOST = "http://otu6v4c72.bkt.clouddn.com/";
+    private Context mContext;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -86,6 +94,7 @@ public class PublishActivity extends AppCompatActivity implements View.OnClickLi
         mSelectedType = mContentTypes[0];
         initView();
         setUpRichTextEditor();
+        mContext = this;
         PublishType type = (PublishType) getIntent().getSerializableExtra("type");
         if (type != null) {
             mSelectedType = type.toString();
@@ -109,7 +118,7 @@ public class PublishActivity extends AppCompatActivity implements View.OnClickLi
         @Override
         public void onInit(int code) {
             if (code != ErrorCode.SUCCESS) {
-                Toast.makeText(PublishActivity.this, "初始化失败，错误码：" + code,
+                Toast.makeText(mContext, "初始化失败，错误码：" + code,
                         Toast.LENGTH_SHORT).show();
             }
         }
@@ -158,6 +167,41 @@ public class PublishActivity extends AppCompatActivity implements View.OnClickLi
         mContent.setEditorFontColor(getResources().getColor(R.color.textPrimaryDark));
     }
 
+    public void publishContent(List<String> keys){
+        if (TextUtils.isEmpty(mTitleStr)) {
+            Toast.makeText(this, "标题不能为空", Toast.LENGTH_SHORT).show();
+            return;
+        } else if (TextUtils.isEmpty(mContentStr)) {
+            Toast.makeText(this, "内容不能为空", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        if(keys != null && keys.size() == selectedPhotos.size()){
+            for(int i = 0; i < selectedPhotos.size(); i++){
+                mContentStr = mContentStr.replace(selectedPhotos.get(i), HOST + keys.get(i));
+            }
+        }
+        // Escape the " to \"
+        mTitleStr = mTitleStr.replace("\"", "\\\"");
+        mContentStr = mContentStr.replace("\"", "\\\"");
+        HttpUtils.uploadContent(mTitleStr, mSelectedType, mContentStr)
+                .enqueue(new Callback<SimpleResponse>() {
+            @Override
+            public void onResponse(Call<SimpleResponse> call, Response<SimpleResponse> response) {
+                if(response.body().isOk()){
+                    Toast.makeText(mContext, "发布成功", Toast.LENGTH_SHORT).show();
+                }else {
+                    Toast.makeText(mContext, "发布失败", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<SimpleResponse> call, Throwable t) {
+                Toast.makeText(mContext, "发布连接失败", Toast.LENGTH_SHORT).show();
+                t.printStackTrace();
+            }
+        });
+    }
+
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
@@ -176,14 +220,18 @@ public class PublishActivity extends AppCompatActivity implements View.OnClickLi
                     intent.putExtra("type", PublishType.getType(mSelectedType));
                     startActivity(intent);
                 }
-                Toast.makeText(PublishActivity.this, "type:" + mSelectedType + "\n"
-                        + "title:" + mTitleStr + "\n"
-                        + "content:" + mContentStr, Toast.LENGTH_SHORT).show();
                 selectedPhotos = (ArrayList<String>) StringUtil.getImgSrcList(mContentStr);
-                Log.e("photo", "type:" + mSelectedType + "\n"
-                        + "title:" + mTitleStr + "\n"
-                        + "content:" + mContentStr);
-                Log.e("photo", selectedPhotos.toString());
+                if(selectedPhotos.size() == 0){
+                    publishContent(null);
+                }else {
+                    HttpUtils.upLoadImages(this, selectedPhotos, new OnUploadAllListener() {
+                        @Override
+                        public void uploadAll(List<String> keys) {
+                            Toast.makeText(mContext, "上传成功", Toast.LENGTH_SHORT).show();
+                            publishContent(keys);
+                        }
+                    });
+                }
                 break;
             case R.id.publish_spinner_container:
                 showPopupMenu(v);
@@ -255,10 +303,12 @@ public class PublishActivity extends AppCompatActivity implements View.OnClickLi
                 ViewGroup v1 = (ViewGroup) xRadioGroup.getChildAt(0);
                 ViewGroup v2 = (ViewGroup) xRadioGroup.getChildAt(1);
                 for(int j = 0; j < v1.getChildCount(); j++){
-                    ((RadioButton)v1.getChildAt(j)).setTextColor(getResources().getColor(R.color.textPrimaryDark));
+                    ((RadioButton)v1.getChildAt(j))
+                            .setTextColor(getResources().getColor(R.color.textPrimaryDark));
                 }
                 for(int j = 0; j < v2.getChildCount(); j++){
-                    ((RadioButton)v2.getChildAt(j)).setTextColor(getResources().getColor(R.color.textPrimaryDark));
+                    ((RadioButton)v2.getChildAt(j))
+                            .setTextColor(getResources().getColor(R.color.textPrimaryDark));
                 }
                 RadioButton btn = (RadioButton)xRadioGroup.findViewById(i);
                 mSelectedType = btn.getText().toString();
@@ -351,7 +401,7 @@ public class PublishActivity extends AppCompatActivity implements View.OnClickLi
         }
 
         public void onError(SpeechError error) {
-            Toast.makeText(PublishActivity.this, error.getPlainDescription(true),
+            Toast.makeText(mContext, error.getPlainDescription(true),
                     Toast.LENGTH_SHORT).show();
         }
 
@@ -393,19 +443,19 @@ public class PublishActivity extends AppCompatActivity implements View.OnClickLi
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    Toast.makeText(PublishActivity.this, "当前音量" + i, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(mContext, "当前音量" + i, Toast.LENGTH_SHORT).show();
                 }
             });
         }
 
         @Override
         public void onBeginOfSpeech() {
-            Toast.makeText(PublishActivity.this, "开始了", Toast.LENGTH_SHORT).show();
+            Toast.makeText(mContext, "开始了", Toast.LENGTH_SHORT).show();
         }
 
         @Override
         public void onEndOfSpeech() {
-            Toast.makeText(PublishActivity.this, "结束了", Toast.LENGTH_SHORT).show();
+            Toast.makeText(mContext, "结束了", Toast.LENGTH_SHORT).show();
         }
 
         @Override
@@ -463,7 +513,7 @@ public class PublishActivity extends AppCompatActivity implements View.OnClickLi
 
             if (photos != null) {
                 selectedPhotos.addAll(photos);
-                mContent.insertImage(selectedPhotos.get(0), "twitter");
+                mContent.insertImage(selectedPhotos.get(0), "image");
             }
         }
     }
@@ -478,24 +528,18 @@ public class PublishActivity extends AppCompatActivity implements View.OnClickLi
                     .setPositiveButton(getString(R.string.dialog_publish_pos), new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
-                            SpfsUtils.write(PublishActivity.this,
-                                    SpfsUtils.CACHE, "publishType", mSelectedType);
-                            SpfsUtils.write(PublishActivity.this,
-                                    SpfsUtils.CACHE, "publishTitle", mTitleStr);
-                            SpfsUtils.write(PublishActivity.this,
-                                    SpfsUtils.CACHE, "publishContent", mContentStr);
+                            SpfsUtils.write(mContext, SpfsUtils.CACHE, "publishType", mSelectedType);
+                            SpfsUtils.write(mContext, SpfsUtils.CACHE, "publishTitle", mTitleStr);
+                            SpfsUtils.write(mContext, SpfsUtils.CACHE, "publishContent", mContentStr);
                             finish();
                         }
                     })
                     .setNegativeButton(getString(R.string.dialog_publish_neg), new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
-                            SpfsUtils.remove(PublishActivity.this,
-                                    SpfsUtils.CACHE, "publishType");
-                            SpfsUtils.remove(PublishActivity.this,
-                                    SpfsUtils.CACHE, "publishTitle");
-                            SpfsUtils.remove(PublishActivity.this,
-                                    SpfsUtils.CACHE, "publishContent");
+                            SpfsUtils.remove(mContext, SpfsUtils.CACHE, "publishType");
+                            SpfsUtils.remove(mContext, SpfsUtils.CACHE, "publishTitle");
+                            SpfsUtils.remove(mContext, SpfsUtils.CACHE, "publishContent");
                             finish();
                         }
                     })

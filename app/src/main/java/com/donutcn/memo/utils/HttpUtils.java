@@ -2,7 +2,9 @@ package com.donutcn.memo.utils;
 
 import android.content.Context;
 import android.util.Log;
+import android.widget.Toast;
 
+import com.donutcn.memo.entity.ArrayResponse;
 import com.donutcn.memo.entity.SimpleResponse;
 import com.donutcn.memo.listener.OnUploadAllListener;
 import com.franmontiel.persistentcookiejar.ClearableCookieJar;
@@ -20,7 +22,6 @@ import com.qiniu.android.storage.UploadOptions;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -44,32 +45,43 @@ import retrofit2.http.POST;
 
 public class HttpUtils {
 
-    public static final String SERVER_HOST = "ascexz.320.io/GoodPage/API";
-
+    /**
+     * server address.
+     */
+    private static final String SERVER_HOST = "ascexz.320.io/GoodPage/API";
     private static final String PATH = "http://" + SERVER_HOST + "/";
 
+    /**
+     * Successful request.
+     */
     public static final int SUCCESS = 200;
 
+    /**
+     * Bad Request.
+     */
     public static final int FAIL = 400;
-
-    private static String uploadToken;
-
-    private static AtomicInteger uploadCount = new AtomicInteger(0);
+    /**
+     * Unauthorized request.
+     */
+    public static final int UNAUTHORIZED = 401;
 
     private static Retrofit instance;
-
     private static ClearableCookieJar cookieJar;
-
     private static UploadManager uploadManager;
 
     private static List<String> fileKeys;
+    private static AtomicInteger uploadCount = new AtomicInteger(0);
 
     public static synchronized void create(Context context) {
         if (instance == null) {
             cookieJar = new PersistentCookieJar(
                     new SetCookieCache(), new SharedPrefsCookiePersistor(context));
-            OkHttpClient okHttpClient = new OkHttpClient.Builder().cookieJar(cookieJar).build();
-            Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
+            OkHttpClient okHttpClient = new OkHttpClient.Builder()
+                    .cookieJar(cookieJar)
+                    .build();
+            Gson gson = new GsonBuilder()
+                    .excludeFieldsWithoutExposeAnnotation()
+                    .create();
             instance = new Retrofit.Builder()
                     .client(okHttpClient)
                     .addConverterFactory(GsonConverterFactory.create(gson))
@@ -82,13 +94,13 @@ public class HttpUtils {
         return instance.create(RRPageService.class);
     }
 
-    public static void clearCookies(String phoneNumber){
+    public static void clearCookies(String phoneNumber) {
         cookieJar.clear();
 //        logout(phoneNumber).enqueue(null);
     }
 
-    private static UploadManager getUploadManager(){
-        if(uploadManager == null){
+    private static UploadManager getUploadManager() {
+        if (uploadManager == null) {
             uploadManager = new UploadManager();
         }
         return uploadManager;
@@ -96,9 +108,10 @@ public class HttpUtils {
 
     /**
      * get the response state code.
+     *
      * @param str response string
      */
-    public static int stateCode(String str){
+    public static int stateCode(String str) {
         try {
             JSONObject json = new JSONObject(str);
             return json.getInt("code");
@@ -112,6 +125,7 @@ public class HttpUtils {
 
         /**
          * user login.
+         *
          * @param user user info
          */
         @POST(APIPath.LOGIN)
@@ -119,6 +133,7 @@ public class HttpUtils {
 
         /**
          * request for message Verification Code.
+         *
          * @param phone phone number
          */
         @POST(APIPath.GET_AUTH_CODE)
@@ -126,6 +141,7 @@ public class HttpUtils {
 
         /**
          * user register.
+         *
          * @param phone user info
          */
         @POST(APIPath.REGISTER)
@@ -133,6 +149,7 @@ public class HttpUtils {
 
         /**
          * modify user password
+         *
          * @param phone user info
          */
         @POST(APIPath.MODIFY_PASSWORD)
@@ -140,6 +157,7 @@ public class HttpUtils {
 
         /**
          * user logout
+         *
          * @param phone phone number
          */
         @POST(APIPath.LOGOUT)
@@ -151,11 +169,27 @@ public class HttpUtils {
         @POST(APIPath.GET_UPLOAD_TOKEN)
         Call<SimpleResponse> getUploadToken();
 
+        /**
+         * publish content.
+         */
+        @POST(APIPath.UPLOAD_CONTENT)
+        Call<SimpleResponse> uploadContent(@Body RequestBody content);
+
+        /**
+         * refresh recommend content.
+         */
+        @POST(APIPath.REFRESH_RECOMMEND)
+        Call<ArrayResponse> getRecommendContent();
+
+
+        /**
+         * cookie test.
+         */
         @POST("article_api/ceshi")
         Call<ResponseBody> test();
     }
 
-    private class APIPath{
+    private class APIPath {
         private static final String LOGIN = "login_api";
 
         private static final String GET_AUTH_CODE = "login_api/authcode_api";
@@ -166,10 +200,14 @@ public class HttpUtils {
 
         private static final String LOGOUT = "login_api/login_out_api";
 
-        private static final String GET_UPLOAD_TOKEN = "";
+        private static final String GET_UPLOAD_TOKEN = "upload/upload.php";
+
+        private static final String UPLOAD_CONTENT = "private_api/create_article_api";
+
+        private static final String REFRESH_RECOMMEND = "index_api/index/10";
     }
 
-    public static Call<SimpleResponse> login(String username, String password){
+    public static Call<SimpleResponse> login(String username, String password) {
         String str = "{\"username\":\"" + username + "\"," +
                 "\"password\":\"" + password + "\"}";
         RequestBody request = RequestBody
@@ -177,7 +215,7 @@ public class HttpUtils {
         return create().login(request);
     }
 
-    public static Call<SimpleResponse> getVerifiedCode(String phoneNumber, String action){
+    public static Call<SimpleResponse> getVerifiedCode(String phoneNumber, String action) {
         String str = "{\"tel_number\":\"" + phoneNumber + "\"," +
                 "\"action\":\"" + action + "\"}";
         RequestBody request = RequestBody
@@ -186,84 +224,105 @@ public class HttpUtils {
     }
 
     public static Call<SimpleResponse> modifyUser(String phoneNumber, String authCode,
-                                              String password, int action){
+                                                  String password, int action) {
         String str = "{\"tel_number\":\"" + phoneNumber + "\"," +
-                        "\"authcode\":\"" + authCode + "\"," +
-                        "\"password\":\"" + password + "\"}";
+                "\"authcode\":\"" + authCode + "\"," +
+                "\"password\":\"" + password + "\"}";
         RequestBody request = RequestBody
                 .create(okhttp3.MediaType.parse("application/json; charset=utf-8"), str);
-        if(action == 0)
+        if (action == 0)
             return create().register(request);
         else
             return create().modifyPassword(request);
     }
 
-    public static Call<SimpleResponse> logout(String phoneNumber){
-        String str = "{\"username\":\"" + phoneNumber  + "\"}";
+    public static Call<SimpleResponse> logout(String phoneNumber) {
+        String str = "{\"username\":\"" + phoneNumber + "\"}";
         RequestBody request = RequestBody
                 .create(okhttp3.MediaType.parse("application/json; charset=utf-8"), str);
         return create().logout(request);
     }
 
-    public static Call<ResponseBody> test(){
+    public static Call<SimpleResponse> uploadContent(String title, String type, String content) {
+        String str = "{\"title\":\"" + title + "\"," +
+                "\"type\":\"" + type + "\"," +
+                "\"content\":\"" + content + "\"}";
+        RequestBody request = RequestBody
+                .create(okhttp3.MediaType.parse("application/json; charset=utf-8"), str);
+        return create().uploadContent(request);
+    }
+
+    public static Call<ArrayResponse> getRecommendContent() {
+        return create().getRecommendContent();
+    }
+
+    public static Call<ResponseBody> test() {
         return create().test();
     }
 
     /**
      * upload images to qiniu server
-     * @param context context
-     * @param paths image file path
+     *
+     * @param context  context
+     * @param paths    image file path
      * @param listener {@link OnUploadAllListener}
      */
-    public static void upLoadImages(Context context, final List<String> paths, final OnUploadAllListener listener){
+    public static void upLoadImages(final Context context, final List<String> paths,
+                                    final OnUploadAllListener listener) {
         final OnValidTokenListener onValidTokenListener = new OnValidTokenListener() {
             @Override
-            public void onValidToken() {
-                doUploadFiles(paths, listener);
+            public void onValidToken(String token) {
+                doUploadFiles(paths, token, listener);
             }
 
             @Override
             public void onInvalidToken() {
-
+                Toast.makeText(context, "图片上传失败", Toast.LENGTH_SHORT).show();
+                Log.e("upload", "invalid token");
             }
         };
-        if(uploadToken == null){
-            create().getUploadToken().enqueue(new Callback<SimpleResponse>() {
-                @Override
-                public void onResponse(Call<SimpleResponse> call, Response<SimpleResponse> response) {
-                    if(response.body().isOk()){
-                        uploadToken = "";
-                        onValidTokenListener.onValidToken();
-                    }
+        create().getUploadToken().enqueue(new Callback<SimpleResponse>() {
+            @Override
+            public void onResponse(Call<SimpleResponse> call, Response<SimpleResponse> response) {
+                if (response.body().isOk()) {
+                    String token = response.body().getMessage();
+                    onValidTokenListener.onValidToken(token);
+                } else {
+                    onValidTokenListener.onInvalidToken();
                 }
+            }
 
-                @Override
-                public void onFailure(Call<SimpleResponse> call, Throwable t) {
-                    t.printStackTrace();
-                }
-            });
-        }else {
-            onValidTokenListener.onValidToken();
-        }
+            @Override
+            public void onFailure(Call<SimpleResponse> call, Throwable t) {
+                onValidTokenListener.onInvalidToken();
+                t.printStackTrace();
+            }
+        });
+
     }
 
-    private static void doUploadFiles(final List<String> paths, final OnUploadAllListener listener){
+    private static void doUploadFiles(final List<String> paths, String token,
+                                      final OnUploadAllListener listener) {
         fileKeys = Collections.synchronizedList(new ArrayList<String>());
-        for(String path : paths){
-            getUploadManager().put(path, null, uploadToken,
+        for (String path : paths) {
+            getUploadManager().put(path, null, token,
                     new UpCompletionHandler() {
                         @Override
                         public void complete(String key, ResponseInfo info, JSONObject response) {
-                            if(info.isOK()){
+                            if (info.isOK()) {
+                                try {
+                                    // store the file key.
+                                    fileKeys.add(response.getString("key"));
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
+                                }
                                 uploadCount.addAndGet(1);
-                                // store the file key.
-                                fileKeys.add(key);
-                                if(uploadCount.get() == paths.size()){
+                                if (uploadCount.get() == paths.size()) {
                                     listener.uploadAll(fileKeys);
                                     // reset uploadCount.
                                     uploadCount.getAndSet(0);
                                 }
-                            }else {
+                            } else {
                                 Log.e("qiniu_upload", info.error);
                             }
                         }
@@ -282,7 +341,7 @@ public class HttpUtils {
         /**
          * get the valid token or exist valid token.
          */
-        void onValidToken();
+        void onValidToken(String token);
 
         /**
          * can't get the valid token or doesn't exist valid token.
