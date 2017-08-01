@@ -37,6 +37,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private HomeFragment mHomeFragment;
     private DiscoverFragment mDiscoverFragment;
 
+    public int mRecommendPage = 1;
     private long mExitTime = 0;
     private int mDefaultItem;
 

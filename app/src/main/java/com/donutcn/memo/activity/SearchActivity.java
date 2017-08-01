@@ -11,12 +11,18 @@ import android.widget.Toast;
 
 import com.donutcn.memo.R;
 import com.donutcn.memo.adapter.SearchListAdapter;
+import com.donutcn.memo.entity.ArrayResponse;
+import com.donutcn.memo.entity.BriefContent;
 import com.donutcn.memo.listener.OnItemClickListener;
+import com.donutcn.memo.utils.HttpUtils;
 import com.donutcn.memo.utils.WindowUtils;
 import com.donutcn.memo.view.ListViewDecoration;
 
 import java.util.ArrayList;
-import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class SearchActivity extends AppCompatActivity implements OnItemClickListener {
 
@@ -24,6 +30,7 @@ public class SearchActivity extends AppCompatActivity implements OnItemClickList
     private EditText mSearch_et;
     private SearchListAdapter mAdapter;
 
+    private ArrayList<BriefContent> list;
     private String mKeyWords;
 
     @Override
@@ -37,13 +44,16 @@ public class SearchActivity extends AppCompatActivity implements OnItemClickList
 
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         mRecyclerView.addItemDecoration(new ListViewDecoration(this, R.dimen.item_decoration_height, 8, 8));
+        list = new ArrayList<>();
+        mAdapter = new SearchListAdapter(SearchActivity.this, list);
+        mAdapter.setOnItemClickListener(SearchActivity.this);
+        mRecyclerView.setAdapter(mAdapter);
 
         mSearch_et.setOnKeyListener(new View.OnKeyListener() {
             @Override
             public boolean onKey(View v, int keyCode, KeyEvent event) {
                 if(keyCode == KeyEvent.KEYCODE_ENTER){
                     mKeyWords = mSearch_et.getText().toString().trim();
-                    Toast.makeText(SearchActivity.this, mKeyWords, Toast.LENGTH_SHORT).show();
                     startSearch();
                     return true;
                 }
@@ -53,14 +63,25 @@ public class SearchActivity extends AppCompatActivity implements OnItemClickList
     }
 
     public void startSearch(){
-        List<String> dataList = new ArrayList<>();
-        for (int i = 0; i < 6; i++) {
-            dataList.add("我是第" + i + "个。");
-        }
-        mAdapter = new SearchListAdapter(this, dataList);
-        mAdapter.setOnItemClickListener(this);
+        HttpUtils.searchContent(mKeyWords).enqueue(new Callback<ArrayResponse>() {
+            @Override
+            public void onResponse(Call<ArrayResponse> call, Response<ArrayResponse> response) {
+                if(response.body().isOk()){
+                    list.clear();
+                    list.addAll(response.body().getData());
+                    mAdapter.setKeyword(mKeyWords);
+                    mAdapter.notifyDataSetChanged();
+                }else {
+                    Toast.makeText(SearchActivity.this, "没有找到结果", Toast.LENGTH_SHORT).show();
+                }
+            }
 
-        mRecyclerView.setAdapter(mAdapter);
+            @Override
+            public void onFailure(Call<ArrayResponse> call, Throwable t) {
+                t.printStackTrace();
+                Toast.makeText(SearchActivity.this, "搜索连接失败", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     @Override

@@ -1,6 +1,7 @@
 package com.donutcn.memo.activity;
 
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -84,6 +85,7 @@ public class PublishActivity extends AppCompatActivity implements View.OnClickLi
     private String mContentStr = "";
     private static final String HOST = "http://otu6v4c72.bkt.clouddn.com/";
     private Context mContext;
+    private ProgressDialog mPublishDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -112,6 +114,9 @@ public class PublishActivity extends AppCompatActivity implements View.OnClickLi
 
         mIat = SpeechRecognizer.createRecognizer(this, mInitListener);
         mIatDialog = new RecognizerDialog(this, mInitListener);
+
+        mPublishDialog = new ProgressDialog(this);
+        mPublishDialog.setMessage("正在上传中...");
     }
 
     private InitListener mInitListener = new InitListener() {
@@ -168,13 +173,6 @@ public class PublishActivity extends AppCompatActivity implements View.OnClickLi
     }
 
     public void publishContent(List<String> keys){
-        if (TextUtils.isEmpty(mTitleStr)) {
-            Toast.makeText(this, "标题不能为空", Toast.LENGTH_SHORT).show();
-            return;
-        } else if (TextUtils.isEmpty(mContentStr)) {
-            Toast.makeText(this, "内容不能为空", Toast.LENGTH_SHORT).show();
-            return;
-        }
         if(keys != null && keys.size() == selectedPhotos.size()){
             for(int i = 0; i < selectedPhotos.size(); i++){
                 mContentStr = mContentStr.replace(selectedPhotos.get(i), HOST + keys.get(i));
@@ -189,15 +187,18 @@ public class PublishActivity extends AppCompatActivity implements View.OnClickLi
             public void onResponse(Call<SimpleResponse> call, Response<SimpleResponse> response) {
                 if(response.body().isOk()){
                     Toast.makeText(mContext, "发布成功", Toast.LENGTH_SHORT).show();
+                    startCompletePage();
                 }else {
                     Toast.makeText(mContext, "发布失败", Toast.LENGTH_SHORT).show();
                 }
+                mPublishDialog.cancel();
             }
 
             @Override
             public void onFailure(Call<SimpleResponse> call, Throwable t) {
-                Toast.makeText(mContext, "发布连接失败", Toast.LENGTH_SHORT).show();
                 t.printStackTrace();
+                Toast.makeText(mContext, "发布连接失败", Toast.LENGTH_SHORT).show();
+                mPublishDialog.cancel();
             }
         });
     }
@@ -206,20 +207,14 @@ public class PublishActivity extends AppCompatActivity implements View.OnClickLi
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.toolbar_with_btn:
-                // according to the selected type, pass the different parameters to activity.
-                if (mSelectedType.equals(mContentTypes[0])
-                        || mSelectedType.equals(mContentTypes[1])
-                        || mSelectedType.equals(mContentTypes[5])) {
-                    startActivity(new Intent(this, SocialShareActivity.class));
-                } else if (mSelectedType.equals(mContentTypes[2])
-                        || mSelectedType.equals(mContentTypes[3])
-                        || mSelectedType.equals(mContentTypes[4])
-                        || mSelectedType.equals(mContentTypes[6])
-                        || mSelectedType.equals(mContentTypes[7])) {
-                    Intent intent = new Intent(this, CompletingPage.class);
-                    intent.putExtra("type", PublishType.getType(mSelectedType));
-                    startActivity(intent);
+                if (TextUtils.isEmpty(mTitleStr)) {
+                    Toast.makeText(this, "标题不能为空", Toast.LENGTH_SHORT).show();
+                    return;
+                } else if (TextUtils.isEmpty(mContentStr)) {
+                    Toast.makeText(this, "内容不能为空", Toast.LENGTH_SHORT).show();
+                    return;
                 }
+                mPublishDialog.show();
                 selectedPhotos = (ArrayList<String>) StringUtil.getImgSrcList(mContentStr);
                 if(selectedPhotos.size() == 0){
                     publishContent(null);
@@ -227,7 +222,6 @@ public class PublishActivity extends AppCompatActivity implements View.OnClickLi
                     HttpUtils.upLoadImages(this, selectedPhotos, new OnUploadAllListener() {
                         @Override
                         public void uploadAll(List<String> keys) {
-                            Toast.makeText(mContext, "上传成功", Toast.LENGTH_SHORT).show();
                             publishContent(keys);
                         }
                     });
@@ -285,6 +279,23 @@ public class PublishActivity extends AppCompatActivity implements View.OnClickLi
             case R.id.clear:
                 mContent.removeFormat();
                 break;
+        }
+    }
+
+    private void startCompletePage(){
+        // according to the selected type, pass the different parameters to activity.
+        if (mSelectedType.equals(mContentTypes[0])
+                || mSelectedType.equals(mContentTypes[1])
+                || mSelectedType.equals(mContentTypes[5])) {
+            startActivity(new Intent(this, SocialShareActivity.class));
+        } else if (mSelectedType.equals(mContentTypes[2])
+                || mSelectedType.equals(mContentTypes[3])
+                || mSelectedType.equals(mContentTypes[4])
+                || mSelectedType.equals(mContentTypes[6])
+                || mSelectedType.equals(mContentTypes[7])) {
+            Intent intent = new Intent(this, CompletingPage.class);
+            intent.putExtra("type", PublishType.getType(mSelectedType));
+            startActivity(intent);
         }
     }
 

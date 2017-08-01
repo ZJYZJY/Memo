@@ -6,7 +6,6 @@ import com.google.gson.annotations.Expose;
 import org.json.JSONException;
 
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  * com.donutcn.memo.entity
@@ -20,7 +19,6 @@ public class ArrayResponse extends Response<ArrayList<BriefContent>> {
 
     public ArrayResponse(String res) throws JSONException {
         super(res);
-        data = getData();
     }
 
     @Override

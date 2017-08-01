@@ -36,7 +36,9 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 import retrofit2.http.Body;
+import retrofit2.http.GET;
 import retrofit2.http.POST;
+import retrofit2.http.Path;
 
 /**
  * com.donutcn.memo.utils
@@ -178,8 +180,8 @@ public class HttpUtils {
         /**
          * refresh recommend content.
          */
-        @POST(APIPath.REFRESH_RECOMMEND)
-        Call<ArrayResponse> getRecommendContent();
+        @GET(APIPath.REFRESH_RECOMMEND)
+        Call<ArrayResponse> getRecommendContent(@Path("page") int page);
 
         /**
          * refresh recommend content.
@@ -209,7 +211,7 @@ public class HttpUtils {
 
         private static final String UPLOAD_CONTENT = "private_api/create_article_api";
 
-        private static final String REFRESH_RECOMMEND = "index_api/index/10";
+        private static final String REFRESH_RECOMMEND = "index_api/index/{page}";
 
         private static final String SEARCH_CONTENT = "index_api/search_api";
     }
@@ -259,8 +261,8 @@ public class HttpUtils {
         return create().uploadContent(request);
     }
 
-    public static Call<ArrayResponse> getRecommendContent() {
-        return create().getRecommendContent();
+    public static Call<ArrayResponse> getRecommendContent(int page) {
+        return create().getRecommendContent(page);
     }
 
     public static Call<ArrayResponse> searchContent(String key){

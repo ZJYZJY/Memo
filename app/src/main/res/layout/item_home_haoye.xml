@@ -106,12 +106,11 @@
 
             <TextView
                 android:id="@+id/tv_publish_author"
-                android:layout_width="wrap_content"
+                android:layout_width="@dimen/content_item_author_width"
                 android:layout_height="match_parent"
                 android:layout_gravity="center_vertical"
                 android:ellipsize="end"
                 android:gravity="center_vertical"
-                android:maxEms="5"
                 android:maxLines="1"
                 android:paddingRight="4dp"
                 android:text="新丽"

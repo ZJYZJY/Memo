@@ -9,31 +9,36 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.donutcn.memo.R;
+import com.donutcn.memo.entity.BriefContent;
 import com.donutcn.memo.listener.OnItemClickListener;
 import com.yanzhenjie.recyclerview.swipe.SwipeMenuAdapter;
+import com.zzhoujay.richtext.RichText;
 
-import java.util.List;
+import java.util.ArrayList;
 
 public class SearchListAdapter extends SwipeMenuAdapter<SearchListAdapter.ViewHolder> {
 
-    private List<String> titles;
-
+    private ArrayList<BriefContent> list;
     private Context mContext;
-
+    private String keyword;
     private OnItemClickListener mOnItemClickListener;
 
-    public SearchListAdapter(Context context, List<String> titles) {
+    public SearchListAdapter(Context context, ArrayList<BriefContent> list) {
         this.mContext = context;
-        this.titles = titles;
+        this.list = list;
     }
 
     public void setOnItemClickListener(OnItemClickListener onItemClickListener) {
         this.mOnItemClickListener = onItemClickListener;
     }
 
+    public void setKeyword(String key){
+        this.keyword = key;
+    }
+
     @Override
     public int getItemCount() {
-        return titles == null ? 0 : titles.size();
+        return list == null ? 0 : list.size();
     }
 
     @Override
@@ -51,7 +56,18 @@ public class SearchListAdapter extends SwipeMenuAdapter<SearchListAdapter.ViewHo
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        holder.setData();
+        String title = list.get(position).getTitle();
+        title = title.replace(keyword, "<font color=\"#d42714\">" + keyword + "</font>");
+        String content = list.get(position).getContent();
+        content = content.replace(keyword, "<font color=\"#d42714\">" + keyword + "</font>");
+        holder.mTitle.setText(title);
+        RichText.fromHtml(title).into(holder.mTitle);
+        holder.mAuthorDate.setText(mContext.getString(R.string.placeholder_search_item_author,
+                list.get(position).getName(), list.get(position).getTime().substring(2, 10)));
+        RichText.fromHtml(content).noImage(true).into(holder.mContent);
+        holder.mInfo.setText(mContext.getString(R.string.placeholder_search_item_info,
+                list.get(position).getReadCount(), list.get(position).getComment(),
+                list.get(position).getUpVote()));
     }
 
     static class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
@@ -72,10 +88,6 @@ public class SearchListAdapter extends SwipeMenuAdapter<SearchListAdapter.ViewHo
             mAuthorDate = (TextView) itemView.findViewById(R.id.tv_author_date);
             mContent = (TextView) itemView.findViewById(R.id.tv_content);
             mInfo = (TextView) itemView.findViewById(R.id.tv_content_info);
-        }
-
-        public void setData() {
-
         }
 
         @Override
