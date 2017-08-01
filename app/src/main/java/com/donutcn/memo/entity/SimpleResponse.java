@@ -11,16 +11,19 @@ import org.json.JSONObject;
  * Created by 73958 on 2017/7/31.
  */
 
-public class SimpleResponse extends Response {
+public class SimpleResponse extends Response<JSONObject> {
 
     @Expose
     private JSONObject data;
 
-    public SimpleResponse(String result) throws JSONException {
-        super(result);
-        if(getData() != null){
-            data = (JSONObject) getData();
-        }
+    public SimpleResponse(String res) throws JSONException {
+        super(res);
+        data = getData();
+    }
+
+    @Override
+    public JSONObject getData() {
+        return data;
     }
 
     public String getField(String key){

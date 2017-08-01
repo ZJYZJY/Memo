@@ -16,6 +16,8 @@ import com.donutcn.memo.activity.ArticlePage;
 import com.donutcn.memo.activity.SearchActivity;
 import com.donutcn.memo.adapter.HaoYeAdapter;
 import com.donutcn.memo.base.BaseScrollFragment;
+import com.donutcn.memo.entity.ArrayResponse;
+import com.donutcn.memo.entity.BriefContent;
 import com.donutcn.memo.event.ReceiveNewMessagesEvent;
 import com.donutcn.memo.event.RequestRefreshEvent;
 import com.donutcn.memo.listener.OnItemClickListener;
@@ -40,11 +42,11 @@ import java.util.List;
 
 public class FriendsFragment extends BaseScrollFragment implements View.OnClickListener {
 
-    private Context mContext;
-
     private SwipeMenuRecyclerView mHaoYe_rv;
-
     private SmartRefreshLayout mRefreshLayout;
+
+    private ArrayList<BriefContent> list;
+    private Context mContext;
 
     @Override
     public void onAttach(Context context) {
@@ -88,11 +90,7 @@ public class FriendsFragment extends BaseScrollFragment implements View.OnClickL
     }
 
     public void Refresh() {
-        List<String> dataList = new ArrayList<>();
-        for (int i = 0; i < 30; i++) {
-            dataList.add("我是第" + i + "个。");
-        }
-        HaoYeAdapter adapter = new HaoYeAdapter(mContext, dataList, ItemLayoutType.AVATAR_IMG);
+        HaoYeAdapter adapter = new HaoYeAdapter(mContext, list, ItemLayoutType.AVATAR_IMG);
         adapter.setOnItemClickListener(mOnItemClickListener);
 
         mHaoYe_rv.setAdapter(adapter);

@@ -181,6 +181,11 @@ public class HttpUtils {
         @POST(APIPath.REFRESH_RECOMMEND)
         Call<ArrayResponse> getRecommendContent();
 
+        /**
+         * refresh recommend content.
+         */
+        @POST(APIPath.SEARCH_CONTENT)
+        Call<ArrayResponse> searchContent(@Body RequestBody content);
 
         /**
          * cookie test.
@@ -200,11 +205,13 @@ public class HttpUtils {
 
         private static final String LOGOUT = "login_api/login_out_api";
 
-        private static final String GET_UPLOAD_TOKEN = "upload/upload.php";
+        private static final String GET_UPLOAD_TOKEN = "private_api/upload_api";
 
         private static final String UPLOAD_CONTENT = "private_api/create_article_api";
 
         private static final String REFRESH_RECOMMEND = "index_api/index/10";
+
+        private static final String SEARCH_CONTENT = "index_api/search_api";
     }
 
     public static Call<SimpleResponse> login(String username, String password) {
@@ -254,6 +261,13 @@ public class HttpUtils {
 
     public static Call<ArrayResponse> getRecommendContent() {
         return create().getRecommendContent();
+    }
+
+    public static Call<ArrayResponse> searchContent(String key){
+        String str = "{\"keywords\":\"" + key + "\"}";
+        RequestBody request = RequestBody
+                .create(okhttp3.MediaType.parse("application/json; charset=utf-8"), str);
+        return create().searchContent(request);
     }
 
     public static Call<ResponseBody> test() {

@@ -17,10 +17,13 @@ import com.donutcn.memo.activity.ArticlePage;
 import com.donutcn.memo.activity.SearchActivity;
 import com.donutcn.memo.adapter.HaoYeAdapter;
 import com.donutcn.memo.base.BaseScrollFragment;
+import com.donutcn.memo.entity.ArrayResponse;
+import com.donutcn.memo.entity.BriefContent;
 import com.donutcn.memo.event.ReceiveNewMessagesEvent;
 import com.donutcn.memo.event.RequestRefreshEvent;
 import com.donutcn.memo.listener.OnItemClickListener;
 import com.donutcn.memo.type.ItemLayoutType;
+import com.donutcn.memo.utils.HttpUtils;
 import com.donutcn.memo.view.ListViewDecoration;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
@@ -37,17 +40,20 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 
 import java.util.ArrayList;
-import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class RecommendFragment extends BaseScrollFragment implements View.OnClickListener {
 
-    private Context mContext;
-
     private SwipeMenuRecyclerView mHaoYe_rv;
-
     private SmartRefreshLayout mRefreshLayout;
-
     private TextView mSearch_tv;
+
+    private HaoYeAdapter adapter;
+    private ArrayList<BriefContent> list;
+    private Context mContext;
 
     @Override
     public void onAttach(Context context) {
@@ -93,20 +99,33 @@ public class RecommendFragment extends BaseScrollFragment implements View.OnClic
     }
 
     public void Refresh() {
-        List<String> dataList = new ArrayList<>();
-        for (int i = 0; i < 30; i++) {
-            dataList.add("我是第" + i + "个。");
-        }
-        HaoYeAdapter adapter = new HaoYeAdapter(mContext, dataList, ItemLayoutType.AVATAR_IMG);
-        adapter.setOnItemClickListener(mOnItemClickListener);
+        HttpUtils.getRecommendContent().enqueue(new Callback<ArrayResponse>() {
+            @Override
+            public void onResponse(Call<ArrayResponse> call, Response<ArrayResponse> response) {
+                if(response.body().isOk()){
+                    list = response.body().getData();
+                    adapter = new HaoYeAdapter(mContext, list, ItemLayoutType.AVATAR_IMG);
+                    adapter.setOnItemClickListener(mOnItemClickListener);
+                    mHaoYe_rv.setAdapter(adapter);
+                }else {
+                    Toast.makeText(getContext(), "推荐失败", Toast.LENGTH_SHORT).show();
+                }
+                mRefreshLayout.finishRefresh();
+            }
 
-        mHaoYe_rv.setAdapter(adapter);
+            @Override
+            public void onFailure(Call<ArrayResponse> call, Throwable t) {
+                t.printStackTrace();
+                Toast.makeText(getContext(), "推荐连接失败", Toast.LENGTH_SHORT).show();
+                mRefreshLayout.finishRefresh();
+            }
+        });
     }
 
     private OnRefreshListener mRefreshListener = new OnRefreshListener() {
         @Override
         public void onRefresh(RefreshLayout refreshlayout) {
-            refreshlayout.finishRefresh(1000);
+            Refresh();
         }
     };
 

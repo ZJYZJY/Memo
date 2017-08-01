@@ -9,23 +9,28 @@ import android.widget.TextView;
 
 import com.donutcn.memo.R;
 import com.donutcn.memo.base.BasePublishAdapter;
+import com.donutcn.memo.entity.BriefContent;
 import com.donutcn.memo.listener.OnItemClickListener;
 import com.donutcn.memo.type.ItemLayoutType;
 import com.donutcn.memo.type.PublishType;
+import com.donutcn.memo.utils.DynamicTimeFormat;
+import com.donutcn.memo.utils.StringUtil;
 
-import java.util.List;
+import java.text.DateFormat;
+import java.util.ArrayList;
+import java.util.Date;
 
 public class HaoYeAdapter extends BasePublishAdapter<HaoYeAdapter.DefaultViewHolder> {
 
-    private List<String> titles;
+    private ArrayList<BriefContent> list;
     private int mLayoutType;
     private Context mContext;
 
     private OnItemClickListener mOnItemClickListener;
 
-    public HaoYeAdapter(Context context, List<String> titles, @ItemLayoutType int layoutType) {
+    public HaoYeAdapter(Context context, ArrayList<BriefContent> list, @ItemLayoutType int layoutType) {
         this.mContext = context;
-        this.titles = titles;
+        this.list = list;
         this.mLayoutType = layoutType;
     }
 
@@ -35,7 +40,7 @@ public class HaoYeAdapter extends BasePublishAdapter<HaoYeAdapter.DefaultViewHol
 
     @Override
     public int getItemCount() {
-        return titles == null ? 0 : titles.size();
+        return list == null ? 0 : list.size();
     }
 
     @Override
@@ -104,7 +109,16 @@ public class HaoYeAdapter extends BasePublishAdapter<HaoYeAdapter.DefaultViewHol
 
     @Override
     public void onBindViewHolder(DefaultViewHolder holder, int position) {
-        holder.setData();
+        holder.mTitle.setText(list.get(position).getTitle());
+        holder.mContentType.setText(list.get(position).getType());
+        holder.mContent.setText(list.get(position).getContent());
+
+        holder.mAuthor.setText(list.get(position).getName());
+        Date date = StringUtil.string2Date(list.get(position).getTime());
+        DateFormat dateFormat = new DynamicTimeFormat("发布于 %s");
+        holder.mTime.setText(dateFormat.format(date));
+        holder.mUpvote.setText(list.get(position).getUpVote());
+        holder.mComment.setText(list.get(position).getComment());
     }
 
     static class DefaultViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
@@ -114,6 +128,7 @@ public class HaoYeAdapter extends BasePublishAdapter<HaoYeAdapter.DefaultViewHol
         TextView mTitle;
         TextView mContent;
         TextView mContentType;
+        TextView mAuthor;
         TextView mTime;
         TextView mUpvote;
         TextView mComment;
@@ -128,14 +143,10 @@ public class HaoYeAdapter extends BasePublishAdapter<HaoYeAdapter.DefaultViewHol
             mTitle = (TextView) itemView.findViewById(R.id.tv_title);
             mContent = (TextView) itemView.findViewById(R.id.tv_content);
             mContentType = (TextView) itemView.findViewById(R.id.tv_content_type);
+            mAuthor = (TextView) itemView.findViewById(R.id.tv_publish_author);
             mTime = (TextView) itemView.findViewById(R.id.tv_publish_time);
             mUpvote = (TextView) itemView.findViewById(R.id.tv_upvote);
             mComment = (TextView) itemView.findViewById(R.id.tv_comment);
-//            mImage.setBackgroundResource(R.drawable.bg_green);
-        }
-
-        public void setData() {
-
         }
 
         @Override

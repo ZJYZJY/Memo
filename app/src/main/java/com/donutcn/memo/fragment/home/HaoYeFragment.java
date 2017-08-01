@@ -13,6 +13,8 @@ import android.widget.Toast;
 
 import com.donutcn.memo.activity.ArticlePage;
 import com.donutcn.memo.base.BaseScrollFragment;
+import com.donutcn.memo.entity.ArrayResponse;
+import com.donutcn.memo.entity.BriefContent;
 import com.donutcn.memo.event.ReceiveNewMessagesEvent;
 import com.donutcn.memo.event.RequestRefreshEvent;
 import com.donutcn.memo.type.ItemLayoutType;
@@ -39,15 +41,12 @@ import java.util.List;
 
 public class HaoYeFragment extends BaseScrollFragment {
 
-    private Context mContext;
-
     private SwipeMenuRecyclerView mHaoYe_rv;
-
     public SmartRefreshLayout mRefreshLayout;
 
     private HaoYeAdapter mAdapter;
-
-    private List<String> dataList;
+    private ArrayList<BriefContent> list;
+    private Context mContext;
 
     @Override
     public void onAttach(Context context) {
@@ -90,11 +89,7 @@ public class HaoYeFragment extends BaseScrollFragment {
     }
 
     public void Refresh() {
-        dataList = new ArrayList<>();
-        for (int i = 0; i < 10; i++) {
-            dataList.add("我是第" + i + "个。");
-        }
-        mAdapter = new HaoYeAdapter(mContext, dataList, ItemLayoutType.TYPE_TAG);
+        mAdapter = new HaoYeAdapter(mContext, list, ItemLayoutType.TYPE_TAG);
         mAdapter.setOnItemClickListener(mOnItemClickListener);
         mAdapter.setFooterEnable(true);
 

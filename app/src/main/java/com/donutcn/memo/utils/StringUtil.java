@@ -1,6 +1,7 @@
 package com.donutcn.memo.utils;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -39,5 +40,20 @@ public class StringUtil {
             }
         }
         return list;
+    }
+
+    public static Date string2Date(String str){
+        String[] res = str.split(" ");
+        String[] date = res[0].split("-");
+        String[] time = res[1].split(":");
+        // the year minus 1900.
+        int year = Integer.valueOf(date[0]) - 1900;
+        // the month between 0-11.
+        int month = Integer.valueOf(date[1]) - 1;
+        int day = Integer.valueOf(date[2]);
+        int hrs = Integer.valueOf(time[0]);
+        int min = Integer.valueOf(time[1]);
+        int sec = Integer.valueOf(time[2]);
+        return new Date(year, month, day, hrs, min, sec);
     }
 }

@@ -11,9 +11,7 @@ import org.json.JSONObject;
  * Created by 73958 on 2017/7/31.
  */
 
-public abstract class Response {
-
-    private JSONObject result;
+public abstract class Response<T> {
 
     /**
      * http request state code.
@@ -27,17 +25,11 @@ public abstract class Response {
     @Expose
     private String message;
 
-    /**
-     * extra data field.
-     */
-    private Object data;
-
     public Response(String res) {
         try {
-            this.result = new JSONObject(res);
+            JSONObject result = new JSONObject(res);
             this.code = result.getInt("code");
             this.message = result.getString("message");
-            this.data = result.get("data");
         } catch (JSONException e) {
             this.code = HttpUtils.FAIL;
             this.message = "null";
@@ -53,12 +45,5 @@ public abstract class Response {
         return message;
     }
 
-    public Object getData(){
-        return data;
-    }
-
-    @Override
-    public String toString() {
-        return result.toString();
-    }
+    public abstract T getData();
 }

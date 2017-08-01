@@ -11,6 +11,8 @@ import android.widget.Toast;
 
 import com.donutcn.memo.R;
 import com.donutcn.memo.adapter.HaoYeAdapter;
+import com.donutcn.memo.entity.ArrayResponse;
+import com.donutcn.memo.entity.BriefContent;
 import com.donutcn.memo.listener.OnItemClickListener;
 import com.donutcn.memo.type.ItemLayoutType;
 import com.donutcn.memo.utils.WindowUtils;
@@ -23,6 +25,8 @@ public class AuthorPage extends AppCompatActivity implements OnItemClickListener
 
     private RecyclerView mRecyclerView;
     private CollapsingToolbarLayout mCollapsingToolbar;
+
+    private ArrayList<BriefContent> list;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,11 +48,7 @@ public class AuthorPage extends AppCompatActivity implements OnItemClickListener
     }
 
     public void Refresh(){
-        List<String> dataList = new ArrayList<>();
-        for (int i = 0; i < 6; i++) {
-            dataList.add("我是第" + i + "个。");
-        }
-        HaoYeAdapter adapter = new HaoYeAdapter(this, dataList, ItemLayoutType.TYPE_TAG);
+        HaoYeAdapter adapter = new HaoYeAdapter(this, list, ItemLayoutType.TYPE_TAG);
         adapter.setOnItemClickListener(this);
         mRecyclerView.setAdapter(adapter);
 
