@@ -12,6 +12,7 @@
         android:background="@drawable/text_box_bg"
         android:gravity="center_vertical"
         android:paddingLeft="@dimen/padding_medium"
+        android:textColor="@color/text_light"
         android:text="@string/hint_search_text_box" />
 
     <com.scwang.smartrefresh.layout.SmartRefreshLayout

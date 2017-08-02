@@ -6,15 +6,16 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
 import com.donutcn.memo.fragment.discover.FriendsFragment;
+import com.donutcn.memo.fragment.discover.LatestFragment;
 import com.donutcn.memo.fragment.discover.RecommendFragment;
-import com.donutcn.memo.fragment.home.HaoYeFragment;
+import com.donutcn.memo.fragment.home.MemoFragment;
 import com.donutcn.memo.fragment.home.MessageFragment;
 
 public class TabFragmentPagerAdapter extends FragmentPagerAdapter {
 
-    final int PAGE_COUNT = 2;
-    private String tabTitles0[] = new String[]{"好页", "消息"};
-    private String tabTitles1[] = new String[]{"推荐", "好友圈"};
+    private int PAGE_COUNT;
+    private String tabTitles0[] = new String[]{"人人记", "消息"};
+    private String tabTitles1[] = new String[]{"推荐", "最新", "好友"};
     private int type;
     private Context context;
 
@@ -25,6 +26,10 @@ public class TabFragmentPagerAdapter extends FragmentPagerAdapter {
         mFragmentManager = fm;
         this.context = context;
         this.type = type;
+        if(type == 0)
+            PAGE_COUNT = 2;
+        else
+            PAGE_COUNT = 3;
     }
 
     public Fragment getFragment(int position){
@@ -39,13 +44,15 @@ public class TabFragmentPagerAdapter extends FragmentPagerAdapter {
     public Fragment getItem(int position) {
         if (type == 0) {
             if (position == 0) {
-                return new HaoYeFragment();
+                return new MemoFragment();
             } else {
                 return new MessageFragment();
             }
         } else {
             if (position == 0) {
                 return new RecommendFragment();
+            } else if(position == 1){
+                return new LatestFragment();
             } else {
                 return new FriendsFragment();
             }

@@ -1,4 +1,4 @@
-package com.donutcn.memo.fragment.home;
+package com.donutcn.memo.fragment.discover;
 
 import android.content.Context;
 import android.content.Intent;
@@ -9,19 +9,18 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
+import com.donutcn.memo.R;
 import com.donutcn.memo.activity.ArticlePage;
+import com.donutcn.memo.activity.SearchActivity;
+import com.donutcn.memo.adapter.MemoAdapter;
 import com.donutcn.memo.base.BaseScrollFragment;
-import com.donutcn.memo.entity.ArrayResponse;
 import com.donutcn.memo.entity.BriefContent;
 import com.donutcn.memo.event.ReceiveNewMessagesEvent;
 import com.donutcn.memo.event.RequestRefreshEvent;
+import com.donutcn.memo.listener.OnItemClickListener;
 import com.donutcn.memo.type.ItemLayoutType;
 import com.donutcn.memo.view.ListViewDecoration;
-import com.donutcn.memo.R;
-import com.donutcn.memo.adapter.HaoYeAdapter;
-import com.donutcn.memo.listener.OnItemClickListener;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnLoadmoreListener;
@@ -37,14 +36,12 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 
 import java.util.ArrayList;
-import java.util.List;
 
-public class HaoYeFragment extends BaseScrollFragment {
+public class LatestFragment extends BaseScrollFragment implements View.OnClickListener {
 
     private SwipeMenuRecyclerView mHaoYe_rv;
-    public SmartRefreshLayout mRefreshLayout;
+    private SmartRefreshLayout mRefreshLayout;
 
-    private HaoYeAdapter mAdapter;
     private ArrayList<BriefContent> list;
     private Context mContext;
 
@@ -57,12 +54,13 @@ public class HaoYeFragment extends BaseScrollFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        EventBus.getDefault().register(this);
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_haoye, container, false);
+        return inflater.inflate(R.layout.fragment_friends, container, false);
     }
 
     @Override
@@ -74,8 +72,7 @@ public class HaoYeFragment extends BaseScrollFragment {
         mRefreshLayout.setOnLoadmoreListener(mLoadmoreListener);
 
         mHaoYe_rv.setLayoutManager(new LinearLayoutManager(mContext));
-        mHaoYe_rv.addItemDecoration(new ListViewDecoration(mContext,
-                R.dimen.item_decoration_height, 8, 8));
+        mHaoYe_rv.addItemDecoration(new ListViewDecoration(getContext(), R.dimen.item_decoration_height));
 
         // set up swipe menu.
         mHaoYe_rv.setSwipeMenuCreator(mSwipeMenuCreator);
@@ -85,15 +82,14 @@ public class HaoYeFragment extends BaseScrollFragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        EventBus.getDefault().register(this);
+        Refresh();
     }
 
     public void Refresh() {
-        mAdapter = new HaoYeAdapter(mContext, list, ItemLayoutType.TYPE_TAG);
-        mAdapter.setOnItemClickListener(mOnItemClickListener);
-        mAdapter.setFooterEnable(true);
+        MemoAdapter adapter = new MemoAdapter(mContext, list, ItemLayoutType.AVATAR_IMG);
+        adapter.setOnItemClickListener(mOnItemClickListener);
 
-        mHaoYe_rv.setAdapter(mAdapter);
+        mHaoYe_rv.setAdapter(adapter);
     }
 
     private OnRefreshListener mRefreshListener = new OnRefreshListener() {
@@ -129,24 +125,6 @@ public class HaoYeFragment extends BaseScrollFragment {
                         .setWidth(width)
                         .setHeight(height);
                 swipeRightMenu.addMenuItem(editItem);
-
-                SwipeMenuItem shareItem = new SwipeMenuItem(mContext)
-                        .setBackgroundDrawable(R.drawable.selector_blue)
-                        .setText(getResources().getString(R.string.btn_swipe_edit))
-                        .setTextColor(Color.WHITE)
-                        .setTextSize(16)
-                        .setWidth(width)
-                        .setHeight(height);
-                swipeRightMenu.addMenuItem(shareItem);
-
-                SwipeMenuItem delItem = new SwipeMenuItem(mContext)
-                        .setBackgroundDrawable(R.drawable.selector_red)
-                        .setText(getResources().getString(R.string.btn_swipe_delete))
-                        .setTextColor(Color.WHITE)
-                        .setTextSize(16)
-                        .setWidth(width)
-                        .setHeight(height);
-                swipeRightMenu.addMenuItem(delItem);
             }
         }
     };
@@ -154,12 +132,21 @@ public class HaoYeFragment extends BaseScrollFragment {
     private OnItemClickListener mOnItemClickListener = new OnItemClickListener() {
         @Override
         public void onItemClick(int position) {
-            EventBus.getDefault().post(new ReceiveNewMessagesEvent(0, position));
+            EventBus.getDefault().post(new ReceiveNewMessagesEvent(3, position));
             Intent intent = new Intent(mContext, ArticlePage.class);
             intent.putExtra("contentId", list.get(position).getId());
             startActivity(intent);
         }
     };
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.recommend_search:
+                startActivity(new Intent(getContext(), SearchActivity.class));
+                break;
+        }
+    }
 
     /**
      * Menu onClickListener
@@ -179,8 +166,6 @@ public class HaoYeFragment extends BaseScrollFragment {
             closeable.smoothCloseMenu();
 
             if (direction == SwipeMenuRecyclerView.RIGHT_DIRECTION) {
-                Toast.makeText(mContext, "list第" + adapterPosition + "; 右侧菜单第" + menuPosition,
-                        Toast.LENGTH_SHORT).show();
             }
         }
     };
@@ -199,7 +184,7 @@ public class HaoYeFragment extends BaseScrollFragment {
 
     @Subscribe
     public void onRequestRefreshEvent(RequestRefreshEvent event){
-        if(event.getRefreshPosition() == 0){
+        if(event.getRefreshPosition() == 3){
             mHaoYe_rv.scrollToPosition(0);
             mRefreshLayout.autoRefresh(0);
         }

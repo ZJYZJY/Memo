@@ -57,9 +57,9 @@ public class SearchListAdapter extends SwipeMenuAdapter<SearchListAdapter.ViewHo
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
         String title = list.get(position).getTitle();
-        title = title.replace(keyword, "<font color=\"#d42714\">" + keyword + "</font>");
+        title = title.replace(keyword, "<font color=\"#DB7A65\">" + keyword + "</font>");
         String content = list.get(position).getContent();
-        content = content.replace(keyword, "<font color=\"#d42714\">" + keyword + "</font>");
+        content = content.replace(keyword, "<font color=\"#DB7A65\">" + keyword + "</font>");
         holder.mTitle.setText(title);
         RichText.fromHtml(title).into(holder.mTitle);
         holder.mAuthorDate.setText(mContext.getString(R.string.placeholder_search_item_author,

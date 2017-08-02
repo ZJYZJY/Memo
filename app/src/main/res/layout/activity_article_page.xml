@@ -13,41 +13,47 @@
 
         <include layout="@layout/toolbar_with_icon" />
 
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/px_line"
+            android:background="@color/border_gray" />
+
         <ScrollView
             android:id="@+id/article_scroll"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:background="@color/white"
             android:scrollbarStyle="insideOverlay">
 
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:paddingTop="@dimen/padding_container"
+                android:paddingBottom="@dimen/padding_container"
                 android:paddingLeft="@dimen/padding_container"
                 android:paddingRight="@dimen/padding_container"
-                android:paddingBottom="@dimen/padding_container">
+                android:paddingTop="@dimen/padding_container">
 
                 <TextView
                     android:id="@+id/article_title"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:textColor="@color/text_black"
-                    android:textSize="22sp"/>
+                    android:textSize="22sp" />
 
                 <LinearLayout
                     android:id="@+id/article_sub_title"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/article_title"
-                    android:paddingTop="@dimen/padding_large"
+                    android:orientation="horizontal"
                     android:paddingBottom="@dimen/padding_large"
-                    android:orientation="horizontal">
+                    android:paddingTop="@dimen/padding_large">
 
                     <TextView
                         android:id="@+id/article_date"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textColor="@color/textPrimary"/>
+                        android:textColor="@color/textPrimary" />
 
                     <TextView
                         android:id="@+id/article_author"
@@ -55,13 +61,13 @@
                         android:layout_height="wrap_content"
                         android:paddingLeft="@dimen/padding_large"
                         android:paddingRight="@dimen/padding_large"
-                        android:textColor="@color/text_blue"/>
+                        android:textColor="@color/text_blue" />
 
                     <TextView
                         android:id="@+id/article_read_count"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textColor="@color/textPrimary"/>
+                        android:textColor="@color/textPrimary" />
                 </LinearLayout>
 
                 <TextView
@@ -77,5 +83,10 @@
         </ScrollView>
     </LinearLayout>
 
-    <include layout="@layout/bottom_bar_interactive"/>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/px_line"
+        android:background="@color/border_gray" />
+
+    <include layout="@layout/bottom_bar_interactive" />
 </LinearLayout>

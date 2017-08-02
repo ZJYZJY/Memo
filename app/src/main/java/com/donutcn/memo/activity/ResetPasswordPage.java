@@ -8,12 +8,12 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.donutcn.memo.R;
 import com.donutcn.memo.entity.SimpleResponse;
 import com.donutcn.memo.utils.CountDownTimerUtils;
 import com.donutcn.memo.utils.HttpUtils;
+import com.donutcn.memo.utils.ToastUtil;
 import com.donutcn.memo.utils.UserStatus;
 import com.donutcn.memo.utils.WindowUtils;
 
@@ -55,7 +55,7 @@ public class ResetPasswordPage extends AppCompatActivity implements View.OnClick
     public void requestForAuthCode(){
         String phoneNumber = mPhone.getText().toString();
         if(TextUtils.isEmpty(phoneNumber)){
-            Toast.makeText(this, "请输入手机号码", Toast.LENGTH_SHORT).show();
+            ToastUtil.show(this, "请输入手机号码");
             return;
         }
         mGetAuthCode.setClickable(false);
@@ -65,12 +65,11 @@ public class ResetPasswordPage extends AppCompatActivity implements View.OnClick
             public void onResponse(Call<SimpleResponse> call, Response<SimpleResponse> response) {
                 if(response.body().isOk()){
                     authCodeTimer.start();
-                    Toast.makeText(ResetPasswordPage.this, "验证码发送成功", Toast.LENGTH_SHORT).show();
+                    ToastUtil.show(ResetPasswordPage.this, "验证码发送成功");
                 }else {
                     mGetAuthCode.setClickable(true);
                     mGetAuthCode.setBackgroundResource(R.drawable.selector_radius_blue_btn);
-                    Toast.makeText(ResetPasswordPage.this, "验证码发送失败，"
-                            + response.body().getMessage(), Toast.LENGTH_SHORT).show();
+                    ToastUtil.show(ResetPasswordPage.this, "验证码发送失败，" + response.body().getMessage());
                 }
             }
 
@@ -78,7 +77,7 @@ public class ResetPasswordPage extends AppCompatActivity implements View.OnClick
             public void onFailure(Call<SimpleResponse> call, Throwable t) {
                 mGetAuthCode.setClickable(true);
                 mGetAuthCode.setBackgroundResource(R.drawable.selector_radius_blue_btn);
-                Toast.makeText(ResetPasswordPage.this, "获取验证码连接失败", Toast.LENGTH_SHORT).show();
+                ToastUtil.show(ResetPasswordPage.this, "获取验证码连接失败");
                 t.printStackTrace();
             }
         });
@@ -89,33 +88,32 @@ public class ResetPasswordPage extends AppCompatActivity implements View.OnClick
         String authCode = mMsgCode.getText().toString();
         String password = mPassword.getText().toString();
         if (TextUtils.isEmpty(phoneNumber)) {
-            Toast.makeText(this, "手机号不能为空", Toast.LENGTH_SHORT).show();
+            ToastUtil.show(this, "手机号不能为空");
             return;
         } else if (TextUtils.isEmpty(phoneNumber)) {
-            Toast.makeText(this, "验证码不能为空", Toast.LENGTH_SHORT).show();
+            ToastUtil.show(this, "验证码不能为空");
             return;
         } else if (TextUtils.isEmpty(phoneNumber)) {
-            Toast.makeText(this, "密码不能为空", Toast.LENGTH_SHORT).show();
+            ToastUtil.show(this, "密码不能为空");
             return;
         }
         HttpUtils.modifyUser(phoneNumber, authCode, password, ACTION_MODIFY).enqueue(new Callback<SimpleResponse>() {
             @Override
             public void onResponse(Call<SimpleResponse> call, Response<SimpleResponse> response) {
                 if(response.body().isOk()){
-                    Toast.makeText(ResetPasswordPage.this, "重置密码成功", Toast.LENGTH_SHORT).show();
+                    ToastUtil.show(ResetPasswordPage.this, "重置密码成功");
                     UserStatus.login(getApplicationContext(), phoneNumber);
                     Intent intent = new Intent(ResetPasswordPage.this, MainActivity.class);
                     intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                     startActivity(intent);
                 }else {
-                    Toast.makeText(ResetPasswordPage.this, "重置密码失败，"
-                            + response.body().getMessage(), Toast.LENGTH_SHORT).show();
+                    ToastUtil.show(ResetPasswordPage.this, "重置密码失败，" + response.body().getMessage());
                 }
             }
 
             @Override
             public void onFailure(Call<SimpleResponse> call, Throwable t) {
-                Toast.makeText(ResetPasswordPage.this, "注册连接失败", Toast.LENGTH_SHORT).show();
+                ToastUtil.show(ResetPasswordPage.this, "重置连接失败");
                 t.printStackTrace();
             }
         });

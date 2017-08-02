@@ -11,7 +11,6 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ScrollView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.donutcn.memo.R;
 import com.donutcn.memo.X5testActivity;
@@ -19,6 +18,7 @@ import com.donutcn.memo.entity.ContentResponse;
 import com.donutcn.memo.type.PublishType;
 import com.donutcn.memo.utils.DensityUtils;
 import com.donutcn.memo.utils.HttpUtils;
+import com.donutcn.memo.utils.ToastUtil;
 import com.donutcn.memo.utils.WindowUtils;
 import com.zzhoujay.richtext.CacheType;
 import com.zzhoujay.richtext.ImageHolder;
@@ -64,14 +64,14 @@ public class ArticlePage extends AppCompatActivity implements View.OnClickListen
                         mType = res.getType();
                         showContent();
                     }else {
-                        Toast.makeText(ArticlePage.this, "该文章不存在", Toast.LENGTH_SHORT).show();
+                        ToastUtil.show(ArticlePage.this, "该文章不存在");
                     }
                 }
 
                 @Override
                 public void onFailure(Call<ContentResponse> call, Throwable t) {
                     t.printStackTrace();
-                    Toast.makeText(ArticlePage.this, "连接失败", Toast.LENGTH_SHORT).show();
+                    ToastUtil.show(ArticlePage.this, "连接失败");
                 }
             });
         }

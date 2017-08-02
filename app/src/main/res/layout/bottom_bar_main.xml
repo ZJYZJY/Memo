@@ -8,14 +8,14 @@
     <View
         android:id="@+id/divide_line"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/dp_line"
+        android:layout_height="@dimen/px_line"
         android:background="@color/border_gray" />
 
     <LinearLayout
         android:id="@+id/main_bottom_view"
         android:layout_width="match_parent"
         android:layout_height="@dimen/toolbar_height"
-        android:background="@color/colorPrimary"
+        android:background="@color/white"
         android:orientation="horizontal">
 
         <com.donutcn.widgetlib.widget.CheckableImageButton
@@ -23,8 +23,8 @@
             style="@android:style/Widget.DeviceDefault.Button.Borderless"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:padding="@dimen/padding_medium"
+            android:layout_weight="2"
+            android:padding="@dimen/padding_large"
             android:scaleType="centerInside"
             app:isChecked="true"
             app:srcCompat="@drawable/home_selector" />
@@ -35,7 +35,7 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:padding="@dimen/padding_medium"
+            android:padding="@dimen/padding_text_small"
             android:scaleType="centerInside"
             app:srcCompat="@drawable/publish" />
 
@@ -44,8 +44,8 @@
             style="@android:style/Widget.DeviceDefault.Button.Borderless"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:padding="@dimen/padding_medium"
+            android:layout_weight="2"
+            android:padding="@dimen/padding_large"
             android:scaleType="centerInside"
             app:srcCompat="@drawable/discover_selector" />
     </LinearLayout>

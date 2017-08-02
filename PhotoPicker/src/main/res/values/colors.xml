@@ -1,7 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-  <color name="__picker_toolbar">#efefef</color>
+  <color name="__picker_toolbar">#FBFBFB</color>
+  <color name="__picker_text_gray">#7e7e7e</color>
+  <color name="__picker_text_orange">#DB7A65</color>
+  <color name="__picker_border_gray">#dddddd</color>
 
   <color name="__picker_pager_bg">#CA000000</color>
   <color name="__picker_selected_bg">#44000000</color>

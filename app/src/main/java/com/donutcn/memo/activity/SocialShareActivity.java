@@ -8,11 +8,11 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import android.widget.Toast;
 
 import com.donutcn.memo.R;
 import com.donutcn.memo.entity.SimpleResponse;
 import com.donutcn.memo.utils.HttpUtils;
+import com.donutcn.memo.utils.ToastUtil;
 import com.donutcn.memo.utils.WindowUtils;
 import com.donutcn.widgetlib.widget.SwitchView;
 import com.umeng.socialize.ShareAction;
@@ -77,30 +77,24 @@ public class SocialShareActivity extends AppCompatActivity implements View.OnCli
     }
 
     public void setPrivate(final boolean isPrivate) {
-        final Toast toast = new Toast(this);
-        toast.setDuration(Toast.LENGTH_SHORT);
         HttpUtils.setPrivate(contentId, isPrivate ? 1 : 0).enqueue(new Callback<SimpleResponse>() {
             @Override
             public void onResponse(Call<SimpleResponse> call, Response<SimpleResponse> response) {
-                toast.cancel();
                 if (response.body().isOk()) {
                     if(isPrivate){
-                        toast.setText("设为私有");
+                        ToastUtil.show(SocialShareActivity.this, "设为私有");
                     }else {
-                        toast.setText("设为公开");
+                        ToastUtil.show(SocialShareActivity.this, "设为公开");
                     }
                 } else {
-                    toast.setText("设置失败");
+                    ToastUtil.show(SocialShareActivity.this, "设置失败");
                 }
-                toast.show();
             }
 
             @Override
             public void onFailure(Call<SimpleResponse> call, Throwable t) {
                 t.printStackTrace();
-                toast.cancel();
-                toast.setText("设置连接失败");
-                toast.show();
+                ToastUtil.show(SocialShareActivity.this, "设置连接失败");
             }
         });
     }
@@ -154,7 +148,7 @@ public class SocialShareActivity extends AppCompatActivity implements View.OnCli
             case R.id.share_iv7:
                 ClipboardManager cm = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
                 cm.setText("复制成功");
-                Toast.makeText(this, "复制成功", Toast.LENGTH_LONG).show();
+                ToastUtil.show(this, "复制成功");
                 break;
             case R.id.share_iv8:
                 Intent intent = new Intent(Intent.ACTION_SEND);
@@ -176,14 +170,13 @@ public class SocialShareActivity extends AppCompatActivity implements View.OnCli
         @Override
         public void onResult(SHARE_MEDIA platform) {
             Log.d("plat", "platform" + platform);
-
-            Toast.makeText(SocialShareActivity.this, platform + " 分享成功啦", Toast.LENGTH_SHORT).show();
+            ToastUtil.show(SocialShareActivity.this, platform + " 分享成功啦");
 
         }
 
         @Override
         public void onError(SHARE_MEDIA platform, Throwable t) {
-            Toast.makeText(SocialShareActivity.this, platform + " 分享失败啦", Toast.LENGTH_SHORT).show();
+            ToastUtil.show(SocialShareActivity.this, platform + " 分享失败啦");
             if (t != null) {
                 Log.d("throw", "throw:" + t.getMessage());
             }
@@ -191,7 +184,7 @@ public class SocialShareActivity extends AppCompatActivity implements View.OnCli
 
         @Override
         public void onCancel(SHARE_MEDIA platform) {
-            Toast.makeText(SocialShareActivity.this, platform + " 分享取消了", Toast.LENGTH_SHORT).show();
+            ToastUtil.show(SocialShareActivity.this, platform + " 分享取消了");
         }
     };
 

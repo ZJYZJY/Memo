@@ -8,7 +8,6 @@ import android.content.pm.PackageManager;
 import android.os.Build;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
-import android.widget.Toast;
 
 public class PermissionCheck {
 
@@ -63,6 +62,6 @@ public class PermissionCheck {
     }
 
     public void showPermissionDialog() {
-        Toast.makeText(context, "permission deny", Toast.LENGTH_SHORT).show();
+        ToastUtil.show(context, "permission deny");
     }
 }

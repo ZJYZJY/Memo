@@ -7,7 +7,6 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
-import android.widget.Toast;
 
 import com.donutcn.memo.R;
 import com.donutcn.memo.adapter.ViewPagerAdapter;
@@ -16,6 +15,7 @@ import com.donutcn.memo.fragment.SplashFragment;
 import com.donutcn.memo.fragment.discover.DiscoverFragment;
 import com.donutcn.memo.fragment.home.HomeFragment;
 import com.donutcn.memo.utils.HttpUtils;
+import com.donutcn.memo.utils.ToastUtil;
 import com.donutcn.memo.utils.WindowUtils;
 import com.donutcn.widgetlib.widget.CheckableImageButton;
 
@@ -79,6 +79,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.main_bottom_home:
+                ToastUtil.show(this, "主页");
                 // 查看登录状态 debug
                 HttpUtils.test().enqueue(new Callback<ResponseBody>() {
                     @Override
@@ -104,6 +105,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 }
                 break;
             case R.id.main_bottom_dis:
+                ToastUtil.show(this, "发现");
                 if(mDiscover.isChecked()){
                     EventBus.getDefault().post(new RequestRefreshEvent(
                             mDiscoverFragment.getCurrentPagePosition() + 2));
@@ -131,7 +133,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 && event.getAction() == KeyEvent.ACTION_DOWN
                 && splashFragment == null) {
             if ((System.currentTimeMillis() - mExitTime) > 2000) {
-                Toast.makeText(MainActivity.this, getString(R.string.toast_exit_double_click), Toast.LENGTH_SHORT).show();
+                ToastUtil.show(MainActivity.this, getString(R.string.toast_exit_double_click));
                 mExitTime = System.currentTimeMillis();
             } else {
                 Intent intent = new Intent(this, LoginActivity.class);

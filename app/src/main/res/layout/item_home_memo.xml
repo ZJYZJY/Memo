@@ -4,7 +4,10 @@
     android:layout_height="wrap_content"
     android:background="?selectableItemBackground"
     android:orientation="horizontal"
-    android:padding="@dimen/padding_large">
+    android:paddingLeft="@dimen/padding_large"
+    android:paddingRight="@dimen/padding_large"
+    android:paddingTop="@dimen/padding_medium"
+    android:paddingBottom="@dimen/padding_medium">
 
     <com.donutcn.widgetlib.widget.CircleImageView
         android:id="@+id/iv_content_icon"
@@ -25,7 +28,7 @@
         android:layout_toRightOf="@+id/iv_content_icon"
         android:text="360智能软件工程师等你来"
         android:textColor="@color/textPrimaryDark"
-        android:textSize="17sp" />
+        android:textSize="16sp" />
 
     <TextView
         android:id="@+id/tv_content"
@@ -39,7 +42,8 @@
         android:lineSpacingExtra="@dimen/line_space_large"
         android:maxLines="2"
         android:text="每年在全国各大高校招聘应届毕业生数百名，该项目旨在为有全职求职意愿的大大的阿斯顿阿斯顿为发达省份挖饿发生的父亲为绯闻情妇"
-        android:textColor="@color/textPrimary" />
+        android:textColor="@color/textPrimary"
+        android:textSize="15sp" />
 
     <LinearLayout
         android:id="@+id/iv_container"
@@ -85,8 +89,6 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_centerVertical="true"
-            android:layout_toLeftOf="@+id/comment_upvote"
-            android:layout_toStartOf="@+id/comment_upvote"
             android:orientation="horizontal">
 
             <TextView
@@ -102,11 +104,11 @@
                 android:paddingRight="2dp"
                 android:text="招聘"
                 android:textColor="@color/white"
-                android:textSize="12sp" />
+                android:textSize="14sp" />
 
             <TextView
                 android:id="@+id/tv_publish_author"
-                android:layout_width="@dimen/content_item_author_width"
+                android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_gravity="center_vertical"
                 android:ellipsize="end"
@@ -114,8 +116,8 @@
                 android:maxLines="1"
                 android:paddingRight="4dp"
                 android:text="新丽"
-                android:textColor="@color/textPrimary"
-                android:textSize="12sp"
+                android:textColor="@color/text_light"
+                android:textSize="14sp"
                 android:visibility="gone" />
 
             <TextView
@@ -124,54 +126,54 @@
                 android:layout_height="match_parent"
                 android:layout_gravity="center_vertical"
                 android:gravity="center_vertical"
-                android:text="发布于 3小时前"
-                android:textColor="@color/textPrimary"
-                android:textSize="12sp" />
+                android:text="3小时前"
+                android:textColor="@color/text_light"
+                android:textSize="14sp" />
         </LinearLayout>
 
-        <LinearLayout
-            android:id="@+id/comment_upvote"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentRight="true"
-            android:layout_alignTop="@+id/tv_publish_info"
-            android:orientation="horizontal">
+        <!--<LinearLayout-->
+            <!--android:id="@+id/comment_upvote"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="match_parent"-->
+            <!--android:layout_alignParentEnd="true"-->
+            <!--android:layout_alignParentRight="true"-->
+            <!--android:layout_alignTop="@+id/tv_publish_info"-->
+            <!--android:orientation="horizontal">-->
 
-            <ImageView
-                android:layout_width="14dp"
-                android:layout_height="14dp"
-                android:src="@drawable/ic_upvote_fill" />
+            <!--<ImageView-->
+                <!--android:layout_width="14dp"-->
+                <!--android:layout_height="14dp"-->
+                <!--android:src="@drawable/ic_upvote_fill" />-->
 
-            <TextView
-                android:id="@+id/tv_upvote"
-                android:layout_width="24dp"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_marginLeft="4dp"
-                android:layout_marginStart="4dp"
-                android:text="20"
-                android:textColor="@color/textPrimary"
-                android:textSize="12sp" />
+            <!--<TextView-->
+                <!--android:id="@+id/tv_upvote"-->
+                <!--android:layout_width="24dp"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_gravity="center"-->
+                <!--android:layout_marginLeft="4dp"-->
+                <!--android:layout_marginStart="4dp"-->
+                <!--android:text="20"-->
+                <!--android:textColor="@color/textPrimary"-->
+                <!--android:textSize="12sp" />-->
 
-            <ImageView
-                android:layout_width="12dp"
-                android:layout_height="12dp"
-                android:layout_gravity="center"
-                android:layout_marginLeft="4dp"
-                android:layout_marginStart="4dp"
-                android:src="@drawable/comment_fill" />
+            <!--<ImageView-->
+                <!--android:layout_width="12dp"-->
+                <!--android:layout_height="12dp"-->
+                <!--android:layout_gravity="center"-->
+                <!--android:layout_marginLeft="4dp"-->
+                <!--android:layout_marginStart="4dp"-->
+                <!--android:src="@drawable/comment_fill" />-->
 
-            <TextView
-                android:id="@+id/tv_comment"
-                android:layout_width="24dp"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_marginLeft="4dp"
-                android:layout_marginStart="4dp"
-                android:text="20"
-                android:textColor="@color/textPrimary"
-                android:textSize="12sp" />
-        </LinearLayout>
+            <!--<TextView-->
+                <!--android:id="@+id/tv_comment"-->
+                <!--android:layout_width="24dp"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_gravity="center"-->
+                <!--android:layout_marginLeft="4dp"-->
+                <!--android:layout_marginStart="4dp"-->
+                <!--android:text="20"-->
+                <!--android:textColor="@color/textPrimary"-->
+                <!--android:textSize="12sp" />-->
+        <!--</LinearLayout>-->
     </RelativeLayout>
 </RelativeLayout>

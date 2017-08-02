@@ -22,7 +22,7 @@
         android:layout_marginStart="8dp"
         android:layout_toEndOf="@+id/back_arrow"
         android:layout_toRightOf="@+id/back_arrow"
-        android:textColor="@android:color/black"
+        android:textColor="@color/__picker_text_gray"
         android:textSize="18sp" />
 
     <Button
@@ -38,5 +38,5 @@
         android:layout_marginRight="8dp"
         android:onClick="onAction"
         android:text="@string/__picker_done"
-        android:textColor="@android:color/black" />
+        android:textColor="@color/__picker_text_orange" />
 </RelativeLayout>

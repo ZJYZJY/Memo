@@ -12,10 +12,10 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.donutcn.memo.R;
 import com.donutcn.memo.listener.OnTextChangerListener;
+import com.donutcn.memo.utils.ToastUtil;
 
 import java.util.ArrayList;
 
@@ -142,7 +142,7 @@ public class VoteItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                 @Override
                 public void onClick(View v) {
                     if (views.size() == 2) {
-                        Toast.makeText(mContext, mContext.getString(R.string.toast_min_vote_items), Toast.LENGTH_SHORT).show();
+                        ToastUtil.show(mContext, mContext.getString(R.string.toast_min_vote_items));
                         return;
                     }
                     views.remove(holder.getAdapterPosition() - 1);

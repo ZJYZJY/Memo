@@ -44,6 +44,7 @@ public class MessageFragment extends BaseScrollFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        EventBus.getDefault().register(this);
     }
 
     @Override
@@ -61,14 +62,12 @@ public class MessageFragment extends BaseScrollFragment {
         mRefreshLayout.setOnLoadmoreListener(mLoadmoreListener);
 
         mMessage_rv.setLayoutManager(new LinearLayoutManager(mContext));
-        mMessage_rv.addItemDecoration(new ListViewDecoration(mContext,
-                R.dimen.item_decoration_height, 0, 0));
+        mMessage_rv.addItemDecoration(new ListViewDecoration(mContext, R.dimen.item_decoration_height));
     }
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        EventBus.getDefault().register(this);
         Refresh();
     }
 

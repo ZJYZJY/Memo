@@ -53,8 +53,9 @@ public class DiscoverFragment extends Fragment implements OnTabSelectListener {
         mTabLayout = (SlidingTabLayout) view.findViewById(R.id.sliding_tabs);
         mTabLayout.setViewPager(mViewPager);
         mTabLayout.setOnTabSelectListener(this);
-        mTabLayout.showMsg(1, 3);
         mTabLayout.showDot(0);
+        mTabLayout.showMsg(1, 3);
+        mTabLayout.showMsg(2, 2);
         return view;
     }
 

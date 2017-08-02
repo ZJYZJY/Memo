@@ -22,6 +22,10 @@ public class ListViewDecoration extends RecyclerView.ItemDecoration {
     private final int mOrientation;
     private int mLeft, mRight;
 
+    public ListViewDecoration(Context context, @DimenRes int size) {
+        this(context, size, 0, 0, LinearLayout.VERTICAL);
+    }
+
     public ListViewDecoration(Context context, @DimenRes int size, int left, int right) {
         this(context, size, left, right, LinearLayout.VERTICAL);
     }

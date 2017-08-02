@@ -1,5 +1,6 @@
 package com.donutcn.memo.activity;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -7,7 +8,6 @@ import android.support.v7.widget.RecyclerView;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.EditText;
-import android.widget.Toast;
 
 import com.donutcn.memo.R;
 import com.donutcn.memo.adapter.SearchListAdapter;
@@ -15,6 +15,7 @@ import com.donutcn.memo.entity.ArrayResponse;
 import com.donutcn.memo.entity.BriefContent;
 import com.donutcn.memo.listener.OnItemClickListener;
 import com.donutcn.memo.utils.HttpUtils;
+import com.donutcn.memo.utils.ToastUtil;
 import com.donutcn.memo.utils.WindowUtils;
 import com.donutcn.memo.view.ListViewDecoration;
 
@@ -73,21 +74,23 @@ public class SearchActivity extends AppCompatActivity implements OnItemClickList
                     mAdapter.setKeyword(mKeyWords);
                     mAdapter.notifyDataSetChanged();
                 }else {
-                    Toast.makeText(SearchActivity.this, "没有找到结果", Toast.LENGTH_SHORT).show();
+                    ToastUtil.show(SearchActivity.this, "没有找到结果");
                 }
             }
 
             @Override
             public void onFailure(Call<ArrayResponse> call, Throwable t) {
                 t.printStackTrace();
-                Toast.makeText(SearchActivity.this, "搜索连接失败", Toast.LENGTH_SHORT).show();
+                ToastUtil.show(SearchActivity.this, "搜索连接失败");
             }
         });
     }
 
     @Override
     public void onItemClick(int position) {
-
+        Intent intent = new Intent(this, ArticlePage.class);
+        intent.putExtra("contentId", list.get(position).getId());
+        startActivity(intent);
     }
 
     public void onBack(View view){

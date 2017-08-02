@@ -7,11 +7,9 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.donutcn.memo.R;
-import com.donutcn.memo.adapter.HaoYeAdapter;
-import com.donutcn.memo.entity.ArrayResponse;
+import com.donutcn.memo.adapter.MemoAdapter;
 import com.donutcn.memo.entity.BriefContent;
 import com.donutcn.memo.listener.OnItemClickListener;
 import com.donutcn.memo.type.ItemLayoutType;
@@ -19,7 +17,6 @@ import com.donutcn.memo.utils.WindowUtils;
 import com.donutcn.memo.view.ListViewDecoration;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class AuthorPage extends AppCompatActivity implements OnItemClickListener {
 
@@ -48,7 +45,7 @@ public class AuthorPage extends AppCompatActivity implements OnItemClickListener
     }
 
     public void Refresh(){
-        HaoYeAdapter adapter = new HaoYeAdapter(this, list, ItemLayoutType.TYPE_TAG);
+        MemoAdapter adapter = new MemoAdapter(this, list, ItemLayoutType.TYPE_TAG);
         adapter.setOnItemClickListener(this);
         mRecyclerView.setAdapter(adapter);
 
@@ -58,7 +55,6 @@ public class AuthorPage extends AppCompatActivity implements OnItemClickListener
 
     @Override
     public void onItemClick(int position) {
-        Toast.makeText(this, "我是第" + position + "个", Toast.LENGTH_SHORT).show();
     }
 
     public void onBack(View view){

@@ -14,7 +14,6 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -31,12 +30,15 @@ import com.donutcn.memo.R;
 import com.donutcn.memo.entity.SimpleResponse;
 import com.donutcn.memo.listener.OnUploadAllListener;
 import com.donutcn.memo.type.PublishType;
+import com.donutcn.memo.utils.DensityUtils;
 import com.donutcn.memo.utils.HttpUtils;
 import com.donutcn.memo.utils.PermissionCheck;
 import com.donutcn.memo.utils.RecognizerResultParser;
 import com.donutcn.memo.utils.SpfsUtils;
 import com.donutcn.memo.utils.StringUtil;
+import com.donutcn.memo.utils.ToastUtil;
 import com.donutcn.memo.utils.WindowUtils;
+import com.donutcn.widgetlib.ShadowDrawable;
 import com.iflytek.cloud.ErrorCode;
 import com.iflytek.cloud.InitListener;
 import com.iflytek.cloud.RecognizerListener;
@@ -71,7 +73,7 @@ public class PublishActivity extends AppCompatActivity implements View.OnClickLi
     private Button mPublishBtn;
     private LinearLayout mAddPic, mTypeSet, mTemplate, mSpeech;
     private HorizontalScrollView mTools;
-    private ImageView mKeyboard;
+    private ImageView mKeyboard, mSpeechClose;
 
     private SpeechRecognizer mIat;
     private RecognizerDialog mIatDialog;
@@ -123,8 +125,7 @@ public class PublishActivity extends AppCompatActivity implements View.OnClickLi
         @Override
         public void onInit(int code) {
             if (code != ErrorCode.SUCCESS) {
-                Toast.makeText(mContext, "初始化失败，错误码：" + code,
-                        Toast.LENGTH_SHORT).show();
+                ToastUtil.show(mContext, "初始化失败，错误码：" + code);
             }
         }
     };
@@ -143,9 +144,21 @@ public class PublishActivity extends AppCompatActivity implements View.OnClickLi
         mTemplate = (LinearLayout) findViewById(R.id.pub_template);
         mSpeech = (LinearLayout) findViewById(R.id.pub_speech_input);
         mKeyboard = (ImageView) findViewById(R.id.pub_keyboard_toggle);
+        mSpeechClose = (ImageView) findViewById(R.id.pub_speech_close);
         mTools = (HorizontalScrollView) findViewById(R.id.type_setting_tools);
 
-        findViewById(R.id.publish_spinner_container).setOnClickListener(this);
+        View view = findViewById(R.id.publish_spinner_container);
+        view.setOnClickListener(this);
+        ShadowDrawable shadow = new ShadowDrawable();
+        shadow.setColor(getResources().getColor(R.color.shadow))
+                .setOffsetY(0)
+                .setRadius(10)
+                .setEdgeShadowWidth(2)
+                .setFilterColor(0x56ffffff)
+                .setTopMargin(2)
+                .setParentHeight(DensityUtils.dp2px(this, 32))
+                .attach(view)
+                .build();
         mPublishBtn.setOnClickListener(this);
 
         mAddPic.setOnClickListener(this);
@@ -186,11 +199,11 @@ public class PublishActivity extends AppCompatActivity implements View.OnClickLi
             @Override
             public void onResponse(Call<SimpleResponse> call, Response<SimpleResponse> response) {
                 if(response.body().isOk()){
-                    Toast.makeText(mContext, "发布成功", Toast.LENGTH_SHORT).show();
+                    ToastUtil.show(mContext, "发布成功");
 //                    Log.e("id", response.body().getField("article_id"));
                     openSharePage(String.valueOf(response.body().getField("article_id")));
                 }else {
-                    Toast.makeText(mContext, "发布失败", Toast.LENGTH_SHORT).show();
+                    ToastUtil.show(mContext, "发布失败");
                 }
                 mPublishDialog.cancel();
             }
@@ -198,7 +211,7 @@ public class PublishActivity extends AppCompatActivity implements View.OnClickLi
             @Override
             public void onFailure(Call<SimpleResponse> call, Throwable t) {
                 t.printStackTrace();
-                Toast.makeText(mContext, "发布连接失败", Toast.LENGTH_SHORT).show();
+                ToastUtil.show(mContext, "发布连接失败");
                 mPublishDialog.cancel();
             }
         });
@@ -209,10 +222,10 @@ public class PublishActivity extends AppCompatActivity implements View.OnClickLi
         switch (v.getId()) {
             case R.id.toolbar_with_btn:
                 if (TextUtils.isEmpty(mTitleStr)) {
-                    Toast.makeText(this, "标题不能为空", Toast.LENGTH_SHORT).show();
+                    ToastUtil.show(this, "标题不能为空");
                     return;
                 } else if (TextUtils.isEmpty(mContentStr)) {
-                    Toast.makeText(this, "内容不能为空", Toast.LENGTH_SHORT).show();
+                    ToastUtil.show(this, "内容不能为空");
                     return;
                 }
                 mPublishDialog.show();
@@ -250,7 +263,6 @@ public class PublishActivity extends AppCompatActivity implements View.OnClickLi
                         ? View.GONE : View.VISIBLE);
                 break;
             case R.id.pub_template:
-                Toast.makeText(this, "模版", Toast.LENGTH_SHORT).show();
                 break;
             case R.id.pub_speech_input:
                 PermissionCheck permissionCheck = new PermissionCheck(this);
@@ -423,8 +435,7 @@ public class PublishActivity extends AppCompatActivity implements View.OnClickLi
         }
 
         public void onError(SpeechError error) {
-            Toast.makeText(mContext, error.getPlainDescription(true),
-                    Toast.LENGTH_SHORT).show();
+            ToastUtil.show(mContext, error.getPlainDescription(true));
         }
 
     };
@@ -465,19 +476,19 @@ public class PublishActivity extends AppCompatActivity implements View.OnClickLi
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    Toast.makeText(mContext, "当前音量" + i, Toast.LENGTH_SHORT).show();
+                    ToastUtil.show(mContext, "当前音量" + i);
                 }
             });
         }
 
         @Override
         public void onBeginOfSpeech() {
-            Toast.makeText(mContext, "开始了", Toast.LENGTH_SHORT).show();
+            ToastUtil.show(mContext, "开始了");
         }
 
         @Override
         public void onEndOfSpeech() {
-            Toast.makeText(mContext, "结束了", Toast.LENGTH_SHORT).show();
+            ToastUtil.show(mContext, "结束了");
         }
 
         @Override

@@ -1,22 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!--<color name="colorPrimary">#3F51B5</color>-->
-    <color name="colorPrimary">#efefef</color>
+    <color name="colorPrimary">#FBFBFB</color>
     <color name="colorPrimaryDark">#efefef</color>
-    <color name="colorAccent">#43BD4B</color>
+    <color name="colorAccent">#3595FF</color>
 
     <color name="background_blank">#fafafa</color>
     <color name="background_gray">#ebebeb</color>
     <color name="background_black_light">#41464b</color>
     <color name="background_black">#252a2f</color>
-    <color name="border_gray">#dadada</color>
+    <color name="border_gray">#dddddd</color>
     <color name="border_dark">#a1a1a1</color>
 
-    <color name="textPrimary">#939393</color>
-    <color name="textPrimaryDark">#4f4f4f</color>
-    <color name="text_red">#d42714</color>
+    <color name="text_light">#cdcdcd</color>
+    <color name="textPrimary">#a09f9f</color>
+    <color name="textPrimaryDark">#323333</color>
+    <color name="text_gray">#7e7e7e</color>
     <color name="text_black">#181818</color>
     <color name="text_blue">#4a74a7</color>
+    <color name="text_orange">#DB7A65</color>
 
     <color name="red_normal">#eb4e3d</color>
     <color name="red_pressed">#c74133</color>
@@ -25,17 +27,19 @@
     <color name="gray_normal">#c7c7cb</color>
     <color name="gray_pressed">#98989c</color>
 
-    <color name="btn_blue_normal">#1cadfe</color>
-    <color name="btn_blue_pressed">#168fd1</color>
-    <color name="btn_green_normal">#49bf37</color>
-    <color name="btn_green_pressed">#3a9a2c</color>
-    <color name="btn_red_normal">#eb4e3d</color>
-    <color name="btn_red_pressed">#c74133</color>
+    <color name="btn_blue_normal">#3595FF</color>
+    <color name="btn_blue_pressed">#2d7cd4</color>
+    <color name="btn_green_normal">#38C929</color>
+    <color name="btn_green_pressed">#2b9c1f</color>
+    <color name="btn_red_normal">#F4623B</color>
+    <color name="btn_red_pressed">#c04e2f</color>
 
-    <color name="type_red_bg">#cd5654</color>
-    <color name="type_blue_bg">#46a2dd</color>
-    <color name="type_green_bg">#43bd4b</color>
+    <color name="type_red_bg">#F4623B</color>
+    <color name="type_blue_bg">#3595FF</color>
+    <color name="type_green_bg">#38C929</color>
 
     <color name="white">#FFFFFFFF</color>
     <color name="white_pressed">#FFCFCFCF</color>
+
+    <color name="shadow">#4d000000</color>
 </resources>

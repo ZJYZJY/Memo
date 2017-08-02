@@ -7,6 +7,11 @@
         android:id="@+id/dis_toolbar"
         layout="@layout/toolbar_main" />
 
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/px_line"
+        android:background="@color/border_gray" />
+
     <com.donutcn.widgetlib.NoScrollViewPager
         android:id="@+id/dis_viewpager"
         android:layout_width="match_parent"

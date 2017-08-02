@@ -15,7 +15,6 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.donutcn.memo.R;
 import com.donutcn.memo.entity.SimpleResponse;
@@ -23,6 +22,7 @@ import com.donutcn.memo.fragment.SplashFragment;
 import com.donutcn.memo.utils.CountDownTimerUtils;
 import com.donutcn.memo.utils.HttpUtils;
 import com.donutcn.memo.utils.SpfsUtils;
+import com.donutcn.memo.utils.ToastUtil;
 import com.donutcn.memo.utils.UserStatus;
 import com.donutcn.memo.utils.WindowUtils;
 
@@ -138,30 +138,29 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         final String username = mPhoneNum.getText().toString();
         String password = mPassword.getText().toString();
         if(TextUtils.isEmpty(username)){
-            Toast.makeText(this, "手机号不能为空", Toast.LENGTH_SHORT).show();
+            ToastUtil.show(this, "手机号不能为空");
             return;
         }else if(TextUtils.isEmpty(password)){
-            Toast.makeText(this, "密码不能为空", Toast.LENGTH_SHORT).show();
+            ToastUtil.show(this, "密码不能为空");
             return;
         }
         HttpUtils.login(username, password).enqueue(new Callback<SimpleResponse>() {
             @Override
             public void onResponse(Call<SimpleResponse> call, Response<SimpleResponse> response) {
                 if (response.body().isOk()) {
-                    Toast.makeText(LoginActivity.this, "登录成功", Toast.LENGTH_SHORT).show();
+                    ToastUtil.show(LoginActivity.this, "登录成功");
                     UserStatus.login(getApplicationContext(), username);
                     Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                     intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                     startActivity(intent);
                 } else {
-                    Toast.makeText(LoginActivity.this, "登录失败，"
-                            + response.body().getMessage(), Toast.LENGTH_SHORT).show();
+                    ToastUtil.show(LoginActivity.this, "登录失败，" + response.body().getMessage());
                 }
             }
 
             @Override
             public void onFailure(Call<SimpleResponse> call, Throwable t) {
-                Toast.makeText(LoginActivity.this, "登录连接失败", Toast.LENGTH_SHORT).show();
+                ToastUtil.show(LoginActivity.this, "登录连接失败");
                 t.printStackTrace();
             }
         });
@@ -172,33 +171,32 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         String authCode = mRegCode.getText().toString();
         String password = mRegPassword.getText().toString();
         if (TextUtils.isEmpty(phoneNumber)) {
-            Toast.makeText(this, "手机号不能为空", Toast.LENGTH_SHORT).show();
+            ToastUtil.show(this, "手机号不能为空");
             return;
         } else if (TextUtils.isEmpty(phoneNumber)) {
-            Toast.makeText(this, "验证码不能为空", Toast.LENGTH_SHORT).show();
+            ToastUtil.show(this, "验证码不能为空");
             return;
         } else if (TextUtils.isEmpty(phoneNumber)) {
-            Toast.makeText(this, "密码不能为空", Toast.LENGTH_SHORT).show();
+            ToastUtil.show(this, "密码不能为空");
             return;
         }
         HttpUtils.modifyUser(phoneNumber, authCode, password, ACTION_REGISTER).enqueue(new Callback<SimpleResponse>() {
             @Override
             public void onResponse(Call<SimpleResponse> call, Response<SimpleResponse> response) {
                 if(response.body().isOk()){
-                    Toast.makeText(LoginActivity.this, "注册成功", Toast.LENGTH_SHORT).show();
+                    ToastUtil.show(LoginActivity.this, "注册成功");
                     UserStatus.login(getApplicationContext(), phoneNumber);
                     Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                     intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                     startActivity(intent);
                 }else {
-                    Toast.makeText(LoginActivity.this, "注册失败，"
-                            + response.body().getMessage(), Toast.LENGTH_SHORT).show();
+                    ToastUtil.show(LoginActivity.this, "注册失败，" + response.body().getMessage());
                 }
             }
 
             @Override
             public void onFailure(Call<SimpleResponse> call, Throwable t) {
-                Toast.makeText(LoginActivity.this, "注册连接失败", Toast.LENGTH_SHORT).show();
+                ToastUtil.show(LoginActivity.this, "注册连接失败");
                 t.printStackTrace();
             }
         });
@@ -207,7 +205,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     public void requestForAuthCode(){
         String phoneNumber = mRegPhone.getText().toString();
         if(TextUtils.isEmpty(phoneNumber)){
-            Toast.makeText(this, "请输入手机号码", Toast.LENGTH_SHORT).show();
+            ToastUtil.show(this, "请输入手机号码");
             return;
         }
         mMsgCode.setClickable(false);
@@ -217,12 +215,11 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             public void onResponse(Call<SimpleResponse> call, Response<SimpleResponse> response) {
                 if(response.body().isOk()){
                     authCodeTimer.start();
-                    Toast.makeText(LoginActivity.this, "验证码发送成功", Toast.LENGTH_SHORT).show();
+                    ToastUtil.show(LoginActivity.this, "验证码发送成功");
                 }else {
                     mMsgCode.setClickable(true);
                     mMsgCode.setBackgroundResource(R.drawable.selector_radius_blue_btn);
-                    Toast.makeText(LoginActivity.this, "验证码发送失败，"
-                            + response.body().getMessage(), Toast.LENGTH_SHORT).show();
+                    ToastUtil.show(LoginActivity.this, "验证码发送失败，" + response.body().getMessage());
                 }
             }
 
@@ -230,7 +227,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             public void onFailure(Call<SimpleResponse> call, Throwable t) {
                 mMsgCode.setClickable(true);
                 mMsgCode.setBackgroundResource(R.drawable.selector_radius_blue_btn);
-                Toast.makeText(LoginActivity.this, "获取验证码连接失败", Toast.LENGTH_SHORT).show();
+                ToastUtil.show(LoginActivity.this, "验证码发送连接失败");
                 t.printStackTrace();
             }
         });
@@ -252,6 +249,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 findViewById(R.id.login_et).setVisibility(View.GONE);
                 break;
             case R.id.login_btn:
+                WindowUtils.toggleKeyboard(this, v, false);
                 if(mToLogin.isChecked())
                     attemptToLogin();
                 else

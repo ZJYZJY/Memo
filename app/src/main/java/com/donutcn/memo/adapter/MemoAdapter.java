@@ -20,7 +20,7 @@ import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
-public class HaoYeAdapter extends BasePublishAdapter<HaoYeAdapter.DefaultViewHolder> {
+public class MemoAdapter extends BasePublishAdapter<MemoAdapter.DefaultViewHolder> {
 
     private ArrayList<BriefContent> list;
     private int mLayoutType;
@@ -28,7 +28,7 @@ public class HaoYeAdapter extends BasePublishAdapter<HaoYeAdapter.DefaultViewHol
 
     private OnItemClickListener mOnItemClickListener;
 
-    public HaoYeAdapter(Context context, ArrayList<BriefContent> list, @ItemLayoutType int layoutType) {
+    public MemoAdapter(Context context, ArrayList<BriefContent> list, @ItemLayoutType int layoutType) {
         this.mContext = context;
         this.list = list;
         this.mLayoutType = layoutType;
@@ -109,16 +109,18 @@ public class HaoYeAdapter extends BasePublishAdapter<HaoYeAdapter.DefaultViewHol
 
     @Override
     public void onBindViewHolder(DefaultViewHolder holder, int position) {
+        String type = list.get(position).getType();
         holder.mTitle.setText(list.get(position).getTitle());
-        holder.mContentType.setText(list.get(position).getType());
+        holder.mContentType.setText(type);
         holder.mContent.setText(list.get(position).getContent());
 
-        holder.mAuthor.setText(list.get(position).getName());
+        holder.mAuthor.setText(mContext.getString(R.string.placeholder_publish_author_type,
+                list.get(position).getName(), type));
         Date date = StringUtil.string2Date(list.get(position).getTime());
-        DateFormat dateFormat = new DynamicTimeFormat("发布于 %s");
+        DateFormat dateFormat = new DynamicTimeFormat("%s");
         holder.mTime.setText(dateFormat.format(date));
-        holder.mUpvote.setText(list.get(position).getUpVote());
-        holder.mComment.setText(list.get(position).getComment());
+//        holder.mUpvote.setText(list.get(position).getUpVote());
+//        holder.mComment.setText(list.get(position).getComment());
     }
 
     static class DefaultViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
@@ -145,8 +147,8 @@ public class HaoYeAdapter extends BasePublishAdapter<HaoYeAdapter.DefaultViewHol
             mContentType = (TextView) itemView.findViewById(R.id.tv_content_type);
             mAuthor = (TextView) itemView.findViewById(R.id.tv_publish_author);
             mTime = (TextView) itemView.findViewById(R.id.tv_publish_time);
-            mUpvote = (TextView) itemView.findViewById(R.id.tv_upvote);
-            mComment = (TextView) itemView.findViewById(R.id.tv_comment);
+//            mUpvote = (TextView) itemView.findViewById(R.id.tv_upvote);
+//            mComment = (TextView) itemView.findViewById(R.id.tv_comment);
         }
 
         @Override

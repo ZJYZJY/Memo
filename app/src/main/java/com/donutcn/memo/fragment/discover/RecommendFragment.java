@@ -10,13 +10,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.donutcn.memo.R;
 import com.donutcn.memo.activity.ArticlePage;
 import com.donutcn.memo.activity.MainActivity;
 import com.donutcn.memo.activity.SearchActivity;
-import com.donutcn.memo.adapter.HaoYeAdapter;
+import com.donutcn.memo.adapter.MemoAdapter;
 import com.donutcn.memo.base.BaseScrollFragment;
 import com.donutcn.memo.entity.ArrayResponse;
 import com.donutcn.memo.entity.BriefContent;
@@ -25,6 +24,7 @@ import com.donutcn.memo.event.RequestRefreshEvent;
 import com.donutcn.memo.listener.OnItemClickListener;
 import com.donutcn.memo.type.ItemLayoutType;
 import com.donutcn.memo.utils.HttpUtils;
+import com.donutcn.memo.utils.ToastUtil;
 import com.donutcn.memo.view.ListViewDecoration;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
@@ -52,7 +52,7 @@ public class RecommendFragment extends BaseScrollFragment implements View.OnClic
     private SmartRefreshLayout mRefreshLayout;
     private TextView mSearch_tv;
 
-    private HaoYeAdapter adapter;
+    private MemoAdapter adapter;
     private ArrayList<BriefContent> list;
     private Context mContext;
 
@@ -67,6 +67,7 @@ public class RecommendFragment extends BaseScrollFragment implements View.OnClic
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        EventBus.getDefault().register(this);
     }
 
     @Override
@@ -86,8 +87,7 @@ public class RecommendFragment extends BaseScrollFragment implements View.OnClic
         mSearch_tv.setOnClickListener(this);
 
         mHaoYe_rv.setLayoutManager(new LinearLayoutManager(mContext));
-        mHaoYe_rv.addItemDecoration(new ListViewDecoration(getContext(),
-                R.dimen.item_decoration_height, 84, 8));
+        mHaoYe_rv.addItemDecoration(new ListViewDecoration(getContext(), R.dimen.item_decoration_height));
 
         // set up swipe menu.
         mHaoYe_rv.setSwipeMenuCreator(mSwipeMenuCreator);
@@ -97,10 +97,9 @@ public class RecommendFragment extends BaseScrollFragment implements View.OnClic
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        EventBus.getDefault().register(this);
         page = ((MainActivity)getActivity()).mRecommendPage;
         list = new ArrayList<>();
-        adapter = new HaoYeAdapter(mContext, list, ItemLayoutType.AVATAR_IMG);
+        adapter = new MemoAdapter(mContext, list, ItemLayoutType.AVATAR_IMG);
         adapter.setOnItemClickListener(mOnItemClickListener);
         mHaoYe_rv.setAdapter(adapter);
         Refresh();
@@ -111,10 +110,11 @@ public class RecommendFragment extends BaseScrollFragment implements View.OnClic
             @Override
             public void onResponse(Call<ArrayResponse> call, Response<ArrayResponse> response) {
                 if(response.body().isOk()){
+                    list.clear();
                     list.addAll(response.body().getData());
                     adapter.notifyDataSetChanged();
                 }else {
-                    Toast.makeText(getContext(), "已经到底部了", Toast.LENGTH_SHORT).show();
+                    ToastUtil.show(getContext(), "已经到底部了");
                 }
                 mRefreshLayout.finishRefresh();
             }
@@ -122,7 +122,7 @@ public class RecommendFragment extends BaseScrollFragment implements View.OnClic
             @Override
             public void onFailure(Call<ArrayResponse> call, Throwable t) {
                 t.printStackTrace();
-                Toast.makeText(getContext(), "推荐连接失败", Toast.LENGTH_SHORT).show();
+                ToastUtil.show(getContext(), "推荐连接失败");
                 mRefreshLayout.finishRefresh();
             }
         });
@@ -137,16 +137,17 @@ public class RecommendFragment extends BaseScrollFragment implements View.OnClic
                     list.addAll(10 * (page - 1), response.body().getData());
                     adapter.notifyDataSetChanged();
                     ((MainActivity)getActivity()).mRecommendPage++;
+                    mRefreshLayout.finishLoadmore();
                 }else {
-                    Toast.makeText(getContext(), "已经到底部了", Toast.LENGTH_SHORT).show();
+                    ToastUtil.show(getContext(), "已经到底部了");
+                    mRefreshLayout.finishLoadmore(true);
                 }
-                mRefreshLayout.finishLoadmore();
             }
 
             @Override
             public void onFailure(Call<ArrayResponse> call, Throwable t) {
                 t.printStackTrace();
-                Toast.makeText(getContext(), "推荐连接失败", Toast.LENGTH_SHORT).show();
+                ToastUtil.show(getContext(), "推荐连接失败");
                 mRefreshLayout.finishLoadmore();
             }
         });
@@ -226,8 +227,7 @@ public class RecommendFragment extends BaseScrollFragment implements View.OnClic
             closeable.smoothCloseMenu();
 
             if (direction == SwipeMenuRecyclerView.RIGHT_DIRECTION) {
-                Toast.makeText(mContext, "list第" + adapterPosition + "; 右侧菜单第" + menuPosition,
-                        Toast.LENGTH_SHORT).show();
+
             }
         }
     };

@@ -9,18 +9,17 @@ import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.EditText;
-import android.widget.Toast;
 
 import com.donutcn.memo.R;
 import com.donutcn.memo.adapter.VoteItemAdapter;
 import com.donutcn.memo.entity.SimpleResponse;
 import com.donutcn.memo.type.PublishType;
 import com.donutcn.memo.utils.HttpUtils;
+import com.donutcn.memo.utils.ToastUtil;
 import com.donutcn.memo.utils.WindowUtils;
 import com.donutcn.widgetlib.widget.CheckBox;
 import com.donutcn.widgetlib.widget.SwitchView;
 
-import java.io.IOException;
 import java.util.ArrayList;
 
 import okhttp3.ResponseBody;
@@ -125,7 +124,7 @@ public class CompletingPage extends AppCompatActivity {
                 field1Str = field1.getText().toString().trim();
                 field2Str = field2.getText().toString().trim();
                 if (TextUtils.isEmpty(field1Str) || TextUtils.isEmpty(field2Str)) {
-                    Toast.makeText(mContext, "请填写完整信息", Toast.LENGTH_SHORT).show();
+                    ToastUtil.show(mContext, "请填写完整信息");
                     return;
                 }
                 break;
@@ -141,7 +140,7 @@ public class CompletingPage extends AppCompatActivity {
                 field3Str = field3.getText().toString().trim();
                 if (TextUtils.isEmpty(field1Str) || TextUtils.isEmpty(field2Str)
                         || TextUtils.isEmpty(field3Str)) {
-                    Toast.makeText(mContext, "请填写完整信息", Toast.LENGTH_SHORT).show();
+                    ToastUtil.show(mContext, "请填写完整信息");
                     return;
                 }
                 break;
@@ -151,7 +150,7 @@ public class CompletingPage extends AppCompatActivity {
                 field3Str = field3.getText().toString().trim();
                 if (TextUtils.isEmpty(field1Str) || TextUtils.isEmpty(field2Str)
                         || TextUtils.isEmpty(field3Str)) {
-                    Toast.makeText(mContext, "请填写完整信息", Toast.LENGTH_SHORT).show();
+                    ToastUtil.show(mContext, "请填写完整信息");
                     return;
                 }
                 break;
@@ -164,14 +163,14 @@ public class CompletingPage extends AppCompatActivity {
                     contentId = String.valueOf(response.body().getField("article_id"));
                     completeInfo();
                 } else {
-                    Toast.makeText(mContext, "发布失败", Toast.LENGTH_SHORT).show();
+                    ToastUtil.show(mContext, "发布失败");
                 }
             }
 
             @Override
             public void onFailure(Call<SimpleResponse> call, Throwable t) {
                 t.printStackTrace();
-                Toast.makeText(mContext, "发布连接失败", Toast.LENGTH_SHORT).show();
+                ToastUtil.show(mContext, "发布连接失败");
             }
         });
     }
@@ -182,19 +181,20 @@ public class CompletingPage extends AppCompatActivity {
             @Override
             public void onResponse(Call<SimpleResponse> call, Response<SimpleResponse> response) {
                 if (response.body().isOk()) {
-                    Toast.makeText(mContext, "发布成功", Toast.LENGTH_SHORT).show();
+                    ToastUtil.show(mContext, "发布成功");
                     Intent intent = new Intent(mContext, SocialShareActivity.class);
                     intent.putExtra("contentId", contentId);
                     startActivity(intent);
+                    finish();
                 } else {
-                    Toast.makeText(mContext, "发布信息完善失败", Toast.LENGTH_SHORT).show();
+                    ToastUtil.show(mContext, "发布信息完善失败");
                 }
             }
 
             @Override
             public void onFailure(Call<SimpleResponse> call, Throwable t) {
                 t.printStackTrace();
-                Toast.makeText(mContext, "完善连接失败", Toast.LENGTH_SHORT).show();
+                ToastUtil.show(mContext, "完善连接失败");
             }
         });
     }

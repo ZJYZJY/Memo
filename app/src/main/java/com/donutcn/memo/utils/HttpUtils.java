@@ -2,7 +2,6 @@ package com.donutcn.memo.utils;
 
 import android.content.Context;
 import android.util.Log;
-import android.widget.Toast;
 
 import com.donutcn.memo.entity.ArrayResponse;
 import com.donutcn.memo.entity.ContentResponse;
@@ -318,6 +317,7 @@ public class HttpUtils {
             json.put("article_id", id);
             json.put("type", type.toString());
             if (needApply) {
+                json.put("is_sign_up", 1);
                 json.put("extra1", extra1);
                 json.put("extra2", extra2);
             }
@@ -368,7 +368,7 @@ public class HttpUtils {
 
             @Override
             public void onInvalidToken() {
-                Toast.makeText(context, "图片上传失败", Toast.LENGTH_SHORT).show();
+                ToastUtil.show(context, "图片上传失败");
                 Log.e("upload", "invalid token");
             }
         };
