@@ -38,6 +38,7 @@
                 android:background="@color/border_gray" />
 
             <EditText
+                android:id="@+id/comment_field1"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@color/colorPrimary"
@@ -51,6 +52,7 @@
                 android:background="@color/border_gray" />
 
             <EditText
+                android:id="@+id/comment_field2"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@color/colorPrimary"
@@ -64,6 +66,7 @@
                 android:background="@color/border_gray" />
 
             <EditText
+                android:id="@+id/comment_field3"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@color/colorPrimary"

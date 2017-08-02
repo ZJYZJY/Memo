@@ -14,6 +14,7 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -180,13 +181,14 @@ public class PublishActivity extends AppCompatActivity implements View.OnClickLi
         // Escape the " to \"
         mTitleStr = mTitleStr.replace("\"", "\\\"");
         mContentStr = mContentStr.replace("\"", "\\\"");
-        HttpUtils.uploadContent(mTitleStr, mSelectedType, mContentStr)
+        HttpUtils.publishContent(mTitleStr, mSelectedType, mContentStr)
                 .enqueue(new Callback<SimpleResponse>() {
             @Override
             public void onResponse(Call<SimpleResponse> call, Response<SimpleResponse> response) {
                 if(response.body().isOk()){
                     Toast.makeText(mContext, "发布成功", Toast.LENGTH_SHORT).show();
-                    startCompletePage();
+//                    Log.e("id", response.body().getField("article_id"));
+                    openSharePage(String.valueOf(response.body().getField("article_id")));
                 }else {
                     Toast.makeText(mContext, "发布失败", Toast.LENGTH_SHORT).show();
                 }
@@ -215,15 +217,22 @@ public class PublishActivity extends AppCompatActivity implements View.OnClickLi
                 }
                 mPublishDialog.show();
                 selectedPhotos = (ArrayList<String>) StringUtil.getImgSrcList(mContentStr);
-                if(selectedPhotos.size() == 0){
-                    publishContent(null);
+                if(mSelectedType.equals(mContentTypes[0])
+                        || mSelectedType.equals(mContentTypes[1])
+                        || mSelectedType.equals(mContentTypes[5])){
+                    if(selectedPhotos.size() == 0){
+                        publishContent(null);
+                    }else {
+                        HttpUtils.upLoadImages(this, selectedPhotos, new OnUploadAllListener() {
+                            @Override
+                            public void uploadAll(List<String> keys) {
+                                publishContent(keys);
+                            }
+                        });
+                    }
                 }else {
-                    HttpUtils.upLoadImages(this, selectedPhotos, new OnUploadAllListener() {
-                        @Override
-                        public void uploadAll(List<String> keys) {
-                            publishContent(keys);
-                        }
-                    });
+                    startCompletePage();
+                    mPublishDialog.cancel();
                 }
                 break;
             case R.id.publish_spinner_container:
@@ -281,26 +290,25 @@ public class PublishActivity extends AppCompatActivity implements View.OnClickLi
         }
     }
 
-    private void startCompletePage(){
-        // according to the selected type, pass the different parameters to activity.
-        if (mSelectedType.equals(mContentTypes[0])
-                || mSelectedType.equals(mContentTypes[1])
-                || mSelectedType.equals(mContentTypes[5])) {
-            startActivity(new Intent(this, SocialShareActivity.class));
-        } else if (mSelectedType.equals(mContentTypes[2])
-                || mSelectedType.equals(mContentTypes[3])
-                || mSelectedType.equals(mContentTypes[4])
-                || mSelectedType.equals(mContentTypes[6])
-                || mSelectedType.equals(mContentTypes[7])) {
-            Intent intent = new Intent(this, CompletingPage.class);
-            intent.putExtra("type", PublishType.getType(mSelectedType));
-            startActivity(intent);
-        }
+    private void openSharePage(String contentId) {
+        Intent intent = new Intent(this, SocialShareActivity.class);
+        intent.putExtra("contentId", contentId);
+        startActivity(intent);
+    }
+
+    private void startCompletePage() {
+        Intent intent = new Intent(this, CompletingPage.class);
+        intent.putExtra("title", mTitleStr);
+        intent.putExtra("type", PublishType.getType(mSelectedType));
+        intent.putExtra("content", mContentStr);
+        startActivity(intent);
     }
 
     private void showPopupMenu(View view) {
         View popWindowView = getLayoutInflater().inflate(R.layout.publish_type_popup, null);
         XRadioGroup radioGroup = (XRadioGroup) popWindowView.findViewById(R.id.publish_type_container);
+        final ViewGroup v1 = (ViewGroup) radioGroup.getChildAt(0);
+        final ViewGroup v2 = (ViewGroup) radioGroup.getChildAt(1);
         final View img = findViewById(R.id.ic_drop_arrow);
         img.setRotation(180f);
         PopupWindow popupWindow = new PopupWindow(popWindowView,
@@ -310,22 +318,26 @@ public class PublishActivity extends AppCompatActivity implements View.OnClickLi
         radioGroup.setOnCheckedChangeListener(new XRadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(XRadioGroup xRadioGroup, @IdRes int i) {
-                ViewGroup v1 = (ViewGroup) xRadioGroup.getChildAt(0);
-                ViewGroup v2 = (ViewGroup) xRadioGroup.getChildAt(1);
-                for(int j = 0; j < v1.getChildCount(); j++){
-                    ((RadioButton)v1.getChildAt(j))
+                for (int j = 0; j < v1.getChildCount(); j++) {
+                    ((RadioButton) v1.getChildAt(j))
                             .setTextColor(getResources().getColor(R.color.textPrimaryDark));
                 }
-                for(int j = 0; j < v2.getChildCount(); j++){
-                    ((RadioButton)v2.getChildAt(j))
+                for (int j = 0; j < v2.getChildCount(); j++) {
+                    ((RadioButton) v2.getChildAt(j))
                             .setTextColor(getResources().getColor(R.color.textPrimaryDark));
                 }
-                RadioButton btn = (RadioButton)xRadioGroup.findViewById(i);
+                RadioButton btn = (RadioButton) xRadioGroup.findViewById(i);
                 mSelectedType = btn.getText().toString();
                 mPublishType.setText(mSelectedType);
                 btn.setTextColor(getResources().getColor(R.color.white));
             }
         });
+        int position = PublishType.getType(mSelectedType).ordinal();
+        if (position <= 3) {
+            ((RadioButton) v1.getChildAt(position)).setChecked(true);
+        } else {
+            ((RadioButton) v2.getChildAt(position - 4)).setChecked(true);
+        }
         popupWindow.setOnDismissListener(new PopupWindow.OnDismissListener() {
             @Override
             public void onDismiss() {

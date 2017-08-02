@@ -55,6 +55,10 @@ public class VoteItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
         return views.size();
     }
 
+    public ArrayList<String> getTextArray() {
+        return mVoteItemStr;
+    }
+
     public void setMaxVoteSelection(int max) {
         this.maxVoteSelection = max;
     }

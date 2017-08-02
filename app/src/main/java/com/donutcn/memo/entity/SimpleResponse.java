@@ -24,9 +24,9 @@ public class SimpleResponse extends Response<LinkedHashMap> {
         return data;
     }
 
-    public String getField(String key){
+    public  <T> T getField(String key){
         if(data == null)
-            return "";
-        return (String) data.get(key);
+            return null;
+        return (T) data.get(key);
     }
 }

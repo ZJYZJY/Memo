@@ -8,6 +8,7 @@ import com.donutcn.memo.entity.ArrayResponse;
 import com.donutcn.memo.entity.ContentResponse;
 import com.donutcn.memo.entity.SimpleResponse;
 import com.donutcn.memo.listener.OnUploadAllListener;
+import com.donutcn.memo.type.PublishType;
 import com.franmontiel.persistentcookiejar.ClearableCookieJar;
 import com.franmontiel.persistentcookiejar.PersistentCookieJar;
 import com.franmontiel.persistentcookiejar.cache.SetCookieCache;
@@ -175,8 +176,8 @@ public class HttpUtils {
         /**
          * publish content.
          */
-        @POST(APIPath.UPLOAD_CONTENT)
-        Call<SimpleResponse> uploadContent(@Body RequestBody content);
+        @POST(APIPath.PUBLISH_CONTENT)
+        Call<SimpleResponse> publishContent(@Body RequestBody content);
 
         /**
          * refresh recommend content.
@@ -191,10 +192,22 @@ public class HttpUtils {
         Call<ArrayResponse> searchContent(@Body RequestBody content);
 
         /**
-         * refresh recommend content.
+         * get publish content by id.
          */
         @GET(APIPath.GET_CONTENT)
         Call<ContentResponse> getContent(@Path("id") String id);
+
+        /**
+         * change the content access level.
+         */
+        @GET(APIPath.SET_CONTENT_PRIVATE)
+        Call<SimpleResponse> setPrivate(@Body RequestBody content);
+
+        /**
+         * complete publish content info.
+         */
+        @POST(APIPath.COMPLETE_INFO)
+        Call<SimpleResponse> completeInfo(@Body RequestBody content);
 
         /**
          * cookie test.
@@ -216,13 +229,17 @@ public class HttpUtils {
 
         private static final String GET_UPLOAD_TOKEN = "private_api/upload_api";
 
-        private static final String UPLOAD_CONTENT = "private_api/create_article_api";
+        private static final String PUBLISH_CONTENT = "private_api/create_article_api";
 
         private static final String REFRESH_RECOMMEND = "index_api/index/{page}";
 
         private static final String SEARCH_CONTENT = "index_api/search_api";
 
         private static final String GET_CONTENT = "index_api/see_article_api/{id}";
+
+        private static final String SET_CONTENT_PRIVATE = "private_api/is_private_api";
+
+        private static final String COMPLETE_INFO = "private_api/article_field_api";
     }
 
     public static Call<SimpleResponse> login(String username, String password) {
@@ -261,13 +278,13 @@ public class HttpUtils {
         return create().logout(request);
     }
 
-    public static Call<SimpleResponse> uploadContent(String title, String type, String content) {
+    public static Call<SimpleResponse> publishContent(String title, String type, String content) {
         String str = "{\"title\":\"" + title + "\"," +
                 "\"type\":\"" + type + "\"," +
                 "\"content\":\"" + content + "\"}";
         RequestBody request = RequestBody
                 .create(okhttp3.MediaType.parse("application/json; charset=utf-8"), str);
-        return create().uploadContent(request);
+        return create().publishContent(request);
     }
 
     public static Call<ArrayResponse> getRecommendContent(int page) {
@@ -283,6 +300,51 @@ public class HttpUtils {
 
     public static Call<ContentResponse> getContent(String id){
         return create().getContent(id);
+    }
+
+    public static Call<SimpleResponse> setPrivate(String id, int isPrivate) {
+        String str = "{\"article_id\":\"" + id + "\"," +
+                "\"is_private\":" + isPrivate + "}";
+        RequestBody request = RequestBody
+                .create(okhttp3.MediaType.parse("application/json; charset=utf-8"), str);
+        return create().setPrivate(request);
+    }
+
+    public static Call<SimpleResponse>
+    completeInfo(String id, PublishType type, String field1, String field2, String field3,
+                 boolean needApply, int extra1, int extra2, List<String> voteItems) {
+        JSONObject json = new JSONObject();
+        try {
+            json.put("article_id", id);
+            json.put("type", type.toString());
+            if (needApply) {
+                json.put("extra1", extra1);
+                json.put("extra2", extra2);
+            }
+            switch (type) {
+                case RESERVE:
+                case SALE:
+                    json.put("field3", field3);
+                case ACTIVITY:
+                case RECRUIT:
+                    json.put("field1", field1);
+                    json.put("field2", field2);
+                    break;
+                case VOTE:
+                    JSONObject items = new JSONObject();
+                    for (int i = 0; i < voteItems.size(); i++) {
+                        items.put(String.valueOf(i), voteItems.get(i));
+                    }
+                    json.put("data", items);
+                    break;
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        RequestBody request = RequestBody
+                .create(okhttp3.MediaType.parse("application/json; charset=utf-8"), json.toString());
+        System.out.println(json.toString());
+        return create().completeInfo(request);
     }
 
     public static Call<ResponseBody> test() {

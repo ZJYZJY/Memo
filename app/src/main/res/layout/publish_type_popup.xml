@@ -26,11 +26,10 @@
                 android:layout_weight="1"
                 android:background="@drawable/publish_type_selector"
                 android:button="@null"
-                android:checked="true"
                 android:gravity="center"
                 android:padding="@dimen/padding_large"
                 android:text="@string/publish_content_article"
-                android:textColor="@color/white"
+                android:textColor="@color/textPrimaryDark"
                 android:textSize="16sp" />
 
             <RadioButton

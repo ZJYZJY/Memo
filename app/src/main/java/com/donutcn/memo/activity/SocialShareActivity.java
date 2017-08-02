@@ -11,6 +11,8 @@ import android.widget.Button;
 import android.widget.Toast;
 
 import com.donutcn.memo.R;
+import com.donutcn.memo.entity.SimpleResponse;
+import com.donutcn.memo.utils.HttpUtils;
 import com.donutcn.memo.utils.WindowUtils;
 import com.donutcn.widgetlib.widget.SwitchView;
 import com.umeng.socialize.ShareAction;
@@ -20,12 +22,17 @@ import com.umeng.socialize.bean.SHARE_MEDIA;
 import com.umeng.socialize.media.UMImage;
 import com.umeng.socialize.media.UMWeb;
 
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
 public class SocialShareActivity extends AppCompatActivity implements View.OnClickListener {
 
     private SwitchView mSwith;
     private Button mHomePage;
 
     private UMWeb mUMWeb;
+    private String contentId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,10 +44,24 @@ public class SocialShareActivity extends AppCompatActivity implements View.OnCli
 
         initView();
         initMedia();
+        contentId = getIntent().getStringExtra("contentId");
     }
 
-    public void initView(){
+    public void initView() {
         mSwith = (SwitchView) findViewById(R.id.social_content_private);
+        mSwith.setOnStateChangedListener(new SwitchView.OnStateChangedListener() {
+            @Override
+            public void toggleToOn(SwitchView view) {
+                // not private
+                setPrivate(!view.isOpened());
+            }
+
+            @Override
+            public void toggleToOff(SwitchView view) {
+                // set private
+                setPrivate(!view.isOpened());
+            }
+        });
         mHomePage = (Button) findViewById(R.id.toolbar_with_btn);
 
         findViewById(R.id.share_iv1).setOnClickListener(this);
@@ -55,9 +76,38 @@ public class SocialShareActivity extends AppCompatActivity implements View.OnCli
         mHomePage.setOnClickListener(this);
     }
 
+    public void setPrivate(final boolean isPrivate) {
+        final Toast toast = new Toast(this);
+        toast.setDuration(Toast.LENGTH_SHORT);
+        HttpUtils.setPrivate(contentId, isPrivate ? 1 : 0).enqueue(new Callback<SimpleResponse>() {
+            @Override
+            public void onResponse(Call<SimpleResponse> call, Response<SimpleResponse> response) {
+                toast.cancel();
+                if (response.body().isOk()) {
+                    if(isPrivate){
+                        toast.setText("设为私有");
+                    }else {
+                        toast.setText("设为公开");
+                    }
+                } else {
+                    toast.setText("设置失败");
+                }
+                toast.show();
+            }
+
+            @Override
+            public void onFailure(Call<SimpleResponse> call, Throwable t) {
+                t.printStackTrace();
+                toast.cancel();
+                toast.setText("设置连接失败");
+                toast.show();
+            }
+        });
+    }
+
     @Override
     public void onClick(View v) {
-        switch (v.getId()){
+        switch (v.getId()) {
             case R.id.toolbar_with_btn:
                 Intent intent0 = new Intent(this, MainActivity.class);
                 intent0.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
@@ -122,9 +172,10 @@ public class SocialShareActivity extends AppCompatActivity implements View.OnCli
         public void onStart(SHARE_MEDIA platform) {
 
         }
+
         @Override
         public void onResult(SHARE_MEDIA platform) {
-            Log.d("plat","platform"+platform);
+            Log.d("plat", "platform" + platform);
 
             Toast.makeText(SocialShareActivity.this, platform + " 分享成功啦", Toast.LENGTH_SHORT).show();
 
@@ -132,15 +183,15 @@ public class SocialShareActivity extends AppCompatActivity implements View.OnCli
 
         @Override
         public void onError(SHARE_MEDIA platform, Throwable t) {
-            Toast.makeText(SocialShareActivity.this,platform + " 分享失败啦", Toast.LENGTH_SHORT).show();
-            if(t!=null){
-                Log.d("throw","throw:"+t.getMessage());
+            Toast.makeText(SocialShareActivity.this, platform + " 分享失败啦", Toast.LENGTH_SHORT).show();
+            if (t != null) {
+                Log.d("throw", "throw:" + t.getMessage());
             }
         }
 
         @Override
         public void onCancel(SHARE_MEDIA platform) {
-            Toast.makeText(SocialShareActivity.this,platform + " 分享取消了", Toast.LENGTH_SHORT).show();
+            Toast.makeText(SocialShareActivity.this, platform + " 分享取消了", Toast.LENGTH_SHORT).show();
         }
     };
 
@@ -151,14 +202,14 @@ public class SocialShareActivity extends AppCompatActivity implements View.OnCli
 
     }
 
-    public void initMedia(){
+    public void initMedia() {
         mUMWeb = new UMWeb("http://bbs.umeng.com/");
         mUMWeb.setTitle("This is web title");
         mUMWeb.setThumb(new UMImage(this, R.drawable.pub_keyboard));
         mUMWeb.setDescription("my description");
     }
 
-    public void onBack(View view){
+    public void onBack(View view) {
         finish();
     }
 

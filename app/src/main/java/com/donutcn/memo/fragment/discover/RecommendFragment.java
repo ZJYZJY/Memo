@@ -103,7 +103,29 @@ public class RecommendFragment extends BaseScrollFragment implements View.OnClic
         adapter = new HaoYeAdapter(mContext, list, ItemLayoutType.AVATAR_IMG);
         adapter.setOnItemClickListener(mOnItemClickListener);
         mHaoYe_rv.setAdapter(adapter);
-        LoadMore();
+        Refresh();
+    }
+
+    public void Refresh() {
+        HttpUtils.getRecommendContent(1).enqueue(new Callback<ArrayResponse>() {
+            @Override
+            public void onResponse(Call<ArrayResponse> call, Response<ArrayResponse> response) {
+                if(response.body().isOk()){
+                    list.addAll(response.body().getData());
+                    adapter.notifyDataSetChanged();
+                }else {
+                    Toast.makeText(getContext(), "已经到底部了", Toast.LENGTH_SHORT).show();
+                }
+                mRefreshLayout.finishRefresh();
+            }
+
+            @Override
+            public void onFailure(Call<ArrayResponse> call, Throwable t) {
+                t.printStackTrace();
+                Toast.makeText(getContext(), "推荐连接失败", Toast.LENGTH_SHORT).show();
+                mRefreshLayout.finishRefresh();
+            }
+        });
     }
 
     public void LoadMore() {
@@ -133,7 +155,7 @@ public class RecommendFragment extends BaseScrollFragment implements View.OnClic
     private OnRefreshListener mRefreshListener = new OnRefreshListener() {
         @Override
         public void onRefresh(RefreshLayout refreshlayout) {
-            refreshlayout.finishRefresh(1000);
+            Refresh();
         }
     };
 
