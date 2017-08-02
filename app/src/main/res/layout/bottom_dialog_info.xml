@@ -50,7 +50,7 @@
                     android:layout_marginTop="@dimen/margin_large"
                     android:background="@drawable/edit_text_box_bg"
                     android:hint="@string/completing_name_cb"
-                    android:padding="@dimen/padding_small"
+                    android:padding="@dimen/padding_medium"
                     android:textSize="16sp" />
 
                 <EditText
@@ -59,7 +59,7 @@
                     android:layout_marginTop="@dimen/margin_large"
                     android:background="@drawable/edit_text_box_bg"
                     android:hint="@string/completing_phone_cb"
-                    android:padding="@dimen/padding_small"
+                    android:padding="@dimen/padding_medium"
                     android:textSize="16sp" />
 
                 <EditText
@@ -68,7 +68,7 @@
                     android:layout_marginTop="@dimen/margin_large"
                     android:background="@drawable/edit_text_box_bg"
                     android:hint="@string/completing_wechat_cb"
-                    android:padding="@dimen/padding_small"
+                    android:padding="@dimen/padding_medium"
                     android:textSize="16sp" />
 
                 <EditText
@@ -77,7 +77,7 @@
                     android:layout_marginTop="@dimen/margin_large"
                     android:background="@drawable/edit_text_box_bg"
                     android:hint="@string/completing_email_cb"
-                    android:padding="@dimen/padding_small"
+                    android:padding="@dimen/padding_medium"
                     android:textSize="16sp" />
             </LinearLayout>
         </android.support.v4.widget.NestedScrollView>

@@ -137,7 +137,9 @@ public class FriendsFragment extends BaseScrollFragment implements View.OnClickL
         @Override
         public void onItemClick(int position) {
             EventBus.getDefault().post(new ReceiveNewMessagesEvent(3, position));
-            startActivity(new Intent(getContext(), ArticlePage.class));
+            Intent intent = new Intent(mContext, ArticlePage.class);
+            intent.putExtra("contentId", list.get(position).getId());
+            startActivity(intent);
         }
     };
 

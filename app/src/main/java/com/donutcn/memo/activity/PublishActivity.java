@@ -16,7 +16,6 @@ import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.HorizontalScrollView;
@@ -251,7 +250,7 @@ public class PublishActivity extends AppCompatActivity implements View.OnClickLi
                 }
                 break;
             case R.id.pub_keyboard_toggle:
-                toggleKeyboard();
+                WindowUtils.toggleKeyboard(this);
                 break;
             // type setting tools onClick listener.
             case R.id.bold:
@@ -577,11 +576,6 @@ public class PublishActivity extends AppCompatActivity implements View.OnClickLi
 
     public void onBack(View view) {
         storeDraft();
-    }
-
-    private void toggleKeyboard() {
-        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-        imm.toggleSoftInput(0, InputMethodManager.HIDE_NOT_ALWAYS);
     }
 
     @Override

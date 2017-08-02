@@ -5,6 +5,7 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.donutcn.memo.entity.ArrayResponse;
+import com.donutcn.memo.entity.ContentResponse;
 import com.donutcn.memo.entity.SimpleResponse;
 import com.donutcn.memo.listener.OnUploadAllListener;
 import com.franmontiel.persistentcookiejar.ClearableCookieJar;
@@ -190,6 +191,12 @@ public class HttpUtils {
         Call<ArrayResponse> searchContent(@Body RequestBody content);
 
         /**
+         * refresh recommend content.
+         */
+        @GET(APIPath.GET_CONTENT)
+        Call<ContentResponse> getContent(@Path("id") String id);
+
+        /**
          * cookie test.
          */
         @POST("article_api/ceshi")
@@ -214,6 +221,8 @@ public class HttpUtils {
         private static final String REFRESH_RECOMMEND = "index_api/index/{page}";
 
         private static final String SEARCH_CONTENT = "index_api/search_api";
+
+        private static final String GET_CONTENT = "index_api/see_article_api/{id}";
     }
 
     public static Call<SimpleResponse> login(String username, String password) {
@@ -270,6 +279,10 @@ public class HttpUtils {
         RequestBody request = RequestBody
                 .create(okhttp3.MediaType.parse("application/json; charset=utf-8"), str);
         return create().searchContent(request);
+    }
+
+    public static Call<ContentResponse> getContent(String id){
+        return create().getContent(id);
     }
 
     public static Call<ResponseBody> test() {

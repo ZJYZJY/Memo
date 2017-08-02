@@ -31,7 +31,6 @@
                     android:id="@+id/article_title"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="日本人心中的中国人：既能看懂日本汉字又能说英语"
                     android:textColor="@color/text_black"
                     android:textSize="22sp"/>
 
@@ -48,7 +47,6 @@
                         android:id="@+id/article_date"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="2017-06-24"
                         android:textColor="@color/textPrimary"/>
 
                     <TextView
@@ -57,14 +55,12 @@
                         android:layout_height="wrap_content"
                         android:paddingLeft="@dimen/padding_large"
                         android:paddingRight="@dimen/padding_large"
-                        android:textColor="@color/text_blue"
-                        android:text="非常可乐"/>
+                        android:textColor="@color/text_blue"/>
 
                     <TextView
                         android:id="@+id/article_read_count"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="阅读 61045"
                         android:textColor="@color/textPrimary"/>
                 </LinearLayout>
 

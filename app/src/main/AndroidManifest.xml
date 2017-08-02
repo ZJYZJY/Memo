@@ -129,7 +129,8 @@
         <!-- android:excludeFromRecents="true" -->
         <!-- android:theme="@style/Theme.UMDefault" /> -->
         <!-- *************************    related to Share END **************************** -->
-        <activity android:name=".activity.ResetPasswordPage"></activity>
+        <activity android:name=".activity.ResetPasswordPage" />
+        <activity android:name=".X5testActivity"></activity>
     </application>
 
 </manifest>

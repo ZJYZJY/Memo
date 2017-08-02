@@ -18,6 +18,7 @@ import com.scwang.smartrefresh.layout.footer.ClassicsFooter;
 import com.scwang.smartrefresh.layout.header.ClassicsHeader;
 import com.tencent.bugly.Bugly;
 import com.tencent.bugly.crashreport.CrashReport;
+import com.tencent.smtt.sdk.QbSdk;
 import com.umeng.socialize.Config;
 import com.umeng.socialize.PlatformConfig;
 import com.umeng.socialize.UMShareAPI;
@@ -46,7 +47,7 @@ public class App extends Application {
         HttpUtils.create(getApplicationContext());
         RichText.initCacheDir(this);
         SpeechUtility.createUtility(this, SpeechConstant.APPID + "=59647377");
-
+        QbSdk.initX5Environment(getApplicationContext(), null);
         // set the default header and footer.
         SmartRefreshLayout.setDefaultRefreshHeaderCreater(new DefaultRefreshHeaderCreater() {
             @Override

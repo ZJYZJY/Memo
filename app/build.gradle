@@ -67,6 +67,7 @@ dependencies {
     compile project(':PhotoPicker')
     compile project(':richeditor')
     //    compile 'com.scwang.smartrefresh:SmartRefreshHeader:1.0.3-alpha-3'//use custom header
+    compile files('libs/tbs_sdk_v2.5.0.1037_36880_minsize.jar')
     compile 'com.qiniu:qiniu-android-sdk:7.3.8'
     compile 'com.umeng.analytics:analytics:latest.integration'
     compile 'com.tencent.bugly:crashreport_upgrade:latest.release'

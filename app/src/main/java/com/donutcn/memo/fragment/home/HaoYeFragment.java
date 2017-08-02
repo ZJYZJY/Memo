@@ -155,7 +155,9 @@ public class HaoYeFragment extends BaseScrollFragment {
         @Override
         public void onItemClick(int position) {
             EventBus.getDefault().post(new ReceiveNewMessagesEvent(0, position));
-            startActivity(new Intent(mContext, ArticlePage.class));
+            Intent intent = new Intent(mContext, ArticlePage.class);
+            intent.putExtra("contentId", list.get(position).getId());
+            startActivity(intent);
         }
     };
 

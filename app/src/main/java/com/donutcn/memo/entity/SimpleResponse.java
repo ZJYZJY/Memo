@@ -3,37 +3,30 @@ package com.donutcn.memo.entity;
 import com.donutcn.memo.base.Response;
 import com.google.gson.annotations.Expose;
 
-import org.json.JSONException;
-import org.json.JSONObject;
+import java.util.LinkedHashMap;
 
 /**
  * com.donutcn.memo.entity
  * Created by 73958 on 2017/7/31.
  */
 
-public class SimpleResponse extends Response<JSONObject> {
+public class SimpleResponse extends Response<LinkedHashMap> {
 
     @Expose
-    private JSONObject data;
+    private LinkedHashMap data;
 
-    public SimpleResponse(String res) throws JSONException {
+    public SimpleResponse(String res) {
         super(res);
-        data = getData();
     }
 
     @Override
-    public JSONObject getData() {
+    public LinkedHashMap getData() {
         return data;
     }
 
     public String getField(String key){
         if(data == null)
             return "";
-        try {
-            return data.getString(key);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        return "";
+        return (String) data.get(key);
     }
 }

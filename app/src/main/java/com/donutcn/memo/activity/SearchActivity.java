@@ -54,6 +54,7 @@ public class SearchActivity extends AppCompatActivity implements OnItemClickList
             public boolean onKey(View v, int keyCode, KeyEvent event) {
                 if(keyCode == KeyEvent.KEYCODE_ENTER){
                     mKeyWords = mSearch_et.getText().toString().trim();
+                    WindowUtils.toggleKeyboard(SearchActivity.this, mSearch_et, false);
                     startSearch();
                     return true;
                 }
@@ -95,5 +96,8 @@ public class SearchActivity extends AppCompatActivity implements OnItemClickList
 
     public void onCancel(View view){
         mSearch_et.getText().clear();
+        list.clear();
+        mAdapter.notifyDataSetChanged();
+        WindowUtils.toggleKeyboard(this, mSearch_et, true);
     }
 }
