@@ -10,7 +10,12 @@ import java.util.List;
 public interface UploadCallback {
 
     /**
-     * after all files are uploaded, this method will be called.
+     * after single file was uploaded, this method will be called.
+     */
+    void uploadSingle(String key);
+
+    /**
+     * after all files were uploaded, this method will be called.
      */
     void uploadAll(List<String> keys);
 

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:padding="@dimen/padding_medium">
+
+    <com.donutcn.widgetlib.widget.CircleImageView
+        android:id="@+id/contact_icon"
+        android:layout_width="@dimen/icon_item_user"
+        android:layout_height="@dimen/icon_item_user"
+        android:src="@mipmap/user_default_icon" />
+
+    <TextView
+        android:id="@+id/contact_name"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_marginLeft="@dimen/margin_medium"
+        android:layout_marginStart="@dimen/margin_medium"
+        android:gravity="center_vertical"
+        android:text="用户1"
+        android:textSize="16sp" />
+</LinearLayout>

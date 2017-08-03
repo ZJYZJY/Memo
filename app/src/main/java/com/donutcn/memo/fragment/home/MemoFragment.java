@@ -1,6 +1,8 @@
 package com.donutcn.memo.fragment.home;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -16,11 +18,13 @@ import com.donutcn.memo.activity.MainActivity;
 import com.donutcn.memo.base.BaseScrollFragment;
 import com.donutcn.memo.entity.ArrayResponse;
 import com.donutcn.memo.entity.BriefContent;
+import com.donutcn.memo.entity.SimpleResponse;
 import com.donutcn.memo.event.ReceiveNewMessagesEvent;
 import com.donutcn.memo.event.RequestRefreshEvent;
 import com.donutcn.memo.type.ItemLayoutType;
 import com.donutcn.memo.utils.CollectionUtil;
 import com.donutcn.memo.utils.HttpUtils;
+import com.donutcn.memo.utils.SpfsUtils;
 import com.donutcn.memo.utils.ToastUtil;
 import com.donutcn.memo.utils.UserStatus;
 import com.donutcn.memo.view.ListViewDecoration;
@@ -83,6 +87,7 @@ public class MemoFragment extends BaseScrollFragment {
         mRefreshLayout = (SmartRefreshLayout) view.findViewById(R.id.swipe_layout);
         mRefreshLayout.setOnRefreshListener(mRefreshListener);
         mRefreshLayout.setOnLoadmoreListener(mLoadmoreListener);
+        mRefreshLayout.setEnableLoadmore(false);
 
         mHaoYe_rv.setLayoutManager(new LinearLayoutManager(mContext));
         mHaoYe_rv.addItemDecoration(new ListViewDecoration(mContext, R.dimen.item_decoration_height));
@@ -106,20 +111,23 @@ public class MemoFragment extends BaseScrollFragment {
     }
 
     public void Refresh() {
-        HttpUtils.getMyContent(1).enqueue(new Callback<ArrayResponse>() {
+        HttpUtils.getMyContent(1).enqueue(new Callback<ArrayResponse<BriefContent>>() {
             @Override
-            public void onResponse(Call<ArrayResponse> call, Response<ArrayResponse> response) {
+            public void onResponse(Call<ArrayResponse<BriefContent>> call, Response<ArrayResponse<BriefContent>> response) {
                 if(response.body().isOk()){
                     list.addAll(0, response.body().getData());
                     list = (ArrayList<BriefContent>) CollectionUtil.removeDuplicateWithOrder(list);
                     mAdapter.setDataSet(list);
                     mAdapter.notifyDataSetChanged();
+                    if(list.size() >= 10){
+                        mRefreshLayout.setEnableLoadmore(true);
+                    }
                 }
                 mRefreshLayout.finishRefresh();
             }
 
             @Override
-            public void onFailure(Call<ArrayResponse> call, Throwable t) {
+            public void onFailure(Call<ArrayResponse<BriefContent>> call, Throwable t) {
                 t.printStackTrace();
                 ToastUtil.show(getContext(), "连接失败");
                 mRefreshLayout.finishRefresh();
@@ -129,24 +137,24 @@ public class MemoFragment extends BaseScrollFragment {
 
     public void LoadMore() {
         page = ((MainActivity)getActivity()).mMemoPage;
-        HttpUtils.getMyContent(page).enqueue(new Callback<ArrayResponse>() {
+        HttpUtils.getMyContent(page).enqueue(new Callback<ArrayResponse<BriefContent>>() {
             @Override
-            public void onResponse(Call<ArrayResponse> call, Response<ArrayResponse> response) {
+            public void onResponse(Call<ArrayResponse<BriefContent>> call, Response<ArrayResponse<BriefContent>> response) {
                 if(response.body().isOk()){
                     list.addAll(list.size(), response.body().getData());
                     mAdapter.setDataSet(list);
                     mAdapter.notifyDataSetChanged();
                     ((MainActivity)getActivity()).mMemoPage++;
                     mRefreshLayout.finishLoadmore();
-                    Log.e("list", "第五个" + list.get(5).getImage0());
                 }else {
                     ToastUtil.show(getContext(), "已经到底部了");
+                    mRefreshLayout.setEnableLoadmore(false);
                     mRefreshLayout.finishLoadmore(true);
                 }
             }
 
             @Override
-            public void onFailure(Call<ArrayResponse> call, Throwable t) {
+            public void onFailure(Call<ArrayResponse<BriefContent>> call, Throwable t) {
                 t.printStackTrace();
                 ToastUtil.show(getContext(), "连接失败");
                 mRefreshLayout.finishLoadmore();
@@ -232,15 +240,58 @@ public class MemoFragment extends BaseScrollFragment {
          *                        right swipe menu,value：{@link SwipeMenuRecyclerView#RIGHT_DIRECTION}.
          */
         @Override
-        public void onItemClick(Closeable closeable, int adapterPosition, int menuPosition, int direction) {
+        public void onItemClick(Closeable closeable, final int adapterPosition, int menuPosition, int direction) {
             // close the swipe menu
             closeable.smoothCloseMenu();
 
             if (direction == SwipeMenuRecyclerView.RIGHT_DIRECTION) {
-
+                switch (menuPosition) {
+                    case 0:
+                        break;
+                    case 1:
+                        break;
+                    case 2:
+                        new AlertDialog.Builder(mContext)
+                                .setMessage(getString(R.string.dialog_del_publish_content))
+                                .setPositiveButton(getString(R.string.dialog_publish_pos), new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        deleteContent(adapterPosition);
+                                    }
+                                })
+                                .setNegativeButton(getString(R.string.dialog_publish_neg), null)
+                                .setCancelable(true)
+                                .show();
+                        break;
+                }
             }
+//            SpfsUtils.write(mContext, SpfsUtils.CACHE, "publishType", mSelectedType);
+//            SpfsUtils.write(mContext, SpfsUtils.CACHE, "publishTitle", mTitleStr);
+//            SpfsUtils.write(mContext, SpfsUtils.CACHE, "publishContent", mContentStr);
         }
     };
+
+    private void deleteContent(final int position){
+        HttpUtils.deleteContent(list.get(position).getId()).enqueue(new Callback<SimpleResponse>() {
+            @Override
+            public void onResponse(Call<SimpleResponse> call, Response<SimpleResponse> response) {
+                Log.d("del_content", response.body().getMessage());
+                if(response.body().isOk()){
+                    list.remove(position);
+                    mAdapter.notifyItemRemoved(position);
+                    ToastUtil.show(mContext, "删除成功");
+                }else {
+                    ToastUtil.show(mContext, "删除失败");
+                }
+            }
+
+            @Override
+            public void onFailure(Call<SimpleResponse> call, Throwable t) {
+                t.printStackTrace();
+                ToastUtil.show(mContext, "删除连接失败");
+            }
+        });
+    }
 
     @Override
     public void onResume() {

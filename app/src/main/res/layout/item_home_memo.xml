@@ -63,14 +63,16 @@
             android:layout_width="match_parent"
             android:layout_height="96dp"
             android:layout_weight="1"
+            android:layout_marginRight="@dimen/margin_small"
+            android:layout_marginEnd="@dimen/margin_small"
             android:scaleType="centerCrop" />
 
         <ImageView
             android:id="@+id/iv_two"
             android:layout_width="match_parent"
             android:layout_height="96dp"
-            android:layout_marginLeft="@dimen/margin_large"
-            android:layout_marginStart="@dimen/margin_large"
+            android:layout_marginLeft="@dimen/margin_small"
+            android:layout_marginStart="@dimen/margin_small"
             android:layout_weight="1"
             android:scaleType="centerCrop" />
     </LinearLayout>

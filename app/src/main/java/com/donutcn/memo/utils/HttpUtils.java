@@ -4,6 +4,7 @@ import android.content.Context;
 import android.util.Log;
 
 import com.donutcn.memo.entity.ArrayResponse;
+import com.donutcn.memo.entity.BriefContent;
 import com.donutcn.memo.entity.ContentResponse;
 import com.donutcn.memo.entity.SimpleResponse;
 import com.donutcn.memo.listener.UploadCallback;
@@ -20,6 +21,7 @@ import com.qiniu.android.storage.UpProgressHandler;
 import com.qiniu.android.storage.UploadManager;
 import com.qiniu.android.storage.UploadOptions;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -182,13 +184,13 @@ public class HttpUtils {
          * refresh recommend content.
          */
         @GET(APIPath.REFRESH_RECOMMEND)
-        Call<ArrayResponse> getRecommendContent(@Path("page") int page);
+        Call<ArrayResponse<BriefContent>> getRecommendContent(@Path("page") int page);
 
         /**
          * refresh recommend content.
          */
         @POST(APIPath.SEARCH_CONTENT)
-        Call<ArrayResponse> searchContent(@Body RequestBody content);
+        Call<ArrayResponse<BriefContent>> searchContent(@Body RequestBody content);
 
         /**
          * get publish content by id.
@@ -212,7 +214,19 @@ public class HttpUtils {
          * complete publish content info.
          */
         @GET(APIPath.GET_MY_CONTENT)
-        Call<ArrayResponse> getMyContent(@Path("page") int page);
+        Call<ArrayResponse<BriefContent>> getMyContent(@Path("page") int page);
+
+        /**
+         * match user contact friends.
+         */
+        @POST(APIPath.MATCH_CONTACTS)
+        Call<ArrayResponse> matchContacts(@Body RequestBody contacts);
+
+        /**
+         * delete user publish content.
+         */
+        @GET(APIPath.DELETE_CONTENT)
+        Call<SimpleResponse> deleteContent(@Path("id") String id);
 
         /**
          * cookie test.
@@ -247,6 +261,10 @@ public class HttpUtils {
         private static final String COMPLETE_INFO = "private_api/article_field_api";
 
         private static final String GET_MY_CONTENT = "private_api/index/{page}";
+
+        private static final String MATCH_CONTACTS = "private_api/myfriend_api";
+
+        private static final String DELETE_CONTENT = "private_api/delete_article_api/{id}";
     }
 
     public static Call<SimpleResponse> login(String username, String password) {
@@ -285,20 +303,28 @@ public class HttpUtils {
         return create().logout(request);
     }
 
-    public static Call<SimpleResponse> publishContent(String title, String type, String content) {
-        String str = "{\"title\":\"" + title + "\"," +
-                "\"type\":\"" + type + "\"," +
-                "\"content\":\"" + content + "\"}";
+    public static Call<SimpleResponse> publishContent(String id, String title, String type, String content) {
+        String str;
+        if(id != null){
+            str = "{\"article_id\":\"" + id + "\"," +
+                    "\"title\":\"" + title + "\"," +
+                    "\"type\":\"" + type + "\"," +
+                    "\"content\":\"" + content + "\"}";
+        }else {
+            str = "{\"title\":\"" + title + "\"," +
+                    "\"type\":\"" + type + "\"," +
+                    "\"content\":\"" + content + "\"}";
+        }
         RequestBody request = RequestBody
                 .create(okhttp3.MediaType.parse("application/json; charset=utf-8"), str);
         return create().publishContent(request);
     }
 
-    public static Call<ArrayResponse> getRecommendContent(int page) {
+    public static Call<ArrayResponse<BriefContent>> getRecommendContent(int page) {
         return create().getRecommendContent(page);
     }
 
-    public static Call<ArrayResponse> searchContent(String key){
+    public static Call<ArrayResponse<BriefContent>> searchContent(String key){
         String str = "{\"keywords\":\"" + key + "\"}";
         RequestBody request = RequestBody
                 .create(okhttp3.MediaType.parse("application/json; charset=utf-8"), str);
@@ -351,12 +377,30 @@ public class HttpUtils {
         }
         RequestBody request = RequestBody
                 .create(okhttp3.MediaType.parse("application/json; charset=utf-8"), json.toString());
-        System.out.println(json.toString());
+//        System.out.println(json.toString());
         return create().completeInfo(request);
     }
 
-    public static Call<ArrayResponse> getMyContent(int page){
+    public static Call<ArrayResponse<BriefContent>> getMyContent(int page){
         return create().getMyContent(page);
+    }
+
+    public static Call<ArrayResponse> matchContacts(List<String> signatureCode){
+        JSONObject json = new JSONObject();
+        JSONArray array = new JSONArray();
+        try {
+
+            json.put("data", array);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        RequestBody request = RequestBody
+                .create(okhttp3.MediaType.parse("application/json; charset=utf-8"), json.toString());
+        return create().matchContacts(request);
+    }
+
+    public static Call<SimpleResponse> deleteContent(String id){
+        return create().deleteContent(id);
     }
 
     public static Call<ResponseBody> test() {
@@ -419,10 +463,10 @@ public class HttpUtils {
                                 try {
                                     // store the file key.
                                     fileKeys.add(response.getString("key"));
+                                    listener.uploadSingle(response.getString("key"));
                                 } catch (JSONException e) {
                                     e.printStackTrace();
                                 }
-                                uploadCount.addAndGet(1);
                                 if (uploadCount.get() == paths.size()) {
                                     listener.uploadAll(fileKeys);
                                     // reset uploadCount.

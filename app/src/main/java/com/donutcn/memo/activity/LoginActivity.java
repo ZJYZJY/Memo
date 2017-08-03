@@ -2,6 +2,7 @@ package com.donutcn.memo.activity;
 
 import android.app.FragmentTransaction;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -98,6 +99,25 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 UserStatus.login(getApplicationContext(), phoneNumber);
                 startActivity(new Intent(LoginActivity.this, MainActivity.class));
             }else {
+                Intent intent = getIntent();
+                String scheme = intent.getScheme();
+                Uri uri = intent.getData();
+                System.out.println("scheme:"+scheme);
+                ToastUtil.show(LoginActivity.this, scheme);
+                if (uri != null) {
+                    String host = uri.getHost();
+                    String dataString = intent.getDataString();
+                    String id = uri.getQueryParameter("d");
+                    String path = uri.getPath();
+                    String path1 = uri.getEncodedPath();
+                    String queryString = uri.getQuery();
+                    System.out.println("host:"+host);
+                    System.out.println("dataString:"+dataString);
+                    System.out.println("id:"+id);
+                    System.out.println("path:"+path);
+                    System.out.println("path1:"+path1);
+                    System.out.println("queryString:"+queryString);
+                }
                 removeSplashFragment();
             }
         }

@@ -23,7 +23,6 @@ import com.donutcn.widgetlib.widget.SwitchView;
 
 import java.util.ArrayList;
 
-import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -39,7 +38,7 @@ public class CompletingPage extends AppCompatActivity {
     private Context mContext;
     private PublishType mContentType;
     private ArrayList<String> voteItems;
-    private String contentId;
+    private String mContentId;
     private String field1Str, field2Str, field3Str;
     private String mContentStr, mTitleStr;
 
@@ -53,6 +52,7 @@ public class CompletingPage extends AppCompatActivity {
         WindowUtils.setStatusBarColor(this, R.color.colorPrimary, true);
 
         mContext = this;
+        mContentId = getIntent().getStringExtra("contentId");
         mTitleStr = getIntent().getStringExtra("title");
         mContentStr = getIntent().getStringExtra("content");
         mContentType = (PublishType) getIntent().getSerializableExtra("type");
@@ -156,12 +156,12 @@ public class CompletingPage extends AppCompatActivity {
                 }
                 break;
         }
-        HttpUtils.publishContent(mTitleStr, mContentType.toString(), mContentStr)
+        HttpUtils.publishContent(mContentId, mTitleStr, mContentType.toString(), mContentStr)
                 .enqueue(new Callback<SimpleResponse>() {
             @Override
             public void onResponse(Call<SimpleResponse> call, Response<SimpleResponse> response) {
                 if (response.body().isOk()) {
-                    contentId = String.valueOf(response.body().getField("article_id"));
+                    mContentId = String.valueOf(response.body().getField("article_id"));
                     completeInfo();
                 } else {
                     ToastUtil.show(mContext, "发布失败");
@@ -177,7 +177,7 @@ public class CompletingPage extends AppCompatActivity {
     }
 
     private void completeInfo() {
-        HttpUtils.completeInfo(contentId, mContentType, field1Str, field2Str, field3Str, needToApply,
+        HttpUtils.completeInfo(mContentId, mContentType, field1Str, field2Str, field3Str, needToApply,
                 needExtra1, needExtra2, voteItems).enqueue(new Callback<SimpleResponse>() {
             @Override
             public void onResponse(Call<SimpleResponse> call, Response<SimpleResponse> response) {
@@ -188,7 +188,7 @@ public class CompletingPage extends AppCompatActivity {
                     SpfsUtils.remove(mContext, SpfsUtils.CACHE, "publishTitle");
                     SpfsUtils.remove(mContext, SpfsUtils.CACHE, "publishContent");
                     Intent intent = new Intent(mContext, SocialShareActivity.class);
-                    intent.putExtra("contentId", contentId);
+                    intent.putExtra("mContentId", mContentId);
                     startActivity(intent);
                     finish();
                 } else {

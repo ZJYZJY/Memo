@@ -1,5 +1,7 @@
 package com.donutcn.memo.utils;
 
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -55,5 +57,26 @@ public class StringUtil {
         int min = Integer.valueOf(time[1]);
         int sec = Integer.valueOf(time[2]);
         return new Date(year, month, day, hrs, min, sec);
+    }
+
+    public static String getMD5(String val) {
+        MessageDigest md5 = null;
+        try {
+            md5 = MessageDigest.getInstance("MD5");
+            md5.update(val.getBytes());
+            byte[] m = md5.digest();//加密
+            return byte2String(m);
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    private static String byte2String(byte[] b){
+        StringBuffer sb = new StringBuffer();
+        for(int i = 0; i < b.length; i ++){
+            sb.append(b[i]);
+        }
+        return sb.toString();
     }
 }

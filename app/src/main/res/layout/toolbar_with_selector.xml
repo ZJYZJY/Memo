@@ -6,27 +6,27 @@
 
     <ImageView
         android:id="@+id/back_arrow"
-        android:layout_marginLeft="@dimen/margin_small"
-        android:layout_marginStart="@dimen/margin_small"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
+        android:layout_marginLeft="@dimen/margin_small"
+        android:layout_marginStart="@dimen/margin_small"
         android:onClick="onBack"
         android:padding="@dimen/padding_normal_icon"
         android:src="@drawable/ic_close" />
 
     <LinearLayout
         android:id="@+id/publish_spinner_container"
-        android:background="@color/colorPrimary"
-        android:layout_width="wrap_content"
+        android:layout_width="@dimen/publish_type_width"
         android:layout_height="@dimen/publish_type_height"
         android:layout_centerHorizontal="true"
         android:layout_centerVertical="true"
+        android:background="@drawable/selector_bg"
         android:gravity="center"
         android:orientation="horizontal"
+        android:paddingEnd="@dimen/padding_small"
         android:paddingLeft="@dimen/padding_large"
-        android:paddingStart="@dimen/padding_large"
         android:paddingRight="@dimen/padding_small"
-        android:paddingEnd="@dimen/padding_small">
+        android:paddingStart="@dimen/padding_large">
 
         <TextView
             android:id="@+id/publish_spinner"

@@ -1,9 +1,13 @@
 package com.donutcn.memo.fragment.discover;
 
+import android.app.ProgressDialog;
+import android.content.AsyncQueryHandler;
+import android.content.ContentResolver;
 import android.content.Context;
-import android.content.Intent;
-import android.graphics.Color;
+import android.database.Cursor;
 import android.os.Bundle;
+import android.provider.ContactsContract;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.view.LayoutInflater;
@@ -11,38 +15,40 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.donutcn.memo.R;
-import com.donutcn.memo.activity.ArticlePage;
-import com.donutcn.memo.activity.SearchActivity;
-import com.donutcn.memo.adapter.MemoAdapter;
+import com.donutcn.memo.adapter.FriendListAdapter;
 import com.donutcn.memo.base.BaseScrollFragment;
 import com.donutcn.memo.entity.BriefContent;
+import com.donutcn.memo.entity.Contact;
 import com.donutcn.memo.event.ReceiveNewMessagesEvent;
 import com.donutcn.memo.event.RequestRefreshEvent;
 import com.donutcn.memo.listener.OnItemClickListener;
-import com.donutcn.memo.type.ItemLayoutType;
+import com.donutcn.memo.listener.OnQueryListener;
+import com.donutcn.memo.utils.PermissionCheck;
+import com.donutcn.memo.utils.ToastUtil;
 import com.donutcn.memo.view.ListViewDecoration;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnLoadmoreListener;
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
-import com.yanzhenjie.recyclerview.swipe.Closeable;
-import com.yanzhenjie.recyclerview.swipe.OnSwipeMenuItemClickListener;
-import com.yanzhenjie.recyclerview.swipe.SwipeMenu;
-import com.yanzhenjie.recyclerview.swipe.SwipeMenuCreator;
-import com.yanzhenjie.recyclerview.swipe.SwipeMenuItem;
 import com.yanzhenjie.recyclerview.swipe.SwipeMenuRecyclerView;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
-public class FriendsFragment extends BaseScrollFragment implements View.OnClickListener {
+public class FriendsFragment extends BaseScrollFragment {
 
     private SwipeMenuRecyclerView mHaoYe_rv;
     private SmartRefreshLayout mRefreshLayout;
+    private View mContainer, mNoMatch;
 
-    private ArrayList<BriefContent> list;
+    private FriendListAdapter mAdapter;
+    private ArrayList<BriefContent> mList;
+    private static ArrayList<Contact> mContactsList;
     private Context mContext;
 
     @Override
@@ -65,6 +71,15 @@ public class FriendsFragment extends BaseScrollFragment implements View.OnClickL
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        view.findViewById(R.id.start_match).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startMatch(v);
+            }
+        });
+        mContainer = view.findViewById(R.id.unmatch_container);
+        mNoMatch = view.findViewById(R.id.no_matched_contact);
+
         mHaoYe_rv = (SwipeMenuRecyclerView) view.findViewById(R.id.recycler_view);
         setRecyclerView(mHaoYe_rv);
         mRefreshLayout = (SmartRefreshLayout) view.findViewById(R.id.swipe_layout);
@@ -73,23 +88,19 @@ public class FriendsFragment extends BaseScrollFragment implements View.OnClickL
 
         mHaoYe_rv.setLayoutManager(new LinearLayoutManager(mContext));
         mHaoYe_rv.addItemDecoration(new ListViewDecoration(getContext(), R.dimen.item_decoration_height));
-
-        // set up swipe menu.
-        mHaoYe_rv.setSwipeMenuCreator(mSwipeMenuCreator);
-        mHaoYe_rv.setSwipeMenuItemClickListener(mHaoYeItemClickListener);
     }
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        Refresh();
+//        Refresh();
     }
 
     public void Refresh() {
-        MemoAdapter adapter = new MemoAdapter(mContext, list, ItemLayoutType.AVATAR_IMG);
-        adapter.setOnItemClickListener(mOnItemClickListener);
+        mAdapter = new FriendListAdapter(mContext, mContactsList);
+        mAdapter.setOnItemClickListener(mOnItemClickListener);
 
-        mHaoYe_rv.setAdapter(adapter);
+        mHaoYe_rv.setAdapter(mAdapter);
     }
 
     private OnRefreshListener mRefreshListener = new OnRefreshListener() {
@@ -106,70 +117,26 @@ public class FriendsFragment extends BaseScrollFragment implements View.OnClickL
         }
     };
 
-    /**
-     * Menu creator. Call when creates the menu.
-     */
-    private SwipeMenuCreator mSwipeMenuCreator = new SwipeMenuCreator() {
-        @Override
-        public void onCreateMenu(SwipeMenu swipeLeftMenu, SwipeMenu swipeRightMenu, int viewType) {
-            int width = getResources().getDimensionPixelSize(R.dimen.swipe_menu_item_width);
-            int height = ViewGroup.LayoutParams.MATCH_PARENT;
-
-            // Add the swipe menu on the right
-            {
-                SwipeMenuItem editItem = new SwipeMenuItem(mContext)
-                        .setBackgroundDrawable(R.drawable.selector_gray)
-                        .setText(getResources().getString(R.string.btn_swipe_share))
-                        .setTextColor(Color.WHITE)
-                        .setTextSize(16)
-                        .setWidth(width)
-                        .setHeight(height);
-                swipeRightMenu.addMenuItem(editItem);
-            }
-        }
-    };
-
     private OnItemClickListener mOnItemClickListener = new OnItemClickListener() {
         @Override
         public void onItemClick(int position) {
             EventBus.getDefault().post(new ReceiveNewMessagesEvent(3, position));
-            Intent intent = new Intent(mContext, ArticlePage.class);
-            intent.putExtra("contentId", list.get(position).getId());
-            startActivity(intent);
         }
     };
 
-    @Override
-    public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.recommend_search:
-                startActivity(new Intent(getContext(), SearchActivity.class));
-                break;
+    public void startMatch(View view){
+//        PermissionCheck check = new PermissionCheck(mContext);
+//        if(check.checkContactsPermission()){
+//            getContactsAsync();
+//        }else {
+//            ToastUtil.show(mContext, "未授权读取联系人");
+//        }
+        if(PermissionCheck.checkContactsPermission(this)){
+            getContactsAsync();
+        }else {
+            ToastUtil.show(mContext, "未授权读取联系人");
         }
     }
-
-    /**
-     * Menu onClickListener
-     */
-    private OnSwipeMenuItemClickListener mHaoYeItemClickListener
-            = new OnSwipeMenuItemClickListener() {
-        /**
-         * @param closeable       Used for close the menu
-         * @param adapterPosition position of recyclerView item
-         * @param menuPosition    position of swipe menu item
-         * @param direction       left swipe menu,value：{@link SwipeMenuRecyclerView#LEFT_DIRECTION}，
-         *                        right swipe menu,value：{@link SwipeMenuRecyclerView#RIGHT_DIRECTION}.
-         */
-        @Override
-        public void onItemClick(Closeable closeable, int adapterPosition, int menuPosition, int direction) {
-            // close the swipe menu
-            closeable.smoothCloseMenu();
-
-            if (direction == SwipeMenuRecyclerView.RIGHT_DIRECTION) {
-
-            }
-        }
-    };
 
     @Override
     public void onResume() {
@@ -185,9 +152,111 @@ public class FriendsFragment extends BaseScrollFragment implements View.OnClickL
 
     @Subscribe
     public void onRequestRefreshEvent(RequestRefreshEvent event){
-        if(event.getRefreshPosition() == 4){
+        if(event.getRefreshPosition() == 3){
             mHaoYe_rv.scrollToPosition(0);
             mRefreshLayout.autoRefresh(0);
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
+                                           @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == PermissionCheck.PERMISSION_READ_CONTACTS) {
+
+        }
+    }
+
+    private void getContactsAsync() {
+        final ProgressDialog dialog = new ProgressDialog(mContext);
+        dialog.setTitle("正在匹配联系人");
+        dialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+        dialog.setCanceledOnTouchOutside(false);
+        dialog.show();
+        ContactsQueryHandler qh = new ContactsQueryHandler(getContext().getContentResolver(),
+                new OnQueryListener<Contact>() {
+                    @Override
+                    public void onQueryProgress(int progress, int total) {
+                        dialog.setProgress(progress);
+                    }
+
+                    @Override
+                    public void onQueryComplete(List<Contact> list) {
+                        dialog.dismiss();
+                        ToastUtil.show(mContext, "匹配完成");
+                        mAdapter = new FriendListAdapter(mContext, mContactsList);
+                        mAdapter.setOnItemClickListener(mOnItemClickListener);
+                        mHaoYe_rv.setAdapter(mAdapter);
+                        if(mContactsList.size() > 0){
+                            mRefreshLayout.setVisibility(View.VISIBLE);
+                            mNoMatch.setVisibility(View.GONE);
+                            mContainer.setVisibility(View.GONE);
+                        }else {
+                            mRefreshLayout.setVisibility(View.GONE);
+                            mNoMatch.setVisibility(View.VISIBLE);
+                            mContainer.setVisibility(View.GONE);
+                        }
+                    }
+                });
+        // query field
+        String[] projection = {ContactsContract.CommonDataKinds.Phone._ID,
+                ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME,
+                ContactsContract.CommonDataKinds.Phone.DATA1, "sort_key",
+                ContactsContract.CommonDataKinds.Phone.CONTACT_ID,
+                ContactsContract.CommonDataKinds.Phone.PHOTO_ID,
+                ContactsContract.CommonDataKinds.Phone.LOOKUP_KEY};
+        qh.startQuery(0, null, ContactsContract.CommonDataKinds.Phone.CONTENT_URI, projection, null, null,
+                "sort_key COLLATE LOCALIZED asc");
+    }
+
+    static class ContactsQueryHandler extends AsyncQueryHandler {
+
+        private OnQueryListener<Contact> listener;
+
+        public ContactsQueryHandler(ContentResolver cr, OnQueryListener<Contact> listener) {
+            super(cr);
+            this.listener = listener;
+        }
+
+        @Override
+        protected void onQueryComplete(int token, Object cookie, Cursor cursor) {
+            if (cursor != null && cursor.getCount() > 0) {
+                Map<Integer, Contact> contactIdMap = new HashMap<>();
+                mContactsList = new ArrayList<>();
+                cursor.moveToFirst();
+                int size = cursor.getCount();
+                for (int i = 0; i < cursor.getCount(); i++) {
+                    cursor.moveToPosition(i);
+                    int Id = cursor.getInt(0);
+                    String name = cursor.getString(1);
+                    String number = cursor.getString(2);
+                    number = number.replace(" ", "");
+                    String sortKey = cursor.getString(3);
+                    int contactId = cursor.getInt(4);
+                    Long photoId = cursor.getLong(5);
+                    String lookUpKey = cursor.getString(6);
+
+                    if (contactIdMap.containsKey(contactId)) {
+                        // do nothing
+                    } else {
+                        // create a contact object.
+                        Contact contact = new Contact();
+                        contact.setDesplayName(name);
+                        contact.setPhoneNum(number);
+                        contact.setSortKey(sortKey);
+                        contact.setContactId(contactId);
+                        contact.setPhotoId(photoId);
+                        contact.setLookUpKey(lookUpKey);
+                        mContactsList.add(contact);
+
+                        contactIdMap.put(contactId, contact);
+                    }
+                    listener.onQueryProgress(i / size * 100, size);
+                }
+                cursor.close();
+                listener.onQueryComplete(mContactsList);
+            }
+            super.onQueryComplete(token, cookie, cursor);
         }
     }
 }

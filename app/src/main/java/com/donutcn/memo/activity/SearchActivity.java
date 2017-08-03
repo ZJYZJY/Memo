@@ -65,9 +65,9 @@ public class SearchActivity extends AppCompatActivity implements OnItemClickList
     }
 
     public void startSearch(){
-        HttpUtils.searchContent(mKeyWords).enqueue(new Callback<ArrayResponse>() {
+        HttpUtils.searchContent(mKeyWords).enqueue(new Callback<ArrayResponse<BriefContent>>() {
             @Override
-            public void onResponse(Call<ArrayResponse> call, Response<ArrayResponse> response) {
+            public void onResponse(Call<ArrayResponse<BriefContent>> call, Response<ArrayResponse<BriefContent>> response) {
                 if(response.body().isOk()){
                     list.clear();
                     list.addAll(response.body().getData());
@@ -79,7 +79,7 @@ public class SearchActivity extends AppCompatActivity implements OnItemClickList
             }
 
             @Override
-            public void onFailure(Call<ArrayResponse> call, Throwable t) {
+            public void onFailure(Call<ArrayResponse<BriefContent>> call, Throwable t) {
                 t.printStackTrace();
                 ToastUtil.show(SearchActivity.this, "搜索连接失败");
             }

@@ -84,6 +84,7 @@ public class PublishActivity extends AppCompatActivity implements View.OnClickLi
     private String mSelectedType;
     private String mTitleStr = "";
     private String mContentStr = "";
+    private String mContentId;
     private static final String HOST = "http://otu6v4c72.bkt.clouddn.com/";
     private Context mContext;
     private ProgressDialog mPublishDialog;
@@ -98,6 +99,7 @@ public class PublishActivity extends AppCompatActivity implements View.OnClickLi
         initView();
         setUpRichTextEditor();
         mContext = this;
+        mContentId = getIntent().getStringExtra("contentId");
         PublishType type = (PublishType) getIntent().getSerializableExtra("type");
         if (type != null) {
             mSelectedType = type.toString();
@@ -148,16 +150,6 @@ public class PublishActivity extends AppCompatActivity implements View.OnClickLi
 
         View view = findViewById(R.id.publish_spinner_container);
         view.setOnClickListener(this);
-        ShadowDrawable shadow = new ShadowDrawable();
-        shadow.setColor(getResources().getColor(R.color.shadow))
-                .setOffsetY(0)
-                .setRadius(10)
-                .setEdgeShadowWidth(2)
-                .setFilterColor(0x56ffffff)
-                .setTopMargin(2)
-                .setParentHeight(DensityUtils.dp2px(this, 32))
-                .attach(view)
-                .build();
         mPublishBtn.setOnClickListener(this);
 
         mAddPic.setOnClickListener(this);
@@ -198,7 +190,7 @@ public class PublishActivity extends AppCompatActivity implements View.OnClickLi
         // Escape the " to \"
         mTitleStr = mTitleStr.replace("\"", "\\\"");
         mContentStr = mContentStr.replace("\"", "\\\"");
-        HttpUtils.publishContent(mTitleStr, mSelectedType, mContentStr)
+        HttpUtils.publishContent(mContentId, mTitleStr, mSelectedType, mContentStr)
                 .enqueue(new Callback<SimpleResponse>() {
             @Override
             public void onResponse(Call<SimpleResponse> call, Response<SimpleResponse> response) {
@@ -242,6 +234,9 @@ public class PublishActivity extends AppCompatActivity implements View.OnClickLi
                         publishContent(null);
                     }else {
                         HttpUtils.upLoadImages(this, selectedPhotos, new UploadCallback() {
+                            @Override
+                            public void uploadSingle(String key) {
+                            }
                             @Override
                             public void uploadAll(List<String> keys) {
                                 publishContent(keys);
@@ -321,6 +316,8 @@ public class PublishActivity extends AppCompatActivity implements View.OnClickLi
 
     private void startCompletePage() {
         Intent intent = new Intent(this, CompletingPage.class);
+        if(mContentId != null)
+            intent.putExtra("contentId", mContentId);
         intent.putExtra("title", mTitleStr);
         intent.putExtra("type", PublishType.getType(mSelectedType));
         intent.putExtra("content", mContentStr);
@@ -598,7 +595,7 @@ public class PublishActivity extends AppCompatActivity implements View.OnClickLi
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
                                            @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if (requestCode == PermissionCheck.PERMISSION_RECORD) {
+        if (requestCode == PermissionCheck.PERMISSION_RECORD_AUDIO) {
 
         }
     }

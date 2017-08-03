@@ -85,6 +85,7 @@ public class RecommendFragment extends BaseScrollFragment implements View.OnClic
         mSearch_tv = (TextView) view.findViewById(R.id.recommend_search);
         mRefreshLayout.setOnRefreshListener(mRefreshListener);
         mRefreshLayout.setOnLoadmoreListener(mLoadmoreListener);
+        mRefreshLayout.setEnableLoadmore(false);
         mSearch_tv.setOnClickListener(this);
 
         mHaoYe_rv.setLayoutManager(new LinearLayoutManager(mContext));
@@ -107,20 +108,23 @@ public class RecommendFragment extends BaseScrollFragment implements View.OnClic
     }
 
     public void Refresh() {
-        HttpUtils.getRecommendContent(1).enqueue(new Callback<ArrayResponse>() {
+        HttpUtils.getRecommendContent(1).enqueue(new Callback<ArrayResponse<BriefContent>>() {
             @Override
-            public void onResponse(Call<ArrayResponse> call, Response<ArrayResponse> response) {
+            public void onResponse(Call<ArrayResponse<BriefContent>> call, Response<ArrayResponse<BriefContent>> response) {
                 if(response.body().isOk()){
                     list.addAll(0, response.body().getData());
                     list = (ArrayList<BriefContent>) CollectionUtil.removeDuplicateWithOrder(list);
                     mAdapter.setDataSet(list);
                     mAdapter.notifyDataSetChanged();
+                    if(list.size() >= 10){
+                        mRefreshLayout.setEnableLoadmore(true);
+                    }
                 }
                 mRefreshLayout.finishRefresh();
             }
 
             @Override
-            public void onFailure(Call<ArrayResponse> call, Throwable t) {
+            public void onFailure(Call<ArrayResponse<BriefContent>> call, Throwable t) {
                 t.printStackTrace();
                 ToastUtil.show(getContext(), "推荐连接失败");
                 mRefreshLayout.finishRefresh();
@@ -130,9 +134,9 @@ public class RecommendFragment extends BaseScrollFragment implements View.OnClic
 
     public void LoadMore() {
         page = ((MainActivity)getActivity()).mRecommendPage;
-        HttpUtils.getRecommendContent(page).enqueue(new Callback<ArrayResponse>() {
+        HttpUtils.getRecommendContent(page).enqueue(new Callback<ArrayResponse<BriefContent>>() {
             @Override
-            public void onResponse(Call<ArrayResponse> call, Response<ArrayResponse> response) {
+            public void onResponse(Call<ArrayResponse<BriefContent>> call, Response<ArrayResponse<BriefContent>> response) {
                 if(response.body().isOk()){
                     list.addAll(list.size(), response.body().getData());
                     mAdapter.setDataSet(list);
@@ -141,12 +145,13 @@ public class RecommendFragment extends BaseScrollFragment implements View.OnClic
                     mRefreshLayout.finishLoadmore();
                 }else {
                     ToastUtil.show(getContext(), "已经到底部了");
+                    mRefreshLayout.setEnableLoadmore(false);
                     mRefreshLayout.finishLoadmore(true);
                 }
             }
 
             @Override
-            public void onFailure(Call<ArrayResponse> call, Throwable t) {
+            public void onFailure(Call<ArrayResponse<BriefContent>> call, Throwable t) {
                 t.printStackTrace();
                 ToastUtil.show(getContext(), "推荐连接失败");
                 mRefreshLayout.finishLoadmore();

@@ -83,6 +83,7 @@
     <!--dialog-->
     <string name="dialog_publish_title">插入链接</string>
     <string name="dialog_publish_exit_msg">是否保存草稿</string>
+    <string name="dialog_del_publish_content">确定要删除吗</string>
     <string name="dialog_publish_pos">是</string>
     <string name="dialog_publish_neg">否</string>
 

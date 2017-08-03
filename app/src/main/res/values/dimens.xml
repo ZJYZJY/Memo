@@ -50,7 +50,8 @@
 
     <!--height & width-->
     <dimen name="content_item_author_width">64dp</dimen>
-    <dimen name="publish_type_height">32dp</dimen>
+    <dimen name="publish_type_width">108dp</dimen>
+    <dimen name="publish_type_height">42dp</dimen>
     <dimen name="message_item_height">56dp</dimen>
     <dimen name="message_item_btn_width">96dp</dimen>
     <dimen name="search_bar_height">32dp</dimen>

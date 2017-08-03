@@ -37,7 +37,7 @@ import org.greenrobot.eventbus.Subscribe;
 
 import java.util.ArrayList;
 
-public class LatestFragment extends BaseScrollFragment implements View.OnClickListener {
+public class LatestFragment extends BaseScrollFragment {
 
     private SwipeMenuRecyclerView mHaoYe_rv;
     private SmartRefreshLayout mRefreshLayout;
@@ -60,7 +60,7 @@ public class LatestFragment extends BaseScrollFragment implements View.OnClickLi
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_friends, container, false);
+        return inflater.inflate(R.layout.fragment_latest, container, false);
     }
 
     @Override
@@ -139,15 +139,6 @@ public class LatestFragment extends BaseScrollFragment implements View.OnClickLi
         }
     };
 
-    @Override
-    public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.recommend_search:
-                startActivity(new Intent(getContext(), SearchActivity.class));
-                break;
-        }
-    }
-
     /**
      * Menu onClickListener
      */
@@ -166,6 +157,7 @@ public class LatestFragment extends BaseScrollFragment implements View.OnClickLi
             closeable.smoothCloseMenu();
 
             if (direction == SwipeMenuRecyclerView.RIGHT_DIRECTION) {
+
             }
         }
     };
@@ -184,7 +176,7 @@ public class LatestFragment extends BaseScrollFragment implements View.OnClickLi
 
     @Subscribe
     public void onRequestRefreshEvent(RequestRefreshEvent event){
-        if(event.getRefreshPosition() == 3){
+        if(event.getRefreshPosition() == 4){
             mHaoYe_rv.scrollToPosition(0);
             mRefreshLayout.autoRefresh(0);
         }
