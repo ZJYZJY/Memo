@@ -51,7 +51,7 @@ public class ArticlePage extends AppCompatActivity implements View.OnClickListen
         initView();
         mContentId = getIntent().getStringExtra("contentId");
         if(mContent != null){
-            HttpUtils.getContent(mContentId).enqueue(new Callback<ContentResponse>() {
+            HttpUtils.getContentById(mContentId).enqueue(new Callback<ContentResponse>() {
                 @Override
                 public void onResponse(Call<ContentResponse> call, Response<ContentResponse> response) {
                     ContentResponse res = response.body();

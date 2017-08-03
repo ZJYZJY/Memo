@@ -4,10 +4,10 @@
     android:layout_height="wrap_content"
     android:background="?selectableItemBackground"
     android:orientation="horizontal"
+    android:paddingBottom="@dimen/padding_medium"
     android:paddingLeft="@dimen/padding_large"
     android:paddingRight="@dimen/padding_large"
-    android:paddingTop="@dimen/padding_medium"
-    android:paddingBottom="@dimen/padding_medium">
+    android:paddingTop="@dimen/padding_medium">
 
     <com.donutcn.widgetlib.widget.CircleImageView
         android:id="@+id/iv_content_icon"
@@ -60,19 +60,19 @@
 
         <ImageView
             android:id="@+id/iv_one"
-            android:layout_width="64dp"
-            android:layout_height="64dp"
+            android:layout_width="match_parent"
+            android:layout_height="96dp"
             android:layout_weight="1"
-            android:src="@mipmap/ic_launcher" />
+            android:scaleType="centerCrop" />
 
         <ImageView
             android:id="@+id/iv_two"
-            android:layout_width="64dp"
-            android:layout_height="64dp"
+            android:layout_width="match_parent"
+            android:layout_height="96dp"
             android:layout_marginLeft="@dimen/margin_large"
             android:layout_marginStart="@dimen/margin_large"
             android:layout_weight="1"
-            android:src="@mipmap/ic_launcher" />
+            android:scaleType="centerCrop" />
     </LinearLayout>
 
     <RelativeLayout
@@ -132,48 +132,48 @@
         </LinearLayout>
 
         <!--<LinearLayout-->
-            <!--android:id="@+id/comment_upvote"-->
-            <!--android:layout_width="wrap_content"-->
-            <!--android:layout_height="match_parent"-->
-            <!--android:layout_alignParentEnd="true"-->
-            <!--android:layout_alignParentRight="true"-->
-            <!--android:layout_alignTop="@+id/tv_publish_info"-->
-            <!--android:orientation="horizontal">-->
+        <!--android:id="@+id/comment_upvote"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="match_parent"-->
+        <!--android:layout_alignParentEnd="true"-->
+        <!--android:layout_alignParentRight="true"-->
+        <!--android:layout_alignTop="@+id/tv_publish_info"-->
+        <!--android:orientation="horizontal">-->
 
-            <!--<ImageView-->
-                <!--android:layout_width="14dp"-->
-                <!--android:layout_height="14dp"-->
-                <!--android:src="@drawable/ic_upvote_fill" />-->
+        <!--<ImageView-->
+        <!--android:layout_width="14dp"-->
+        <!--android:layout_height="14dp"-->
+        <!--android:src="@drawable/ic_upvote_fill" />-->
 
-            <!--<TextView-->
-                <!--android:id="@+id/tv_upvote"-->
-                <!--android:layout_width="24dp"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:layout_gravity="center"-->
-                <!--android:layout_marginLeft="4dp"-->
-                <!--android:layout_marginStart="4dp"-->
-                <!--android:text="20"-->
-                <!--android:textColor="@color/textPrimary"-->
-                <!--android:textSize="12sp" />-->
+        <!--<TextView-->
+        <!--android:id="@+id/tv_upvote"-->
+        <!--android:layout_width="24dp"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_gravity="center"-->
+        <!--android:layout_marginLeft="4dp"-->
+        <!--android:layout_marginStart="4dp"-->
+        <!--android:text="20"-->
+        <!--android:textColor="@color/textPrimary"-->
+        <!--android:textSize="12sp" />-->
 
-            <!--<ImageView-->
-                <!--android:layout_width="12dp"-->
-                <!--android:layout_height="12dp"-->
-                <!--android:layout_gravity="center"-->
-                <!--android:layout_marginLeft="4dp"-->
-                <!--android:layout_marginStart="4dp"-->
-                <!--android:src="@drawable/comment_fill" />-->
+        <!--<ImageView-->
+        <!--android:layout_width="12dp"-->
+        <!--android:layout_height="12dp"-->
+        <!--android:layout_gravity="center"-->
+        <!--android:layout_marginLeft="4dp"-->
+        <!--android:layout_marginStart="4dp"-->
+        <!--android:src="@drawable/comment_fill" />-->
 
-            <!--<TextView-->
-                <!--android:id="@+id/tv_comment"-->
-                <!--android:layout_width="24dp"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:layout_gravity="center"-->
-                <!--android:layout_marginLeft="4dp"-->
-                <!--android:layout_marginStart="4dp"-->
-                <!--android:text="20"-->
-                <!--android:textColor="@color/textPrimary"-->
-                <!--android:textSize="12sp" />-->
+        <!--<TextView-->
+        <!--android:id="@+id/tv_comment"-->
+        <!--android:layout_width="24dp"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_gravity="center"-->
+        <!--android:layout_marginLeft="4dp"-->
+        <!--android:layout_marginStart="4dp"-->
+        <!--android:text="20"-->
+        <!--android:textColor="@color/textPrimary"-->
+        <!--android:textSize="12sp" />-->
         <!--</LinearLayout>-->
     </RelativeLayout>
 </RelativeLayout>

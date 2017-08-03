@@ -22,6 +22,6 @@
         android:layout_marginStart="@dimen/margin_small"
         android:layout_toEndOf="@+id/back_arrow"
         android:layout_toRightOf="@+id/back_arrow"
-        android:textColor="@color/textPrimaryDark"
+        android:textColor="@color/text_title_gray"
         android:textSize="18sp" />
 </RelativeLayout>

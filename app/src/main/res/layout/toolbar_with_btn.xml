@@ -22,7 +22,7 @@
         android:layout_marginStart="@dimen/padding_medium"
         android:layout_toEndOf="@+id/back_arrow"
         android:layout_toRightOf="@+id/back_arrow"
-        android:textColor="@color/textPrimaryDark"
+        android:textColor="@color/text_title_gray"
         android:textSize="18sp" />
 
     <Button
@@ -33,9 +33,8 @@
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
         android:layout_centerVertical="true"
-        android:layout_margin="@dimen/margin_small"
-        android:layout_marginEnd="@dimen/margin_medium"
-        android:layout_marginRight="@dimen/margin_medium"
-        android:background="@drawable/transparent_btn"
-        android:textColor="@color/textPrimaryDark" />
+        android:layout_marginEnd="@dimen/margin_small"
+        android:layout_marginRight="@dimen/margin_small"
+        android:textColor="@color/text_title_gray"
+        android:textSize="16sp" />
 </RelativeLayout>

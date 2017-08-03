@@ -42,7 +42,22 @@ public class UserStatus {
         context.startActivity(intent);
     }
 
-    public static boolean checkLoginState(Context context) {
+    public static boolean ifRequestLogin(Context context, String message) {
+        if(!isLogin(context)){
+            if(message != null){
+                ToastUtil.show(context, message);
+            }
+            // go back to LoginActivity
+            Intent intent = new Intent(context, LoginActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            intent.putExtra("showSplash", false);
+            context.startActivity(intent);
+            return true;
+        }
+        return false;
+    }
+
+    public static boolean isLogin(Context context) {
         return SpfsUtils.readBoolean(context, SpfsUtils.USER, "loginFlag", false);
     }
 }

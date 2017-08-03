@@ -62,4 +62,12 @@ public class ContentResponse extends Response<LinkedHashMap> {
     public String getCommentCount() {
         return (String) getContent().get("comment_total");
     }
+
+    @Override
+    public String toString() {
+        if(data == null)
+            return super.toString();
+        else
+            return super.toString() + data.toString();
+    }
 }

@@ -23,6 +23,7 @@ import com.donutcn.memo.event.ReceiveNewMessagesEvent;
 import com.donutcn.memo.event.RequestRefreshEvent;
 import com.donutcn.memo.listener.OnItemClickListener;
 import com.donutcn.memo.type.ItemLayoutType;
+import com.donutcn.memo.utils.CollectionUtil;
 import com.donutcn.memo.utils.HttpUtils;
 import com.donutcn.memo.utils.ToastUtil;
 import com.donutcn.memo.view.ListViewDecoration;
@@ -52,11 +53,11 @@ public class RecommendFragment extends BaseScrollFragment implements View.OnClic
     private SmartRefreshLayout mRefreshLayout;
     private TextView mSearch_tv;
 
-    private MemoAdapter adapter;
+    private MemoAdapter mAdapter;
     private ArrayList<BriefContent> list;
     private Context mContext;
 
-    private int page = 1;
+    private int page = 2;
 
     @Override
     public void onAttach(Context context) {
@@ -99,9 +100,9 @@ public class RecommendFragment extends BaseScrollFragment implements View.OnClic
         super.onActivityCreated(savedInstanceState);
         page = ((MainActivity)getActivity()).mRecommendPage;
         list = new ArrayList<>();
-        adapter = new MemoAdapter(mContext, list, ItemLayoutType.AVATAR_IMG);
-        adapter.setOnItemClickListener(mOnItemClickListener);
-        mHaoYe_rv.setAdapter(adapter);
+        mAdapter = new MemoAdapter(mContext, list, ItemLayoutType.AVATAR_IMG);
+        mAdapter.setOnItemClickListener(mOnItemClickListener);
+        mHaoYe_rv.setAdapter(mAdapter);
         Refresh();
     }
 
@@ -110,11 +111,10 @@ public class RecommendFragment extends BaseScrollFragment implements View.OnClic
             @Override
             public void onResponse(Call<ArrayResponse> call, Response<ArrayResponse> response) {
                 if(response.body().isOk()){
-                    list.clear();
-                    list.addAll(response.body().getData());
-                    adapter.notifyDataSetChanged();
-                }else {
-                    ToastUtil.show(getContext(), "已经到底部了");
+                    list.addAll(0, response.body().getData());
+                    list = (ArrayList<BriefContent>) CollectionUtil.removeDuplicateWithOrder(list);
+                    mAdapter.setDataSet(list);
+                    mAdapter.notifyDataSetChanged();
                 }
                 mRefreshLayout.finishRefresh();
             }
@@ -134,8 +134,9 @@ public class RecommendFragment extends BaseScrollFragment implements View.OnClic
             @Override
             public void onResponse(Call<ArrayResponse> call, Response<ArrayResponse> response) {
                 if(response.body().isOk()){
-                    list.addAll(10 * (page - 1), response.body().getData());
-                    adapter.notifyDataSetChanged();
+                    list.addAll(list.size(), response.body().getData());
+                    mAdapter.setDataSet(list);
+                    mAdapter.notifyDataSetChanged();
                     ((MainActivity)getActivity()).mRecommendPage++;
                     mRefreshLayout.finishLoadmore();
                 }else {

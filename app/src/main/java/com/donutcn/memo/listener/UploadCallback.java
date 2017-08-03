@@ -7,10 +7,15 @@ import java.util.List;
  * Created by 73958 on 2017/7/29.
  */
 
-public interface OnUploadAllListener {
+public interface UploadCallback {
 
     /**
      * after all files are uploaded, this method will be called.
      */
     void uploadAll(List<String> keys);
+
+    /**
+     * upload files fail.
+     */
+    void uploadFail(String error);
 }

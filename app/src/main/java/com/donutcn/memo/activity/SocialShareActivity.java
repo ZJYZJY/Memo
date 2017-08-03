@@ -53,13 +53,13 @@ public class SocialShareActivity extends AppCompatActivity implements View.OnCli
             @Override
             public void toggleToOn(SwitchView view) {
                 // not private
-                setPrivate(!view.isOpened());
+                setPrivate(view.isOpened(), view);
             }
 
             @Override
             public void toggleToOff(SwitchView view) {
                 // set private
-                setPrivate(!view.isOpened());
+                setPrivate(view.isOpened(), view);
             }
         });
         mHomePage = (Button) findViewById(R.id.toolbar_with_btn);
@@ -76,15 +76,17 @@ public class SocialShareActivity extends AppCompatActivity implements View.OnCli
         mHomePage.setOnClickListener(this);
     }
 
-    public void setPrivate(final boolean isPrivate) {
+    public void setPrivate(final boolean isPrivate, final SwitchView view) {
         HttpUtils.setPrivate(contentId, isPrivate ? 1 : 0).enqueue(new Callback<SimpleResponse>() {
             @Override
             public void onResponse(Call<SimpleResponse> call, Response<SimpleResponse> response) {
                 if (response.body().isOk()) {
                     if(isPrivate){
                         ToastUtil.show(SocialShareActivity.this, "设为私有");
+                        view.toggleSwitch(false);
                     }else {
                         ToastUtil.show(SocialShareActivity.this, "设为公开");
+                        view.toggleSwitch(true);
                     }
                 } else {
                     ToastUtil.show(SocialShareActivity.this, "设置失败");
@@ -147,7 +149,7 @@ public class SocialShareActivity extends AppCompatActivity implements View.OnCli
                 break;
             case R.id.share_iv7:
                 ClipboardManager cm = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
-                cm.setText("复制成功");
+                cm.setText(contentId);
                 ToastUtil.show(this, "复制成功");
                 break;
             case R.id.share_iv8:

@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.donutcn.memo.R;
 import com.donutcn.memo.base.BasePublishAdapter;
 import com.donutcn.memo.entity.BriefContent;
@@ -19,6 +20,7 @@ import com.donutcn.memo.utils.StringUtil;
 import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 public class MemoAdapter extends BasePublishAdapter<MemoAdapter.DefaultViewHolder> {
 
@@ -32,6 +34,10 @@ public class MemoAdapter extends BasePublishAdapter<MemoAdapter.DefaultViewHolde
         this.mContext = context;
         this.list = list;
         this.mLayoutType = layoutType;
+    }
+
+    public void setDataSet(ArrayList<BriefContent> list){
+        this.list = list;
     }
 
     public void setOnItemClickListener(OnItemClickListener onItemClickListener) {
@@ -65,66 +71,60 @@ public class MemoAdapter extends BasePublishAdapter<MemoAdapter.DefaultViewHolde
         DefaultViewHolder viewHolder = new DefaultViewHolder(realContentView);
         viewHolder.mOnItemClickListener = mOnItemClickListener;
 
-        if(mLayoutType == ItemLayoutType.TYPE_TAG && viewType == ITEM_NORMAL){
-            PublishType p = PublishType.ARTICLE;
-            String contentType = "";
-            switch (p){
-                case ARTICLE:
-                    contentType = mContext.getString(R.string.publish_content_article);
-                    viewHolder.mContentType.setBackgroundResource(R.drawable.type_blue_bg);
-                    break;
-                case ALBUM:
-                    contentType = mContext.getString(R.string.publish_content_album);
-                    viewHolder.mContentType.setBackgroundResource(R.drawable.type_blue_bg);
-                    break;
-                case ACTIVITY:
-                    contentType = mContext.getString(R.string.publish_content_activity);
-                    viewHolder.mContentType.setBackgroundResource(R.drawable.type_green_bg);
-                    break;
-                case VOTE:
-                    contentType = mContext.getString(R.string.publish_content_vote);
-                    viewHolder.mContentType.setBackgroundResource(R.drawable.type_green_bg);
-                    break;
-                case RECRUIT:
-                    contentType = mContext.getString(R.string.publish_content_recruit);
-                    viewHolder.mContentType.setBackgroundResource(R.drawable.type_red_bg);
-                    break;
-                case QA:
-                    contentType = mContext.getString(R.string.publish_content_qa);
-                    viewHolder.mContentType.setBackgroundResource(R.drawable.type_green_bg);
-                    break;
-                case RESERVE:
-                    contentType = mContext.getString(R.string.publish_content_reserve);
-                    viewHolder.mContentType.setBackgroundResource(R.drawable.type_red_bg);
-                    break;
-                case SALE:
-                    contentType = mContext.getString(R.string.publish_content_sale);
-                    viewHolder.mContentType.setBackgroundResource(R.drawable.type_red_bg);
-                    break;
-            }
-            viewHolder.mContentType.setText(contentType);
-        }
         return viewHolder;
     }
 
     @Override
     public void onBindViewHolder(DefaultViewHolder holder, int position) {
-        String type = list.get(position).getType();
+        String typeStr = list.get(position).getType();
+        PublishType type = PublishType.getType(typeStr);
         holder.mTitle.setText(list.get(position).getTitle());
-        holder.mContentType.setText(type);
+        holder.mContentType.setText(typeStr);
         holder.mContent.setText(list.get(position).getContent());
 
+        String url0 = list.get(position).getImage0();
+        String url1 = list.get(position).getImage1();
+        holder.mContainer.setVisibility(View.GONE);
+        if(!url0.equals("")){
+            holder.mContainer.setVisibility(View.VISIBLE);
+            Glide.with(mContext).load(url0).into(holder.mContentPic1);
+        }
+        if(!url1.equals("")){
+            holder.mContainer.setVisibility(View.VISIBLE);
+            Glide.with(mContext).load(url1).into(holder.mContentPic2);
+        }
+
         holder.mAuthor.setText(mContext.getString(R.string.placeholder_publish_author_type,
-                list.get(position).getName(), type));
+                list.get(position).getName(), typeStr));
         Date date = StringUtil.string2Date(list.get(position).getTime());
         DateFormat dateFormat = new DynamicTimeFormat("%s");
         holder.mTime.setText(dateFormat.format(date));
 //        holder.mUpvote.setText(list.get(position).getUpVote());
 //        holder.mComment.setText(list.get(position).getComment());
+
+        if(mLayoutType == ItemLayoutType.TYPE_TAG && type != null){
+            switch (type){
+                case ARTICLE:
+                case ALBUM:
+                    holder.mContentType.setBackgroundResource(R.drawable.type_blue_bg);
+                    break;
+                case ACTIVITY:
+                case VOTE:
+                case QA:
+                    holder.mContentType.setBackgroundResource(R.drawable.type_green_bg);
+                    break;
+                case RECRUIT:
+                case RESERVE:
+                case SALE:
+                    holder.mContentType.setBackgroundResource(R.drawable.type_red_bg);
+                    break;
+            }
+        }
     }
 
     static class DefaultViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         ImageView mImage;
+        View mContainer;
         ImageView mContentPic1;
         ImageView mContentPic2;
         TextView mTitle;
@@ -140,6 +140,7 @@ public class MemoAdapter extends BasePublishAdapter<MemoAdapter.DefaultViewHolde
             super(itemView);
             itemView.setOnClickListener(this);
             mImage = (ImageView) itemView.findViewById(R.id.iv_content_icon);
+            mContainer = itemView.findViewById(R.id.iv_container);
             mContentPic1 = (ImageView) itemView.findViewById(R.id.iv_one);
             mContentPic2 = (ImageView) itemView.findViewById(R.id.iv_two);
             mTitle = (TextView) itemView.findViewById(R.id.tv_title);

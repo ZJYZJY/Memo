@@ -15,6 +15,7 @@ import com.donutcn.memo.activity.AuthorPage;
 import com.donutcn.memo.adapter.TabFragmentPagerAdapter;
 import com.donutcn.memo.event.ReceiveNewMessagesEvent;
 import com.donutcn.memo.event.RequestRefreshEvent;
+import com.donutcn.memo.utils.UserStatus;
 import com.flyco.tablayout.SlidingTabLayout;
 import com.flyco.tablayout.listener.OnTabSelectListener;
 
@@ -42,8 +43,10 @@ public class DiscoverFragment extends Fragment implements OnTabSelectListener {
         mUserCenter_iv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if(!UserStatus.ifRequestLogin(getContext(), "请先登录")){
 //                startActivity(new Intent(getContext(), PersonalCenterActivity.class));
-                startActivity(new Intent(getContext(), AuthorPage.class));
+                    startActivity(new Intent(getContext(), AuthorPage.class));
+                }
             }
         });
         mPagerAdapter = new TabFragmentPagerAdapter(
@@ -72,6 +75,10 @@ public class DiscoverFragment extends Fragment implements OnTabSelectListener {
 
     @Override
     public void onTabSelect(int position) {
+        // if not the recommend page, request to login.
+        if(position != 0){
+            UserStatus.ifRequestLogin(getContext(), "请先登录");
+        }
         mTabLayout.hideMsg(position);
     }
 

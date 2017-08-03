@@ -6,16 +6,23 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.donutcn.memo.activity.ArticlePage;
+import com.donutcn.memo.activity.MainActivity;
 import com.donutcn.memo.base.BaseScrollFragment;
+import com.donutcn.memo.entity.ArrayResponse;
 import com.donutcn.memo.entity.BriefContent;
 import com.donutcn.memo.event.ReceiveNewMessagesEvent;
 import com.donutcn.memo.event.RequestRefreshEvent;
 import com.donutcn.memo.type.ItemLayoutType;
+import com.donutcn.memo.utils.CollectionUtil;
+import com.donutcn.memo.utils.HttpUtils;
+import com.donutcn.memo.utils.ToastUtil;
+import com.donutcn.memo.utils.UserStatus;
 import com.donutcn.memo.view.ListViewDecoration;
 import com.donutcn.memo.R;
 import com.donutcn.memo.adapter.MemoAdapter;
@@ -36,6 +43,10 @@ import org.greenrobot.eventbus.Subscribe;
 
 import java.util.ArrayList;
 
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
 public class MemoFragment extends BaseScrollFragment {
 
     private SwipeMenuRecyclerView mHaoYe_rv;
@@ -44,6 +55,8 @@ public class MemoFragment extends BaseScrollFragment {
     private MemoAdapter mAdapter;
     private ArrayList<BriefContent> list;
     private Context mContext;
+
+    private int page = 2;
 
     @Override
     public void onAttach(Context context) {
@@ -82,27 +95,76 @@ public class MemoFragment extends BaseScrollFragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        page = ((MainActivity)getActivity()).mMemoPage;
+        list = new ArrayList<>();
+        mAdapter = new MemoAdapter(mContext, list, ItemLayoutType.TYPE_TAG);
+        mAdapter.setOnItemClickListener(mOnItemClickListener);
+        mHaoYe_rv.setAdapter(mAdapter);
+        if(UserStatus.isLogin(mContext)){
+            Refresh();
+        }
     }
 
     public void Refresh() {
-        mAdapter = new MemoAdapter(mContext, list, ItemLayoutType.TYPE_TAG);
-        mAdapter.setOnItemClickListener(mOnItemClickListener);
-        mAdapter.setFooterEnable(true);
+        HttpUtils.getMyContent(1).enqueue(new Callback<ArrayResponse>() {
+            @Override
+            public void onResponse(Call<ArrayResponse> call, Response<ArrayResponse> response) {
+                if(response.body().isOk()){
+                    list.addAll(0, response.body().getData());
+                    list = (ArrayList<BriefContent>) CollectionUtil.removeDuplicateWithOrder(list);
+                    mAdapter.setDataSet(list);
+                    mAdapter.notifyDataSetChanged();
+                }
+                mRefreshLayout.finishRefresh();
+            }
 
-        mHaoYe_rv.setAdapter(mAdapter);
+            @Override
+            public void onFailure(Call<ArrayResponse> call, Throwable t) {
+                t.printStackTrace();
+                ToastUtil.show(getContext(), "连接失败");
+                mRefreshLayout.finishRefresh();
+            }
+        });
+    }
+
+    public void LoadMore() {
+        page = ((MainActivity)getActivity()).mMemoPage;
+        HttpUtils.getMyContent(page).enqueue(new Callback<ArrayResponse>() {
+            @Override
+            public void onResponse(Call<ArrayResponse> call, Response<ArrayResponse> response) {
+                if(response.body().isOk()){
+                    list.addAll(list.size(), response.body().getData());
+                    mAdapter.setDataSet(list);
+                    mAdapter.notifyDataSetChanged();
+                    ((MainActivity)getActivity()).mMemoPage++;
+                    mRefreshLayout.finishLoadmore();
+                    Log.e("list", "第五个" + list.get(5).getImage0());
+                }else {
+                    ToastUtil.show(getContext(), "已经到底部了");
+                    mRefreshLayout.finishLoadmore(true);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ArrayResponse> call, Throwable t) {
+                t.printStackTrace();
+                ToastUtil.show(getContext(), "连接失败");
+                mRefreshLayout.finishLoadmore();
+            }
+        });
     }
 
     private OnRefreshListener mRefreshListener = new OnRefreshListener() {
         @Override
         public void onRefresh(RefreshLayout refreshlayout) {
-            refreshlayout.finishRefresh(1000);
+            Refresh();
         }
     };
 
     private OnLoadmoreListener mLoadmoreListener = new OnLoadmoreListener() {
         @Override
         public void onLoadmore(RefreshLayout refreshlayout) {
-            refreshlayout.finishLoadmore(1000);
+            LoadMore();
         }
     };
 
@@ -183,7 +245,6 @@ public class MemoFragment extends BaseScrollFragment {
     @Override
     public void onResume() {
         super.onResume();
-        Refresh();
     }
 
     @Override

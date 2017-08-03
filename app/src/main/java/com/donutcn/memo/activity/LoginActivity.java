@@ -115,7 +115,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
         // check the login state.
-        loginState = UserStatus.checkLoginState(getApplicationContext());
+        loginState = UserStatus.isLogin(getApplicationContext());
         // delay 3s to remove the splash fragment.
         mSplashHandler.postDelayed(showMainPage, 3000);
     }
@@ -298,6 +298,11 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         if("ExitApp".equals(intent.getAction())){
             finish();
         }
+        mPhoneNum.setText("");
+        mPassword.setText("");
+        mRegPhone.setText("");
+        mRegPassword.setText("");
+        mRegCode.setText("");
         if(getIntent().getBooleanExtra("showSplash", false)){
             // show splash fragment.
             showSplashFragment();

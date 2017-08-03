@@ -39,6 +39,7 @@
             android:id="@+id/ic_drop_arrow"
             android:layout_width="24dp"
             android:layout_height="24dp"
+            android:padding="@dimen/padding_small"
             android:src="@drawable/drop_down_arrow" />
     </LinearLayout>
 

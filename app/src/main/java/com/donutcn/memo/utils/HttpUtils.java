@@ -6,7 +6,7 @@ import android.util.Log;
 import com.donutcn.memo.entity.ArrayResponse;
 import com.donutcn.memo.entity.ContentResponse;
 import com.donutcn.memo.entity.SimpleResponse;
-import com.donutcn.memo.listener.OnUploadAllListener;
+import com.donutcn.memo.listener.UploadCallback;
 import com.donutcn.memo.type.PublishType;
 import com.franmontiel.persistentcookiejar.ClearableCookieJar;
 import com.franmontiel.persistentcookiejar.PersistentCookieJar;
@@ -194,12 +194,12 @@ public class HttpUtils {
          * get publish content by id.
          */
         @GET(APIPath.GET_CONTENT)
-        Call<ContentResponse> getContent(@Path("id") String id);
+        Call<ContentResponse> getContentById(@Path("id") String id);
 
         /**
          * change the content access level.
          */
-        @GET(APIPath.SET_CONTENT_PRIVATE)
+        @POST(APIPath.SET_CONTENT_PRIVATE)
         Call<SimpleResponse> setPrivate(@Body RequestBody content);
 
         /**
@@ -207,6 +207,12 @@ public class HttpUtils {
          */
         @POST(APIPath.COMPLETE_INFO)
         Call<SimpleResponse> completeInfo(@Body RequestBody content);
+
+        /**
+         * complete publish content info.
+         */
+        @GET(APIPath.GET_MY_CONTENT)
+        Call<ArrayResponse> getMyContent(@Path("page") int page);
 
         /**
          * cookie test.
@@ -239,6 +245,8 @@ public class HttpUtils {
         private static final String SET_CONTENT_PRIVATE = "private_api/is_private_api";
 
         private static final String COMPLETE_INFO = "private_api/article_field_api";
+
+        private static final String GET_MY_CONTENT = "private_api/index/{page}";
     }
 
     public static Call<SimpleResponse> login(String username, String password) {
@@ -297,8 +305,8 @@ public class HttpUtils {
         return create().searchContent(request);
     }
 
-    public static Call<ContentResponse> getContent(String id){
-        return create().getContent(id);
+    public static Call<ContentResponse> getContentById(String id){
+        return create().getContentById(id);
     }
 
     public static Call<SimpleResponse> setPrivate(String id, int isPrivate) {
@@ -347,6 +355,10 @@ public class HttpUtils {
         return create().completeInfo(request);
     }
 
+    public static Call<ArrayResponse> getMyContent(int page){
+        return create().getMyContent(page);
+    }
+
     public static Call<ResponseBody> test() {
         return create().test();
     }
@@ -356,10 +368,10 @@ public class HttpUtils {
      *
      * @param context  context
      * @param paths    image file path
-     * @param listener {@link OnUploadAllListener}
+     * @param listener {@link UploadCallback}
      */
     public static void upLoadImages(final Context context, final List<String> paths,
-                                    final OnUploadAllListener listener) {
+                                    final UploadCallback listener) {
         final OnValidTokenListener onValidTokenListener = new OnValidTokenListener() {
             @Override
             public void onValidToken(String token) {
@@ -393,9 +405,12 @@ public class HttpUtils {
     }
 
     private static void doUploadFiles(final List<String> paths, String token,
-                                      final OnUploadAllListener listener) {
+                                      final UploadCallback listener) {
         fileKeys = Collections.synchronizedList(new ArrayList<String>());
+        final boolean[] fail = {false};
         for (String path : paths) {
+            if(fail[0])
+                return;
             getUploadManager().put(path, null, token,
                     new UpCompletionHandler() {
                         @Override
@@ -415,6 +430,8 @@ public class HttpUtils {
                                 }
                             } else {
                                 Log.e("qiniu_upload", info.error);
+                                fail[0] = true;// multiple thread may cause problem
+                                listener.uploadFail(info.error);
                             }
                         }
 

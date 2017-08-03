@@ -15,6 +15,7 @@ import com.donutcn.memo.adapter.VoteItemAdapter;
 import com.donutcn.memo.entity.SimpleResponse;
 import com.donutcn.memo.type.PublishType;
 import com.donutcn.memo.utils.HttpUtils;
+import com.donutcn.memo.utils.SpfsUtils;
 import com.donutcn.memo.utils.ToastUtil;
 import com.donutcn.memo.utils.WindowUtils;
 import com.donutcn.widgetlib.widget.CheckBox;
@@ -182,6 +183,10 @@ public class CompletingPage extends AppCompatActivity {
             public void onResponse(Call<SimpleResponse> call, Response<SimpleResponse> response) {
                 if (response.body().isOk()) {
                     ToastUtil.show(mContext, "发布成功");
+                    // remove drafts.
+                    SpfsUtils.remove(mContext, SpfsUtils.CACHE, "publishType");
+                    SpfsUtils.remove(mContext, SpfsUtils.CACHE, "publishTitle");
+                    SpfsUtils.remove(mContext, SpfsUtils.CACHE, "publishContent");
                     Intent intent = new Intent(mContext, SocialShareActivity.class);
                     intent.putExtra("contentId", contentId);
                     startActivity(intent);

@@ -46,4 +46,9 @@ public abstract class Response<T> {
     }
 
     public abstract T getData();
+
+    @Override
+    public String toString() {
+        return "code => " + code + "\n" + "message => " + message + "\n";
+    }
 }

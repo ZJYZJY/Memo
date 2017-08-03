@@ -24,11 +24,10 @@ import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.RadioButton;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.donutcn.memo.R;
 import com.donutcn.memo.entity.SimpleResponse;
-import com.donutcn.memo.listener.OnUploadAllListener;
+import com.donutcn.memo.listener.UploadCallback;
 import com.donutcn.memo.type.PublishType;
 import com.donutcn.memo.utils.DensityUtils;
 import com.donutcn.memo.utils.HttpUtils;
@@ -186,6 +185,11 @@ public class PublishActivity extends AppCompatActivity implements View.OnClickLi
     }
 
     public void publishContent(List<String> keys){
+        if(keys == null && selectedPhotos.size() >= 0){
+            mPublishDialog.cancel();
+            ToastUtil.show(this, "找不到图片，请重新选择");
+            return;
+        }
         if(keys != null && keys.size() == selectedPhotos.size()){
             for(int i = 0; i < selectedPhotos.size(); i++){
                 mContentStr = mContentStr.replace(selectedPhotos.get(i), HOST + keys.get(i));
@@ -228,6 +232,7 @@ public class PublishActivity extends AppCompatActivity implements View.OnClickLi
                     ToastUtil.show(this, "内容不能为空");
                     return;
                 }
+                WindowUtils.toggleKeyboard(this, v, false);
                 mPublishDialog.show();
                 selectedPhotos = (ArrayList<String>) StringUtil.getImgSrcList(mContentStr);
                 if(mSelectedType.equals(mContentTypes[0])
@@ -236,10 +241,16 @@ public class PublishActivity extends AppCompatActivity implements View.OnClickLi
                     if(selectedPhotos.size() == 0){
                         publishContent(null);
                     }else {
-                        HttpUtils.upLoadImages(this, selectedPhotos, new OnUploadAllListener() {
+                        HttpUtils.upLoadImages(this, selectedPhotos, new UploadCallback() {
                             @Override
                             public void uploadAll(List<String> keys) {
                                 publishContent(keys);
+                            }
+
+                            @Override
+                            public void uploadFail(String error) {
+                                mPublishDialog.cancel();
+                                ToastUtil.show(mContext, "找不到图片，请重新选择");
                             }
                         });
                     }

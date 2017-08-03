@@ -29,4 +29,12 @@ public class SimpleResponse extends Response<LinkedHashMap> {
             return null;
         return (T) data.get(key);
     }
+
+    @Override
+    public String toString() {
+        if(data == null)
+            return super.toString();
+        else
+            return super.toString() + data.toString();
+    }
 }

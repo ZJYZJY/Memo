@@ -123,4 +123,9 @@ public class BriefContent {
     public String getImage1() {
         return imgUrl1;
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        return obj instanceof BriefContent && ((BriefContent) obj).getId().equals(this.id);
+    }
 }

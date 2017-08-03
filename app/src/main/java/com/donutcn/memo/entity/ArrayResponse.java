@@ -29,4 +29,12 @@ public class ArrayResponse extends Response<ArrayList<BriefContent>> {
     public int size(){
         return data == null ? 0 : data.size();
     }
+
+    @Override
+    public String toString() {
+        if(data == null)
+            return super.toString();
+        else
+            return super.toString() + data.toString();
+    }
 }

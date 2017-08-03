@@ -16,6 +16,7 @@ import com.donutcn.memo.fragment.discover.DiscoverFragment;
 import com.donutcn.memo.fragment.home.HomeFragment;
 import com.donutcn.memo.utils.HttpUtils;
 import com.donutcn.memo.utils.ToastUtil;
+import com.donutcn.memo.utils.UserStatus;
 import com.donutcn.memo.utils.WindowUtils;
 import com.donutcn.widgetlib.widget.CheckableImageButton;
 
@@ -37,7 +38,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private HomeFragment mHomeFragment;
     private DiscoverFragment mDiscoverFragment;
 
-    public int mRecommendPage = 1;
+    public int mRecommendPage = 2;
+    public int mMemoPage = 2;
     private long mExitTime = 0;
     private int mDefaultItem;
 
@@ -79,7 +81,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.main_bottom_home:
-                ToastUtil.show(this, "主页");
                 // 查看登录状态 debug
                 HttpUtils.test().enqueue(new Callback<ResponseBody>() {
                     @Override
@@ -95,6 +96,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         t.printStackTrace();
                     }
                 });
+                UserStatus.ifRequestLogin(this, "请先登录");
                 if(mHome.isChecked()){
                     EventBus.getDefault().post(new RequestRefreshEvent(
                             mHomeFragment.getCurrentPagePosition()));
@@ -105,7 +107,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 }
                 break;
             case R.id.main_bottom_dis:
-                ToastUtil.show(this, "发现");
                 if(mDiscover.isChecked()){
                     EventBus.getDefault().post(new RequestRefreshEvent(
                             mDiscoverFragment.getCurrentPagePosition() + 2));
