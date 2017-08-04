@@ -45,7 +45,7 @@ public class HttpUtilsTest {
         list.add("投票2");
         list.add("投票3");
         list.add("投票4");
-        HttpUtils.completeInfo("25", PublishType.RECRUIT, "field1", "field2", "field3", false, 1, 1, list);
+        HttpUtils.completeInfo("25", PublishType.RECRUIT, "field1", "field2", "field3", false, 1, 1, list, false);
     }
 
     @Test

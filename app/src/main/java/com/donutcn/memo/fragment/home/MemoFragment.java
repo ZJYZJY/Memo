@@ -15,6 +15,7 @@ import android.view.ViewGroup;
 
 import com.donutcn.memo.activity.ArticlePage;
 import com.donutcn.memo.activity.MainActivity;
+import com.donutcn.memo.activity.PublishActivity;
 import com.donutcn.memo.base.BaseScrollFragment;
 import com.donutcn.memo.entity.ArrayResponse;
 import com.donutcn.memo.entity.BriefContent;
@@ -24,7 +25,6 @@ import com.donutcn.memo.event.RequestRefreshEvent;
 import com.donutcn.memo.type.ItemLayoutType;
 import com.donutcn.memo.utils.CollectionUtil;
 import com.donutcn.memo.utils.HttpUtils;
-import com.donutcn.memo.utils.SpfsUtils;
 import com.donutcn.memo.utils.ToastUtil;
 import com.donutcn.memo.utils.UserStatus;
 import com.donutcn.memo.view.ListViewDecoration;
@@ -57,7 +57,7 @@ public class MemoFragment extends BaseScrollFragment {
     public SmartRefreshLayout mRefreshLayout;
 
     private MemoAdapter mAdapter;
-    private ArrayList<BriefContent> list;
+    private ArrayList<BriefContent> mList;
     private Context mContext;
 
     private int page = 2;
@@ -101,8 +101,8 @@ public class MemoFragment extends BaseScrollFragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         page = ((MainActivity)getActivity()).mMemoPage;
-        list = new ArrayList<>();
-        mAdapter = new MemoAdapter(mContext, list, ItemLayoutType.TYPE_TAG);
+        mList = new ArrayList<>();
+        mAdapter = new MemoAdapter(mContext, mList, ItemLayoutType.TYPE_TAG);
         mAdapter.setOnItemClickListener(mOnItemClickListener);
         mHaoYe_rv.setAdapter(mAdapter);
         if(UserStatus.isLogin(mContext)){
@@ -111,15 +111,15 @@ public class MemoFragment extends BaseScrollFragment {
     }
 
     public void Refresh() {
-        HttpUtils.getMyContent(1).enqueue(new Callback<ArrayResponse<BriefContent>>() {
+        HttpUtils.getMyContentList(1).enqueue(new Callback<ArrayResponse<BriefContent>>() {
             @Override
             public void onResponse(Call<ArrayResponse<BriefContent>> call, Response<ArrayResponse<BriefContent>> response) {
                 if(response.body().isOk()){
-                    list.addAll(0, response.body().getData());
-                    list = (ArrayList<BriefContent>) CollectionUtil.removeDuplicateWithOrder(list);
-                    mAdapter.setDataSet(list);
+                    mList.addAll(0, response.body().getData());
+                    mList = (ArrayList<BriefContent>) CollectionUtil.removeDuplicateWithOrder(mList);
+                    mAdapter.setDataSet(mList);
                     mAdapter.notifyDataSetChanged();
-                    if(list.size() >= 10){
+                    if(mList.size() >= 10){
                         mRefreshLayout.setEnableLoadmore(true);
                     }
                 }
@@ -137,12 +137,12 @@ public class MemoFragment extends BaseScrollFragment {
 
     public void LoadMore() {
         page = ((MainActivity)getActivity()).mMemoPage;
-        HttpUtils.getMyContent(page).enqueue(new Callback<ArrayResponse<BriefContent>>() {
+        HttpUtils.getMyContentList(page).enqueue(new Callback<ArrayResponse<BriefContent>>() {
             @Override
             public void onResponse(Call<ArrayResponse<BriefContent>> call, Response<ArrayResponse<BriefContent>> response) {
                 if(response.body().isOk()){
-                    list.addAll(list.size(), response.body().getData());
-                    mAdapter.setDataSet(list);
+                    mList.addAll(mList.size(), response.body().getData());
+                    mAdapter.setDataSet(mList);
                     mAdapter.notifyDataSetChanged();
                     ((MainActivity)getActivity()).mMemoPage++;
                     mRefreshLayout.finishLoadmore();
@@ -222,7 +222,7 @@ public class MemoFragment extends BaseScrollFragment {
         public void onItemClick(int position) {
             EventBus.getDefault().post(new ReceiveNewMessagesEvent(0, position));
             Intent intent = new Intent(mContext, ArticlePage.class);
-            intent.putExtra("contentId", list.get(position).getId());
+            intent.putExtra("contentId", mList.get(position).getId());
             startActivity(intent);
         }
     };
@@ -249,6 +249,10 @@ public class MemoFragment extends BaseScrollFragment {
                     case 0:
                         break;
                     case 1:
+                        Intent intent = new Intent(mContext, PublishActivity.class);
+                        intent.putExtra("editMode", true);
+                        intent.putExtra("contentId", mList.get(adapterPosition).getId());
+                        startActivity(intent);
                         break;
                     case 2:
                         new AlertDialog.Builder(mContext)
@@ -272,12 +276,12 @@ public class MemoFragment extends BaseScrollFragment {
     };
 
     private void deleteContent(final int position){
-        HttpUtils.deleteContent(list.get(position).getId()).enqueue(new Callback<SimpleResponse>() {
+        HttpUtils.deleteContent(mList.get(position).getId()).enqueue(new Callback<SimpleResponse>() {
             @Override
             public void onResponse(Call<SimpleResponse> call, Response<SimpleResponse> response) {
                 Log.d("del_content", response.body().getMessage());
                 if(response.body().isOk()){
-                    list.remove(position);
+                    mList.remove(position);
                     mAdapter.notifyItemRemoved(position);
                     ToastUtil.show(mContext, "删除成功");
                 }else {

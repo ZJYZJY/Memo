@@ -5,7 +5,9 @@ import com.donutcn.memo.type.PublishType;
 import com.google.gson.annotations.Expose;
 import com.google.gson.internal.LinkedTreeMap;
 
+import java.util.HashMap;
 import java.util.LinkedHashMap;
+import java.util.Map;
 
 /**
  * com.donutcn.memo.entity
@@ -26,9 +28,29 @@ public class ContentResponse extends Response<LinkedHashMap> {
         return data;
     }
 
+    /**
+     * get the article info field.
+     * @return Json object
+     */
     private LinkedTreeMap getContent() {
         return (LinkedTreeMap) data.get("article");
     }
+
+    /**
+     * get the extra info field.
+     * @return Json object
+     */
+    public LinkedTreeMap getExtraInfo() {
+        return (LinkedTreeMap) data.get("extra_info");
+    }
+
+    /**
+     * get the comment field.
+     * @return Json object
+     */
+//    private LinkedTreeMap getComments() {
+//        return (LinkedTreeMap) data.get("comment");
+//    }
 
     public String getTitle() {
         return (String) getContent().get("title");

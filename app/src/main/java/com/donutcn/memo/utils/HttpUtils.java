@@ -215,7 +215,7 @@ public class HttpUtils {
          * complete publish content info.
          */
         @GET(APIPath.GET_MY_CONTENT)
-        Call<ArrayResponse<BriefContent>> getMyContent(@Path("page") int page);
+        Call<ArrayResponse<BriefContent>> getMyContentList(@Path("page") int page);
 
         /**
          * match user contact friends.
@@ -228,6 +228,12 @@ public class HttpUtils {
          */
         @GET(APIPath.DELETE_CONTENT)
         Call<SimpleResponse> deleteContent(@Path("id") String id);
+
+        /**
+         * modify user publish content.
+         */
+        @GET(APIPath.MODIFY_MY_CONTENT)
+        Call<ContentResponse> modifyMyContent(@Path("id") String id);
 
         /**
          * cookie test.
@@ -266,31 +272,48 @@ public class HttpUtils {
         private static final String MATCH_CONTACTS = "private_api/myfriend_api";
 
         private static final String DELETE_CONTENT = "private_api/delete_article_api/{id}";
+
+        private static final String MODIFY_MY_CONTENT = "private_api/the_article_api/{id}";
     }
 
     public static Call<SimpleResponse> login(String username, String password) {
-        String str = "{\"username\":\"" + username + "\"," +
-                "\"password\":\"" + password + "\"}";
+        JSONObject json = new JSONObject();
+        try {
+            json.put("username", username);
+            json.put("password", password);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
         RequestBody request = RequestBody
-                .create(okhttp3.MediaType.parse("application/json; charset=utf-8"), str);
+                .create(okhttp3.MediaType.parse("application/json; charset=utf-8"), json.toString());
         return create().login(request);
     }
 
     public static Call<SimpleResponse> getVerifiedCode(String phoneNumber, String action) {
-        String str = "{\"tel_number\":\"" + phoneNumber + "\"," +
-                "\"action\":\"" + action + "\"}";
+        JSONObject json = new JSONObject();
+        try {
+            json.put("tel_number", phoneNumber);
+            json.put("action", action);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
         RequestBody request = RequestBody
-                .create(okhttp3.MediaType.parse("application/json; charset=utf-8"), str);
+                .create(okhttp3.MediaType.parse("application/json; charset=utf-8"), json.toString());
         return create().getVerifiedCode(request);
     }
 
     public static Call<SimpleResponse> modifyUser(String phoneNumber, String authCode,
                                                   String password, int action) {
-        String str = "{\"tel_number\":\"" + phoneNumber + "\"," +
-                "\"authcode\":\"" + authCode + "\"," +
-                "\"password\":\"" + password + "\"}";
+        JSONObject json = new JSONObject();
+        try {
+            json.put("tel_number", phoneNumber);
+            json.put("authcode", authCode);
+            json.put("password", password);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
         RequestBody request = RequestBody
-                .create(okhttp3.MediaType.parse("application/json; charset=utf-8"), str);
+                .create(okhttp3.MediaType.parse("application/json; charset=utf-8"), json.toString());
         if (action == 0)
             return create().register(request);
         else
@@ -298,26 +321,31 @@ public class HttpUtils {
     }
 
     public static Call<SimpleResponse> logout(String phoneNumber) {
-        String str = "{\"username\":\"" + phoneNumber + "\"}";
+        JSONObject json = new JSONObject();
+        try {
+            json.put("username", phoneNumber);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
         RequestBody request = RequestBody
-                .create(okhttp3.MediaType.parse("application/json; charset=utf-8"), str);
+                .create(okhttp3.MediaType.parse("application/json; charset=utf-8"), json.toString());
         return create().logout(request);
     }
 
     public static Call<SimpleResponse> publishContent(String id, String title, String type, String content) {
-        String str;
-        if(id != null){
-            str = "{\"article_id\":\"" + id + "\"," +
-                    "\"title\":\"" + title + "\"," +
-                    "\"type\":\"" + type + "\"," +
-                    "\"content\":\"" + content + "\"}";
-        }else {
-            str = "{\"title\":\"" + title + "\"," +
-                    "\"type\":\"" + type + "\"," +
-                    "\"content\":\"" + content + "\"}";
+        JSONObject json = new JSONObject();
+        try {
+            json.put("title", title);
+            json.put("type", type);
+            json.put("content", content);
+            if(id !=null) {
+                json.put("article_id", id);
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
         }
         RequestBody request = RequestBody
-                .create(okhttp3.MediaType.parse("application/json; charset=utf-8"), str);
+                .create(okhttp3.MediaType.parse("application/json; charset=utf-8"), json.toString());
         return create().publishContent(request);
     }
 
@@ -326,9 +354,14 @@ public class HttpUtils {
     }
 
     public static Call<ArrayResponse<BriefContent>> searchContent(String key){
-        String str = "{\"keywords\":\"" + key + "\"}";
+        JSONObject json = new JSONObject();
+        try {
+            json.put("keywords", key);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
         RequestBody request = RequestBody
-                .create(okhttp3.MediaType.parse("application/json; charset=utf-8"), str);
+                .create(okhttp3.MediaType.parse("application/json; charset=utf-8"), json.toString());
         return create().searchContent(request);
     }
 
@@ -337,20 +370,28 @@ public class HttpUtils {
     }
 
     public static Call<SimpleResponse> setPrivate(String id, int isPrivate) {
-        String str = "{\"article_id\":\"" + id + "\"," +
-                "\"is_private\":" + isPrivate + "}";
+        JSONObject json = new JSONObject();
+        try {
+            json.put("article_id", id);
+            json.put("is_private", isPrivate);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
         RequestBody request = RequestBody
-                .create(okhttp3.MediaType.parse("application/json; charset=utf-8"), str);
+                .create(okhttp3.MediaType.parse("application/json; charset=utf-8"), json.toString());
         return create().setPrivate(request);
     }
 
     public static Call<SimpleResponse>
     completeInfo(String id, PublishType type, String field1, String field2, String field3,
-                 boolean needApply, int extra1, int extra2, List<String> voteItems) {
+                 boolean needApply, int extra1, int extra2, List<String> voteItems, boolean editMode) {
         JSONObject json = new JSONObject();
         try {
             json.put("article_id", id);
             json.put("type", type.toString());
+            if(editMode && type != PublishType.VOTE){
+                json.put("action", "edit");
+            }
             if (needApply) {
                 json.put("is_sign_up", 1);
                 json.put("extra1", extra1);
@@ -382,8 +423,8 @@ public class HttpUtils {
         return create().completeInfo(request);
     }
 
-    public static Call<ArrayResponse<BriefContent>> getMyContent(int page){
-        return create().getMyContent(page);
+    public static Call<ArrayResponse<BriefContent>> getMyContentList(int page){
+        return create().getMyContentList(page);
     }
 
     public static Call<ArrayResponse<Contact>> matchContacts(List<String> signatureCode){
@@ -405,6 +446,10 @@ public class HttpUtils {
 
     public static Call<SimpleResponse> deleteContent(String id){
         return create().deleteContent(id);
+    }
+
+    public static Call<ContentResponse> modifyMyContent(String id){
+        return create().modifyMyContent(id);
     }
 
     public static Call<ResponseBody> test() {

@@ -36,7 +36,10 @@ public class StringUtil {
                 Matcher m_src = p_src.matcher(str_img);
                 if (m_src.find()) {
                     String str_src = m_src.group(3);
-                    list.add(str_src);
+                    // if in edit mode, same image will not be reuploaded.
+                    if(!str_src.startsWith("http")){
+                        list.add(str_src);
+                    }
                 }
                 //match the next <img /> tag int this content.
                 result_img = m_img.find();

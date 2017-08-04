@@ -26,6 +26,7 @@ import android.widget.RadioButton;
 import android.widget.TextView;
 
 import com.donutcn.memo.R;
+import com.donutcn.memo.entity.ContentResponse;
 import com.donutcn.memo.entity.SimpleResponse;
 import com.donutcn.memo.listener.UploadCallback;
 import com.donutcn.memo.type.PublishType;
@@ -38,6 +39,7 @@ import com.donutcn.memo.utils.StringUtil;
 import com.donutcn.memo.utils.ToastUtil;
 import com.donutcn.memo.utils.WindowUtils;
 import com.donutcn.widgetlib.ShadowDrawable;
+import com.google.gson.internal.LinkedTreeMap;
 import com.iflytek.cloud.ErrorCode;
 import com.iflytek.cloud.InitListener;
 import com.iflytek.cloud.RecognizerListener;
@@ -81,10 +83,12 @@ public class PublishActivity extends AppCompatActivity implements View.OnClickLi
     private ArrayList<String> selectedPhotos = new ArrayList<>();
 
     private final String[] mContentTypes = PublishType.toStringArray();
+    private LinkedTreeMap mExtraInfo;
     private String mSelectedType;
     private String mTitleStr = "";
     private String mContentStr = "";
     private String mContentId;
+    private boolean mEditMode;
     private static final String HOST = "http://otu6v4c72.bkt.clouddn.com/";
     private static final String strategy = "?imageMogr2/auto-orient/thumbnail/!60p/format/jpg" +
             "/interlace/1/blur/1x0/quality/50|imageslim";
@@ -101,19 +105,24 @@ public class PublishActivity extends AppCompatActivity implements View.OnClickLi
         initView();
         setUpRichTextEditor();
         mContext = this;
-        mContentId = getIntent().getStringExtra("contentId");
-        PublishType type = (PublishType) getIntent().getSerializableExtra("type");
-        if (type != null) {
-            mSelectedType = type.toString();
-            mPublishType.setText(mSelectedType);
-        } else {
-            mSelectedType = SpfsUtils.readString(this, SpfsUtils.CACHE, "publishType", mSelectedType);
-            mTitleStr = SpfsUtils.readString(this, SpfsUtils.CACHE, "publishTitle", "");
-            mContentStr = SpfsUtils.readString(this, SpfsUtils.CACHE, "publishContent", "");
-            if (!isContentEmpty()) {
+        mEditMode = getIntent().getBooleanExtra("editMode", false);
+        if(mEditMode){
+            mContentId = getIntent().getStringExtra("contentId");
+            pullContentInfo(mContentId);
+        }else {
+            PublishType type = (PublishType) getIntent().getSerializableExtra("type");
+            if (type != null) {
+                mSelectedType = type.toString();
                 mPublishType.setText(mSelectedType);
-                mTitle.setText(mTitleStr);
-                mContent.setHtml(mContentStr);
+            } else {
+                mSelectedType = SpfsUtils.readString(this, SpfsUtils.CACHE, "publishType", mSelectedType);
+                mTitleStr = SpfsUtils.readString(this, SpfsUtils.CACHE, "publishTitle", "");
+                mContentStr = SpfsUtils.readString(this, SpfsUtils.CACHE, "publishContent", "");
+                if (!isContentEmpty()) {
+                    mPublishType.setText(mSelectedType);
+                    mTitle.setText(mTitleStr);
+                    mContent.setHtml(mContentStr);
+                }
             }
         }
 
@@ -178,6 +187,35 @@ public class PublishActivity extends AppCompatActivity implements View.OnClickLi
         mContent.setEditorFontColor(getResources().getColor(R.color.textPrimaryDark));
     }
 
+    public void pullContentInfo(String id) {
+        HttpUtils.modifyMyContent(id).enqueue(new Callback<ContentResponse>() {
+            @Override
+            public void onResponse(Call<ContentResponse> call, Response<ContentResponse> response) {
+                if (response.body() != null && response.body().isOk()) {
+                    mSelectedType = response.body().getType().toString();
+                    mPublishType.setText(mSelectedType);
+                    mTitleStr = response.body().getTitle();
+                    mTitle.setText(mTitleStr);
+                    mContentStr = response.body().getContentStr();
+                    mContent.setHtml(mContentStr);
+                    if (!mSelectedType.equals(mContentTypes[0])
+                            && !mSelectedType.equals(mContentTypes[1])
+                            && !mSelectedType.equals(mContentTypes[5])) {
+                        mExtraInfo = response.body().getExtraInfo();
+                    }
+                } else {
+                    ToastUtil.show(mContext, "获取信息失败");
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ContentResponse> call, Throwable t) {
+                t.printStackTrace();
+                ToastUtil.show(mContext, "拉取信息连接失败");
+            }
+        });
+    }
+
     public void publishContent(List<String> keys){
         if(keys == null && selectedPhotos.size() > 0){
             mPublishDialog.cancel();
@@ -228,6 +266,7 @@ public class PublishActivity extends AppCompatActivity implements View.OnClickLi
                 }
                 WindowUtils.toggleKeyboard(this, v, false);
                 mPublishDialog.show();
+                // if in edit mode, same image will not be reuploaded.
                 selectedPhotos = (ArrayList<String>) StringUtil.getImgSrcList(mContentStr);
                 if(mSelectedType.equals(mContentTypes[0])
                         || mSelectedType.equals(mContentTypes[1])
@@ -247,7 +286,7 @@ public class PublishActivity extends AppCompatActivity implements View.OnClickLi
                             @Override
                             public void uploadFail(String error) {
                                 mPublishDialog.cancel();
-                                ToastUtil.show(mContext, "找不到图片，请重新选择");
+                                ToastUtil.show(mContext, "找不到图片，请重新选择1");
                             }
                         });
                     }
@@ -318,8 +357,10 @@ public class PublishActivity extends AppCompatActivity implements View.OnClickLi
 
     private void startCompletePage() {
         Intent intent = new Intent(this, CompletingPage.class);
-        if(mContentId != null)
+        if(mContentId != null){
+            intent.putExtra("extraInfo", mExtraInfo);
             intent.putExtra("contentId", mContentId);
+        }
         intent.putExtra("title", mTitleStr);
         intent.putExtra("type", PublishType.getType(mSelectedType));
         intent.putExtra("content", mContentStr);

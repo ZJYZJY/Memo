@@ -14,7 +14,7 @@
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
             android:layout_centerVertical="true"
-            android:text="Welcome to HaoYe"
+            android:text="Welcome to RenRenJi"
             android:textColor="@color/textPrimaryDark"
             android:textSize="18sp" />
 

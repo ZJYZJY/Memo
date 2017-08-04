@@ -12,6 +12,7 @@ import android.widget.EditText;
 
 import com.donutcn.memo.R;
 import com.donutcn.memo.adapter.VoteItemAdapter;
+import com.donutcn.memo.entity.ContentResponse;
 import com.donutcn.memo.entity.SimpleResponse;
 import com.donutcn.memo.type.PublishType;
 import com.donutcn.memo.utils.HttpUtils;
@@ -20,8 +21,12 @@ import com.donutcn.memo.utils.ToastUtil;
 import com.donutcn.memo.utils.WindowUtils;
 import com.donutcn.widgetlib.widget.CheckBox;
 import com.donutcn.widgetlib.widget.SwitchView;
+import com.google.gson.internal.LinkedTreeMap;
 
+import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.HashMap;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -41,7 +46,9 @@ public class CompletingPage extends AppCompatActivity {
     private String mContentId;
     private String field1Str, field2Str, field3Str;
     private String mContentStr, mTitleStr;
+    private HashMap mExtraInfo;
 
+    private boolean mEditMode = false;
     private boolean needToApply = false;
     private int needExtra1 = 0;
     private int needExtra2 = 0;
@@ -53,6 +60,10 @@ public class CompletingPage extends AppCompatActivity {
 
         mContext = this;
         mContentId = getIntent().getStringExtra("contentId");
+        if(mContentId != null){
+            mEditMode = true;
+            mExtraInfo = (HashMap) getIntent().getSerializableExtra("extraInfo");
+        }
         mTitleStr = getIntent().getStringExtra("title");
         mContentStr = getIntent().getStringExtra("content");
         mContentType = (PublishType) getIntent().getSerializableExtra("type");
@@ -88,6 +99,16 @@ public class CompletingPage extends AppCompatActivity {
         apply = (SwitchView) findViewById(R.id.need_apply);
         field1 = (EditText) findViewById(R.id.comment_field1);
         field2 = (EditText) findViewById(R.id.comment_field2);
+
+        if(mContentId != null){
+            name.setChecked(mExtraInfo.get("is_name").equals("1"));
+            phone.setChecked(mExtraInfo.get("is_tel_number").equals("1"));
+            extra1.setChecked(mExtraInfo.get("extra1").equals("1"));
+            extra2.setChecked(mExtraInfo.get("extra2").equals("1"));
+            apply.setOpened(mExtraInfo.get("is_sign_up").equals("1"));
+            field1.setText((String) mExtraInfo.get("field1"));
+            field2.setText((String) mExtraInfo.get("field2"));
+        }
     }
 
     public void initVoteView() {
@@ -107,12 +128,29 @@ public class CompletingPage extends AppCompatActivity {
         field1 = (EditText) findViewById(R.id.comment_field1);
         field2 = (EditText) findViewById(R.id.comment_field2);
         field3 = (EditText) findViewById(R.id.comment_field3);
+
+        if(mContentId != null){
+            name.setChecked(mExtraInfo.get("is_name").equals("1"));
+            phone.setChecked(mExtraInfo.get("is_tel_number").equals("1"));
+            extra1.setChecked(mExtraInfo.get("extra1").equals("1"));
+            extra2.setChecked(mExtraInfo.get("extra2").equals("1"));
+            apply.setOpened(mExtraInfo.get("is_sign_up").equals("1"));
+            field1.setText((String) mExtraInfo.get("field1"));
+            field2.setText((String) mExtraInfo.get("field2"));
+            field3.setText((String) mExtraInfo.get("field3"));
+        }
     }
 
     public void initSaleView() {
         field1 = (EditText) findViewById(R.id.comment_field1);
         field2 = (EditText) findViewById(R.id.comment_field2);
         field3 = (EditText) findViewById(R.id.comment_field3);
+
+        if(mContentId != null){
+            field1.setText((String) mExtraInfo.get("field1"));
+            field2.setText((String) mExtraInfo.get("field2"));
+            field3.setText((String) mExtraInfo.get("field3"));
+        }
     }
 
     public void onFinish(View view) {
@@ -178,7 +216,7 @@ public class CompletingPage extends AppCompatActivity {
 
     private void completeInfo() {
         HttpUtils.completeInfo(mContentId, mContentType, field1Str, field2Str, field3Str, needToApply,
-                needExtra1, needExtra2, voteItems).enqueue(new Callback<SimpleResponse>() {
+                needExtra1, needExtra2, voteItems, mEditMode).enqueue(new Callback<SimpleResponse>() {
             @Override
             public void onResponse(Call<SimpleResponse> call, Response<SimpleResponse> response) {
                 if (response.body().isOk()) {
