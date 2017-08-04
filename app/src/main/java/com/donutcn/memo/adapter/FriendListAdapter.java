@@ -46,7 +46,7 @@ public class FriendListAdapter extends RecyclerView.Adapter<FriendListAdapter.Vi
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
-        holder.username.setText(list.get(position).getDesplayName());
+        holder.username.setText(list.get(position).getName());
     }
 
     @Override

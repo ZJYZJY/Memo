@@ -86,62 +86,60 @@
 
                     <LinearLayout
                         android:id="@+id/author_follow"
-                        android:layout_width="wrap_content"
+                        android:layout_width="72dp"
                         android:layout_height="wrap_content"
                         android:layout_alignLeft="@+id/author_signature"
                         android:layout_alignStart="@+id/author_signature"
                         android:layout_below="@+id/author_signature"
-                        android:background="@drawable/selector_radius_green_btn"
+                        android:background="@drawable/selector_radius_blue_btn"
+                        android:gravity="center"
                         android:orientation="horizontal"
                         android:paddingBottom="@dimen/padding_medium"
-                        android:paddingLeft="@dimen/padding_large"
-                        android:paddingRight="@dimen/padding_large"
                         android:paddingTop="@dimen/padding_medium">
 
-                        <ImageView
-                            android:layout_width="@dimen/icon_author_btn"
-                            android:layout_height="@dimen/icon_author_btn"
-                            android:layout_gravity="center_vertical"
-                            android:src="@drawable/author_follow" />
-
                         <TextView
+                            android:id="@+id/author_follow_text"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center_vertical"
-                            android:paddingLeft="@dimen/padding_text"
+                            android:paddingLeft="@dimen/padding_large"
+                            android:paddingRight="@dimen/padding_large"
                             android:text="@string/btn_author_follow"
                             android:textColor="@color/white" />
                     </LinearLayout>
+                    <!--<com.donutcn.widgetlib.widget.RippleButton-->
+                    <!--android:id="@+id/author_follow"-->
+                    <!--android:layout_alignLeft="@+id/author_signature"-->
+                    <!--android:layout_alignStart="@+id/author_signature"-->
+                    <!--android:layout_below="@+id/author_signature"-->
+                    <!--android:layout_width="wrap_content"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--app:rb_text="关注"-->
+                    <!--app:rb_checked_text="已关注"/>-->
 
                     <LinearLayout
                         android:id="@+id/author_message"
-                        android:layout_width="wrap_content"
+                        android:layout_width="72dp"
                         android:layout_height="wrap_content"
                         android:layout_below="@+id/author_signature"
                         android:layout_marginLeft="@dimen/margin_small"
                         android:layout_marginStart="@dimen/margin_small"
                         android:layout_toEndOf="@+id/author_follow"
                         android:layout_toRightOf="@+id/author_follow"
-                        android:background="@drawable/selector_radius_green_hollow_btn"
+                        android:background="@drawable/selector_radius_blue_hollow_btn"
+                        android:gravity="center"
                         android:orientation="horizontal"
                         android:paddingBottom="@dimen/padding_medium"
-                        android:paddingLeft="@dimen/padding_large"
-                        android:paddingRight="@dimen/padding_large"
                         android:paddingTop="@dimen/padding_medium">
-
-                        <ImageView
-                            android:layout_width="@dimen/icon_author_btn"
-                            android:layout_height="@dimen/icon_author_btn"
-                            android:layout_gravity="center_vertical"
-                            android:src="@drawable/author_message" />
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center_vertical"
-                            android:paddingLeft="@dimen/padding_text"
+                            android:paddingLeft="@dimen/padding_large"
+                            android:paddingRight="@dimen/padding_large"
                             android:text="@string/btn_author_message"
-                            android:textColor="@color/btn_green_normal" />
+                            android:textColor="@color/type_blue_bg" />
                     </LinearLayout>
                 </RelativeLayout>
             </android.support.design.widget.CollapsingToolbarLayout>

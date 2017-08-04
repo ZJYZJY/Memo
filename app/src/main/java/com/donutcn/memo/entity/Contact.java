@@ -1,5 +1,8 @@
 package com.donutcn.memo.entity;
 
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
+
 /**
  * com.donutcn.memo.entity
  * Created by 73958 on 2017/8/3.
@@ -9,13 +12,34 @@ public class Contact {
 
     private int contactId; //id
     private String desplayName;//姓名
+
+    @Expose
+    @SerializedName("name")
+    private String name;
+
+    @Expose
+    @SerializedName("head_portrait")
+    private String avatar;
     private String phoneNum; // 电话号码
     private String sortKey; // 排序用的
-    private Long photoId; // 图片id
     private String lookUpKey;
     private int selected = 0;
-    private String formattedNumber;
-    private String pinyin; // 姓名拼音
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getAvatar() {
+        return avatar;
+    }
+
+    public void setAvatar(String avatar) {
+        this.avatar = avatar;
+    }
 
     public int getContactId() {
         return contactId;
@@ -49,14 +73,6 @@ public class Contact {
         this.sortKey = sortKey;
     }
 
-    public Long getPhotoId() {
-        return photoId;
-    }
-
-    public void setPhotoId(Long photoId) {
-        this.photoId = photoId;
-    }
-
     public String getLookUpKey() {
         return lookUpKey;
     }
@@ -71,21 +87,5 @@ public class Contact {
 
     public void setSelected(int selected) {
         this.selected = selected;
-    }
-
-    public String getFormattedNumber() {
-        return formattedNumber;
-    }
-
-    public void setFormattedNumber(String formattedNumber) {
-        this.formattedNumber = formattedNumber;
-    }
-
-    public String getPinyin() {
-        return pinyin;
-    }
-
-    public void setPinyin(String pinyin) {
-        this.pinyin = pinyin;
     }
 }

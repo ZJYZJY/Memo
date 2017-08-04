@@ -102,11 +102,11 @@ public class SpfsUtils {
         return spfs.edit().remove(key).commit();
     }
 
-    public boolean clear(Context context) {
+    public static boolean clear(Context context) {
         return clear(context, "");
     }
 
-    public boolean clear(Context context, String type) {
+    public static boolean clear(Context context, String type) {
         SharedPreferences spfs = context.getApplicationContext().getSharedPreferences(ROOT_NAME + type, Context.MODE_PRIVATE);
         return spfs.edit().clear().commit();
     }

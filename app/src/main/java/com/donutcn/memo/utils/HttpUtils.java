@@ -5,6 +5,7 @@ import android.util.Log;
 
 import com.donutcn.memo.entity.ArrayResponse;
 import com.donutcn.memo.entity.BriefContent;
+import com.donutcn.memo.entity.Contact;
 import com.donutcn.memo.entity.ContentResponse;
 import com.donutcn.memo.entity.SimpleResponse;
 import com.donutcn.memo.listener.UploadCallback;
@@ -220,7 +221,7 @@ public class HttpUtils {
          * match user contact friends.
          */
         @POST(APIPath.MATCH_CONTACTS)
-        Call<ArrayResponse> matchContacts(@Body RequestBody contacts);
+        Call<ArrayResponse<Contact>> matchContacts(@Body RequestBody contacts);
 
         /**
          * delete user publish content.
@@ -385,17 +386,20 @@ public class HttpUtils {
         return create().getMyContent(page);
     }
 
-    public static Call<ArrayResponse> matchContacts(List<String> signatureCode){
+    public static Call<ArrayResponse<Contact>> matchContacts(List<String> signatureCode){
         JSONObject json = new JSONObject();
         JSONArray array = new JSONArray();
         try {
-
+            for(String code : signatureCode){
+                array.put(code);
+            }
             json.put("data", array);
         } catch (JSONException e) {
             e.printStackTrace();
         }
         RequestBody request = RequestBody
                 .create(okhttp3.MediaType.parse("application/json; charset=utf-8"), json.toString());
+//        System.out.println(json.toString());
         return create().matchContacts(request);
     }
 
@@ -415,7 +419,7 @@ public class HttpUtils {
      * @param listener {@link UploadCallback}
      */
     public static void upLoadImages(final Context context, final List<String> paths,
-                                    final UploadCallback listener) {
+                                    final UploadCallback<String> listener) {
         final OnValidTokenListener onValidTokenListener = new OnValidTokenListener() {
             @Override
             public void onValidToken(String token) {
@@ -449,7 +453,7 @@ public class HttpUtils {
     }
 
     private static void doUploadFiles(final List<String> paths, String token,
-                                      final UploadCallback listener) {
+                                      final UploadCallback<String> listener) {
         fileKeys = Collections.synchronizedList(new ArrayList<String>());
         final boolean[] fail = {false};
         for (String path : paths) {
@@ -463,7 +467,8 @@ public class HttpUtils {
                                 try {
                                     // store the file key.
                                     fileKeys.add(response.getString("key"));
-                                    listener.uploadSingle(response.getString("key"));
+                                    Log.d("qiniu_upload", response.getString("key"));
+                                    uploadCount.addAndGet(1);
                                 } catch (JSONException e) {
                                     e.printStackTrace();
                                 }

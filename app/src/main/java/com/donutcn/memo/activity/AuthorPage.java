@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.donutcn.memo.R;
@@ -18,10 +19,12 @@ import com.donutcn.memo.view.ListViewDecoration;
 
 import java.util.ArrayList;
 
-public class AuthorPage extends AppCompatActivity implements OnItemClickListener {
+public class AuthorPage extends AppCompatActivity implements OnItemClickListener, View.OnClickListener {
 
     private RecyclerView mRecyclerView;
     private CollapsingToolbarLayout mCollapsingToolbar;
+    private LinearLayout mFollow, mMessage;
+    private TextView mFollowText;
 
     private ArrayList<BriefContent> list;
 
@@ -39,9 +42,43 @@ public class AuthorPage extends AppCompatActivity implements OnItemClickListener
     public void initView(){
         mRecyclerView = (RecyclerView) findViewById(R.id.recycler_view);
         mCollapsingToolbar = (CollapsingToolbarLayout) findViewById(R.id.author_collapsing_toolbar);
+        mFollow = (LinearLayout) findViewById(R.id.author_follow);
+        mMessage = (LinearLayout) findViewById(R.id.author_message);
+        mFollowText = (TextView) findViewById(R.id.author_follow_text);
+
+        mFollow.setOnClickListener(this);
 
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         mRecyclerView.addItemDecoration(new ListViewDecoration(this, R.dimen.item_decoration_height, 16, 16));
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()){
+            case R.id.author_follow:
+                int action;
+                if(mFollowText.getText().toString().equals("关注")){
+                    action = 0;
+                    setFollowed(true);
+                }else {
+                    action = 1;
+                    setFollowed(false);
+                }
+                // TODO:http request.
+                break;
+            case R.id.author_message:
+                break;
+        }
+    }
+
+    private void setFollowed(boolean followed){
+        if(followed){
+            mFollowText.setText("已关注");
+            mFollow.setBackgroundResource(R.drawable.radius_btn_disabled);
+        }else {
+            mFollowText.setText("关注");
+            mFollow.setBackgroundResource(R.drawable.selector_radius_blue_btn);
+        }
     }
 
     public void Refresh(){

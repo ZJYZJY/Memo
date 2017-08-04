@@ -48,4 +48,13 @@ public class HttpUtilsTest {
         HttpUtils.completeInfo("25", PublishType.RECRUIT, "field1", "field2", "field3", false, 1, 1, list);
     }
 
+    @Test
+    public void matchContactsTest(){
+        ArrayList<String> list = new ArrayList<>();
+        list.add("投票1");
+        list.add("投票2");
+        list.add("投票3");
+        list.add("投票4");
+        HttpUtils.matchContacts(list);
+    }
 }

@@ -86,6 +86,8 @@ public class PublishActivity extends AppCompatActivity implements View.OnClickLi
     private String mContentStr = "";
     private String mContentId;
     private static final String HOST = "http://otu6v4c72.bkt.clouddn.com/";
+    private static final String strategy = "?imageMogr2/auto-orient/thumbnail/!60p/format/jpg" +
+            "/interlace/1/blur/1x0/quality/50|imageslim";
     private Context mContext;
     private ProgressDialog mPublishDialog;
 
@@ -177,14 +179,15 @@ public class PublishActivity extends AppCompatActivity implements View.OnClickLi
     }
 
     public void publishContent(List<String> keys){
-        if(keys == null && selectedPhotos.size() >= 0){
+        if(keys == null && selectedPhotos.size() > 0){
             mPublishDialog.cancel();
             ToastUtil.show(this, "找不到图片，请重新选择");
             return;
         }
         if(keys != null && keys.size() == selectedPhotos.size()){
             for(int i = 0; i < selectedPhotos.size(); i++){
-                mContentStr = mContentStr.replace(selectedPhotos.get(i), HOST + keys.get(i));
+                mContentStr = mContentStr.replace(selectedPhotos.get(i),
+                HOST + keys.get(i) + strategy);
             }
         }
         // Escape the " to \"
@@ -196,7 +199,6 @@ public class PublishActivity extends AppCompatActivity implements View.OnClickLi
             public void onResponse(Call<SimpleResponse> call, Response<SimpleResponse> response) {
                 if(response.body().isOk()){
                     ToastUtil.show(mContext, "发布成功");
-//                    Log.e("id", response.body().getField("article_id"));
                     openSharePage(String.valueOf(response.body().getField("article_id")));
                 }else {
                     ToastUtil.show(mContext, "发布失败");
@@ -233,9 +235,9 @@ public class PublishActivity extends AppCompatActivity implements View.OnClickLi
                     if(selectedPhotos.size() == 0){
                         publishContent(null);
                     }else {
-                        HttpUtils.upLoadImages(this, selectedPhotos, new UploadCallback() {
+                        HttpUtils.upLoadImages(this, selectedPhotos, new UploadCallback<String>() {
                             @Override
-                            public void uploadSingle(String key) {
+                            public void uploadProgress(int progress, int total) {
                             }
                             @Override
                             public void uploadAll(List<String> keys) {
@@ -578,9 +580,7 @@ public class PublishActivity extends AppCompatActivity implements View.OnClickLi
                     .setNegativeButton(getString(R.string.dialog_publish_neg), new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
-                            SpfsUtils.remove(mContext, SpfsUtils.CACHE, "publishType");
-                            SpfsUtils.remove(mContext, SpfsUtils.CACHE, "publishTitle");
-                            SpfsUtils.remove(mContext, SpfsUtils.CACHE, "publishContent");
+                            SpfsUtils.clear(mContext, SpfsUtils.CACHE);
                             finish();
                         }
                     })

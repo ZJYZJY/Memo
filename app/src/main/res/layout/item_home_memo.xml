@@ -52,8 +52,8 @@
         android:layout_alignLeft="@+id/tv_title"
         android:layout_alignStart="@+id/tv_title"
         android:layout_below="@+id/tv_content"
-        android:layout_marginEnd="32dp"
-        android:layout_marginRight="32dp"
+        android:layout_marginEnd="@dimen/margin_large"
+        android:layout_marginRight="@dimen/margin_large"
         android:layout_marginTop="@dimen/margin_small"
         android:orientation="horizontal"
         android:visibility="gone">
@@ -63,16 +63,16 @@
             android:layout_width="match_parent"
             android:layout_height="96dp"
             android:layout_weight="1"
-            android:layout_marginRight="@dimen/margin_small"
-            android:layout_marginEnd="@dimen/margin_small"
+            android:layout_marginRight="@dimen/margin_micro"
+            android:layout_marginEnd="@dimen/margin_micro"
             android:scaleType="centerCrop" />
 
         <ImageView
             android:id="@+id/iv_two"
             android:layout_width="match_parent"
             android:layout_height="96dp"
-            android:layout_marginLeft="@dimen/margin_small"
-            android:layout_marginStart="@dimen/margin_small"
+            android:layout_marginLeft="@dimen/margin_micro"
+            android:layout_marginStart="@dimen/margin_micro"
             android:layout_weight="1"
             android:scaleType="centerCrop" />
     </LinearLayout>

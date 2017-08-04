@@ -12,6 +12,7 @@ import android.widget.Button;
 import com.donutcn.memo.R;
 import com.donutcn.memo.entity.SimpleResponse;
 import com.donutcn.memo.utils.HttpUtils;
+import com.donutcn.memo.utils.SpfsUtils;
 import com.donutcn.memo.utils.ToastUtil;
 import com.donutcn.memo.utils.WindowUtils;
 import com.donutcn.widgetlib.widget.SwitchView;
@@ -42,6 +43,8 @@ public class SocialShareActivity extends AppCompatActivity implements View.OnCli
         WindowUtils.setToolBarButton(this, R.string.btn_share_homepage);
         WindowUtils.setStatusBarColor(this, R.color.colorPrimary, true);
 
+        // remove drafts.
+        SpfsUtils.clear(this, SpfsUtils.CACHE);
         initView();
         initMedia();
         contentId = getIntent().getStringExtra("contentId");

@@ -7,17 +7,17 @@ import java.util.List;
  * Created by 73958 on 2017/7/29.
  */
 
-public interface UploadCallback {
+public interface UploadCallback<T> {
 
     /**
-     * after single file was uploaded, this method will be called.
+     * after single step was finished, this method will be called.
      */
-    void uploadSingle(String key);
+    void uploadProgress(int progress, int total);
 
     /**
      * after all files were uploaded, this method will be called.
      */
-    void uploadAll(List<String> keys);
+    void uploadAll(List<T> keys);
 
     /**
      * upload files fail.

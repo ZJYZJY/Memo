@@ -183,10 +183,6 @@ public class CompletingPage extends AppCompatActivity {
             public void onResponse(Call<SimpleResponse> call, Response<SimpleResponse> response) {
                 if (response.body().isOk()) {
                     ToastUtil.show(mContext, "发布成功");
-                    // remove drafts.
-                    SpfsUtils.remove(mContext, SpfsUtils.CACHE, "publishType");
-                    SpfsUtils.remove(mContext, SpfsUtils.CACHE, "publishTitle");
-                    SpfsUtils.remove(mContext, SpfsUtils.CACHE, "publishContent");
                     Intent intent = new Intent(mContext, SocialShareActivity.class);
                     intent.putExtra("mContentId", mContentId);
                     startActivity(intent);

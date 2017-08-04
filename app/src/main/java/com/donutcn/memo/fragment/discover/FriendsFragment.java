@@ -10,6 +10,7 @@ import android.provider.ContactsContract;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,14 +18,18 @@ import android.view.ViewGroup;
 import com.donutcn.memo.R;
 import com.donutcn.memo.adapter.FriendListAdapter;
 import com.donutcn.memo.base.BaseScrollFragment;
-import com.donutcn.memo.entity.BriefContent;
+import com.donutcn.memo.entity.ArrayResponse;
 import com.donutcn.memo.entity.Contact;
 import com.donutcn.memo.event.ReceiveNewMessagesEvent;
 import com.donutcn.memo.event.RequestRefreshEvent;
 import com.donutcn.memo.listener.OnItemClickListener;
 import com.donutcn.memo.listener.OnQueryListener;
+import com.donutcn.memo.listener.UploadCallback;
+import com.donutcn.memo.utils.HttpUtils;
 import com.donutcn.memo.utils.PermissionCheck;
+import com.donutcn.memo.utils.StringUtil;
 import com.donutcn.memo.utils.ToastUtil;
+import com.donutcn.memo.utils.UserStatus;
 import com.donutcn.memo.view.ListViewDecoration;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
@@ -40,6 +45,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
 public class FriendsFragment extends BaseScrollFragment {
 
     private SwipeMenuRecyclerView mHaoYe_rv;
@@ -47,7 +56,7 @@ public class FriendsFragment extends BaseScrollFragment {
     private View mContainer, mNoMatch;
 
     private FriendListAdapter mAdapter;
-    private ArrayList<BriefContent> mList;
+    private static ArrayList<Contact> mTempList;
     private static ArrayList<Contact> mContactsList;
     private Context mContext;
 
@@ -74,7 +83,7 @@ public class FriendsFragment extends BaseScrollFragment {
         view.findViewById(R.id.start_match).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startMatch(v);
+                startMatch();
             }
         });
         mContainer = view.findViewById(R.id.unmatch_container);
@@ -84,7 +93,7 @@ public class FriendsFragment extends BaseScrollFragment {
         setRecyclerView(mHaoYe_rv);
         mRefreshLayout = (SmartRefreshLayout) view.findViewById(R.id.swipe_layout);
         mRefreshLayout.setOnRefreshListener(mRefreshListener);
-        mRefreshLayout.setOnLoadmoreListener(mLoadmoreListener);
+        mRefreshLayout.setEnableLoadmore(false);
 
         mHaoYe_rv.setLayoutManager(new LinearLayoutManager(mContext));
         mHaoYe_rv.addItemDecoration(new ListViewDecoration(getContext(), R.dimen.item_decoration_height));
@@ -93,11 +102,11 @@ public class FriendsFragment extends BaseScrollFragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-//        Refresh();
+        mContactsList = new ArrayList<>();
     }
 
     public void Refresh() {
-        mAdapter = new FriendListAdapter(mContext, mContactsList);
+        mAdapter = new FriendListAdapter(mContext, mTempList);
         mAdapter.setOnItemClickListener(mOnItemClickListener);
 
         mHaoYe_rv.setAdapter(mAdapter);
@@ -110,13 +119,6 @@ public class FriendsFragment extends BaseScrollFragment {
         }
     };
 
-    private OnLoadmoreListener mLoadmoreListener = new OnLoadmoreListener() {
-        @Override
-        public void onLoadmore(RefreshLayout refreshlayout) {
-            refreshlayout.finishLoadmore(1000);
-        }
-    };
-
     private OnItemClickListener mOnItemClickListener = new OnItemClickListener() {
         @Override
         public void onItemClick(int position) {
@@ -124,15 +126,42 @@ public class FriendsFragment extends BaseScrollFragment {
         }
     };
 
-    public void startMatch(View view){
-//        PermissionCheck check = new PermissionCheck(mContext);
-//        if(check.checkContactsPermission()){
-//            getContactsAsync();
-//        }else {
-//            ToastUtil.show(mContext, "未授权读取联系人");
-//        }
+    public void startMatch(){
         if(PermissionCheck.checkContactsPermission(this)){
-            getContactsAsync();
+            final ProgressDialog dialog = new ProgressDialog(mContext);
+            dialog.setTitle("正在匹配联系人");
+            dialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+            dialog.setCanceledOnTouchOutside(false);
+            dialog.show();
+            getContactsAsync(new UploadCallback<Contact>() {
+                @Override
+                public void uploadProgress(int progress, int total) {
+                    dialog.setMax(total);
+                    dialog.setProgress(progress);
+                }
+
+                @Override
+                public void uploadAll(List<Contact> list) {
+                    mAdapter = new FriendListAdapter(mContext, mContactsList);
+                    mAdapter.setOnItemClickListener(mOnItemClickListener);
+                    mHaoYe_rv.setAdapter(mAdapter);
+                    if(mContactsList.size() > 0){
+                        mRefreshLayout.setVisibility(View.VISIBLE);
+                        mNoMatch.setVisibility(View.GONE);
+                        mContainer.setVisibility(View.GONE);
+                    }else {
+                        mRefreshLayout.setVisibility(View.GONE);
+                        mNoMatch.setVisibility(View.VISIBLE);
+                        mContainer.setVisibility(View.GONE);
+                    }
+                    dialog.dismiss();
+                    ToastUtil.show(mContext, "匹配完成");
+                }
+
+                @Override
+                public void uploadFail(String error) {
+                }
+            });
         }else {
             ToastUtil.show(mContext, "未授权读取联系人");
         }
@@ -141,7 +170,6 @@ public class FriendsFragment extends BaseScrollFragment {
     @Override
     public void onResume() {
         super.onResume();
-        Refresh();
     }
 
     @Override
@@ -167,35 +195,16 @@ public class FriendsFragment extends BaseScrollFragment {
         }
     }
 
-    private void getContactsAsync() {
-        final ProgressDialog dialog = new ProgressDialog(mContext);
-        dialog.setTitle("正在匹配联系人");
-        dialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
-        dialog.setCanceledOnTouchOutside(false);
-        dialog.show();
+    private void getContactsAsync(final UploadCallback<Contact> listener) {
         ContactsQueryHandler qh = new ContactsQueryHandler(getContext().getContentResolver(),
                 new OnQueryListener<Contact>() {
                     @Override
                     public void onQueryProgress(int progress, int total) {
-                        dialog.setProgress(progress);
                     }
 
                     @Override
                     public void onQueryComplete(List<Contact> list) {
-                        dialog.dismiss();
-                        ToastUtil.show(mContext, "匹配完成");
-                        mAdapter = new FriendListAdapter(mContext, mContactsList);
-                        mAdapter.setOnItemClickListener(mOnItemClickListener);
-                        mHaoYe_rv.setAdapter(mAdapter);
-                        if(mContactsList.size() > 0){
-                            mRefreshLayout.setVisibility(View.VISIBLE);
-                            mNoMatch.setVisibility(View.GONE);
-                            mContainer.setVisibility(View.GONE);
-                        }else {
-                            mRefreshLayout.setVisibility(View.GONE);
-                            mNoMatch.setVisibility(View.VISIBLE);
-                            mContainer.setVisibility(View.GONE);
-                        }
+                        uploadSignatureCode(list, listener);
                     }
                 });
         // query field
@@ -203,10 +212,52 @@ public class FriendsFragment extends BaseScrollFragment {
                 ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME,
                 ContactsContract.CommonDataKinds.Phone.DATA1, "sort_key",
                 ContactsContract.CommonDataKinds.Phone.CONTACT_ID,
-                ContactsContract.CommonDataKinds.Phone.PHOTO_ID,
                 ContactsContract.CommonDataKinds.Phone.LOOKUP_KEY};
         qh.startQuery(0, null, ContactsContract.CommonDataKinds.Phone.CONTENT_URI, projection, null, null,
                 "sort_key COLLATE LOCALIZED asc");
+    }
+
+    // upload signature code for matching friends.
+    private void uploadSignatureCode(List<Contact> list, final UploadCallback<Contact> listener){
+        List<String> codes = new ArrayList<>();
+        int count = 0, record = 0;
+        int  currentTime = 0;
+        final int times = list.size() / 20 + 1;
+        for(int i = 0; i < list.size(); i++){
+            String code = StringUtil.getMD5(list.get(i).getPhoneNum());
+            codes.add(code);
+            count++;
+            record++;
+            // upload 20 contacts at a time.
+            if(count == 20 || i == list.size() - 1){
+                listener.uploadProgress(record, list.size());
+                count = 0;
+                currentTime++;
+                final int finalCurrentTime = currentTime;
+                HttpUtils.matchContacts(codes).enqueue(new Callback<ArrayResponse<Contact>>() {
+                    @Override
+                    public void onResponse(Call<ArrayResponse<Contact>> call,
+                                           Response<ArrayResponse<Contact>> response) {
+                        if(response.body().isOk()){
+                            int length = response.body().size();
+                            for (int i = 0; i < length; i++){
+                                mContactsList.add(response.body().getData().get(i));
+                            }
+                            if(finalCurrentTime == times){
+                                listener.uploadAll(mContactsList);
+                            }
+                        }else {
+                            Log.e("match_code", "匹配失败");
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<ArrayResponse<Contact>> call, Throwable t) {
+                        t.printStackTrace();
+                    }
+                });
+            }
+        }
     }
 
     static class ContactsQueryHandler extends AsyncQueryHandler {
@@ -221,22 +272,23 @@ public class FriendsFragment extends BaseScrollFragment {
         @Override
         protected void onQueryComplete(int token, Object cookie, Cursor cursor) {
             if (cursor != null && cursor.getCount() > 0) {
-                Map<Integer, Contact> contactIdMap = new HashMap<>();
-                mContactsList = new ArrayList<>();
+                Map<String, Contact> contactIdMap = new HashMap<>();
+                mTempList = new ArrayList<>();
                 cursor.moveToFirst();
                 int size = cursor.getCount();
                 for (int i = 0; i < cursor.getCount(); i++) {
                     cursor.moveToPosition(i);
-                    int Id = cursor.getInt(0);
                     String name = cursor.getString(1);
                     String number = cursor.getString(2);
                     number = number.replace(" ", "");
                     String sortKey = cursor.getString(3);
                     int contactId = cursor.getInt(4);
-                    Long photoId = cursor.getLong(5);
-                    String lookUpKey = cursor.getString(6);
+                    String lookUpKey = cursor.getString(5);
 
-                    if (contactIdMap.containsKey(contactId)) {
+                    String username = UserStatus.getCurrentUser().getUsername();
+                    // remove duplicate numbers and your own number.
+                    if (contactIdMap.containsKey(number)
+                            || (username != null && contactIdMap.containsKey(username))) {
                         // do nothing
                     } else {
                         // create a contact object.
@@ -245,16 +297,14 @@ public class FriendsFragment extends BaseScrollFragment {
                         contact.setPhoneNum(number);
                         contact.setSortKey(sortKey);
                         contact.setContactId(contactId);
-                        contact.setPhotoId(photoId);
                         contact.setLookUpKey(lookUpKey);
-                        mContactsList.add(contact);
-
-                        contactIdMap.put(contactId, contact);
+                        mTempList.add(contact);
+                        contactIdMap.put(number, contact);
                     }
                     listener.onQueryProgress(i / size * 100, size);
                 }
                 cursor.close();
-                listener.onQueryComplete(mContactsList);
+                listener.onQueryComplete(mTempList);
             }
             super.onQueryComplete(token, cookie, cursor);
         }
