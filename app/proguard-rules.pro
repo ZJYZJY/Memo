@@ -139,10 +139,7 @@ public static final int *;
     <init>(Java.lang.Throwable);
 }
 
-# tencent bugly crash report
--dontwarn com.tencent.bugly.**
--keep public class com.tencent.bugly.**{*;}
-# tencent bugly upgrade
+# tencent bugly
 -dontwarn com.tencent.bugly.**
 -keep public class com.tencent.bugly.**{*;}
 -keep class android.support.**{*;}
