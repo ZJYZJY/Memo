@@ -103,7 +103,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 String scheme = intent.getScheme();
                 Uri uri = intent.getData();
                 System.out.println("scheme:"+scheme);
-                ToastUtil.show(LoginActivity.this, scheme);
                 if (uri != null) {
                     String host = uri.getHost();
                     String dataString = intent.getDataString();

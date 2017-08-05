@@ -12,17 +12,17 @@ import java.util.ArrayList;
  * Created by 73958 on 2017/8/1.
  */
 
-public class ArrayResponse<T> extends Response<ArrayList<T>> {
+public class ArrayResponse<E> extends Response<ArrayList<E>> {
 
     @Expose
-    private ArrayList<T> data;
+    private ArrayList<E> data;
 
     public ArrayResponse(String res) throws JSONException {
         super(res);
     }
 
     @Override
-    public ArrayList<T> getData() {
+    public ArrayList<E> getData() {
         return data;
     }
 

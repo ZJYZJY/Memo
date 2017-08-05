@@ -14,10 +14,14 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.donutcn.memo.R;
+import com.donutcn.memo.event.FinishEditVoteItemsEvent;
 import com.donutcn.memo.listener.OnTextChangerListener;
 import com.donutcn.memo.utils.ToastUtil;
 
+import org.greenrobot.eventbus.EventBus;
+
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * com.donutcn.memo.adapter
@@ -34,30 +38,40 @@ public class VoteItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     private Context mContext;
     private ArrayList<Integer> views;
     private ArrayList<String> mVoteItemStr;
+    private final int mUnEditable;
 
     private int maxVoteSelection = 50;
     private OnTextChangerListener listener;
 
-    public VoteItemAdapter(Context context) {
+    public VoteItemAdapter(Context context, List<String> items) {
         this.mContext = context;
         this.mVoteItemStr = new ArrayList<>();
         this.views = new ArrayList<>();
         listener = this;
-        this.views.add(1);
-        this.views.add(2);
-        this.views.add(3);
-        this.mVoteItemStr.add("");
-        this.mVoteItemStr.add("");
-        this.mVoteItemStr.add("");
+        if (items.size() > 0) {
+            mUnEditable = items.size();
+            for (int i = 0; i < items.size(); i++) {
+                this.views.add(i);
+                this.mVoteItemStr.add(items.get(i));
+            }
+        } else {
+            mUnEditable = 0;
+            this.views.add(1);
+            this.views.add(2);
+            this.views.add(3);
+            this.mVoteItemStr.add("");
+            this.mVoteItemStr.add("");
+            this.mVoteItemStr.add("");
+        }
     }
 
     public int getVoteItemCount() {
         return views.size();
     }
 
-    public ArrayList<String> getTextArray() {
-        return mVoteItemStr;
-    }
+//    public ArrayList<String> getTextArray() {
+//        return mVoteItemStr;
+//    }
 
     public void setMaxVoteSelection(int max) {
         this.maxVoteSelection = max;
@@ -110,6 +124,7 @@ public class VoteItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                 @Override
                 public void onClick(View v) {
                     Log.e("res", mVoteItemStr.toString());
+                    EventBus.getDefault().post(new FinishEditVoteItemsEvent(mVoteItemStr.subList(mUnEditable, mVoteItemStr.size())));
                 }
             });
         } else if (position == 0) {
@@ -118,6 +133,12 @@ public class VoteItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
 //            if (((ViewHolder) holder).vote_et.getTag() instanceof TextWatcher) {
 //                ((ViewHolder) holder).vote_et.removeTextChangedListener((TextWatcher) ((ViewHolder) holder).vote_et.getTag());
 //            }
+            ((ViewHolder) holder).vote_et.setEnabled(true);
+            ((ViewHolder) holder).delItem.setVisibility(View.VISIBLE);
+            if(position <= mUnEditable){
+                ((ViewHolder) holder).vote_et.setEnabled(false);
+                ((ViewHolder) holder).delItem.setVisibility(View.GONE);
+            }
             ((ViewHolder) holder).vote_et.setText(mVoteItemStr.get(holder.getAdapterPosition() - 1));
             ((ViewHolder) holder).vote_et.setHint(mContext.getString(R.string.hint_completing_vote_count, position));
             TextWatcher textWatcher = new TextWatcher() {
@@ -138,20 +159,22 @@ public class VoteItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
             };
             ((ViewHolder) holder).vote_et.addTextChangedListener(textWatcher);
 //            ((ViewHolder) holder).vote_et.setTag(textWatcher);
-            ((ViewHolder) holder).delItem.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (views.size() == 2) {
-                        ToastUtil.show(mContext, mContext.getString(R.string.toast_min_vote_items));
-                        return;
+            // disable the uneditable item delete button.
+            if(position > mUnEditable){
+                ((ViewHolder) holder).delItem.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (views.size() == 2) {
+                            ToastUtil.show(mContext, mContext.getString(R.string.toast_min_vote_items));
+                            return;
+                        }
+                        views.remove(holder.getAdapterPosition() - 1);
+                        mVoteItemStr.remove(holder.getAdapterPosition() - 1);
+                        notifyItemRemoved(holder.getAdapterPosition());
+                        notifyItemRangeChanged(0, views.size() + 2);
                     }
-                    views.remove(holder.getAdapterPosition() - 1);
-                    mVoteItemStr.remove(holder.getAdapterPosition() - 1);
-                    notifyItemRemoved(holder.getAdapterPosition());
-                    notifyItemRangeChanged(0, views.size() + 2);
-                }
-            });
-            Log.e("res", mVoteItemStr.toString());
+                });
+            }
         }
     }
 

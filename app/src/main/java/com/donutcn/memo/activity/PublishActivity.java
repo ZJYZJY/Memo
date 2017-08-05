@@ -300,7 +300,7 @@ public class PublishActivity extends AppCompatActivity implements View.OnClickLi
                 break;
             case R.id.pub_add_pic:
                 PhotoPicker.builder()
-                        .setPhotoCount(1)
+                        .setPhotoCount(9)
                         .setShowCamera(true)
                         .setPreviewEnabled(false)
                         .start(this);
@@ -405,6 +405,9 @@ public class PublishActivity extends AppCompatActivity implements View.OnClickLi
             @Override
             public void onDismiss() {
                 img.setRotation(0f);
+                if(mSelectedType.equals(mContentTypes[1])){
+                    mAddPic.performClick();
+                }
             }
         });
         popupWindow.showAsDropDown(view);
@@ -597,7 +600,9 @@ public class PublishActivity extends AppCompatActivity implements View.OnClickLi
 
             if (photos != null) {
                 selectedPhotos.addAll(photos);
-                mContent.insertImage(selectedPhotos.get(0), "image");
+                for(int i = 0; i < selectedPhotos.size(); i++){
+                    mContent.insertImage(selectedPhotos.get(i), "image");
+                }
             }
         }
     }
