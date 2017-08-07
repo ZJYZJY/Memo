@@ -68,7 +68,7 @@ public class SearchActivity extends AppCompatActivity implements OnItemClickList
         HttpUtils.searchContent(mKeyWords).enqueue(new Callback<ArrayResponse<BriefContent>>() {
             @Override
             public void onResponse(Call<ArrayResponse<BriefContent>> call, Response<ArrayResponse<BriefContent>> response) {
-                if(response.body().isOk()){
+                if(response.body() != null && response.body().isOk()){
                     list.clear();
                     list.addAll(response.body().getData());
                     mAdapter.setKeyword(mKeyWords);

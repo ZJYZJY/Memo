@@ -480,9 +480,11 @@ public class HttpUtils {
         create().getUploadToken().enqueue(new Callback<SimpleResponse>() {
             @Override
             public void onResponse(Call<SimpleResponse> call, Response<SimpleResponse> response) {
-                if (response.body().isOk()) {
-                    String token = response.body().getMessage();
-                    onValidTokenListener.onValidToken(token);
+                if (response.body() != null) {
+                    if(response.body().isOk()){
+                        String token = response.body().getMessage();
+                        onValidTokenListener.onValidToken(token);
+                    }
                 } else {
                     onValidTokenListener.onInvalidToken();
                 }

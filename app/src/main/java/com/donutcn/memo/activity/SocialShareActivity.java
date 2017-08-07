@@ -83,13 +83,15 @@ public class SocialShareActivity extends AppCompatActivity implements View.OnCli
         HttpUtils.setPrivate(contentId, isPrivate ? 1 : 0).enqueue(new Callback<SimpleResponse>() {
             @Override
             public void onResponse(Call<SimpleResponse> call, Response<SimpleResponse> response) {
-                if (response.body().isOk()) {
-                    if(isPrivate){
-                        ToastUtil.show(SocialShareActivity.this, "设为私有");
-                        view.toggleSwitch(false);
-                    }else {
-                        ToastUtil.show(SocialShareActivity.this, "设为公开");
-                        view.toggleSwitch(true);
+                if (response.body() != null) {
+                    if(response.body().isOk()){
+                        if(isPrivate){
+                            ToastUtil.show(SocialShareActivity.this, "设为私有");
+                            view.toggleSwitch(false);
+                        }else {
+                            ToastUtil.show(SocialShareActivity.this, "设为公开");
+                            view.toggleSwitch(true);
+                        }
                     }
                 } else {
                     ToastUtil.show(SocialShareActivity.this, "设置失败");

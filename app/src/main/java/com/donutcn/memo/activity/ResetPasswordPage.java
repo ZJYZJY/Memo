@@ -63,7 +63,7 @@ public class ResetPasswordPage extends AppCompatActivity implements View.OnClick
         HttpUtils.getVerifiedCode(phoneNumber, "edituser").enqueue(new Callback<SimpleResponse>() {
             @Override
             public void onResponse(Call<SimpleResponse> call, Response<SimpleResponse> response) {
-                if(response.body().isOk()){
+                if(response.body() != null && response.body().isOk()){
                     authCodeTimer.start();
                     ToastUtil.show(ResetPasswordPage.this, "验证码发送成功");
                 }else {
@@ -100,7 +100,7 @@ public class ResetPasswordPage extends AppCompatActivity implements View.OnClick
         HttpUtils.modifyUser(phoneNumber, authCode, password, ACTION_MODIFY).enqueue(new Callback<SimpleResponse>() {
             @Override
             public void onResponse(Call<SimpleResponse> call, Response<SimpleResponse> response) {
-                if(response.body().isOk()){
+                if(response.body() != null && response.body().isOk()){
                     ToastUtil.show(ResetPasswordPage.this, "重置密码成功");
                     UserStatus.login(getApplicationContext(), phoneNumber);
                     Intent intent = new Intent(ResetPasswordPage.this, MainActivity.class);

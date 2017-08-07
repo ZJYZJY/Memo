@@ -111,13 +111,15 @@ public class RecommendFragment extends BaseScrollFragment implements View.OnClic
         HttpUtils.getRecommendContent(1).enqueue(new Callback<ArrayResponse<BriefContent>>() {
             @Override
             public void onResponse(Call<ArrayResponse<BriefContent>> call, Response<ArrayResponse<BriefContent>> response) {
-                if(response.body().isOk()){
-                    list.addAll(0, response.body().getData());
-                    list = (ArrayList<BriefContent>) CollectionUtil.removeDuplicateWithOrder(list);
-                    mAdapter.setDataSet(list);
-                    mAdapter.notifyDataSetChanged();
-                    if(list.size() >= 10){
-                        mRefreshLayout.setEnableLoadmore(true);
+                if(response.body() != null){
+                    if(response.body().isOk()){
+                        list.addAll(0, response.body().getData());
+                        list = (ArrayList<BriefContent>) CollectionUtil.removeDuplicateWithOrder(list);
+                        mAdapter.setDataSet(list);
+                        mAdapter.notifyDataSetChanged();
+                        if(list.size() >= 10){
+                            mRefreshLayout.setEnableLoadmore(true);
+                        }
                     }
                 }
                 mRefreshLayout.finishRefresh();
@@ -137,12 +139,14 @@ public class RecommendFragment extends BaseScrollFragment implements View.OnClic
         HttpUtils.getRecommendContent(page).enqueue(new Callback<ArrayResponse<BriefContent>>() {
             @Override
             public void onResponse(Call<ArrayResponse<BriefContent>> call, Response<ArrayResponse<BriefContent>> response) {
-                if(response.body().isOk()){
-                    list.addAll(list.size(), response.body().getData());
-                    mAdapter.setDataSet(list);
-                    mAdapter.notifyDataSetChanged();
-                    ((MainActivity)getActivity()).mRecommendPage++;
-                    mRefreshLayout.finishLoadmore();
+                if(response.body() != null){
+                    if(response.body().isOk()){
+                        list.addAll(list.size(), response.body().getData());
+                        mAdapter.setDataSet(list);
+                        mAdapter.notifyDataSetChanged();
+                        ((MainActivity)getActivity()).mRecommendPage++;
+                        mRefreshLayout.finishLoadmore();
+                    }
                 }else {
                     ToastUtil.show(getContext(), "已经到底部了");
                     mRefreshLayout.setEnableLoadmore(false);

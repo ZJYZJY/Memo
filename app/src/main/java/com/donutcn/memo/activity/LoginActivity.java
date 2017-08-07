@@ -166,7 +166,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         HttpUtils.login(username, password).enqueue(new Callback<SimpleResponse>() {
             @Override
             public void onResponse(Call<SimpleResponse> call, Response<SimpleResponse> response) {
-                if (response.body().isOk()) {
+                if (response.body() != null && response.body().isOk()) {
                     ToastUtil.show(LoginActivity.this, "登录成功");
                     UserStatus.login(getApplicationContext(), username);
                     Intent intent = new Intent(LoginActivity.this, MainActivity.class);
@@ -202,7 +202,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         HttpUtils.modifyUser(phoneNumber, authCode, password, ACTION_REGISTER).enqueue(new Callback<SimpleResponse>() {
             @Override
             public void onResponse(Call<SimpleResponse> call, Response<SimpleResponse> response) {
-                if(response.body().isOk()){
+                if(response.body() != null && response.body().isOk()){
                     ToastUtil.show(LoginActivity.this, "注册成功");
                     UserStatus.login(getApplicationContext(), phoneNumber);
                     Intent intent = new Intent(LoginActivity.this, MainActivity.class);
@@ -232,7 +232,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         HttpUtils.getVerifiedCode(phoneNumber, "register").enqueue(new Callback<SimpleResponse>() {
             @Override
             public void onResponse(Call<SimpleResponse> call, Response<SimpleResponse> response) {
-                if(response.body().isOk()){
+                if(response.body() != null && response.body().isOk()){
                     authCodeTimer.start();
                     ToastUtil.show(LoginActivity.this, "验证码发送成功");
                 }else {

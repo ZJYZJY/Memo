@@ -191,17 +191,19 @@ public class PublishActivity extends AppCompatActivity implements View.OnClickLi
         HttpUtils.modifyMyContent(id).enqueue(new Callback<ContentResponse>() {
             @Override
             public void onResponse(Call<ContentResponse> call, Response<ContentResponse> response) {
-                if (response.body() != null && response.body().isOk()) {
-                    mSelectedType = response.body().getType().toString();
-                    mPublishType.setText(mSelectedType);
-                    mTitleStr = response.body().getTitle();
-                    mTitle.setText(mTitleStr);
-                    mContentStr = response.body().getContentStr();
-                    mContent.setHtml(mContentStr);
-                    if (!mSelectedType.equals(mContentTypes[0])
-                            && !mSelectedType.equals(mContentTypes[1])
-                            && !mSelectedType.equals(mContentTypes[5])) {
-                        mExtraInfo = response.body().getExtraInfo();
+                if (response.body() != null) {
+                    if(response.body().isOk()){
+                        mSelectedType = response.body().getType().toString();
+                        mPublishType.setText(mSelectedType);
+                        mTitleStr = response.body().getTitle();
+                        mTitle.setText(mTitleStr);
+                        mContentStr = response.body().getContentStr();
+                        mContent.setHtml(mContentStr);
+                        if (!mSelectedType.equals(mContentTypes[0])
+                                && !mSelectedType.equals(mContentTypes[1])
+                                && !mSelectedType.equals(mContentTypes[5])) {
+                            mExtraInfo = response.body().getExtraInfo();
+                        }
                     }
                 } else {
                     ToastUtil.show(mContext, "获取信息失败");
@@ -235,9 +237,11 @@ public class PublishActivity extends AppCompatActivity implements View.OnClickLi
                 .enqueue(new Callback<SimpleResponse>() {
             @Override
             public void onResponse(Call<SimpleResponse> call, Response<SimpleResponse> response) {
-                if(response.body().isOk()){
-                    ToastUtil.show(mContext, "发布成功");
-                    openSharePage(String.valueOf(response.body().getField("article_id")));
+                if(response.body() != null){
+                    if(response.body().isOk()){
+                        ToastUtil.show(mContext, "发布成功");
+                        openSharePage(String.valueOf(response.body().getField("article_id")));
+                    }
                 }else {
                     ToastUtil.show(mContext, "发布失败");
                 }

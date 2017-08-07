@@ -124,15 +124,17 @@ public class MemoFragment extends BaseScrollFragment {
         HttpUtils.getMyContentList(1).enqueue(new Callback<ArrayResponse<BriefContent>>() {
             @Override
             public void onResponse(Call<ArrayResponse<BriefContent>> call, Response<ArrayResponse<BriefContent>> response) {
-                if(response.body().isOk()){
-                    mList.addAll(0, response.body().getData());
-                    mList = (ArrayList<BriefContent>) CollectionUtil.removeDuplicateWithOrder(mList);
-                    mAdapter.setDataSet(mList);
-                    mAdapter.notifyDataSetChanged();
-                    if(mList.size() >= 10){
-                        mRefreshLayout.setEnableLoadmore(true);
+                if(response.body() != null){
+                    if(response.body().isOk()){
+                        mList.addAll(0, response.body().getData());
+                        mList = (ArrayList<BriefContent>) CollectionUtil.removeDuplicateWithOrder(mList);
+                        mAdapter.setDataSet(mList);
+                        mAdapter.notifyDataSetChanged();
+                        if(mList.size() >= 10){
+                            mRefreshLayout.setEnableLoadmore(true);
+                        }
+                        FileCacheUtil.setCache(mContext, response.body().toString());
                     }
-                    FileCacheUtil.setCache(mContext, response.body().toString());
                 }
                 mRefreshLayout.finishRefresh();
             }
@@ -151,13 +153,15 @@ public class MemoFragment extends BaseScrollFragment {
         HttpUtils.getMyContentList(page).enqueue(new Callback<ArrayResponse<BriefContent>>() {
             @Override
             public void onResponse(Call<ArrayResponse<BriefContent>> call, Response<ArrayResponse<BriefContent>> response) {
-                if(response.body().isOk()){
-                    mList.addAll(mList.size(), response.body().getData());
-                    mAdapter.setDataSet(mList);
-                    mAdapter.notifyDataSetChanged();
-                    ((MainActivity)getActivity()).mMemoPage++;
-                    mRefreshLayout.finishLoadmore();
-                    FileCacheUtil.setCache(mContext, response.body().toString());
+                if(response.body() != null){
+                    if(response.body().isOk()){
+                        mList.addAll(mList.size(), response.body().getData());
+                        mAdapter.setDataSet(mList);
+                        mAdapter.notifyDataSetChanged();
+                        ((MainActivity)getActivity()).mMemoPage++;
+                        mRefreshLayout.finishLoadmore();
+                        FileCacheUtil.setCache(mContext, response.body().toString());
+                    }
                 }else {
                     ToastUtil.show(getContext(), "已经到底部了");
                     mRefreshLayout.setEnableLoadmore(false);
@@ -292,10 +296,12 @@ public class MemoFragment extends BaseScrollFragment {
             @Override
             public void onResponse(Call<SimpleResponse> call, Response<SimpleResponse> response) {
                 Log.d("del_content", response.body().getMessage());
-                if(response.body().isOk()){
-                    mList.remove(position);
-                    mAdapter.notifyItemRemoved(position);
-                    ToastUtil.show(mContext, "删除成功");
+                if(response.body() != null){
+                    if(response.body().isOk()){
+                        mList.remove(position);
+                        mAdapter.notifyItemRemoved(position);
+                        ToastUtil.show(mContext, "删除成功");
+                    }
                 }else {
                     ToastUtil.show(mContext, "删除失败");
                 }

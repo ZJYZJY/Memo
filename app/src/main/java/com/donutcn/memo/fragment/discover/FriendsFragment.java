@@ -274,13 +274,15 @@ public class FriendsFragment extends BaseScrollFragment {
                     @Override
                     public void onResponse(Call<ArrayResponse<Contact>> call,
                                            Response<ArrayResponse<Contact>> response) {
-                        if(response.body().isOk()){
-                            int length = response.body().size();
-                            for (int i = 0; i < length; i++){
-                                mContactsList.add(response.body().getData().get(i));
-                            }
-                            if(finalCurrentTime == times){
-                                listener.uploadAll(mContactsList);
+                        if(response.body() != null){
+                            if(response.body().isOk()){
+                                int length = response.body().size();
+                                for (int i = 0; i < length; i++){
+                                    mContactsList.add(response.body().getData().get(i));
+                                }
+                                if(finalCurrentTime == times){
+                                    listener.uploadAll(mContactsList);
+                                }
                             }
                         }else {
                             Log.e("match_code", "匹配失败");

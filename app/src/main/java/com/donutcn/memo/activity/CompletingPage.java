@@ -203,9 +203,11 @@ public class CompletingPage extends AppCompatActivity {
                 .enqueue(new Callback<SimpleResponse>() {
             @Override
             public void onResponse(Call<SimpleResponse> call, Response<SimpleResponse> response) {
-                if (response.body().isOk()) {
-                    mContentId = String.valueOf(response.body().getField("article_id"));
-                    completeInfo();
+                if (response.body() != null) {
+                    if(response.body().isOk()){
+                        mContentId = String.valueOf(response.body().getField("article_id"));
+                        completeInfo();
+                    }
                 } else {
                     ToastUtil.show(mContext, "发布失败");
                 }
@@ -224,12 +226,14 @@ public class CompletingPage extends AppCompatActivity {
                 needExtra1, needExtra2, mVoteItems, mEditMode).enqueue(new Callback<SimpleResponse>() {
             @Override
             public void onResponse(Call<SimpleResponse> call, Response<SimpleResponse> response) {
-                if (response.body().isOk()) {
-                    ToastUtil.show(mContext, "发布成功");
-                    Intent intent = new Intent(mContext, SocialShareActivity.class);
-                    intent.putExtra("mContentId", mContentId);
-                    startActivity(intent);
-                    finish();
+                if (response.body() != null) {
+                    if(response.body().isOk()){
+                        ToastUtil.show(mContext, "发布成功");
+                        Intent intent = new Intent(mContext, SocialShareActivity.class);
+                        intent.putExtra("mContentId", mContentId);
+                        startActivity(intent);
+                        finish();
+                    }
                 } else {
                     ToastUtil.show(mContext, "发布信息完善失败");
                 }
