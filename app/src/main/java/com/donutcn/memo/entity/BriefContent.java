@@ -129,8 +129,7 @@ public class BriefContent {
         return obj instanceof BriefContent && ((BriefContent) obj).getId().equals(this.id);
     }
 
-    @Override
-    public String toString() {
+    public JSONObject toJson() {
         JSONObject json = new JSONObject();
         try {
             json.put("article_id", id);
@@ -148,6 +147,6 @@ public class BriefContent {
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        return json.toString();
+        return json;
     }
 }

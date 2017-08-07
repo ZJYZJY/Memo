@@ -42,6 +42,7 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -54,7 +55,7 @@ public class RecommendFragment extends BaseScrollFragment implements View.OnClic
     private TextView mSearch_tv;
 
     private MemoAdapter mAdapter;
-    private ArrayList<BriefContent> list;
+    private List<BriefContent> list;
     private Context mContext;
 
     private int page = 2;
@@ -114,7 +115,7 @@ public class RecommendFragment extends BaseScrollFragment implements View.OnClic
                 if(response.body() != null){
                     if(response.body().isOk()){
                         list.addAll(0, response.body().getData());
-                        list = (ArrayList<BriefContent>) CollectionUtil.removeDuplicateWithOrder(list);
+                        list = CollectionUtil.removeDuplicateWithOrder(list);
                         mAdapter.setDataSet(list);
                         mAdapter.notifyDataSetChanged();
                         if(list.size() >= 10){

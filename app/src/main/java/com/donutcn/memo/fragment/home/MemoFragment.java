@@ -33,6 +33,7 @@ import com.donutcn.memo.R;
 import com.donutcn.memo.adapter.MemoAdapter;
 import com.donutcn.memo.listener.OnItemClickListener;
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnLoadmoreListener;
@@ -48,6 +49,7 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -59,7 +61,7 @@ public class MemoFragment extends BaseScrollFragment {
     public SmartRefreshLayout mRefreshLayout;
 
     private MemoAdapter mAdapter;
-    private ArrayList<BriefContent> mList;
+    private List<BriefContent> mList;
     private Context mContext;
 
     private int page = 2;
@@ -100,7 +102,6 @@ public class MemoFragment extends BaseScrollFragment {
     }
 
     @Override
-    @SuppressWarnings("unchecked")
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         page = ((MainActivity)getActivity()).mMemoPage;
@@ -113,8 +114,9 @@ public class MemoFragment extends BaseScrollFragment {
             if(cache.equals(""))
                 Refresh();
             else{
-                //Todo: covert problem.
-                mList = new Gson().fromJson(cache, ArrayResponse.class).getData();
+                //Todo: FIX: use the local cache will cause "can't load more" problem.
+                mList = new Gson().fromJson(cache, new TypeToken<List<BriefContent>>(){}.getType());
+                mAdapter.setDataSet(mList);
                 mAdapter.notifyDataSetChanged();
             }
         }
@@ -127,13 +129,13 @@ public class MemoFragment extends BaseScrollFragment {
                 if(response.body() != null){
                     if(response.body().isOk()){
                         mList.addAll(0, response.body().getData());
-                        mList = (ArrayList<BriefContent>) CollectionUtil.removeDuplicateWithOrder(mList);
+                        mList = CollectionUtil.removeDuplicateWithOrder(mList);
                         mAdapter.setDataSet(mList);
                         mAdapter.notifyDataSetChanged();
                         if(mList.size() >= 10){
                             mRefreshLayout.setEnableLoadmore(true);
                         }
-                        FileCacheUtil.setCache(mContext, response.body().toString());
+                        FileCacheUtil.setCache(mContext, new Gson().toJson(mList));
                     }
                 }
                 mRefreshLayout.finishRefresh();
@@ -160,11 +162,11 @@ public class MemoFragment extends BaseScrollFragment {
                         mAdapter.notifyDataSetChanged();
                         ((MainActivity)getActivity()).mMemoPage++;
                         mRefreshLayout.finishLoadmore();
-                        FileCacheUtil.setCache(mContext, response.body().toString());
+                        FileCacheUtil.setCache(mContext, new Gson().toJson(mList));
                     }
                 }else {
                     ToastUtil.show(getContext(), "已经到底部了");
-                    mRefreshLayout.setEnableLoadmore(false);
+//                    mRefreshLayout.setEnableLoadmore(false);
                     mRefreshLayout.finishLoadmore(true);
                 }
             }

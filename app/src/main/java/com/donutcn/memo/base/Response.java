@@ -1,6 +1,5 @@
 package com.donutcn.memo.base;
 
-import com.donutcn.memo.utils.HttpUtils;
 import com.google.gson.annotations.Expose;
 
 import org.json.JSONException;
@@ -13,17 +12,22 @@ import org.json.JSONObject;
 
 public abstract class Response<T> {
 
-    /**
-     * http request state code.
-     */
+    /** http request state code. */
     @Expose
     private int code;
 
-    /**
-     * http request response message.
-     */
+    /** http request response message. */
     @Expose
     private String message;
+
+    /** Successful request. */
+    private static final int SUCCESS = 200;
+
+    /** Bad Request. */
+    private static final int FAIL = 400;
+
+    /** Unauthorized request. */
+    private static final int UNAUTHORIZED = 401;
 
     public Response(String res) {
         try {
@@ -31,14 +35,18 @@ public abstract class Response<T> {
             this.code = result.getInt("code");
             this.message = result.getString("message");
         } catch (JSONException e) {
-            this.code = HttpUtils.FAIL;
+            this.code = FAIL;
             this.message = "null";
             e.printStackTrace();
         }
     }
 
     public boolean isOk() {
-        return code == HttpUtils.SUCCESS;
+        return code == SUCCESS;
+    }
+
+    public boolean unAuthorized(){
+        return code == UNAUTHORIZED;
     }
 
     public int getCode(){

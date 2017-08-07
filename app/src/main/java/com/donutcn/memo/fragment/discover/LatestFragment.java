@@ -35,14 +35,14 @@ import com.yanzhenjie.recyclerview.swipe.SwipeMenuRecyclerView;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 
-import java.util.ArrayList;
+import java.util.List;
 
 public class LatestFragment extends BaseScrollFragment {
 
     private SwipeMenuRecyclerView mHaoYe_rv;
     private SmartRefreshLayout mRefreshLayout;
 
-    private ArrayList<BriefContent> list;
+    private List<BriefContent> list;
     private Context mContext;
 
     @Override

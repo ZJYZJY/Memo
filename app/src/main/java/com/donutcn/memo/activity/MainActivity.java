@@ -4,12 +4,12 @@ import android.content.Intent;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 
 import com.donutcn.memo.R;
 import com.donutcn.memo.adapter.ViewPagerAdapter;
+import com.donutcn.memo.entity.SimpleResponse;
 import com.donutcn.memo.event.RequestRefreshEvent;
 import com.donutcn.memo.fragment.SplashFragment;
 import com.donutcn.memo.fragment.discover.DiscoverFragment;
@@ -22,9 +22,6 @@ import com.donutcn.widgetlib.widget.CheckableImageButton;
 
 import org.greenrobot.eventbus.EventBus;
 
-import java.io.IOException;
-
-import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -61,6 +58,29 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         mDiscover.setOnClickListener(this);
 
         initViewPager();
+        getWindow().getDecorView().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                HttpUtils.test().enqueue(new Callback<SimpleResponse>() {
+                    @Override
+                    public void onResponse(Call<SimpleResponse> call, Response<SimpleResponse> response) {
+                        if(response.body() != null){
+                            // check if the cookie is out of date.
+                            if (response.body().unAuthorized()) {
+                                ToastUtil.show(MainActivity.this, "登录授权过期，请重新登录");
+                                UserStatus.logout(MainActivity.this, "");
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<SimpleResponse> call, Throwable t) {
+                        t.printStackTrace();
+                        ToastUtil.show(MainActivity.this, "连接失败，请检查你的网络连接");
+                    }
+                });
+            }
+        }, 3000);
     }
 
     private void initViewPager() {
@@ -81,21 +101,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.main_bottom_home:
-                // 查看登录状态 debug
-                HttpUtils.test().enqueue(new Callback<ResponseBody>() {
-                    @Override
-                    public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                        try {
-                            Log.e("test", response.body().string());
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                    @Override
-                    public void onFailure(Call<ResponseBody> call, Throwable t) {
-                        t.printStackTrace();
-                    }
-                });
                 UserStatus.ifRequestLogin(this, "请先登录");
                 if(mHome.isChecked()){
                     EventBus.getDefault().post(new RequestRefreshEvent(

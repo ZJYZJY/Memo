@@ -33,7 +33,6 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import okhttp3.OkHttpClient;
 import okhttp3.RequestBody;
-import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -51,25 +50,9 @@ import retrofit2.http.Path;
 
 public class HttpUtils {
 
-    /**
-     * server address.
-     */
+    /** server address. */
     private static final String SERVER_HOST = "ascexz.320.io/GoodPage/API";
     private static final String PATH = "http://" + SERVER_HOST + "/";
-
-    /**
-     * Successful request.
-     */
-    public static final int SUCCESS = 200;
-
-    /**
-     * Bad Request.
-     */
-    public static final int FAIL = 400;
-    /**
-     * Unauthorized request.
-     */
-    public static final int UNAUTHORIZED = 401;
 
     private static Retrofit instance;
     private static ClearableCookieJar cookieJar;
@@ -110,21 +93,6 @@ public class HttpUtils {
             uploadManager = new UploadManager();
         }
         return uploadManager;
-    }
-
-    /**
-     * get the response state code.
-     *
-     * @param str response string
-     */
-    public static int stateCode(String str) {
-        try {
-            JSONObject json = new JSONObject(str);
-            return json.getInt("code");
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        return FAIL;
     }
 
     public interface RRPageService {
@@ -239,7 +207,7 @@ public class HttpUtils {
          * cookie test.
          */
         @POST("article_api/ceshi")
-        Call<ResponseBody> test();
+        Call<SimpleResponse> test();
     }
 
     private class APIPath {
@@ -452,7 +420,7 @@ public class HttpUtils {
         return create().modifyMyContent(id);
     }
 
-    public static Call<ResponseBody> test() {
+    public static Call<SimpleResponse> test() {
         return create().test();
     }
 

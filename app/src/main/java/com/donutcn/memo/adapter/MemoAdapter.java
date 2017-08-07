@@ -18,25 +18,24 @@ import com.donutcn.memo.utils.DynamicTimeFormat;
 import com.donutcn.memo.utils.StringUtil;
 
 import java.text.DateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 public class MemoAdapter extends BasePublishAdapter<MemoAdapter.DefaultViewHolder> {
 
-    private ArrayList<BriefContent> list;
+    private List<BriefContent> list;
     private int mLayoutType;
     private Context mContext;
 
     private OnItemClickListener mOnItemClickListener;
 
-    public MemoAdapter(Context context, ArrayList<BriefContent> list, @ItemLayoutType int layoutType) {
+    public MemoAdapter(Context context, List<BriefContent> list, @ItemLayoutType int layoutType) {
         this.mContext = context;
         this.list = list;
         this.mLayoutType = layoutType;
     }
 
-    public void setDataSet(ArrayList<BriefContent> list){
+    public void setDataSet(List<BriefContent> list){
         this.list = list;
     }
 

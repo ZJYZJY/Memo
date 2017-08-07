@@ -35,6 +35,8 @@ public class UserStatus {
         HttpUtils.clearCookies(phone);
         // remove login flag
         SpfsUtils.remove(context, SpfsUtils.USER, "loginFlag");
+        // clear local cache.
+        FileCacheUtil.clear(context, FileCacheUtil.docCache);
         // go back to LoginActivity
         Intent intent = new Intent(context, LoginActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);

@@ -5,7 +5,6 @@ import com.google.gson.annotations.Expose;
 
 import org.json.JSONArray;
 import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.util.ArrayList;
 
@@ -34,20 +33,12 @@ public class ArrayResponse<E> extends Response<ArrayList<E>> {
 
     @Override
     public String toString() {
-        JSONObject json = new JSONObject();
-        try {
-            json.put("code", getCode());
-            json.put("message", getMessage());
-            JSONArray array = new JSONArray();
-            if(data != null) {
-                for (E elem : data) {
-                    array.put(elem.toString());
-                }
+        JSONArray array = new JSONArray();
+        if(data != null) {
+            for (E elem : data) {
+                array.put(((BriefContent)elem).toJson());
             }
-            json.put("data", array);
-        } catch (JSONException e) {
-            e.printStackTrace();
         }
-        return json.toString();
+        return array.toString();
     }
 }

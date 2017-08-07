@@ -89,6 +89,12 @@ public class FileCacheUtil {
         return sBuf.toString();
     }
 
+    public static boolean clear(Context context, String cacheFileName){
+        File file = new File(FileCacheUtil.getCachePath(context) + "/"
+                + cacheFileName);
+        return file.delete();
+    }
+
     public static String getCachePath(Context context) {
         return context.getFilesDir().getAbsolutePath();
     }

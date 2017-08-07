@@ -275,21 +275,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                     attemptToRegister();
                 break;
             case R.id.login_with_wechat:
-                // 查看登录状态 debug
-                HttpUtils.test().enqueue(new Callback<ResponseBody>() {
-                    @Override
-                    public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                        try {
-                            Log.e("test", response.body().string());
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                    @Override
-                    public void onFailure(Call<ResponseBody> call, Throwable t) {
-                        t.printStackTrace();
-                    }
-                });
                 break;
             case R.id.enter_without_login:
                 Intent intent = new Intent(this, MainActivity.class);
