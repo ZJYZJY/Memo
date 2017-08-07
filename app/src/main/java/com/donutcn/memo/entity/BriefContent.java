@@ -128,4 +128,26 @@ public class BriefContent {
     public boolean equals(Object obj) {
         return obj instanceof BriefContent && ((BriefContent) obj).getId().equals(this.id);
     }
+
+    @Override
+    public String toString() {
+        JSONObject json = new JSONObject();
+        try {
+            json.put("article_id", id);
+            json.put("head_portrait", userIcon);
+            json.put("name", name);
+            json.put("title", title);
+            json.put("create_time", time);
+            json.put("content", content);
+            json.put("type", type);
+            json.put("read_total", readCount);
+            json.put("praise", upVote);
+            json.put("comment_total", comment);
+            json.put("url1", imgUrl0);
+            json.put("url2", imgUrl1);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return json.toString();
+    }
 }

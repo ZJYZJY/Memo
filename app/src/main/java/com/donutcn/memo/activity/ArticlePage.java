@@ -20,6 +20,9 @@ import com.donutcn.memo.utils.DensityUtils;
 import com.donutcn.memo.utils.HttpUtils;
 import com.donutcn.memo.utils.ToastUtil;
 import com.donutcn.memo.utils.WindowUtils;
+import com.tencent.smtt.sdk.WebSettings;
+import com.tencent.smtt.sdk.WebView;
+import com.tencent.smtt.sdk.WebViewClient;
 import com.zzhoujay.richtext.CacheType;
 import com.zzhoujay.richtext.ImageHolder;
 import com.zzhoujay.richtext.RichText;
@@ -50,31 +53,53 @@ public class ArticlePage extends AppCompatActivity implements View.OnClickListen
         WindowUtils.setStatusBarColor(this, R.color.colorPrimary, true);
         initView();
         mContentId = getIntent().getStringExtra("contentId");
-        if(mContent != null){
-            HttpUtils.getContentById(mContentId).enqueue(new Callback<ContentResponse>() {
-                @Override
-                public void onResponse(Call<ContentResponse> call, Response<ContentResponse> response) {
-                    ContentResponse res = response.body();
-                    if(res.isOk()){
-                        mTitleStr = res.getTitle();
-                        mAuthorStr = res.getAuthor();
-                        mDateStr = res.getDate();
-                        mReadCountStr = res.getReadCount();
-                        mContentStr = res.getContentStr();
-                        mType = res.getType();
-                        showContent();
-                    }else {
-                        ToastUtil.show(ArticlePage.this, "该文章不存在");
-                    }
-                }
+//        if(mContent != null){
+//            HttpUtils.getContentById(mContentId).enqueue(new Callback<ContentResponse>() {
+//                @Override
+//                public void onResponse(Call<ContentResponse> call, Response<ContentResponse> response) {
+//                    ContentResponse res = response.body();
+//                    if(res.isOk()){
+//                        mTitleStr = res.getTitle();
+//                        mAuthorStr = res.getAuthor();
+//                        mDateStr = res.getDate();
+//                        mReadCountStr = res.getReadCount();
+//                        mContentStr = res.getContentStr();
+//                        mType = res.getType();
+//                        showContent();
+//                    }else {
+//                        ToastUtil.show(ArticlePage.this, "该文章不存在");
+//                    }
+//                }
+//
+//                @Override
+//                public void onFailure(Call<ContentResponse> call, Throwable t) {
+//                    t.printStackTrace();
+//                    ToastUtil.show(ArticlePage.this, "连接失败");
+//                }
+//            });
+//        }
 
-                @Override
-                public void onFailure(Call<ContentResponse> call, Throwable t) {
-                    t.printStackTrace();
-                    ToastUtil.show(ArticlePage.this, "连接失败");
-                }
-            });
-        }
+        WebView webView = (WebView) findViewById(R.id.webView);
+        webView.loadUrl("http://ascexz.320.io/GoodPage/API/index_api/see_article_api/" + mContentId);
+
+        WebSettings settings = webView.getSettings();
+        settings.setJavaScriptEnabled(true);
+
+        // 设置加载进来的页面自适应手机屏幕
+        settings.setUseWideViewPort(true);
+        settings.setLoadWithOverviewMode(true);
+
+        settings.setSupportZoom(true);
+        settings.setBuiltInZoomControls(true);
+        settings.setDisplayZoomControls(true);
+
+        webView.setWebViewClient(new WebViewClient() {
+            @Override
+            public boolean shouldOverrideUrlLoading(WebView view, String url) {
+                view.loadUrl(url);
+                return true;
+            }
+        });
     }
 
     private void showContent(){
@@ -150,12 +175,12 @@ public class ArticlePage extends AppCompatActivity implements View.OnClickListen
     }
 
     public void initView() {
-        mTitle = (TextView) findViewById(R.id.article_title);
-        mDate = (TextView) findViewById(R.id.article_date);
-        mAuthor = (TextView) findViewById(R.id.article_author);
-        mReadCount = (TextView) findViewById(R.id.article_read_count);
-        mContent = (TextView) findViewById(R.id.article_content);
-        mScrollView = (ScrollView) findViewById(R.id.article_scroll);
+//        mTitle = (TextView) findViewById(R.id.article_title);
+//        mDate = (TextView) findViewById(R.id.article_date);
+//        mAuthor = (TextView) findViewById(R.id.article_author);
+//        mReadCount = (TextView) findViewById(R.id.article_read_count);
+//        mContent = (TextView) findViewById(R.id.article_content);
+//        mScrollView = (ScrollView) findViewById(R.id.article_scroll);
 
         mInteractive = (Button) findViewById(R.id.interactive);
         mWant = (TextView) findViewById(R.id.interactive_bottom_want);
@@ -208,7 +233,7 @@ public class ArticlePage extends AppCompatActivity implements View.OnClickListen
     public void onWindowFocusChanged(boolean hasFocus) {
         super.onWindowFocusChanged(hasFocus);
         // get the comment layout position.
-        commentHeight = findViewById(R.id.article_content).getTop();
+//        commentHeight = findViewById(R.id.article_content).getTop();
     }
 
     @Override

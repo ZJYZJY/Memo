@@ -15,25 +15,27 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.donutcn.memo.App;
 import com.donutcn.memo.R;
 import com.donutcn.memo.adapter.FriendListAdapter;
 import com.donutcn.memo.base.BaseScrollFragment;
 import com.donutcn.memo.entity.ArrayResponse;
 import com.donutcn.memo.entity.Contact;
-import com.donutcn.memo.event.ReceiveNewMessagesEvent;
+import com.donutcn.memo.ContactDao;
+import com.donutcn.memo.DaoSession;
 import com.donutcn.memo.event.RequestRefreshEvent;
 import com.donutcn.memo.listener.OnItemClickListener;
 import com.donutcn.memo.listener.OnQueryListener;
 import com.donutcn.memo.listener.UploadCallback;
 import com.donutcn.memo.utils.HttpUtils;
 import com.donutcn.memo.utils.PermissionCheck;
+import com.donutcn.memo.utils.SpfsUtils;
 import com.donutcn.memo.utils.StringUtil;
 import com.donutcn.memo.utils.ToastUtil;
 import com.donutcn.memo.utils.UserStatus;
 import com.donutcn.memo.view.ListViewDecoration;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
-import com.scwang.smartrefresh.layout.listener.OnLoadmoreListener;
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
 import com.yanzhenjie.recyclerview.swipe.SwipeMenuRecyclerView;
 
@@ -57,8 +59,9 @@ public class FriendsFragment extends BaseScrollFragment {
 
     private FriendListAdapter mAdapter;
     private static ArrayList<Contact> mTempList;
-    private static ArrayList<Contact> mContactsList;
+    private static List<Contact> mContactsList;
     private Context mContext;
+    private ContactDao mContactDao;
 
     @Override
     public void onAttach(Context context) {
@@ -70,6 +73,8 @@ public class FriendsFragment extends BaseScrollFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EventBus.getDefault().register(this);
+        DaoSession daoSession = ((App)mContext.getApplicationContext()).getDaoSession();
+        mContactDao = daoSession.getContactDao();
     }
 
     @Override
@@ -103,6 +108,25 @@ public class FriendsFragment extends BaseScrollFragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         mContactsList = new ArrayList<>();
+        // check the local database first.
+        if(SpfsUtils.readBoolean(mContext, SpfsUtils.USER, "match_contacts", false)){
+            mContactsList = mContactDao
+                    .queryBuilder()
+                    .orderAsc(ContactDao.Properties.SortKey)
+                    .build().list();
+            mAdapter = new FriendListAdapter(mContext, mContactsList);
+            mAdapter.setOnItemClickListener(mOnItemClickListener);
+            mHaoYe_rv.setAdapter(mAdapter);
+            if(mContactsList.size() > 0){
+                mRefreshLayout.setVisibility(View.VISIBLE);
+                mNoMatch.setVisibility(View.GONE);
+                mContainer.setVisibility(View.GONE);
+            }else {
+                mRefreshLayout.setVisibility(View.GONE);
+                mNoMatch.setVisibility(View.VISIBLE);
+                mContainer.setVisibility(View.GONE);
+            }
+        }
     }
 
     public void Refresh() {
@@ -122,7 +146,7 @@ public class FriendsFragment extends BaseScrollFragment {
     private OnItemClickListener mOnItemClickListener = new OnItemClickListener() {
         @Override
         public void onItemClick(int position) {
-            EventBus.getDefault().post(new ReceiveNewMessagesEvent(3, position));
+
         }
     };
 
@@ -155,7 +179,19 @@ public class FriendsFragment extends BaseScrollFragment {
                         mContainer.setVisibility(View.GONE);
                     }
                     dialog.dismiss();
+                    SpfsUtils.write(mContext, SpfsUtils.USER, "match_contacts", true);
                     ToastUtil.show(mContext, "匹配完成");
+                    // insert matched contact into database.
+                    for(Contact contact : mContactsList) {
+                        Contact findContact = mContactDao
+                                .queryBuilder()
+                                .where(ContactDao.Properties.ContactId.eq(contact.getContactId()))
+                                .build().unique();
+                        if(findContact != null){
+                            mContactDao.deleteByKey(findContact.getContactId());
+                        }
+                        mContactDao.insert(contact);
+                    }
                 }
 
                 @Override
@@ -293,7 +329,7 @@ public class FriendsFragment extends BaseScrollFragment {
                     } else {
                         // create a contact object.
                         Contact contact = new Contact();
-                        contact.setDesplayName(name);
+                        contact.setDisplayName(name);
                         contact.setPhoneNum(number);
                         contact.setSortKey(sortKey);
                         contact.setContactId(contactId);

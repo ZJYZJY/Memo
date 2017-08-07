@@ -10,6 +10,7 @@ import android.widget.TextView;
 import com.donutcn.memo.R;
 import com.donutcn.memo.utils.UserStatus;
 import com.donutcn.memo.utils.WindowUtils;
+import com.tencent.bugly.beta.Beta;
 
 public class PersonalCenterActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -51,6 +52,7 @@ public class PersonalCenterActivity extends AppCompatActivity implements View.On
             case R.id.feedback:
                 break;
             case R.id.about:
+                Beta.checkUpgrade();
                 break;
             case R.id.log_out:
                 UserStatus.logout(getApplicationContext(),

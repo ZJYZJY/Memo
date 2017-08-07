@@ -53,7 +53,7 @@
             android:maxLines="1"
             android:paddingLeft="@dimen/padding_text_small"
             android:paddingRight="@dimen/padding_text_small"
-            android:text="206"
+            android:text="-"
             android:textSize="14sp" />
     </LinearLayout>
 
@@ -81,7 +81,7 @@
             android:maxLines="1"
             android:paddingLeft="@dimen/padding_text_small"
             android:paddingRight="@dimen/padding_text_small"
-            android:text="1430"
+            android:text="-"
             android:textSize="14sp" />
     </LinearLayout>
 

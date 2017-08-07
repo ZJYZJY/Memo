@@ -24,6 +24,7 @@ import com.donutcn.memo.event.ReceiveNewMessagesEvent;
 import com.donutcn.memo.event.RequestRefreshEvent;
 import com.donutcn.memo.type.ItemLayoutType;
 import com.donutcn.memo.utils.CollectionUtil;
+import com.donutcn.memo.utils.FileCacheUtil;
 import com.donutcn.memo.utils.HttpUtils;
 import com.donutcn.memo.utils.ToastUtil;
 import com.donutcn.memo.utils.UserStatus;
@@ -31,6 +32,7 @@ import com.donutcn.memo.view.ListViewDecoration;
 import com.donutcn.memo.R;
 import com.donutcn.memo.adapter.MemoAdapter;
 import com.donutcn.memo.listener.OnItemClickListener;
+import com.google.gson.Gson;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnLoadmoreListener;
@@ -98,6 +100,7 @@ public class MemoFragment extends BaseScrollFragment {
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         page = ((MainActivity)getActivity()).mMemoPage;
@@ -106,7 +109,14 @@ public class MemoFragment extends BaseScrollFragment {
         mAdapter.setOnItemClickListener(mOnItemClickListener);
         mHaoYe_rv.setAdapter(mAdapter);
         if(UserStatus.isLogin(mContext)){
-            Refresh();
+            String cache = FileCacheUtil.getCache(mContext, "docs_cache.txt", FileCacheUtil.CACHE_LONG_TIMEOUT);
+            if(cache.equals(""))
+                Refresh();
+            else{
+                //Todo: covert problem.
+                mList = new Gson().fromJson(cache, ArrayResponse.class).getData();
+                mAdapter.notifyDataSetChanged();
+            }
         }
     }
 
@@ -122,6 +132,7 @@ public class MemoFragment extends BaseScrollFragment {
                     if(mList.size() >= 10){
                         mRefreshLayout.setEnableLoadmore(true);
                     }
+                    FileCacheUtil.setCache(mContext, response.body().toString());
                 }
                 mRefreshLayout.finishRefresh();
             }
@@ -146,6 +157,7 @@ public class MemoFragment extends BaseScrollFragment {
                     mAdapter.notifyDataSetChanged();
                     ((MainActivity)getActivity()).mMemoPage++;
                     mRefreshLayout.finishLoadmore();
+                    FileCacheUtil.setCache(mContext, response.body().toString());
                 }else {
                     ToastUtil.show(getContext(), "已经到底部了");
                     mRefreshLayout.setEnableLoadmore(false);

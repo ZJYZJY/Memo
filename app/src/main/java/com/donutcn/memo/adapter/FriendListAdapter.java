@@ -12,7 +12,7 @@ import com.donutcn.memo.R;
 import com.donutcn.memo.entity.Contact;
 import com.donutcn.memo.listener.OnItemClickListener;
 
-import java.util.ArrayList;
+import java.util.List;
 
 /**
  * com.donutcn.memo.adapter
@@ -22,11 +22,11 @@ import java.util.ArrayList;
 public class FriendListAdapter extends RecyclerView.Adapter<FriendListAdapter.ViewHolder> {
 
     private Context mContext;
-    private ArrayList<Contact> list;
+    private List<Contact> list;
 
     private OnItemClickListener mOnItemClickListener;
 
-    public FriendListAdapter(Context context, ArrayList<Contact> list) {
+    public FriendListAdapter(Context context, List<Contact> list) {
         this.mContext = context;
         this.list = list;
     }

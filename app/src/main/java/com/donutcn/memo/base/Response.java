@@ -41,6 +41,10 @@ public abstract class Response<T> {
         return code == HttpUtils.SUCCESS;
     }
 
+    public int getCode(){
+        return code;
+    }
+
     public String getMessage() {
         return message;
     }

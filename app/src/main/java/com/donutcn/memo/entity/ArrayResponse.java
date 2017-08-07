@@ -3,7 +3,9 @@ package com.donutcn.memo.entity;
 import com.donutcn.memo.base.Response;
 import com.google.gson.annotations.Expose;
 
+import org.json.JSONArray;
 import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 
@@ -32,9 +34,20 @@ public class ArrayResponse<E> extends Response<ArrayList<E>> {
 
     @Override
     public String toString() {
-        if(data == null)
-            return super.toString();
-        else
-            return super.toString() + data.toString();
+        JSONObject json = new JSONObject();
+        try {
+            json.put("code", getCode());
+            json.put("message", getMessage());
+            JSONArray array = new JSONArray();
+            if(data != null) {
+                for (E elem : data) {
+                    array.put(elem.toString());
+                }
+            }
+            json.put("data", array);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return json.toString();
     }
 }

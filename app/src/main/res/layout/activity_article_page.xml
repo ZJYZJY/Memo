@@ -18,69 +18,73 @@
             android:layout_height="@dimen/px_line"
             android:background="@color/border_gray" />
 
-        <ScrollView
-            android:id="@+id/article_scroll"
+        <!--<ScrollView-->
+            <!--android:id="@+id/article_scroll"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="match_parent"-->
+            <!--android:background="@color/white"-->
+            <!--android:scrollbarStyle="insideOverlay">-->
+
+            <!--<RelativeLayout-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:paddingBottom="@dimen/padding_container"-->
+                <!--android:paddingLeft="@dimen/padding_container"-->
+                <!--android:paddingRight="@dimen/padding_container"-->
+                <!--android:paddingTop="@dimen/padding_container">-->
+
+                <!--<TextView-->
+                    <!--android:id="@+id/article_title"-->
+                    <!--android:layout_width="match_parent"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:textColor="@color/text_black"-->
+                    <!--android:textSize="22sp" />-->
+
+                <!--<LinearLayout-->
+                    <!--android:id="@+id/article_sub_title"-->
+                    <!--android:layout_width="match_parent"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:layout_below="@+id/article_title"-->
+                    <!--android:orientation="horizontal"-->
+                    <!--android:paddingBottom="@dimen/padding_large"-->
+                    <!--android:paddingTop="@dimen/padding_large">-->
+
+                    <!--<TextView-->
+                        <!--android:id="@+id/article_date"-->
+                        <!--android:layout_width="wrap_content"-->
+                        <!--android:layout_height="wrap_content"-->
+                        <!--android:textColor="@color/textPrimary" />-->
+
+                    <!--<TextView-->
+                        <!--android:id="@+id/article_author"-->
+                        <!--android:layout_width="wrap_content"-->
+                        <!--android:layout_height="wrap_content"-->
+                        <!--android:paddingLeft="@dimen/padding_large"-->
+                        <!--android:paddingRight="@dimen/padding_large"-->
+                        <!--android:textColor="@color/text_blue" />-->
+
+                    <!--<TextView-->
+                        <!--android:id="@+id/article_read_count"-->
+                        <!--android:layout_width="wrap_content"-->
+                        <!--android:layout_height="wrap_content"-->
+                        <!--android:textColor="@color/textPrimary" />-->
+                <!--</LinearLayout>-->
+
+                <!--<TextView-->
+                    <!--android:id="@+id/article_content"-->
+                    <!--android:layout_width="match_parent"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:layout_below="@+id/article_sub_title"-->
+                    <!--android:lineSpacingExtra="@dimen/line_space"-->
+                    <!--android:text=""-->
+                    <!--android:textColor="@color/textPrimaryDark"-->
+                    <!--android:textSize="15sp" />-->
+            <!--</RelativeLayout>-->
+        <!--</ScrollView>-->
+        <com.tencent.smtt.sdk.WebView
+            android:id="@+id/webView"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@color/white"
-            android:scrollbarStyle="insideOverlay">
-
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:paddingBottom="@dimen/padding_container"
-                android:paddingLeft="@dimen/padding_container"
-                android:paddingRight="@dimen/padding_container"
-                android:paddingTop="@dimen/padding_container">
-
-                <TextView
-                    android:id="@+id/article_title"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:textColor="@color/text_black"
-                    android:textSize="22sp" />
-
-                <LinearLayout
-                    android:id="@+id/article_sub_title"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@+id/article_title"
-                    android:orientation="horizontal"
-                    android:paddingBottom="@dimen/padding_large"
-                    android:paddingTop="@dimen/padding_large">
-
-                    <TextView
-                        android:id="@+id/article_date"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:textColor="@color/textPrimary" />
-
-                    <TextView
-                        android:id="@+id/article_author"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:paddingLeft="@dimen/padding_large"
-                        android:paddingRight="@dimen/padding_large"
-                        android:textColor="@color/text_blue" />
-
-                    <TextView
-                        android:id="@+id/article_read_count"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:textColor="@color/textPrimary" />
-                </LinearLayout>
-
-                <TextView
-                    android:id="@+id/article_content"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@+id/article_sub_title"
-                    android:lineSpacingExtra="@dimen/line_space"
-                    android:text=""
-                    android:textColor="@color/textPrimaryDark"
-                    android:textSize="15sp" />
-            </RelativeLayout>
-        </ScrollView>
+            android:layout_height="match_parent"/>
     </LinearLayout>
 
     <View

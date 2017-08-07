@@ -4,6 +4,8 @@ import android.app.Application;
 import android.content.Context;
 import android.text.TextUtils;
 
+import com.donutcn.memo.DaoMaster;
+import com.donutcn.memo.DaoSession;
 import com.donutcn.memo.utils.HttpUtils;
 import com.iflytek.cloud.SpeechConstant;
 import com.iflytek.cloud.SpeechUtility;
@@ -24,6 +26,8 @@ import com.umeng.socialize.PlatformConfig;
 import com.umeng.socialize.UMShareAPI;
 import com.zzhoujay.richtext.RichText;
 
+import org.greenrobot.greendao.database.Database;
+
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
@@ -35,6 +39,8 @@ import java.io.IOException;
 
 public class App extends Application {
 
+    private DaoSession daoSession;
+
     @Override
     public void onCreate() {
         super.onCreate();
@@ -42,8 +48,13 @@ public class App extends Application {
         // enable umeng debug.
         Config.DEBUG = true;
         UMShareAPI.get(this);
-        // init Bugly
+        // initialize Bugly
         initBugly();
+        // initialize greenDAO
+        DaoMaster.DevOpenHelper helper = new DaoMaster.DevOpenHelper(this, "memo-db");
+        Database db = helper.getWritableDb();
+        daoSession = new DaoMaster(db).newSession();
+
         HttpUtils.create(getApplicationContext());
         RichText.initCacheDir(this);
         SpeechUtility.createUtility(this, SpeechConstant.APPID + "=59647377");
@@ -78,6 +89,10 @@ public class App extends Application {
         strategy.setUploadProcess(processName == null || processName.equals(packageName));
 
         Bugly.init(context, "d2e8294caf", true, strategy);
+    }
+
+    public DaoSession getDaoSession() {
+        return daoSession;
     }
 
     /**

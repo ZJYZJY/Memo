@@ -3,15 +3,24 @@ package com.donutcn.memo.entity;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
+import org.greenrobot.greendao.annotation.Entity;
+import org.greenrobot.greendao.annotation.Generated;
+import org.greenrobot.greendao.annotation.Id;
+
 /**
  * com.donutcn.memo.entity
  * Created by 73958 on 2017/8/3.
  */
 
+@Entity
 public class Contact {
 
-    private int contactId; //id
-    private String desplayName;//姓名
+    @Id
+    @Expose
+    @SerializedName("user_id")
+    private long contactId; //id
+
+    private String displayName;//姓名
 
     @Expose
     @SerializedName("name")
@@ -20,10 +29,28 @@ public class Contact {
     @Expose
     @SerializedName("head_portrait")
     private String avatar;
+
+    @Expose
+    @SerializedName("username")
     private String phoneNum; // 电话号码
     private String sortKey; // 排序用的
     private String lookUpKey;
-    private int selected = 0;
+
+    @Generated(hash = 616731164)
+    public Contact(long contactId, String displayName, String name, String avatar,
+            String phoneNum, String sortKey, String lookUpKey) {
+        this.contactId = contactId;
+        this.displayName = displayName;
+        this.name = name;
+        this.avatar = avatar;
+        this.phoneNum = phoneNum;
+        this.sortKey = sortKey;
+        this.lookUpKey = lookUpKey;
+    }
+
+    @Generated(hash = 672515148)
+    public Contact() {
+    }
 
     public String getName() {
         return name;
@@ -41,7 +68,7 @@ public class Contact {
         this.avatar = avatar;
     }
 
-    public int getContactId() {
+    public long getContactId() {
         return contactId;
     }
 
@@ -49,12 +76,12 @@ public class Contact {
         this.contactId = contactId;
     }
 
-    public String getDesplayName() {
-        return desplayName;
+    public String getDisplayName() {
+        return displayName;
     }
 
-    public void setDesplayName(String desplayName) {
-        this.desplayName = desplayName;
+    public void setDisplayName(String displayName) {
+        this.displayName = displayName;
     }
 
     public String getPhoneNum() {
@@ -81,11 +108,7 @@ public class Contact {
         this.lookUpKey = lookUpKey;
     }
 
-    public int getSelected() {
-        return selected;
-    }
-
-    public void setSelected(int selected) {
-        this.selected = selected;
+    public void setContactId(long contactId) {
+        this.contactId = contactId;
     }
 }
