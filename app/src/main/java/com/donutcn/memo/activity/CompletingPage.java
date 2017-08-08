@@ -230,7 +230,9 @@ public class CompletingPage extends AppCompatActivity {
                     if(response.body().isOk()){
                         ToastUtil.show(mContext, "发布成功");
                         Intent intent = new Intent(mContext, SocialShareActivity.class);
-                        intent.putExtra("mContentId", mContentId);
+                        intent.putExtra("contentId", mContentId);
+                        // Todo: pass the content url to share activity.
+                        intent.putExtra("contentUrl", "");
                         startActivity(intent);
                         finish();
                     }

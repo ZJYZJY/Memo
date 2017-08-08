@@ -1,0 +1,105 @@
+package com.donutcn.memo.helper;
+
+import android.app.Activity;
+import android.content.Context;
+import android.util.Log;
+
+import com.donutcn.memo.utils.ToastUtil;
+import com.umeng.socialize.ShareAction;
+import com.umeng.socialize.UMShareListener;
+import com.umeng.socialize.bean.SHARE_MEDIA;
+import com.umeng.socialize.media.UMWeb;
+import com.umeng.socialize.shareboard.ShareBoardConfig;
+
+/**
+ * com.donutcn.memo.helper
+ * Created by 73958 on 2017/8/8.
+ */
+
+public class ShareHelper {
+
+    private Context mContext;
+
+    public ShareHelper(Context context){
+        this.mContext = context;
+    }
+
+    public void shareWechat(UMWeb web){
+        new ShareAction((Activity) mContext)
+                .withMedia(web)
+                .setPlatform(SHARE_MEDIA.WEIXIN)
+                .setCallback(umShareListener)
+                .share();
+    }
+
+    public void shareWechatCirlce(UMWeb web){
+        new ShareAction((Activity) mContext)
+                .withMedia(web)
+                .setPlatform(SHARE_MEDIA.WEIXIN_CIRCLE)
+                .setCallback(umShareListener)
+                .share();
+    }
+
+    public void shareQQ(UMWeb web){
+        new ShareAction((Activity) mContext)
+                .withMedia(web)
+                .setPlatform(SHARE_MEDIA.QQ)
+                .setCallback(umShareListener)
+                .share();
+    }
+
+    public void shareQzone(UMWeb web){
+        new ShareAction((Activity) mContext)
+                .withMedia(web)
+                .setPlatform(SHARE_MEDIA.QZONE)
+                .setCallback(umShareListener)
+                .share();
+    }
+
+    public void shareWeibo(UMWeb web){
+        new ShareAction((Activity) mContext)
+                .withMedia(web)
+                .setPlatform(SHARE_MEDIA.SINA)
+                .setCallback(umShareListener)
+                .share();
+    }
+
+    public void openShareBoard(UMWeb web){
+        ShareBoardConfig config = new ShareBoardConfig();
+        config.setShareboardPostion(ShareBoardConfig.SHAREBOARD_POSITION_CENTER);
+        config.setMenuItemBackgroundShape(ShareBoardConfig.BG_SHAPE_NONE);
+        new ShareAction((Activity) mContext)
+                .withMedia(web)
+                .setDisplayList(SHARE_MEDIA.WEIXIN, SHARE_MEDIA.WEIXIN_CIRCLE,
+                        SHARE_MEDIA.WEIXIN_FAVORITE, SHARE_MEDIA.SINA, SHARE_MEDIA.QQ, SHARE_MEDIA.QZONE)
+                .setCallback(umShareListener)
+                .open(config);
+    }
+
+    private UMShareListener umShareListener = new UMShareListener() {
+        @Override
+        public void onStart(SHARE_MEDIA platform) {
+
+        }
+
+        @Override
+        public void onResult(SHARE_MEDIA platform) {
+            Log.d("plat", "platform" + platform);
+            ToastUtil.show(mContext, platform + " 分享成功啦");
+
+        }
+
+        @Override
+        public void onError(SHARE_MEDIA platform, Throwable t) {
+            ToastUtil.show(mContext, platform + " 分享失败啦");
+            if (t != null) {
+                Log.d("throw", "throw:" + t.getMessage());
+            }
+        }
+
+        @Override
+        public void onCancel(SHARE_MEDIA platform) {
+            ToastUtil.show(mContext, platform + " 分享取消了");
+        }
+    };
+}

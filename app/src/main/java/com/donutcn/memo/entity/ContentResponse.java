@@ -19,10 +19,6 @@ public class ContentResponse extends Response<LinkedHashMap> {
     @Expose
     private LinkedHashMap data;
 
-    public ContentResponse(String res) {
-        super(res);
-    }
-
     @Override
     public LinkedHashMap getData() {
         return data;

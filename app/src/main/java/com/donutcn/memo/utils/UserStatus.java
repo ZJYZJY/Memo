@@ -6,6 +6,8 @@ import android.content.Intent;
 import com.donutcn.memo.activity.LoginActivity;
 import com.donutcn.memo.entity.User;
 
+import java.util.Map;
+
 /**
  * com.donutcn.memo.utils
  * Created by 73958 on 2017/7/28.
@@ -13,20 +15,30 @@ import com.donutcn.memo.entity.User;
 
 public class UserStatus {
 
+    public static int PHONE_LOGIN = 1000;
+    public static int WECHAT_LOGIN = 2000;
     private static User USER = null;
 
     private static void setCurrentUser(String phoneNum) {
         USER = new User(phoneNum);
     }
 
+    private static void setCurrentUser(String openId, String name, String gender, String iconUrl) {
+        USER = new User(openId, name, gender, iconUrl);
+    }
+
     public static User getCurrentUser() {
         return USER;
     }
 
-    public static void login(Context context, String phoneNumber) {
+    public static void login(Context context, int loginType, Map<String, String> data) {
         SpfsUtils.write(context, SpfsUtils.USER, "loginFlag", true);
-        SpfsUtils.write(context, SpfsUtils.USER, "phoneNumber", phoneNumber);
-        setCurrentUser(phoneNumber);
+        if(loginType == PHONE_LOGIN){
+            SpfsUtils.write(context, SpfsUtils.USER, "phoneNumber", data.get("phone"));
+            setCurrentUser(data.get("phone"));
+        }else if(loginType == WECHAT_LOGIN){
+            setCurrentUser(data.get("openid"), data.get("name"), data.get("gender"), data.get("iconUrl"));
+        }
     }
 
     public static void logout(Context context, String phone) {

@@ -17,6 +17,9 @@ import com.donutcn.memo.utils.ToastUtil;
 import com.donutcn.memo.utils.UserStatus;
 import com.donutcn.memo.utils.WindowUtils;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -63,13 +66,17 @@ public class ResetPasswordPage extends AppCompatActivity implements View.OnClick
         HttpUtils.getVerifiedCode(phoneNumber, "edituser").enqueue(new Callback<SimpleResponse>() {
             @Override
             public void onResponse(Call<SimpleResponse> call, Response<SimpleResponse> response) {
-                if(response.body() != null && response.body().isOk()){
-                    authCodeTimer.start();
-                    ToastUtil.show(ResetPasswordPage.this, "验证码发送成功");
-                }else {
-                    mGetAuthCode.setClickable(true);
-                    mGetAuthCode.setBackgroundResource(R.drawable.selector_radius_blue_btn);
-                    ToastUtil.show(ResetPasswordPage.this, "验证码发送失败，" + response.body().getMessage());
+                if(response.body() != null){
+                    if(response.body().isOk()){
+                        authCodeTimer.start();
+                        ToastUtil.show(ResetPasswordPage.this, "验证码发送成功");
+                    } else {
+                        mGetAuthCode.setClickable(true);
+                        mGetAuthCode.setBackgroundResource(R.drawable.selector_radius_blue_btn);
+                        ToastUtil.show(ResetPasswordPage.this, "验证码发送失败，" + response.body().getMessage());
+                    }
+                } else {
+                    ToastUtil.show(ResetPasswordPage.this, "验证码发送失败 ，服务器未知错误");
                 }
             }
 
@@ -100,14 +107,20 @@ public class ResetPasswordPage extends AppCompatActivity implements View.OnClick
         HttpUtils.modifyUser(phoneNumber, authCode, password, ACTION_MODIFY).enqueue(new Callback<SimpleResponse>() {
             @Override
             public void onResponse(Call<SimpleResponse> call, Response<SimpleResponse> response) {
-                if(response.body() != null && response.body().isOk()){
-                    ToastUtil.show(ResetPasswordPage.this, "重置密码成功");
-                    UserStatus.login(getApplicationContext(), phoneNumber);
-                    Intent intent = new Intent(ResetPasswordPage.this, MainActivity.class);
-                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                    startActivity(intent);
-                }else {
-                    ToastUtil.show(ResetPasswordPage.this, "重置密码失败，" + response.body().getMessage());
+                if(response.body() != null){
+                    if(response.body().isOk()){
+                        ToastUtil.show(ResetPasswordPage.this, "重置密码成功");
+                        Map<String, String> data = new HashMap<>();
+                        data.put("phone", phoneNumber);
+                        UserStatus.login(getApplicationContext(), UserStatus.PHONE_LOGIN, data);
+                        Intent intent = new Intent(ResetPasswordPage.this, MainActivity.class);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                        startActivity(intent);
+                    }else {
+                        ToastUtil.show(ResetPasswordPage.this, "重置密码失败，" + response.body().getMessage());
+                    }
+                } else {
+                    ToastUtil.show(ResetPasswordPage.this, "登录失败，服务器未知错误");
                 }
             }
 

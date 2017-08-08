@@ -240,7 +240,8 @@ public class PublishActivity extends AppCompatActivity implements View.OnClickLi
                 if(response.body() != null){
                     if(response.body().isOk()){
                         ToastUtil.show(mContext, "发布成功");
-                        openSharePage(String.valueOf(response.body().getField("article_id")));
+                        // Todo: pass the content url to share activity.
+                        openSharePage(String.valueOf(response.body().getField("article_id")), "");
                     }
                 }else {
                     ToastUtil.show(mContext, "发布失败");
@@ -353,9 +354,10 @@ public class PublishActivity extends AppCompatActivity implements View.OnClickLi
         }
     }
 
-    private void openSharePage(String contentId) {
+    private void openSharePage(String contentId, String contentUrl) {
         Intent intent = new Intent(this, SocialShareActivity.class);
         intent.putExtra("contentId", contentId);
+        intent.putExtra("contentUrl", contentUrl);
         startActivity(intent);
     }
 

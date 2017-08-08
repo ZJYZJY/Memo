@@ -29,24 +29,16 @@ public abstract class Response<T> {
     /** Unauthorized request. */
     private static final int UNAUTHORIZED = 401;
 
-    public Response(String res) {
-        try {
-            JSONObject result = new JSONObject(res);
-            this.code = result.getInt("code");
-            this.message = result.getString("message");
-        } catch (JSONException e) {
-            this.code = FAIL;
-            this.message = "null";
-            e.printStackTrace();
-        }
-    }
-
     public boolean isOk() {
         return code == SUCCESS;
     }
 
     public boolean unAuthorized(){
         return code == UNAUTHORIZED;
+    }
+
+    public boolean isFail(){
+        return code == FAIL;
     }
 
     public int getCode(){

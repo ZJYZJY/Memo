@@ -15,10 +15,6 @@ public class SimpleResponse extends Response<LinkedHashMap> {
     @Expose
     private LinkedHashMap data;
 
-    public SimpleResponse(String res) {
-        super(res);
-    }
-
     @Override
     public LinkedHashMap getData() {
         return data;

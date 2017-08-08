@@ -14,7 +14,6 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.donutcn.memo.activity.ArticlePage;
-import com.donutcn.memo.activity.MainActivity;
 import com.donutcn.memo.activity.PublishActivity;
 import com.donutcn.memo.base.BaseScrollFragment;
 import com.donutcn.memo.entity.ArrayResponse;
@@ -22,6 +21,7 @@ import com.donutcn.memo.entity.BriefContent;
 import com.donutcn.memo.entity.SimpleResponse;
 import com.donutcn.memo.event.ReceiveNewMessagesEvent;
 import com.donutcn.memo.event.RequestRefreshEvent;
+import com.donutcn.memo.helper.ShareHelper;
 import com.donutcn.memo.type.ItemLayoutType;
 import com.donutcn.memo.utils.CollectionUtil;
 import com.donutcn.memo.utils.FileCacheUtil;
@@ -38,6 +38,8 @@ import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnLoadmoreListener;
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
+import com.umeng.socialize.media.UMImage;
+import com.umeng.socialize.media.UMWeb;
 import com.yanzhenjie.recyclerview.swipe.Closeable;
 import com.yanzhenjie.recyclerview.swipe.OnSwipeMenuItemClickListener;
 import com.yanzhenjie.recyclerview.swipe.SwipeMenu;
@@ -63,8 +65,6 @@ public class MemoFragment extends BaseScrollFragment {
     private MemoAdapter mAdapter;
     private List<BriefContent> mList;
     private Context mContext;
-
-    private int page = 2;
 
     @Override
     public void onAttach(Context context) {
@@ -104,7 +104,6 @@ public class MemoFragment extends BaseScrollFragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        page = ((MainActivity)getActivity()).mMemoPage;
         mList = new ArrayList<>();
         mAdapter = new MemoAdapter(mContext, mList, ItemLayoutType.TYPE_TAG);
         mAdapter.setOnItemClickListener(mOnItemClickListener);
@@ -123,12 +122,14 @@ public class MemoFragment extends BaseScrollFragment {
     }
 
     public void Refresh() {
-        HttpUtils.getMyContentList(1).enqueue(new Callback<ArrayResponse<BriefContent>>() {
+        HttpUtils.getMyContentList("down", mList.size() == 0 ? "0" : mList.get(0).getId())
+                .enqueue(new Callback<ArrayResponse<BriefContent>>() {
             @Override
             public void onResponse(Call<ArrayResponse<BriefContent>> call, Response<ArrayResponse<BriefContent>> response) {
                 if(response.body() != null){
                     if(response.body().isOk()){
                         mList.addAll(0, response.body().getData());
+                        // Todo: FIX "duplicate list" problem.
                         mList = CollectionUtil.removeDuplicateWithOrder(mList);
                         mAdapter.setDataSet(mList);
                         mAdapter.notifyDataSetChanged();
@@ -151,8 +152,8 @@ public class MemoFragment extends BaseScrollFragment {
     }
 
     public void LoadMore() {
-        page = ((MainActivity)getActivity()).mMemoPage;
-        HttpUtils.getMyContentList(page).enqueue(new Callback<ArrayResponse<BriefContent>>() {
+        HttpUtils.getMyContentList("up", mList.get(mList.size() - 1).getId())
+                .enqueue(new Callback<ArrayResponse<BriefContent>>() {
             @Override
             public void onResponse(Call<ArrayResponse<BriefContent>> call, Response<ArrayResponse<BriefContent>> response) {
                 if(response.body() != null){
@@ -160,15 +161,17 @@ public class MemoFragment extends BaseScrollFragment {
                         mList.addAll(mList.size(), response.body().getData());
                         mAdapter.setDataSet(mList);
                         mAdapter.notifyDataSetChanged();
-                        ((MainActivity)getActivity()).mMemoPage++;
                         mRefreshLayout.finishLoadmore();
                         FileCacheUtil.setCache(mContext, new Gson().toJson(mList));
+                    } else if(response.body().unAuthorized()){
+
+                    } else if(response.body().isFail()) {
+                        ToastUtil.show(getContext(), "已经到底部了");
+//                        mRefreshLayout.setEnableLoadmore(false);
+                        mRefreshLayout.finishLoadmore(true);
                     }
-                }else {
-                    ToastUtil.show(getContext(), "已经到底部了");
-//                    mRefreshLayout.setEnableLoadmore(false);
-                    mRefreshLayout.finishLoadmore(true);
                 }
+                mRefreshLayout.finishLoadmore();
             }
 
             @Override
@@ -265,6 +268,11 @@ public class MemoFragment extends BaseScrollFragment {
             if (direction == SwipeMenuRecyclerView.RIGHT_DIRECTION) {
                 switch (menuPosition) {
                     case 0:
+                        UMWeb web = new UMWeb("http://www.baidu.com");
+                        web.setTitle("This is web title");
+                        web.setThumb(new UMImage(mContext, R.drawable.pub_keyboard));
+                        web.setDescription("my description");
+                        new ShareHelper(mContext).openShareBoard(web);
                         break;
                     case 1:
                         Intent intent = new Intent(mContext, PublishActivity.class);

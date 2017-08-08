@@ -7,23 +7,20 @@ import org.json.JSONArray;
 import org.json.JSONException;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * com.donutcn.memo.entity
  * Created by 73958 on 2017/8/1.
  */
 
-public class ArrayResponse<E> extends Response<ArrayList<E>> {
+public class ArrayResponse<E> extends Response<List<E>> {
 
     @Expose
-    private ArrayList<E> data;
-
-    public ArrayResponse(String res) throws JSONException {
-        super(res);
-    }
+    private List<E> data;
 
     @Override
-    public ArrayList<E> getData() {
+    public List<E> getData() {
         return data;
     }
 

@@ -29,6 +29,7 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import okhttp3.OkHttpClient;
@@ -51,8 +52,8 @@ import retrofit2.http.Path;
 public class HttpUtils {
 
     /** server address. */
-    private static final String SERVER_HOST = "ascexz.320.io/GoodPage/API";
-    private static final String PATH = "http://" + SERVER_HOST + "/";
+    private static final String SERVER_HOST = "ascexz.320.io";
+    private static final String PATH = "http://" + SERVER_HOST + "/GoodPage/API/";
 
     private static Retrofit instance;
     private static ClearableCookieJar cookieJar;
@@ -152,8 +153,9 @@ public class HttpUtils {
         /**
          * refresh recommend content.
          */
-        @GET(APIPath.REFRESH_RECOMMEND)
-        Call<ArrayResponse<BriefContent>> getRecommendContent(@Path("page") int page);
+        @GET(APIPath.GET_RECOMMEND)
+        Call<ArrayResponse<BriefContent>> getRecommendContent(@Path("action") String action,
+                                                              @Path("id") String id);
 
         /**
          * refresh recommend content.
@@ -183,7 +185,8 @@ public class HttpUtils {
          * complete publish content info.
          */
         @GET(APIPath.GET_MY_CONTENT)
-        Call<ArrayResponse<BriefContent>> getMyContentList(@Path("page") int page);
+        Call<ArrayResponse<BriefContent>> getMyContentList(@Path("action") String action,
+                                                           @Path("id") String id);
 
         /**
          * match user contact friends.
@@ -225,7 +228,7 @@ public class HttpUtils {
 
         private static final String PUBLISH_CONTENT = "private_api/create_article_api";
 
-        private static final String REFRESH_RECOMMEND = "index_api/index/{page}";
+        private static final String GET_RECOMMEND = "index_api/index/{action}/{id}";
 
         private static final String SEARCH_CONTENT = "index_api/search_api";
 
@@ -235,7 +238,7 @@ public class HttpUtils {
 
         private static final String COMPLETE_INFO = "private_api/article_field_api";
 
-        private static final String GET_MY_CONTENT = "private_api/index/{page}";
+        private static final String GET_MY_CONTENT = "private_api/index/{action}/{id}";
 
         private static final String MATCH_CONTACTS = "private_api/myfriend_api";
 
@@ -244,11 +247,18 @@ public class HttpUtils {
         private static final String MODIFY_MY_CONTENT = "private_api/the_article_api/{id}";
     }
 
-    public static Call<SimpleResponse> login(String username, String password) {
+    public static Call<SimpleResponse> login(int loginType, Map<String, String> data) {
         JSONObject json = new JSONObject();
         try {
-            json.put("username", username);
-            json.put("password", password);
+            if(loginType == UserStatus.PHONE_LOGIN){
+                json.put("username", data.get("username"));
+                json.put("password", data.get("password"));
+            }else if(loginType == UserStatus.WECHAT_LOGIN){
+                json.put("openid", data.get("openid"));
+                json.put("name", data.get("name"));
+                json.put("gender", data.get("gender"));
+                json.put("iconurl", data.get("iconurl"));
+            }
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -317,8 +327,8 @@ public class HttpUtils {
         return create().publishContent(request);
     }
 
-    public static Call<ArrayResponse<BriefContent>> getRecommendContent(int page) {
-        return create().getRecommendContent(page);
+    public static Call<ArrayResponse<BriefContent>> getRecommendContent(String action, String id) {
+        return create().getRecommendContent(action, id);
     }
 
     public static Call<ArrayResponse<BriefContent>> searchContent(String key){
@@ -391,8 +401,8 @@ public class HttpUtils {
         return create().completeInfo(request);
     }
 
-    public static Call<ArrayResponse<BriefContent>> getMyContentList(int page){
-        return create().getMyContentList(page);
+    public static Call<ArrayResponse<BriefContent>> getMyContentList(String action, String id){
+        return create().getMyContentList(action, id);
     }
 
     public static Call<ArrayResponse<Contact>> matchContacts(List<String> signatureCode){

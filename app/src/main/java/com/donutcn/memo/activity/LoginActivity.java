@@ -7,7 +7,6 @@ import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
@@ -16,6 +15,7 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.donutcn.memo.R;
 import com.donutcn.memo.entity.SimpleResponse;
@@ -26,10 +26,13 @@ import com.donutcn.memo.utils.SpfsUtils;
 import com.donutcn.memo.utils.ToastUtil;
 import com.donutcn.memo.utils.UserStatus;
 import com.donutcn.memo.utils.WindowUtils;
+import com.umeng.socialize.UMAuthListener;
+import com.umeng.socialize.UMShareAPI;
+import com.umeng.socialize.bean.SHARE_MEDIA;
 
-import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
-import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -96,7 +99,9 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             if(loginState){
                 String phoneNumber = SpfsUtils.readString(
                         getApplicationContext(), SpfsUtils.USER, "phoneNumber", "");
-                UserStatus.login(getApplicationContext(), phoneNumber);
+                Map<String, String> data = new HashMap<>();
+                data.put("phone", phoneNumber);
+                UserStatus.login(getApplicationContext(), UserStatus.PHONE_LOGIN, data);
                 startActivity(new Intent(LoginActivity.this, MainActivity.class));
             }else {
                 Intent intent = getIntent();
@@ -163,17 +168,26 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             ToastUtil.show(this, "密码不能为空");
             return;
         }
-        HttpUtils.login(username, password).enqueue(new Callback<SimpleResponse>() {
+        Map<String, String> data = new HashMap<>();
+        data.put("username", username);
+        data.put("password", password);
+        HttpUtils.login(UserStatus.PHONE_LOGIN, data).enqueue(new Callback<SimpleResponse>() {
             @Override
             public void onResponse(Call<SimpleResponse> call, Response<SimpleResponse> response) {
                 if (response.body() != null && response.body().isOk()) {
-                    ToastUtil.show(LoginActivity.this, "登录成功");
-                    UserStatus.login(getApplicationContext(), username);
-                    Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                    startActivity(intent);
+                    if (response.body().isOk()) {
+                        ToastUtil.show(LoginActivity.this, "登录成功");
+                        Map<String, String> data = new HashMap<>();
+                        data.put("phone", username);
+                        UserStatus.login(getApplicationContext(), UserStatus.PHONE_LOGIN, data);
+                        Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                        startActivity(intent);
+                    } else {
+                        ToastUtil.show(LoginActivity.this, "登录失败，" + response.body().getMessage());
+                    }
                 } else {
-                    ToastUtil.show(LoginActivity.this, "登录失败，" + response.body().getMessage());
+                    ToastUtil.show(LoginActivity.this, "登录失败，服务器未知错误");
                 }
             }
 
@@ -202,14 +216,20 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         HttpUtils.modifyUser(phoneNumber, authCode, password, ACTION_REGISTER).enqueue(new Callback<SimpleResponse>() {
             @Override
             public void onResponse(Call<SimpleResponse> call, Response<SimpleResponse> response) {
-                if(response.body() != null && response.body().isOk()){
-                    ToastUtil.show(LoginActivity.this, "注册成功");
-                    UserStatus.login(getApplicationContext(), phoneNumber);
-                    Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-                    intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                    startActivity(intent);
-                }else {
-                    ToastUtil.show(LoginActivity.this, "注册失败，" + response.body().getMessage());
+                if(response.body() != null){
+                    if(response.body().isOk()){
+                        ToastUtil.show(LoginActivity.this, "注册成功");
+                        Map<String, String> data = new HashMap<>();
+                        data.put("phone", phoneNumber);
+                        UserStatus.login(getApplicationContext(), UserStatus.PHONE_LOGIN, data);
+                        Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                        startActivity(intent);
+                    }else {
+                        ToastUtil.show(LoginActivity.this, "注册失败，" + response.body().getMessage());
+                    }
+                } else {
+                    ToastUtil.show(LoginActivity.this, "登录失败，服务器未知错误");
                 }
             }
 
@@ -232,13 +252,17 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         HttpUtils.getVerifiedCode(phoneNumber, "register").enqueue(new Callback<SimpleResponse>() {
             @Override
             public void onResponse(Call<SimpleResponse> call, Response<SimpleResponse> response) {
-                if(response.body() != null && response.body().isOk()){
-                    authCodeTimer.start();
-                    ToastUtil.show(LoginActivity.this, "验证码发送成功");
-                }else {
-                    mMsgCode.setClickable(true);
-                    mMsgCode.setBackgroundResource(R.drawable.selector_radius_blue_btn);
-                    ToastUtil.show(LoginActivity.this, "验证码发送失败，" + response.body().getMessage());
+                if(response.body() != null){
+                    if(response.body().isOk()){
+                        authCodeTimer.start();
+                        ToastUtil.show(LoginActivity.this, "验证码发送成功");
+                    }else {
+                        mMsgCode.setClickable(true);
+                        mMsgCode.setBackgroundResource(R.drawable.selector_radius_blue_btn);
+                        ToastUtil.show(LoginActivity.this, "验证码发送失败，" + response.body().getMessage());
+                    }
+                } else {
+                    ToastUtil.show(LoginActivity.this, "登录失败，服务器未知错误");
                 }
             }
 
@@ -275,11 +299,12 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                     attemptToRegister();
                 break;
             case R.id.login_with_wechat:
+                UMShareAPI.get(this).getPlatformInfo(this, SHARE_MEDIA.WEIXIN, umAuthListener);
                 break;
             case R.id.enter_without_login:
                 Intent intent = new Intent(this, MainActivity.class);
                 intent.putExtra("showSplash", false);
-                intent.putExtra("defaultItem", 1);
+                intent.putExtra("unlogin", true);
                 startActivity(intent);
                 break;
             case R.id.tv_get_msg_code:
@@ -291,9 +316,64 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         }
     }
 
+    private UMAuthListener umAuthListener = new UMAuthListener() {
+        @Override
+        public void onStart(SHARE_MEDIA platform) {
+            //授权开始的回调
+        }
+        @Override
+        public void onComplete(SHARE_MEDIA platform, int action, final Map<String, String> data) {
+            System.out.println(data.toString());
+            HttpUtils.login(UserStatus.WECHAT_LOGIN, data).enqueue(new Callback<SimpleResponse>() {
+                @Override
+                public void onResponse(Call<SimpleResponse> call, Response<SimpleResponse> response) {
+                    if(response.body() != null && response.body().isOk()){
+                        ToastUtil.show(LoginActivity.this, "登录成功");
+                        UserStatus.login(getApplicationContext(), UserStatus.WECHAT_LOGIN, data);
+                        Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                        startActivity(intent);
+                    }else {
+                        ToastUtil.show(LoginActivity.this, "登录失败");
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<SimpleResponse> call, Throwable t) {
+                    t.printStackTrace();
+                    ToastUtil.show(LoginActivity.this, "连接失败，请检查你的网络");
+                }
+            });
+        }
+
+        @Override
+        public void onError(SHARE_MEDIA platform, int action, Throwable t) {
+            t.printStackTrace();
+            Toast.makeText( getApplicationContext(), "授权失败", Toast.LENGTH_SHORT).show();
+        }
+
+        @Override
+        public void onCancel(SHARE_MEDIA platform, int action) {
+            Toast.makeText( getApplicationContext(), "授权取消", Toast.LENGTH_SHORT).show();
+        }
+    };
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        UMShareAPI.get(this).onActivityResult(requestCode, resultCode, data);
+
+    }
+
     public void onSkipSplash(View view) {
         mSplashHandler.removeCallbacks(showMainPage);
         getWindow().getDecorView().post(showMainPage);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        UMShareAPI.get(this).release();
     }
 
     @Override

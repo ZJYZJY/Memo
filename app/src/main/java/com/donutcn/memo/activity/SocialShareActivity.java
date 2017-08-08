@@ -11,12 +11,12 @@ import android.widget.Button;
 
 import com.donutcn.memo.R;
 import com.donutcn.memo.entity.SimpleResponse;
+import com.donutcn.memo.helper.ShareHelper;
 import com.donutcn.memo.utils.HttpUtils;
 import com.donutcn.memo.utils.SpfsUtils;
 import com.donutcn.memo.utils.ToastUtil;
 import com.donutcn.memo.utils.WindowUtils;
 import com.donutcn.widgetlib.widget.SwitchView;
-import com.umeng.socialize.ShareAction;
 import com.umeng.socialize.UMShareAPI;
 import com.umeng.socialize.UMShareListener;
 import com.umeng.socialize.bean.SHARE_MEDIA;
@@ -33,7 +33,7 @@ public class SocialShareActivity extends AppCompatActivity implements View.OnCli
     private Button mHomePage;
 
     private UMWeb mUMWeb;
-    private String contentId;
+    private String contentId, contentUrl;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,9 +45,10 @@ public class SocialShareActivity extends AppCompatActivity implements View.OnCli
 
         // remove drafts.
         SpfsUtils.clear(this, SpfsUtils.CACHE);
-        initView();
-        initMedia();
         contentId = getIntent().getStringExtra("contentId");
+        contentUrl = getIntent().getStringExtra("contentUrl");
+        initView();
+        initWebMedia();
     }
 
     public void initView() {
@@ -115,40 +116,19 @@ public class SocialShareActivity extends AppCompatActivity implements View.OnCli
                 startActivity(intent0);
                 break;
             case R.id.share_iv1:
-                new ShareAction(SocialShareActivity.this)
-                        .withMedia(mUMWeb)
-                        .setPlatform(SHARE_MEDIA.WEIXIN)
-                        .setCallback(umShareListener)
-                        .share();
+                new ShareHelper(this).shareWechat(mUMWeb);
                 break;
             case R.id.share_iv2:
-                new ShareAction(SocialShareActivity.this)
-                        .withMedia(mUMWeb)
-                        .setPlatform(SHARE_MEDIA.WEIXIN_CIRCLE)
-                        .setCallback(umShareListener)
-                        .share();
+                new ShareHelper(this).shareWechatCirlce(mUMWeb);
                 break;
             case R.id.share_iv3:
-                new ShareAction(SocialShareActivity.this)
-                        .withMedia(mUMWeb)
-                        .setPlatform(SHARE_MEDIA.QQ)
-                        .setCallback(umShareListener)
-                        .share();
+                new ShareHelper(this).shareQQ(mUMWeb);
                 break;
             case R.id.share_iv4:
-                new ShareAction(SocialShareActivity.this)
-                        .withMedia(mUMWeb)
-                        .setPlatform(SHARE_MEDIA.QZONE)
-                        .setCallback(umShareListener)
-                        .share();
+                new ShareHelper(this).shareQzone(mUMWeb);
                 break;
             case R.id.share_iv5:
-                new ShareAction(SocialShareActivity.this)
-                        .withText("hello")
-                        .withMedia(mUMWeb)
-                        .setPlatform(SHARE_MEDIA.SINA)
-                        .setCallback(umShareListener)
-                        .share();
+                new ShareHelper(this).shareWeibo(mUMWeb);
                 break;
             case R.id.share_iv6:
                 break;
@@ -202,8 +182,8 @@ public class SocialShareActivity extends AppCompatActivity implements View.OnCli
 
     }
 
-    public void initMedia() {
-        mUMWeb = new UMWeb("http://bbs.umeng.com/");
+    public void initWebMedia() {
+        mUMWeb = new UMWeb("http://www.baidu.com");
         mUMWeb.setTitle("This is web title");
         mUMWeb.setThumb(new UMImage(this, R.drawable.pub_keyboard));
         mUMWeb.setDescription("my description");

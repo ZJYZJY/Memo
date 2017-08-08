@@ -72,6 +72,9 @@
 	-keep class com.tencent.mm.opensdk.** {
    *;
 	}
+	-keep class com.tencent.wxop.** {
+        *;
+     }
 	-dontwarn twitter4j.**
 	-keep class twitter4j.** { *; }
 

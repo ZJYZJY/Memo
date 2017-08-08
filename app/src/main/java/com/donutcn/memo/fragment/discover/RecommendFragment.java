@@ -13,7 +13,6 @@ import android.widget.TextView;
 
 import com.donutcn.memo.R;
 import com.donutcn.memo.activity.ArticlePage;
-import com.donutcn.memo.activity.MainActivity;
 import com.donutcn.memo.activity.SearchActivity;
 import com.donutcn.memo.adapter.MemoAdapter;
 import com.donutcn.memo.base.BaseScrollFragment;
@@ -21,6 +20,7 @@ import com.donutcn.memo.entity.ArrayResponse;
 import com.donutcn.memo.entity.BriefContent;
 import com.donutcn.memo.event.ReceiveNewMessagesEvent;
 import com.donutcn.memo.event.RequestRefreshEvent;
+import com.donutcn.memo.helper.ShareHelper;
 import com.donutcn.memo.listener.OnItemClickListener;
 import com.donutcn.memo.type.ItemLayoutType;
 import com.donutcn.memo.utils.CollectionUtil;
@@ -31,6 +31,8 @@ import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnLoadmoreListener;
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
+import com.umeng.socialize.media.UMImage;
+import com.umeng.socialize.media.UMWeb;
 import com.yanzhenjie.recyclerview.swipe.Closeable;
 import com.yanzhenjie.recyclerview.swipe.OnSwipeMenuItemClickListener;
 import com.yanzhenjie.recyclerview.swipe.SwipeMenu;
@@ -55,10 +57,8 @@ public class RecommendFragment extends BaseScrollFragment implements View.OnClic
     private TextView mSearch_tv;
 
     private MemoAdapter mAdapter;
-    private List<BriefContent> list;
+    private List<BriefContent> mList;
     private Context mContext;
-
-    private int page = 2;
 
     @Override
     public void onAttach(Context context) {
@@ -100,25 +100,25 @@ public class RecommendFragment extends BaseScrollFragment implements View.OnClic
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        page = ((MainActivity)getActivity()).mRecommendPage;
-        list = new ArrayList<>();
-        mAdapter = new MemoAdapter(mContext, list, ItemLayoutType.AVATAR_IMG);
+        mList = new ArrayList<>();
+        mAdapter = new MemoAdapter(mContext, mList, ItemLayoutType.AVATAR_IMG);
         mAdapter.setOnItemClickListener(mOnItemClickListener);
         mHaoYe_rv.setAdapter(mAdapter);
         Refresh();
     }
 
     public void Refresh() {
-        HttpUtils.getRecommendContent(1).enqueue(new Callback<ArrayResponse<BriefContent>>() {
+        HttpUtils.getRecommendContent("down", mList.size() == 0 ? "0" : mList.get(0).getId())
+                .enqueue(new Callback<ArrayResponse<BriefContent>>() {
             @Override
             public void onResponse(Call<ArrayResponse<BriefContent>> call, Response<ArrayResponse<BriefContent>> response) {
                 if(response.body() != null){
                     if(response.body().isOk()){
-                        list.addAll(0, response.body().getData());
-                        list = CollectionUtil.removeDuplicateWithOrder(list);
-                        mAdapter.setDataSet(list);
+                        mList.addAll(0, response.body().getData());
+                        mList = CollectionUtil.removeDuplicateWithOrder(mList);
+                        mAdapter.setDataSet(mList);
                         mAdapter.notifyDataSetChanged();
-                        if(list.size() >= 10){
+                        if(mList.size() >= 10){
                             mRefreshLayout.setEnableLoadmore(true);
                         }
                     }
@@ -136,23 +136,25 @@ public class RecommendFragment extends BaseScrollFragment implements View.OnClic
     }
 
     public void LoadMore() {
-        page = ((MainActivity)getActivity()).mRecommendPage;
-        HttpUtils.getRecommendContent(page).enqueue(new Callback<ArrayResponse<BriefContent>>() {
+        HttpUtils.getRecommendContent("up", mList.get(mList.size() - 1).getId())
+                .enqueue(new Callback<ArrayResponse<BriefContent>>() {
             @Override
             public void onResponse(Call<ArrayResponse<BriefContent>> call, Response<ArrayResponse<BriefContent>> response) {
                 if(response.body() != null){
                     if(response.body().isOk()){
-                        list.addAll(list.size(), response.body().getData());
-                        mAdapter.setDataSet(list);
+                        mList.addAll(mList.size(), response.body().getData());
+                        mAdapter.setDataSet(mList);
                         mAdapter.notifyDataSetChanged();
-                        ((MainActivity)getActivity()).mRecommendPage++;
                         mRefreshLayout.finishLoadmore();
+                    }else if(response.body().unAuthorized()){
+
+                    } else if(response.body().isFail()) {
+                        ToastUtil.show(getContext(), "已经到底部了");
+//                        mRefreshLayout.setEnableLoadmore(false);
+                        mRefreshLayout.finishLoadmore(true);
                     }
-                }else {
-                    ToastUtil.show(getContext(), "已经到底部了");
-                    mRefreshLayout.setEnableLoadmore(false);
-                    mRefreshLayout.finishLoadmore(true);
                 }
+                mRefreshLayout.finishLoadmore();
             }
 
             @Override
@@ -206,7 +208,7 @@ public class RecommendFragment extends BaseScrollFragment implements View.OnClic
         public void onItemClick(int position) {
             EventBus.getDefault().post(new ReceiveNewMessagesEvent(2, position));
             Intent intent = new Intent(getContext(), ArticlePage.class);
-            intent.putExtra("contentId", list.get(position).getId());
+            intent.putExtra("contentId", mList.get(position).getId());
             startActivity(intent);
         }
     };
@@ -238,7 +240,13 @@ public class RecommendFragment extends BaseScrollFragment implements View.OnClic
             closeable.smoothCloseMenu();
 
             if (direction == SwipeMenuRecyclerView.RIGHT_DIRECTION) {
-
+                if(menuPosition == 0) {
+                    UMWeb web = new UMWeb("http://www.baidu.com");
+                    web.setTitle("This is web title");
+                    web.setThumb(new UMImage(mContext, R.drawable.pub_keyboard));
+                    web.setDescription("my description");
+                    new ShareHelper(mContext).openShareBoard(web);
+                }
             }
         }
     };
