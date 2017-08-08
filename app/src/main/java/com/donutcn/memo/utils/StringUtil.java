@@ -48,6 +48,11 @@ public class StringUtil {
         return list;
     }
 
+    /**
+     * covert String to {@link Date}
+     * @param str String like "2017-08-01 17:25:36"
+     * @return
+     */
     public static Date string2Date(String str){
         String[] res = str.split(" ");
         String[] date = res[0].split("-");

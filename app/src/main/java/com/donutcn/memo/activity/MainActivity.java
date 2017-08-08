@@ -15,6 +15,7 @@ import com.donutcn.memo.event.RequestRefreshEvent;
 import com.donutcn.memo.fragment.SplashFragment;
 import com.donutcn.memo.fragment.discover.DiscoverFragment;
 import com.donutcn.memo.fragment.home.HomeFragment;
+import com.donutcn.memo.helper.LoginHelper;
 import com.donutcn.memo.utils.HttpUtils;
 import com.donutcn.memo.utils.ToastUtil;
 import com.donutcn.memo.utils.UserStatus;
@@ -60,7 +61,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                                 if (response.body().unAuthorized()) {
                                     Log.e("unAuthorized", response.body().toString());
                                     ToastUtil.show(MainActivity.this, "登录授权过期，请重新登录");
-                                    UserStatus.logout(MainActivity.this, "");
+                                    LoginHelper.logout(MainActivity.this);
                                 }
                             }
                         }
@@ -105,7 +106,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.main_bottom_home:
-                UserStatus.ifRequestLogin(this, "请先登录");
+                LoginHelper.ifRequestLogin(this, "请先登录");
                 if(mHome.isChecked()){
                     EventBus.getDefault().post(new RequestRefreshEvent(
                             mHomeFragment.getCurrentPagePosition()));

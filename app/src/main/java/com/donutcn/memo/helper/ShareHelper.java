@@ -8,6 +8,7 @@ import com.donutcn.memo.utils.ToastUtil;
 import com.umeng.socialize.ShareAction;
 import com.umeng.socialize.UMShareListener;
 import com.umeng.socialize.bean.SHARE_MEDIA;
+import com.umeng.socialize.media.UMImage;
 import com.umeng.socialize.media.UMWeb;
 import com.umeng.socialize.shareboard.ShareBoardConfig;
 
@@ -64,10 +65,18 @@ public class ShareHelper {
                 .share();
     }
 
-    public void openShareBoard(UMWeb web){
+    public void openShareBoard(String url, String title, String picUrl, String content){
+        // set up share board style.
         ShareBoardConfig config = new ShareBoardConfig();
         config.setShareboardPostion(ShareBoardConfig.SHAREBOARD_POSITION_CENTER);
         config.setMenuItemBackgroundShape(ShareBoardConfig.BG_SHAPE_NONE);
+
+        UMWeb web = new UMWeb(url);
+        web.setTitle(title);
+        if(picUrl != null && !picUrl.equals("")){
+            web.setThumb(new UMImage(mContext, picUrl));
+        }
+        web.setDescription(content);
         new ShareAction((Activity) mContext)
                 .withMedia(web)
                 .setDisplayList(SHARE_MEDIA.WEIXIN, SHARE_MEDIA.WEIXIN_CIRCLE,

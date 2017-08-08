@@ -11,16 +11,18 @@ public class User {
 
     private String username;
     private String phoneNum;
-    private int loginType;
     private String gender;
     private String iconUrl;
 
     private String openId;
     private String name;
 
-    public User(String phoneNum) {
+    private int loginType;
+
+    public User(String phoneNum, String iconUrl) {
         this.loginType = UserStatus.PHONE_LOGIN;
         this.phoneNum = phoneNum;
+        this.iconUrl = iconUrl;
     }
 
     public User(String openId, String name, String gender, String iconUrl){

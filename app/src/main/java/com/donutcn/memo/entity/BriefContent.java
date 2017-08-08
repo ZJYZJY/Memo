@@ -1,5 +1,6 @@
 package com.donutcn.memo.entity;
 
+import com.donutcn.memo.utils.StringUtil;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
@@ -24,6 +25,10 @@ public class BriefContent {
     @Expose
     @SerializedName(value = "head_portrait")
     private String userIcon;
+
+    @Expose
+    @SerializedName(value = "url")
+    private String url;
 
     @Expose
     @SerializedName(value = "title")
@@ -61,23 +66,29 @@ public class BriefContent {
     @SerializedName(value = "url2")
     private String imgUrl1;
 
-    public BriefContent(JSONObject json) throws JSONException {
-        this.id = json.getString("article_id");
-        this.userIcon = json.getString("head_portrait");
-        this.name = json.getString("name");
-        this.title = json.getString("title");
-        this.time = json.getString("create_time");
-        this.content = json.getString("content");
-        this.type = json.getString("type");
-        this.readCount = json.getInt("read_total");
-        this.upVote = json.getInt("praise");
-        this.comment = json.getInt("comment_total");
-        this.imgUrl0 = json.getString("url1");
-        this.imgUrl1 = json.getString("url2");
-    }
+    private long timeStamp;
+
+//    public BriefContent(JSONObject json) throws JSONException {
+//        this.id = json.getString("article_id");
+//        this.userIcon = json.getString("head_portrait");
+//        this.name = json.getString("name");
+//        this.title = json.getString("title");
+//        this.time = json.getString("create_time");
+//        this.content = json.getString("content");
+//        this.type = json.getString("type");
+//        this.readCount = json.getInt("read_total");
+//        this.upVote = json.getInt("praise");
+//        this.comment = json.getInt("comment_total");
+//        this.imgUrl0 = json.getString("url1");
+//        this.imgUrl1 = json.getString("url2");
+//    }
 
     public String getId() {
         return id;
+    }
+
+    public String getUrl() {
+        return url;
     }
 
     public String getUserIcon() {
@@ -124,8 +135,21 @@ public class BriefContent {
         return imgUrl1;
     }
 
+    public long getTimeStamp() {
+        timeStamp =  StringUtil.string2Date(time).getTime();
+        return timeStamp;
+    }
+
+    @Override
+    public int hashCode() {
+        return this.id.hashCode();
+    }
+
     @Override
     public boolean equals(Object obj) {
+        if(this == obj){
+            return true;
+        }
         return obj instanceof BriefContent && ((BriefContent) obj).getId().equals(this.id);
     }
 
@@ -135,6 +159,7 @@ public class BriefContent {
             json.put("article_id", id);
             json.put("head_portrait", userIcon);
             json.put("name", name);
+            json.put("url", url);
             json.put("title", title);
             json.put("create_time", time);
             json.put("content", content);

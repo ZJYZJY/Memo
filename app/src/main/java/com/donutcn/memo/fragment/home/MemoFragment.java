@@ -21,6 +21,7 @@ import com.donutcn.memo.entity.BriefContent;
 import com.donutcn.memo.entity.SimpleResponse;
 import com.donutcn.memo.event.ReceiveNewMessagesEvent;
 import com.donutcn.memo.event.RequestRefreshEvent;
+import com.donutcn.memo.helper.LoginHelper;
 import com.donutcn.memo.helper.ShareHelper;
 import com.donutcn.memo.type.ItemLayoutType;
 import com.donutcn.memo.utils.CollectionUtil;
@@ -73,8 +74,8 @@ public class MemoFragment extends BaseScrollFragment {
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    public void onStart() {
+        super.onStart();
         EventBus.getDefault().register(this);
     }
 
@@ -91,7 +92,7 @@ public class MemoFragment extends BaseScrollFragment {
         mRefreshLayout = (SmartRefreshLayout) view.findViewById(R.id.swipe_layout);
         mRefreshLayout.setOnRefreshListener(mRefreshListener);
         mRefreshLayout.setOnLoadmoreListener(mLoadmoreListener);
-        mRefreshLayout.setEnableLoadmore(false);
+//        mRefreshLayout.setEnableLoadmore(true);
 
         mHaoYe_rv.setLayoutManager(new LinearLayoutManager(mContext));
         mHaoYe_rv.addItemDecoration(new ListViewDecoration(mContext, R.dimen.item_decoration_height));
@@ -113,7 +114,6 @@ public class MemoFragment extends BaseScrollFragment {
             if(cache.equals(""))
                 Refresh();
             else{
-                //Todo: FIX: use the local cache will cause "can't load more" problem.
                 mList = new Gson().fromJson(cache, new TypeToken<List<BriefContent>>(){}.getType());
                 mAdapter.setDataSet(mList);
                 mAdapter.notifyDataSetChanged();
@@ -122,6 +122,7 @@ public class MemoFragment extends BaseScrollFragment {
     }
 
     public void Refresh() {
+        // Todo: replace getId() with getTimeStamp().
         HttpUtils.getMyContentList("down", mList.size() == 0 ? "0" : mList.get(0).getId())
                 .enqueue(new Callback<ArrayResponse<BriefContent>>() {
             @Override
@@ -129,13 +130,9 @@ public class MemoFragment extends BaseScrollFragment {
                 if(response.body() != null){
                     if(response.body().isOk()){
                         mList.addAll(0, response.body().getData());
-                        // Todo: FIX "duplicate list" problem.
                         mList = CollectionUtil.removeDuplicateWithOrder(mList);
                         mAdapter.setDataSet(mList);
                         mAdapter.notifyDataSetChanged();
-                        if(mList.size() >= 10){
-                            mRefreshLayout.setEnableLoadmore(true);
-                        }
                         FileCacheUtil.setCache(mContext, new Gson().toJson(mList));
                     }
                 }
@@ -167,8 +164,8 @@ public class MemoFragment extends BaseScrollFragment {
 
                     } else if(response.body().isFail()) {
                         ToastUtil.show(getContext(), "已经到底部了");
-//                        mRefreshLayout.setEnableLoadmore(false);
-                        mRefreshLayout.finishLoadmore(true);
+                        mRefreshLayout.finishLoadmore();
+                        mRefreshLayout.setLoadmoreFinished(true);
                     }
                 }
                 mRefreshLayout.finishLoadmore();
@@ -268,11 +265,11 @@ public class MemoFragment extends BaseScrollFragment {
             if (direction == SwipeMenuRecyclerView.RIGHT_DIRECTION) {
                 switch (menuPosition) {
                     case 0:
-                        UMWeb web = new UMWeb("http://www.baidu.com");
-                        web.setTitle("This is web title");
-                        web.setThumb(new UMImage(mContext, R.drawable.pub_keyboard));
-                        web.setDescription("my description");
-                        new ShareHelper(mContext).openShareBoard(web);
+                        new ShareHelper(mContext).openShareBoard(
+                                mList.get(adapterPosition).getUrl(),
+                                mList.get(adapterPosition).getTitle(),
+                                mList.get(adapterPosition).getImage0(),
+                                mList.get(adapterPosition).getContent());
                         break;
                     case 1:
                         Intent intent = new Intent(mContext, PublishActivity.class);
@@ -331,9 +328,9 @@ public class MemoFragment extends BaseScrollFragment {
     }
 
     @Override
-    public void onDestroy() {
-        super.onDestroy();
+    public void onStop() {
         EventBus.getDefault().unregister(this);
+        super.onStop();
     }
 
     @Subscribe

@@ -92,6 +92,14 @@ public class MemoAdapter extends BasePublishAdapter<MemoAdapter.DefaultViewHolde
             holder.mContainer.setVisibility(View.VISIBLE);
             Glide.with(mContext).load(url1).into(holder.mContentPic2);
         }
+        String iconUrl = list.get(position).getUserIcon();
+        if(mLayoutType == ItemLayoutType.AVATAR_IMG){
+            if(iconUrl != null && !iconUrl.equals("")){
+                Glide.with(mContext).load(iconUrl).centerCrop().into(holder.mImage);
+            } else {
+                holder.mImage.setImageResource(R.mipmap.user_default_icon);
+            }
+        }
 
         holder.mAuthor.setText(mContext.getString(R.string.placeholder_publish_author_type,
                 list.get(position).getName(), typeStr));

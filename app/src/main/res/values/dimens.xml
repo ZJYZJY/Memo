@@ -43,6 +43,7 @@
     <dimen name="padding_text_small">2dp</dimen>
 
     <dimen name="margin_top_img">32dp</dimen>
+    <dimen name="margin_huge">24dp</dimen>
     <dimen name="margin_large">16dp</dimen>
     <dimen name="margin_medium">12dp</dimen>
     <dimen name="margin_small">8dp</dimen>
@@ -59,7 +60,7 @@
     <dimen name="completing_okBtn_height">36dp</dimen>
     <dimen name="completing_okBtn_width">128dp</dimen>
     <dimen name="completing_okBtn_margin">48dp</dimen>
-    <dimen name="small_switch_width">42dp</dimen>
+    <dimen name="small_switch_width">36dp</dimen>
     <dimen name="dialog_reply_editor_height">96dp</dimen>
     <dimen name="dialog_reply_btn_height">32dp</dimen>
 

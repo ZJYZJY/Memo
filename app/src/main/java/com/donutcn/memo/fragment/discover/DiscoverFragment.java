@@ -1,5 +1,6 @@
 package com.donutcn.memo.fragment.discover;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -10,11 +11,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
+import com.bumptech.glide.Glide;
 import com.donutcn.memo.R;
 import com.donutcn.memo.activity.AuthorPage;
 import com.donutcn.memo.adapter.TabFragmentPagerAdapter;
+import com.donutcn.memo.event.LoginStateEvent;
 import com.donutcn.memo.event.ReceiveNewMessagesEvent;
 import com.donutcn.memo.event.RequestRefreshEvent;
+import com.donutcn.memo.helper.LoginHelper;
 import com.donutcn.memo.utils.UserStatus;
 import com.flyco.tablayout.SlidingTabLayout;
 import com.flyco.tablayout.listener.OnTabSelectListener;
@@ -29,9 +33,18 @@ public class DiscoverFragment extends Fragment implements OnTabSelectListener {
     private SlidingTabLayout mTabLayout;
     private ImageView mUserCenter_iv;
 
+    private Context mContext;
+
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        this.mContext = context;
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        EventBus.getDefault().register(this);
     }
 
     @Override
@@ -43,7 +56,7 @@ public class DiscoverFragment extends Fragment implements OnTabSelectListener {
         mUserCenter_iv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(!UserStatus.ifRequestLogin(getContext(), "请先登录")){
+                if(!LoginHelper.ifRequestLogin(getContext(), "请先登录")){
 //                startActivity(new Intent(getContext(), PersonalCenterActivity.class));
                     startActivity(new Intent(getContext(), AuthorPage.class));
                 }
@@ -69,15 +82,13 @@ public class DiscoverFragment extends Fragment implements OnTabSelectListener {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        EventBus.getDefault().register(this);
-        Refresh();
     }
 
     @Override
     public void onTabSelect(int position) {
         // if not the recommend page, request to login.
         if(position != 0){
-            UserStatus.ifRequestLogin(getContext(), "请先登录");
+            LoginHelper.ifRequestLogin(getContext(), "请先登录");
         }
         mTabLayout.hideMsg(position);
     }
@@ -88,30 +99,30 @@ public class DiscoverFragment extends Fragment implements OnTabSelectListener {
         EventBus.getDefault().post(new RequestRefreshEvent(getCurrentPagePosition() + 2));
     }
 
-    public void update() {
-        Refresh();
-    }
-
-    public void Refresh() {
-
-    }
-
     @Override
-    public void onResume() {
-        super.onResume();
-        Refresh();
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
+    public void onStop() {
         EventBus.getDefault().unregister(this);
+        super.onStop();
     }
 
     @Subscribe
     public void onReceiveNewMessagesEvent(ReceiveNewMessagesEvent event){
         if(event.getMessagePos() >= 2){
             mTabLayout.showMsg(event.getMessagePos() - 2, event.getMessageCount());
+        }
+    }
+
+    @Subscribe(sticky = true)
+    public void onLoginStateEvent(LoginStateEvent event){
+        if(event.isLogin()){
+            String iconUrl = event.getUser().getIconUrl();
+            if(iconUrl == null || iconUrl.equals("")){
+                mUserCenter_iv.setImageResource(R.mipmap.user_default_icon);
+            }else {
+                Glide.with(mContext).load(iconUrl).centerCrop().into(mUserCenter_iv);
+            }
+        } else {
+            mUserCenter_iv.setImageResource(R.drawable.mine);
         }
     }
 }

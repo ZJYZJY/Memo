@@ -20,6 +20,7 @@ import android.widget.Toast;
 import com.donutcn.memo.R;
 import com.donutcn.memo.entity.SimpleResponse;
 import com.donutcn.memo.fragment.SplashFragment;
+import com.donutcn.memo.helper.LoginHelper;
 import com.donutcn.memo.utils.CountDownTimerUtils;
 import com.donutcn.memo.utils.HttpUtils;
 import com.donutcn.memo.utils.SpfsUtils;
@@ -99,9 +100,12 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             if(loginState){
                 String phoneNumber = SpfsUtils.readString(
                         getApplicationContext(), SpfsUtils.USER, "phoneNumber", "");
+                String iconurl = SpfsUtils.readString(
+                        getApplicationContext(), SpfsUtils.USER, "iconurl", "");
                 Map<String, String> data = new HashMap<>();
                 data.put("phone", phoneNumber);
-                UserStatus.login(getApplicationContext(), UserStatus.PHONE_LOGIN, data);
+                data.put("iconurl", iconurl);
+                LoginHelper.login(getApplicationContext(), UserStatus.PHONE_LOGIN, data);
                 startActivity(new Intent(LoginActivity.this, MainActivity.class));
             }else {
                 Intent intent = getIntent();
@@ -179,7 +183,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                         ToastUtil.show(LoginActivity.this, "登录成功");
                         Map<String, String> data = new HashMap<>();
                         data.put("phone", username);
-                        UserStatus.login(getApplicationContext(), UserStatus.PHONE_LOGIN, data);
+                        data.put("iconurl", (String) response.body().getField("head_portrait"));
+                        LoginHelper.login(getApplicationContext(), UserStatus.PHONE_LOGIN, data);
                         Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                         startActivity(intent);
@@ -221,7 +226,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                         ToastUtil.show(LoginActivity.this, "注册成功");
                         Map<String, String> data = new HashMap<>();
                         data.put("phone", phoneNumber);
-                        UserStatus.login(getApplicationContext(), UserStatus.PHONE_LOGIN, data);
+                        data.put("iconurl", (String) response.body().getField("head_portrait"));
+                        LoginHelper.login(getApplicationContext(), UserStatus.PHONE_LOGIN, data);
                         Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                         startActivity(intent);
@@ -323,13 +329,12 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         }
         @Override
         public void onComplete(SHARE_MEDIA platform, int action, final Map<String, String> data) {
-            System.out.println(data.toString());
             HttpUtils.login(UserStatus.WECHAT_LOGIN, data).enqueue(new Callback<SimpleResponse>() {
                 @Override
                 public void onResponse(Call<SimpleResponse> call, Response<SimpleResponse> response) {
                     if(response.body() != null && response.body().isOk()){
                         ToastUtil.show(LoginActivity.this, "登录成功");
-                        UserStatus.login(getApplicationContext(), UserStatus.WECHAT_LOGIN, data);
+                        LoginHelper.login(getApplicationContext(), UserStatus.WECHAT_LOGIN, data);
                         Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                         startActivity(intent);

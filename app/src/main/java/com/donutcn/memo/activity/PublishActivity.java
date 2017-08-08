@@ -14,6 +14,7 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -198,6 +199,9 @@ public class PublishActivity extends AppCompatActivity implements View.OnClickLi
                         mTitleStr = response.body().getTitle();
                         mTitle.setText(mTitleStr);
                         mContentStr = response.body().getContentStr();
+                        // unEscape the \" to "
+                        mTitleStr = mTitleStr.replace("\\\"", "\"");
+                        mContentStr = mContentStr.replace("\\\"", "\"");
                         mContent.setHtml(mContentStr);
                         if (!mSelectedType.equals(mContentTypes[0])
                                 && !mSelectedType.equals(mContentTypes[1])
@@ -231,8 +235,8 @@ public class PublishActivity extends AppCompatActivity implements View.OnClickLi
             }
         }
         // Escape the " to \"
-        mTitleStr = mTitleStr.replace("\"", "\\\"");
-        mContentStr = mContentStr.replace("\"", "\\\"");
+//        mTitleStr = mTitleStr.replace("\"", "\\\"");
+//        mContentStr = mContentStr.replace("\"", "\\\"");
         HttpUtils.publishContent(mContentId, mTitleStr, mSelectedType, mContentStr)
                 .enqueue(new Callback<SimpleResponse>() {
             @Override
@@ -240,8 +244,12 @@ public class PublishActivity extends AppCompatActivity implements View.OnClickLi
                 if(response.body() != null){
                     if(response.body().isOk()){
                         ToastUtil.show(mContext, "发布成功");
-                        // Todo: pass the content url to share activity.
-                        openSharePage(String.valueOf(response.body().getField("article_id")), "");
+                        Log.e("publish", response.body().toString());
+                        openSharePage(String.valueOf(response.body().getField("article_id")),
+                                (String) response.body().getField("url"),
+                                (String) response.body().getField("title"),
+                                (String) response.body().getField("content"),
+                                (String) response.body().getField("picurl"));
                     }
                 }else {
                     ToastUtil.show(mContext, "发布失败");
@@ -354,10 +362,13 @@ public class PublishActivity extends AppCompatActivity implements View.OnClickLi
         }
     }
 
-    private void openSharePage(String contentId, String contentUrl) {
+    private void openSharePage(String contentId, String contentUrl, String title, String content, String picUrl) {
         Intent intent = new Intent(this, SocialShareActivity.class);
         intent.putExtra("contentId", contentId);
         intent.putExtra("contentUrl", contentUrl);
+        intent.putExtra("title", title);
+        intent.putExtra("content", content);
+        intent.putExtra("picUrl", picUrl);
         startActivity(intent);
     }
 

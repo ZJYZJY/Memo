@@ -72,9 +72,14 @@ public class FriendsFragment extends BaseScrollFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        EventBus.getDefault().register(this);
         DaoSession daoSession = ((App)mContext.getApplicationContext()).getDaoSession();
         mContactDao = daoSession.getContactDao();
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        EventBus.getDefault().register(this);
     }
 
     @Override
@@ -209,9 +214,9 @@ public class FriendsFragment extends BaseScrollFragment {
     }
 
     @Override
-    public void onDestroy() {
-        super.onDestroy();
+    public void onStop() {
         EventBus.getDefault().unregister(this);
+        super.onStop();
     }
 
     @Subscribe

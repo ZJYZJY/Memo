@@ -84,9 +84,8 @@ public class HttpUtils {
         return instance.create(RRPageService.class);
     }
 
-    public static void clearCookies(String phoneNumber) {
+    public static void clearCookies() {
         cookieJar.clear();
-//        logout(phoneNumber).enqueue(null);
     }
 
     private static UploadManager getUploadManager() {
@@ -135,6 +134,7 @@ public class HttpUtils {
          *
          * @param phone phone number
          */
+        @Deprecated
         @POST(APIPath.LOGOUT)
         Call<SimpleResponse> logout(@Body RequestBody phone);
 
@@ -298,6 +298,7 @@ public class HttpUtils {
             return create().modifyPassword(request);
     }
 
+    @Deprecated
     public static Call<SimpleResponse> logout(String phoneNumber) {
         JSONObject json = new JSONObject();
         try {

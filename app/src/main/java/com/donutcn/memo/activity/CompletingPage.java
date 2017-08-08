@@ -206,7 +206,13 @@ public class CompletingPage extends AppCompatActivity {
                 if (response.body() != null) {
                     if(response.body().isOk()){
                         mContentId = String.valueOf(response.body().getField("article_id"));
-                        completeInfo();
+                        Intent mShareIntent = new Intent(mContext, SocialShareActivity.class);
+                        mShareIntent.putExtra("contentId", mContentId);
+                        mShareIntent.putExtra("contentUrl", (String) response.body().getField("url"));
+                        mShareIntent.putExtra("title", (String) response.body().getField("title"));
+                        mShareIntent.putExtra("content", (String) response.body().getField("content"));
+                        mShareIntent.putExtra("picUrl", (String) response.body().getField("picurl"));
+                        completeInfo(mShareIntent);
                     }
                 } else {
                     ToastUtil.show(mContext, "发布失败");
@@ -221,7 +227,7 @@ public class CompletingPage extends AppCompatActivity {
         });
     }
 
-    private void completeInfo() {
+    private void completeInfo(final Intent intent) {
         HttpUtils.completeInfo(mContentId, mContentType, field1Str, field2Str, field3Str, needToApply,
                 needExtra1, needExtra2, mVoteItems, mEditMode).enqueue(new Callback<SimpleResponse>() {
             @Override
@@ -229,10 +235,6 @@ public class CompletingPage extends AppCompatActivity {
                 if (response.body() != null) {
                     if(response.body().isOk()){
                         ToastUtil.show(mContext, "发布成功");
-                        Intent intent = new Intent(mContext, SocialShareActivity.class);
-                        intent.putExtra("contentId", mContentId);
-                        // Todo: pass the content url to share activity.
-                        intent.putExtra("contentUrl", "");
                         startActivity(intent);
                         finish();
                     }

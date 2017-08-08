@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 
 import com.donutcn.memo.R;
 import com.donutcn.memo.entity.SimpleResponse;
@@ -33,7 +34,7 @@ public class SocialShareActivity extends AppCompatActivity implements View.OnCli
     private Button mHomePage;
 
     private UMWeb mUMWeb;
-    private String contentId, contentUrl;
+    private String contentId, contentUrl, title, content, picUrl;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,12 +44,17 @@ public class SocialShareActivity extends AppCompatActivity implements View.OnCli
         WindowUtils.setToolBarButton(this, R.string.btn_share_homepage);
         WindowUtils.setStatusBarColor(this, R.color.colorPrimary, true);
 
-        // remove drafts.
-        SpfsUtils.clear(this, SpfsUtils.CACHE);
         contentId = getIntent().getStringExtra("contentId");
         contentUrl = getIntent().getStringExtra("contentUrl");
+        title = getIntent().getStringExtra("title");
+        content = getIntent().getStringExtra("content");
+        picUrl = getIntent().getStringExtra("picUrl");
+        if(title != null){
+            ((TextView)findViewById(R.id.share_title)).setText(title);
+        }
+        // remove drafts.
+        SpfsUtils.clear(this, SpfsUtils.CACHE);
         initView();
-        initWebMedia();
     }
 
     public void initView() {
@@ -109,6 +115,7 @@ public class SocialShareActivity extends AppCompatActivity implements View.OnCli
 
     @Override
     public void onClick(View v) {
+        initWebMedia();
         switch (v.getId()) {
             case R.id.toolbar_with_btn:
                 Intent intent0 = new Intent(this, MainActivity.class);
@@ -134,7 +141,7 @@ public class SocialShareActivity extends AppCompatActivity implements View.OnCli
                 break;
             case R.id.share_iv7:
                 ClipboardManager cm = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
-                cm.setText(contentId);
+                cm.setText(contentUrl);
                 ToastUtil.show(this, "复制成功");
                 break;
             case R.id.share_iv8:
@@ -183,10 +190,12 @@ public class SocialShareActivity extends AppCompatActivity implements View.OnCli
     }
 
     public void initWebMedia() {
-        mUMWeb = new UMWeb("http://www.baidu.com");
-        mUMWeb.setTitle("This is web title");
-        mUMWeb.setThumb(new UMImage(this, R.drawable.pub_keyboard));
-        mUMWeb.setDescription("my description");
+        mUMWeb = new UMWeb(contentUrl);
+        mUMWeb.setTitle(title);
+        if(picUrl != null && !picUrl.equals("")){
+            mUMWeb.setThumb(new UMImage(this, picUrl));
+        }
+        mUMWeb.setDescription(content);
     }
 
     public void onBack(View view) {

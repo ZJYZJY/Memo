@@ -10,36 +10,267 @@
 
     <View
         android:layout_width="match_parent"
-        android:layout_height="@dimen/dp_line"
+        android:layout_height="@dimen/px_line"
         android:background="@color/border_gray" />
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:gravity="center"
-        android:orientation="vertical"
-        android:padding="@dimen/padding_container_huge">
+        android:padding="@dimen/padding_container">
 
         <TextView
+            android:id="@+id/share_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="@dimen/margin_huge"
+            android:ellipsize="end"
+            android:maxLines="2"
+            android:text="@string/social_share_title"
+            android:textColor="@color/text_title_gray"
+            android:textSize="18sp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/share_title"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="@dimen/margin_small"
+            android:text="@string/share_success"
+            android:textColor="@color/text_title_gray"
+            android:textSize="16sp" />
+
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
             android:gravity="center"
-            android:paddingBottom="@dimen/padding_container"
-            android:text="@string/social_share_title"
-            android:textColor="@color/textPrimaryDark"
-            android:textSize="18sp" />
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="@dimen/padding_container"
+                android:text="@string/social_share_title"
+                android:textColor="@color/text_title_gray"
+                android:textSize="16sp" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/dp_line"
+                android:layout_marginLeft="@dimen/margin_small"
+                android:layout_marginRight="@dimen/margin_small"
+                android:background="@color/border_gray" />
+
+            <TableLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingBottom="@dimen/padding_container_huge"
+                android:paddingTop="@dimen/padding_container">
+
+                <TableRow>
+
+                    <RelativeLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1">
+
+                        <ImageView
+                            android:id="@+id/share_iv1"
+                            android:layout_width="@dimen/icon_share"
+                            android:layout_height="@dimen/icon_share"
+                            android:layout_centerHorizontal="true"
+                            android:src="@drawable/share_wechat" />
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@+id/share_iv1"
+                            android:gravity="center"
+                            android:paddingTop="@dimen/padding_small"
+                            android:text="@string/social_share_wei_friend"
+                            android:textSize="12sp" />
+                    </RelativeLayout>
+
+                    <RelativeLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1">
+
+                        <ImageView
+                            android:id="@+id/share_iv2"
+                            android:layout_width="@dimen/icon_share"
+                            android:layout_height="@dimen/icon_share"
+                            android:layout_centerHorizontal="true"
+                            android:gravity="center"
+                            android:src="@drawable/share_mements" />
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@+id/share_iv2"
+                            android:gravity="center"
+                            android:paddingTop="@dimen/padding_small"
+                            android:text="@string/social_share_wei"
+                            android:textSize="12sp" />
+                    </RelativeLayout>
+
+                    <RelativeLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1">
+
+                        <ImageView
+                            android:id="@+id/share_iv3"
+                            android:layout_width="@dimen/icon_share"
+                            android:layout_height="@dimen/icon_share"
+                            android:layout_centerHorizontal="true"
+                            android:src="@drawable/share_qq" />
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@+id/share_iv3"
+                            android:gravity="center"
+                            android:paddingTop="@dimen/padding_small"
+                            android:text="@string/social_share_qq_friend"
+                            android:textSize="12sp" />
+                    </RelativeLayout>
+
+                    <RelativeLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1">
+
+                        <ImageView
+                            android:id="@+id/share_iv4"
+                            android:layout_width="@dimen/icon_share"
+                            android:layout_height="@dimen/icon_share"
+                            android:layout_centerHorizontal="true"
+                            android:src="@drawable/share_qzone" />
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@+id/share_iv4"
+                            android:gravity="center"
+                            android:paddingTop="@dimen/padding_small"
+                            android:text="@string/social_share_qzone"
+                            android:textSize="12sp" />
+                    </RelativeLayout>
+                </TableRow>
+
+                <TableRow android:layout_marginTop="@dimen/blank_item_divider">
+
+                    <RelativeLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1">
+
+                        <ImageView
+                            android:id="@+id/share_iv5"
+                            android:layout_width="@dimen/icon_share"
+                            android:layout_height="@dimen/icon_share"
+                            android:layout_centerHorizontal="true"
+                            android:src="@drawable/share_weibo" />
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@+id/share_iv5"
+                            android:gravity="center"
+                            android:paddingTop="@dimen/padding_small"
+                            android:text="@string/social_share_weibo"
+                            android:textSize="12sp" />
+                    </RelativeLayout>
+
+                    <RelativeLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1">
+
+                        <ImageView
+                            android:id="@+id/share_iv6"
+                            android:layout_width="@dimen/icon_share"
+                            android:layout_height="@dimen/icon_share"
+                            android:layout_centerHorizontal="true"
+                            android:gravity="center"
+                            android:src="@drawable/share_picture" />
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@+id/share_iv6"
+                            android:gravity="center"
+                            android:paddingTop="@dimen/padding_small"
+                            android:text="@string/social_share_picture"
+                            android:textSize="12sp" />
+                    </RelativeLayout>
+
+                    <RelativeLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1">
+
+                        <ImageView
+                            android:id="@+id/share_iv7"
+                            android:layout_width="@dimen/icon_share"
+                            android:layout_height="@dimen/icon_share"
+                            android:layout_centerHorizontal="true"
+                            android:src="@drawable/share_link" />
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@+id/share_iv7"
+                            android:gravity="center"
+                            android:paddingTop="@dimen/padding_small"
+                            android:text="@string/social_share_copy_link"
+                            android:textSize="12sp" />
+                    </RelativeLayout>
+
+                    <RelativeLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1">
+
+                        <ImageView
+                            android:id="@+id/share_iv8"
+                            android:layout_width="@dimen/icon_share"
+                            android:layout_height="@dimen/icon_share"
+                            android:layout_centerHorizontal="true"
+                            android:src="@drawable/share_more" />
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@+id/share_iv8"
+                            android:gravity="center"
+                            android:paddingTop="@dimen/padding_small"
+                            android:text="@string/social_share_more"
+                            android:textSize="12sp" />
+                    </RelativeLayout>
+                </TableRow>
+            </TableLayout>
+        </LinearLayout>
 
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
             android:padding="@dimen/padding_medium">
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
+                android:layout_marginEnd="@dimen/margin_small"
+                android:layout_marginRight="@dimen/margin_small"
                 android:layout_toLeftOf="@+id/social_content_private"
                 android:layout_toStartOf="@+id/social_content_private"
+                android:gravity="end|center_vertical"
                 android:text="@string/social_share_tip"
                 android:textColor="@color/textPrimary"
                 android:textSize="15sp" />
@@ -53,203 +284,5 @@
                 app:hasShadow="false"
                 app:isOpened="true" />
         </RelativeLayout>
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/dp_line"
-            android:layout_marginLeft="@dimen/margin_small"
-            android:layout_marginRight="@dimen/margin_small"
-            android:background="@color/border_gray" />
-
-        <TableLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:paddingBottom="@dimen/padding_container_huge"
-            android:paddingTop="@dimen/padding_container_huge">
-
-            <TableRow>
-
-                <RelativeLayout
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1">
-
-                    <ImageView
-                        android:id="@+id/share_iv1"
-                        android:layout_width="@dimen/icon_share"
-                        android:layout_height="@dimen/icon_share"
-                        android:layout_centerHorizontal="true"
-                        android:src="@drawable/share_wechat" />
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_below="@+id/share_iv1"
-                        android:gravity="center"
-                        android:paddingTop="@dimen/padding_small"
-                        android:text="@string/social_share_wei_friend"
-                        android:textSize="12sp" />
-                </RelativeLayout>
-
-                <RelativeLayout
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1">
-
-                    <ImageView
-                        android:id="@+id/share_iv2"
-                        android:layout_width="@dimen/icon_share"
-                        android:layout_height="@dimen/icon_share"
-                        android:layout_centerHorizontal="true"
-                        android:gravity="center"
-                        android:src="@drawable/share_mements" />
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_below="@+id/share_iv2"
-                        android:gravity="center"
-                        android:paddingTop="@dimen/padding_small"
-                        android:text="@string/social_share_wei"
-                        android:textSize="12sp" />
-                </RelativeLayout>
-
-                <RelativeLayout
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1">
-
-                    <ImageView
-                        android:id="@+id/share_iv3"
-                        android:layout_width="@dimen/icon_share"
-                        android:layout_height="@dimen/icon_share"
-                        android:layout_centerHorizontal="true"
-                        android:src="@drawable/share_qq" />
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_below="@+id/share_iv3"
-                        android:gravity="center"
-                        android:paddingTop="@dimen/padding_small"
-                        android:text="@string/social_share_qq_friend"
-                        android:textSize="12sp" />
-                </RelativeLayout>
-
-                <RelativeLayout
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1">
-
-                    <ImageView
-                        android:id="@+id/share_iv4"
-                        android:layout_width="@dimen/icon_share"
-                        android:layout_height="@dimen/icon_share"
-                        android:layout_centerHorizontal="true"
-                        android:src="@drawable/share_qzone" />
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_below="@+id/share_iv4"
-                        android:gravity="center"
-                        android:paddingTop="@dimen/padding_small"
-                        android:text="@string/social_share_qzone"
-                        android:textSize="12sp" />
-                </RelativeLayout>
-            </TableRow>
-
-            <TableRow android:layout_marginTop="@dimen/blank_item_divider">
-
-                <RelativeLayout
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1">
-
-                    <ImageView
-                        android:id="@+id/share_iv5"
-                        android:layout_width="@dimen/icon_share"
-                        android:layout_height="@dimen/icon_share"
-                        android:layout_centerHorizontal="true"
-                        android:src="@drawable/share_weibo" />
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_below="@+id/share_iv5"
-                        android:gravity="center"
-                        android:paddingTop="@dimen/padding_small"
-                        android:text="@string/social_share_weibo"
-                        android:textSize="12sp" />
-                </RelativeLayout>
-
-                <RelativeLayout
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1">
-
-                    <ImageView
-                        android:id="@+id/share_iv6"
-                        android:layout_width="@dimen/icon_share"
-                        android:layout_height="@dimen/icon_share"
-                        android:layout_centerHorizontal="true"
-                        android:gravity="center"
-                        android:src="@drawable/share_picture" />
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_below="@+id/share_iv6"
-                        android:gravity="center"
-                        android:paddingTop="@dimen/padding_small"
-                        android:text="@string/social_share_picture"
-                        android:textSize="12sp" />
-                </RelativeLayout>
-
-                <RelativeLayout
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1">
-
-                    <ImageView
-                        android:id="@+id/share_iv7"
-                        android:layout_width="@dimen/icon_share"
-                        android:layout_height="@dimen/icon_share"
-                        android:layout_centerHorizontal="true"
-                        android:src="@drawable/share_link" />
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_below="@+id/share_iv7"
-                        android:gravity="center"
-                        android:paddingTop="@dimen/padding_small"
-                        android:text="@string/social_share_copy_link"
-                        android:textSize="12sp" />
-                </RelativeLayout>
-
-                <RelativeLayout
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1">
-
-                    <ImageView
-                        android:id="@+id/share_iv8"
-                        android:layout_width="@dimen/icon_share"
-                        android:layout_height="@dimen/icon_share"
-                        android:layout_centerHorizontal="true"
-                        android:src="@drawable/share_more" />
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_below="@+id/share_iv8"
-                        android:gravity="center"
-                        android:paddingTop="@dimen/padding_small"
-                        android:text="@string/social_share_more"
-                        android:textSize="12sp" />
-                </RelativeLayout>
-            </TableRow>
-        </TableLayout>
-    </LinearLayout>
+    </RelativeLayout>
 </LinearLayout>

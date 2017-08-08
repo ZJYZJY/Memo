@@ -108,7 +108,7 @@
 
     <!--share type-->
     <string name="social_share_title">分享到社交网络</string>
-    <string name="social_share_tip">此信息阅读权限为公开浏览</string>
+    <string name="social_share_tip">此信息访问权限为开放浏览</string>
     <string name="social_share_wei_friend">微信好友</string>
     <string name="social_share_wei">微信朋友圈</string>
     <string name="social_share_qq_friend">QQ好友</string>
@@ -151,6 +151,7 @@
     <string name="completing_recruit_title">完善本次 招聘 信息</string>
     <string name="completing_reserve_title">完善本次 预订 信息</string>
     <string name="completing_sale_title">完善本次 二手物品 信息</string>
+    <string name="share_success">信息发布成功！</string>
 
     <!--personal center item-->
     <string name="personal_center_authentication">身份认证</string>

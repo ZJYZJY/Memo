@@ -8,6 +8,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.donutcn.memo.R;
+import com.donutcn.memo.helper.LoginHelper;
 import com.donutcn.memo.utils.UserStatus;
 import com.donutcn.memo.utils.WindowUtils;
 import com.tencent.bugly.beta.Beta;
@@ -55,8 +56,7 @@ public class PersonalCenterActivity extends AppCompatActivity implements View.On
                 Beta.checkUpgrade();
                 break;
             case R.id.log_out:
-                UserStatus.logout(getApplicationContext(),
-                        UserStatus.getCurrentUser().getPhoneNum());
+                LoginHelper.logout(getApplicationContext());
                 break;
         }
     }

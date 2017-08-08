@@ -52,22 +52,22 @@ public class ViewPagerAdapter extends FragmentPagerAdapter {
         tagList.remove(makeFragmentName(container.getId(), getItemId(position)));
     }
 
-    public void update(int item){
-        Fragment fragment = ((AppCompatActivity)context)
-                .getSupportFragmentManager().findFragmentByTag(tagList.get(item));
-        if(fragment != null){
-            switch (item) {
-                case 0:
-                    ((HomeFragment) fragment).update();
-                    break;
-                case 1:
-                    ((DiscoverFragment) fragment).update();
-                    break;
-                default:
-                    break;
-            }
-        }
-    }
+//    public void update(int item){
+//        Fragment fragment = ((AppCompatActivity)context)
+//                .getSupportFragmentManager().findFragmentByTag(tagList.get(item));
+//        if(fragment != null){
+//            switch (item) {
+//                case 0:
+//                    ((HomeFragment) fragment).update();
+//                    break;
+//                case 1:
+//                    ((DiscoverFragment) fragment).update();
+//                    break;
+//                default:
+//                    break;
+//            }
+//        }
+//    }
 
     private static String makeFragmentName(int viewId, long id) {
         return "android:switcher:" + viewId + ":" + id;

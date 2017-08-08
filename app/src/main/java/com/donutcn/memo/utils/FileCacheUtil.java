@@ -36,8 +36,9 @@ public class FileCacheUtil {
      * content是要存储的内容，可以是任意格式的，不一定是字符串。
      */
     public static void setCache(Context context, String content, String cacheFileName, int mode) {
+        clear(context, cacheFileName);
         FileOutputStream fos = null;
-   try {
+        try {
             Log.e("write_cache", content);
             //打开文件输出流，接收参数是文件名和模式
             fos = context.openFileOutput(cacheFileName, mode);
@@ -45,7 +46,7 @@ public class FileCacheUtil {
         } catch (IOException e) {
             e.printStackTrace();
         } finally {
-            if(fos != null) {
+            if (fos != null) {
                 try {
                     fos.close();
                 } catch (IOException e) {

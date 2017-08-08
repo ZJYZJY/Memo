@@ -67,8 +67,8 @@ public class RecommendFragment extends BaseScrollFragment implements View.OnClic
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    public void onStart() {
+        super.onStart();
         EventBus.getDefault().register(this);
     }
 
@@ -86,7 +86,6 @@ public class RecommendFragment extends BaseScrollFragment implements View.OnClic
         mSearch_tv = (TextView) view.findViewById(R.id.recommend_search);
         mRefreshLayout.setOnRefreshListener(mRefreshListener);
         mRefreshLayout.setOnLoadmoreListener(mLoadmoreListener);
-        mRefreshLayout.setEnableLoadmore(false);
         mSearch_tv.setOnClickListener(this);
 
         mHaoYe_rv.setLayoutManager(new LinearLayoutManager(mContext));
@@ -118,9 +117,6 @@ public class RecommendFragment extends BaseScrollFragment implements View.OnClic
                         mList = CollectionUtil.removeDuplicateWithOrder(mList);
                         mAdapter.setDataSet(mList);
                         mAdapter.notifyDataSetChanged();
-                        if(mList.size() >= 10){
-                            mRefreshLayout.setEnableLoadmore(true);
-                        }
                     }
                 }
                 mRefreshLayout.finishRefresh();
@@ -150,8 +146,8 @@ public class RecommendFragment extends BaseScrollFragment implements View.OnClic
 
                     } else if(response.body().isFail()) {
                         ToastUtil.show(getContext(), "已经到底部了");
-//                        mRefreshLayout.setEnableLoadmore(false);
-                        mRefreshLayout.finishLoadmore(true);
+                        mRefreshLayout.finishLoadmore();
+                        mRefreshLayout.setLoadmoreFinished(true);
                     }
                 }
                 mRefreshLayout.finishLoadmore();
@@ -241,11 +237,11 @@ public class RecommendFragment extends BaseScrollFragment implements View.OnClic
 
             if (direction == SwipeMenuRecyclerView.RIGHT_DIRECTION) {
                 if(menuPosition == 0) {
-                    UMWeb web = new UMWeb("http://www.baidu.com");
-                    web.setTitle("This is web title");
-                    web.setThumb(new UMImage(mContext, R.drawable.pub_keyboard));
-                    web.setDescription("my description");
-                    new ShareHelper(mContext).openShareBoard(web);
+                    new ShareHelper(mContext).openShareBoard(
+                            mList.get(adapterPosition).getUrl(),
+                            mList.get(adapterPosition).getTitle(),
+                            mList.get(adapterPosition).getImage0(),
+                            mList.get(adapterPosition).getContent());
                 }
             }
         }
@@ -257,9 +253,9 @@ public class RecommendFragment extends BaseScrollFragment implements View.OnClic
     }
 
     @Override
-    public void onDestroy() {
-        super.onDestroy();
+    public void onStop() {
         EventBus.getDefault().unregister(this);
+        super.onStop();
     }
 
     @Subscribe
