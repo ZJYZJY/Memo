@@ -3,6 +3,9 @@ package com.donutcn.memo.utils;
 import android.content.Context;
 import android.content.Intent;
 
+import com.donutcn.memo.App;
+import com.donutcn.memo.ContactDao;
+import com.donutcn.memo.DaoSession;
 import com.donutcn.memo.activity.LoginActivity;
 import com.donutcn.memo.entity.User;
 import com.donutcn.memo.event.LoginStateEvent;
@@ -44,8 +47,11 @@ public class UserStatus {
         // clear cookies
         HttpUtils.clearCookies();
         // remove login flag
-        SpfsUtils.remove(context, SpfsUtils.USER, "loginFlag");
+        SpfsUtils.clear(context, SpfsUtils.CACHE);
+        SpfsUtils.clear(context, SpfsUtils.USER);
         // clear local cache.
         FileCacheUtil.clear(context, FileCacheUtil.docCache);
+        // clear the local database.
+        ((App)context.getApplicationContext()).getDaoSession().getContactDao().deleteAll();
     }
 }

@@ -18,6 +18,7 @@ import com.donutcn.memo.adapter.TabFragmentPagerAdapter;
 import com.donutcn.memo.event.LoginStateEvent;
 import com.donutcn.memo.event.ReceiveNewMessagesEvent;
 import com.donutcn.memo.event.RequestRefreshEvent;
+import com.donutcn.widgetlib.widget.CircleImageView;
 import com.flyco.tablayout.SlidingTabLayout;
 import com.flyco.tablayout.listener.OnTabSelectListener;
 
@@ -109,6 +110,8 @@ public class HomeFragment extends Fragment implements OnTabSelectListener {
             String iconUrl = event.getUser().getIconUrl();
             if(iconUrl == null || iconUrl.equals("")){
                 mUserCenter_iv.setImageResource(R.mipmap.user_default_icon);
+                ((CircleImageView)mUserCenter_iv).setBorderColor(getResources().getColor(R.color.border_gray));
+                ((CircleImageView)mUserCenter_iv).setBorderWidth(1);
             }else {
                 Glide.with(mContext).load(iconUrl).centerCrop().into(mUserCenter_iv);
             }

@@ -93,6 +93,7 @@ dependencies {
     compile 'com.github.fodroid:XRadioGroup:v1.1'
     compile 'com.github.franmontiel:PersistentCookieJar:v1.0.1'
     compile 'org.greenrobot:greendao:3.2.2'
+    compile 'top.zibin:Luban:1.1.2'
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
     testCompile 'junit:junit:4.12'
     testCompile 'org.json:json:20140107'

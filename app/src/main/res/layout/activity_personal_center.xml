@@ -45,10 +45,12 @@
 
         <TextView
             android:id="@+id/personal_center_user_name"
-            android:layout_width="wrap_content"
+            android:layout_width="@dimen/personal_signature_width"
             android:layout_height="wrap_content"
             android:layout_below="@+id/personal_center_user_icon"
             android:layout_centerHorizontal="true"
+            android:gravity="center"
+            android:maxLines="1"
             android:padding="@dimen/padding_medium"
             android:text="landyne"
             android:textColor="@color/white" />

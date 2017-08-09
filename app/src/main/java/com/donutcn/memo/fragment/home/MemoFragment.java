@@ -8,7 +8,6 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,12 +20,12 @@ import com.donutcn.memo.entity.BriefContent;
 import com.donutcn.memo.entity.SimpleResponse;
 import com.donutcn.memo.event.ReceiveNewMessagesEvent;
 import com.donutcn.memo.event.RequestRefreshEvent;
-import com.donutcn.memo.helper.LoginHelper;
 import com.donutcn.memo.helper.ShareHelper;
 import com.donutcn.memo.type.ItemLayoutType;
 import com.donutcn.memo.utils.CollectionUtil;
 import com.donutcn.memo.utils.FileCacheUtil;
 import com.donutcn.memo.utils.HttpUtils;
+import com.donutcn.memo.utils.LogUtil;
 import com.donutcn.memo.utils.ToastUtil;
 import com.donutcn.memo.utils.UserStatus;
 import com.donutcn.memo.view.ListViewDecoration;
@@ -122,12 +121,12 @@ public class MemoFragment extends BaseScrollFragment {
     }
 
     public void Refresh() {
-        // Todo: replace getId() with getTimeStamp().
-        HttpUtils.getMyContentList("down", mList.size() == 0 ? "0" : mList.get(0).getId())
+        HttpUtils.getMyContentList("down", mList.size() == 0 ? 0 : mList.get(0).getTimeStamp())
                 .enqueue(new Callback<ArrayResponse<BriefContent>>() {
             @Override
             public void onResponse(Call<ArrayResponse<BriefContent>> call, Response<ArrayResponse<BriefContent>> response) {
                 if(response.body() != null){
+                    LogUtil.d("refresh", response.body().toString());
                     if(response.body().isOk()){
                         mList.addAll(0, response.body().getData());
                         mList = CollectionUtil.removeDuplicateWithOrder(mList);
@@ -149,11 +148,12 @@ public class MemoFragment extends BaseScrollFragment {
     }
 
     public void LoadMore() {
-        HttpUtils.getMyContentList("up", mList.get(mList.size() - 1).getId())
+        HttpUtils.getMyContentList("up", mList.get(mList.size() - 1).getTimeStamp())
                 .enqueue(new Callback<ArrayResponse<BriefContent>>() {
             @Override
             public void onResponse(Call<ArrayResponse<BriefContent>> call, Response<ArrayResponse<BriefContent>> response) {
                 if(response.body() != null){
+                    LogUtil.d("load", response.body().toString());
                     if(response.body().isOk()){
                         mList.addAll(mList.size(), response.body().getData());
                         mAdapter.setDataSet(mList);
@@ -190,7 +190,9 @@ public class MemoFragment extends BaseScrollFragment {
     private OnLoadmoreListener mLoadmoreListener = new OnLoadmoreListener() {
         @Override
         public void onLoadmore(RefreshLayout refreshlayout) {
-            LoadMore();
+            if(mList.size() > 0){
+                LoadMore();
+            }
         }
     };
 
@@ -240,7 +242,11 @@ public class MemoFragment extends BaseScrollFragment {
         public void onItemClick(int position) {
             EventBus.getDefault().post(new ReceiveNewMessagesEvent(0, position));
             Intent intent = new Intent(mContext, ArticlePage.class);
-            intent.putExtra("contentId", mList.get(position).getId());
+            intent.putExtra("url", mList.get(position).getUrl());
+            intent.putExtra("type", mList.get(position).getType());
+            intent.putExtra("upvote", mList.get(position).getUpVote());
+            intent.putExtra("comment", mList.get(position).getComment());
+            intent.putExtra("self", true);
             startActivity(intent);
         }
     };
@@ -302,7 +308,7 @@ public class MemoFragment extends BaseScrollFragment {
         HttpUtils.deleteContent(mList.get(position).getId()).enqueue(new Callback<SimpleResponse>() {
             @Override
             public void onResponse(Call<SimpleResponse> call, Response<SimpleResponse> response) {
-                Log.d("del_content", response.body().getMessage());
+                LogUtil.d("delete", response.body().getMessage());
                 if(response.body() != null){
                     if(response.body().isOk()){
                         mList.remove(position);
@@ -325,6 +331,7 @@ public class MemoFragment extends BaseScrollFragment {
     @Override
     public void onResume() {
         super.onResume();
+        Refresh();
     }
 
     @Override

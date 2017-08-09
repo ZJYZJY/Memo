@@ -98,14 +98,25 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         @Override
         public void run() {
             if(loginState){
-                String phoneNumber = SpfsUtils.readString(
-                        getApplicationContext(), SpfsUtils.USER, "phoneNumber", "");
+                int loginType = SpfsUtils.readInt(
+                        getApplicationContext(), SpfsUtils.USER, "login_type", UserStatus.PHONE_LOGIN);
+                String phoneNumber = null;
+                if(loginType == UserStatus.PHONE_LOGIN){
+                    phoneNumber = SpfsUtils.readString(
+                            getApplicationContext(), SpfsUtils.USER, "phoneNumber", "");
+                }
+                String name = SpfsUtils.readString(
+                        getApplicationContext(), SpfsUtils.USER, "name", "");
+                String gender = SpfsUtils.readString(
+                        getApplicationContext(), SpfsUtils.USER, "gender", "");
                 String iconurl = SpfsUtils.readString(
                         getApplicationContext(), SpfsUtils.USER, "iconurl", "");
                 Map<String, String> data = new HashMap<>();
                 data.put("phone", phoneNumber);
+                data.put("name", name);
+                data.put("gender", gender);
                 data.put("iconurl", iconurl);
-                LoginHelper.login(getApplicationContext(), UserStatus.PHONE_LOGIN, data);
+                LoginHelper.login(getApplicationContext(), loginType, data);
                 startActivity(new Intent(LoginActivity.this, MainActivity.class));
             }else {
                 Intent intent = getIntent();
@@ -334,6 +345,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 public void onResponse(Call<SimpleResponse> call, Response<SimpleResponse> response) {
                     if(response.body() != null && response.body().isOk()){
                         ToastUtil.show(LoginActivity.this, "登录成功");
+                        data.put("name", (String) response.body().getField("name"));
                         LoginHelper.login(getApplicationContext(), UserStatus.WECHAT_LOGIN, data);
                         Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);

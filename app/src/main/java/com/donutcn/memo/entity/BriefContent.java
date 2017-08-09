@@ -136,7 +136,8 @@ public class BriefContent {
     }
 
     public long getTimeStamp() {
-        timeStamp =  StringUtil.string2Date(time).getTime();
+        // transfer 'ms' to 's'.
+        timeStamp =  StringUtil.string2Date(time).getTime() / 1000;
         return timeStamp;
     }
 

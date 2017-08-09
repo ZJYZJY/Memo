@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="?selectableItemBackground"
@@ -17,7 +18,9 @@
         android:layout_marginRight="@dimen/margin_medium"
         android:contentDescription="@string/app_name"
         android:src="@mipmap/user_icon"
-        android:visibility="gone" />
+        android:visibility="gone"
+        app:civ_border_color="@color/border_gray"
+        app:civ_border_width="@dimen/px_line" />
 
     <TextView
         android:id="@+id/tv_title"
@@ -62,9 +65,9 @@
             android:id="@+id/iv_one"
             android:layout_width="match_parent"
             android:layout_height="96dp"
-            android:layout_weight="1"
-            android:layout_marginRight="@dimen/margin_micro"
             android:layout_marginEnd="@dimen/margin_micro"
+            android:layout_marginRight="@dimen/margin_micro"
+            android:layout_weight="1"
             android:scaleType="centerCrop" />
 
         <ImageView

@@ -47,10 +47,22 @@ public class DynamicTimeFormat extends SimpleDateFormat {
         Calendar today = Calendar.getInstance();
 
         int hour = other.get(Calendar.HOUR_OF_DAY);
-
+        /*
+         * time[0] : 2017年
+         * time[1] : 8月1日
+         * time[2] : 17:13
+         */
         String[] times = toAppendTo.toString().split(" ");
+        /*
+         * 0:00~6:00    凌晨
+         * 6:00~12:00   早上
+         * 12:00        中午
+         * 12:00~18:00  下午
+         * 18:00~24:00  晚上
+         */
         String moment = hour == 12 ? moments[0] : moments[hour / 6 + 1];
         String timeFormat = moment + " " + times[2];
+        // hour offset in one day.
         String timePassFormat = String.valueOf(today.get(Calendar.HOUR_OF_DAY) - hour);
         String dateFormat = times[1];
         String yearFormat = times[0];
@@ -71,7 +83,7 @@ public class DynamicTimeFormat extends SimpleDateFormat {
                 }
                 switch (temp) {
                     case 0:
-                        if(today.get(Calendar.HOUR_OF_DAY) == other.get(Calendar.HOUR_OF_DAY)){
+                        if(Integer.valueOf(timePassFormat) == 0){
                             if(today.get(Calendar.MILLISECOND) - other.get(Calendar.MILLISECOND) < 60){
                                 toAppendTo.append("刚刚");
                             }else {

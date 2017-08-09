@@ -50,7 +50,8 @@ public class SocialShareActivity extends AppCompatActivity implements View.OnCli
         content = getIntent().getStringExtra("content");
         picUrl = getIntent().getStringExtra("picUrl");
         if(title != null){
-            ((TextView)findViewById(R.id.share_title)).setText(title);
+            ((TextView)findViewById(R.id.share_title))
+                    .setText(getString(R.string.placeholder_share_title, title));
         }
         // remove drafts.
         SpfsUtils.clear(this, SpfsUtils.CACHE);

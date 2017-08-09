@@ -28,11 +28,15 @@ public class LoginHelper {
     public static void login(Context context, int loginType, Map<String, String> data) {
         SpfsUtils.write(context, SpfsUtils.USER, "loginFlag", true);
         Log.d("login_info", data.toString());
+        SpfsUtils.write(context, SpfsUtils.USER, "login_type", loginType);
         if(loginType == PHONE_LOGIN){
             SpfsUtils.write(context, SpfsUtils.USER, "phoneNumber", data.get("phone"));
             SpfsUtils.write(context, SpfsUtils.USER, "iconurl", data.get("iconurl"));
             UserStatus.setCurrentUser(data.get("phone"), data.get("iconurl"));
         }else if(loginType == WECHAT_LOGIN){
+            SpfsUtils.write(context, SpfsUtils.USER, "name", data.get("name"));
+            SpfsUtils.write(context, SpfsUtils.USER, "gender", data.get("gender"));
+            SpfsUtils.write(context, SpfsUtils.USER, "iconurl", data.get("iconurl"));
             UserStatus.setCurrentUser(data.get("openid"), data.get("name"), data.get("gender"), data.get("iconurl"));
         }
         EventBus.getDefault().postSticky(new LoginStateEvent(true, getCurrentUser()));
@@ -46,6 +50,10 @@ public class LoginHelper {
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         intent.putExtra("showSplash", false);
         context.startActivity(intent);
+    }
+
+    public static void autoLogin(Context context){
+
     }
 
     public static boolean ifRequestLogin(Context context, String message) {

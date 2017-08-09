@@ -25,6 +25,7 @@ import com.donutcn.memo.listener.OnItemClickListener;
 import com.donutcn.memo.type.ItemLayoutType;
 import com.donutcn.memo.utils.CollectionUtil;
 import com.donutcn.memo.utils.HttpUtils;
+import com.donutcn.memo.utils.LogUtil;
 import com.donutcn.memo.utils.ToastUtil;
 import com.donutcn.memo.view.ListViewDecoration;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
@@ -107,11 +108,12 @@ public class RecommendFragment extends BaseScrollFragment implements View.OnClic
     }
 
     public void Refresh() {
-        HttpUtils.getRecommendContent("down", mList.size() == 0 ? "0" : mList.get(0).getId())
+        HttpUtils.getRecommendContent("down", mList.size() == 0 ? 0 : mList.get(0).getTimeStamp())
                 .enqueue(new Callback<ArrayResponse<BriefContent>>() {
             @Override
             public void onResponse(Call<ArrayResponse<BriefContent>> call, Response<ArrayResponse<BriefContent>> response) {
                 if(response.body() != null){
+                    LogUtil.d("refresh", response.body().toString());
                     if(response.body().isOk()){
                         mList.addAll(0, response.body().getData());
                         mList = CollectionUtil.removeDuplicateWithOrder(mList);
@@ -132,11 +134,12 @@ public class RecommendFragment extends BaseScrollFragment implements View.OnClic
     }
 
     public void LoadMore() {
-        HttpUtils.getRecommendContent("up", mList.get(mList.size() - 1).getId())
+        HttpUtils.getRecommendContent("up", mList.get(mList.size() - 1).getTimeStamp())
                 .enqueue(new Callback<ArrayResponse<BriefContent>>() {
             @Override
             public void onResponse(Call<ArrayResponse<BriefContent>> call, Response<ArrayResponse<BriefContent>> response) {
                 if(response.body() != null){
+                    LogUtil.d("load", response.body().toString());
                     if(response.body().isOk()){
                         mList.addAll(mList.size(), response.body().getData());
                         mAdapter.setDataSet(mList);
@@ -172,7 +175,9 @@ public class RecommendFragment extends BaseScrollFragment implements View.OnClic
     private OnLoadmoreListener mLoadmoreListener = new OnLoadmoreListener() {
         @Override
         public void onLoadmore(RefreshLayout refreshlayout) {
-            LoadMore();
+            if(mList.size() > 0){
+                LoadMore();
+            }
         }
     };
 
@@ -204,7 +209,12 @@ public class RecommendFragment extends BaseScrollFragment implements View.OnClic
         public void onItemClick(int position) {
             EventBus.getDefault().post(new ReceiveNewMessagesEvent(2, position));
             Intent intent = new Intent(getContext(), ArticlePage.class);
-            intent.putExtra("contentId", mList.get(position).getId());
+            intent.putExtra("url", mList.get(position).getUrl());
+            intent.putExtra("name", mList.get(position).getName());
+            intent.putExtra("userIcon", mList.get(position).getUserIcon());
+            intent.putExtra("type", mList.get(position).getType());
+            intent.putExtra("upvote", mList.get(position).getUpVote());
+            intent.putExtra("comment", mList.get(position).getComment());
             startActivity(intent);
         }
     };

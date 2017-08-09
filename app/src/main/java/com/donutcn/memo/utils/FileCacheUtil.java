@@ -1,7 +1,6 @@
 package com.donutcn.memo.utils;
 
 import android.content.Context;
-import android.util.Log;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -39,7 +38,7 @@ public class FileCacheUtil {
         clear(context, cacheFileName);
         FileOutputStream fos = null;
         try {
-            Log.e("write_cache", content);
+            LogUtil.d("write", content);
             //打开文件输出流，接收参数是文件名和模式
             fos = context.openFileOutput(cacheFileName, mode);
             fos.write(content.getBytes());
@@ -86,7 +85,7 @@ public class FileCacheUtil {
                 }
             }
         }
-        Log.e("read_cache", sBuf.toString());
+        LogUtil.d("read", sBuf.toString());
         return sBuf.toString();
     }
 

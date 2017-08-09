@@ -25,8 +25,9 @@
             android:layout_centerHorizontal="true"
             android:layout_marginTop="@dimen/margin_huge"
             android:ellipsize="end"
-            android:maxLines="2"
-            android:text="@string/social_share_title"
+            android:paddingLeft="@dimen/padding_container"
+            android:paddingRight="@dimen/padding_container"
+            android:maxLines="1"
             android:textColor="@color/text_title_gray"
             android:textSize="18sp" />
 

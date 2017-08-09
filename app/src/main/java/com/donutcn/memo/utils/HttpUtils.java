@@ -1,7 +1,6 @@
 package com.donutcn.memo.utils;
 
 import android.content.Context;
-import android.util.Log;
 
 import com.donutcn.memo.entity.ArrayResponse;
 import com.donutcn.memo.entity.BriefContent;
@@ -26,6 +25,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -155,7 +155,7 @@ public class HttpUtils {
          */
         @GET(APIPath.GET_RECOMMEND)
         Call<ArrayResponse<BriefContent>> getRecommendContent(@Path("action") String action,
-                                                              @Path("id") String id);
+                                                              @Path("timestamp") long timeStamp);
 
         /**
          * refresh recommend content.
@@ -186,7 +186,7 @@ public class HttpUtils {
          */
         @GET(APIPath.GET_MY_CONTENT)
         Call<ArrayResponse<BriefContent>> getMyContentList(@Path("action") String action,
-                                                           @Path("id") String id);
+                                                           @Path("timestamp") long timeStamp);
 
         /**
          * match user contact friends.
@@ -228,7 +228,7 @@ public class HttpUtils {
 
         private static final String PUBLISH_CONTENT = "private_api/create_article_api";
 
-        private static final String GET_RECOMMEND = "index_api/index/{action}/{id}";
+        private static final String GET_RECOMMEND = "index_api/index/{action}/{timestamp}";
 
         private static final String SEARCH_CONTENT = "index_api/search_api";
 
@@ -238,7 +238,7 @@ public class HttpUtils {
 
         private static final String COMPLETE_INFO = "private_api/article_field_api";
 
-        private static final String GET_MY_CONTENT = "private_api/index/{action}/{id}";
+        private static final String GET_MY_CONTENT = "private_api/index/{action}/{timestamp}";
 
         private static final String MATCH_CONTACTS = "private_api/myfriend_api";
 
@@ -328,8 +328,8 @@ public class HttpUtils {
         return create().publishContent(request);
     }
 
-    public static Call<ArrayResponse<BriefContent>> getRecommendContent(String action, String id) {
-        return create().getRecommendContent(action, id);
+    public static Call<ArrayResponse<BriefContent>> getRecommendContent(String action, long timeStamp) {
+        return create().getRecommendContent(action, timeStamp);
     }
 
     public static Call<ArrayResponse<BriefContent>> searchContent(String key){
@@ -402,8 +402,8 @@ public class HttpUtils {
         return create().completeInfo(request);
     }
 
-    public static Call<ArrayResponse<BriefContent>> getMyContentList(String action, String id){
-        return create().getMyContentList(action, id);
+    public static Call<ArrayResponse<BriefContent>> getMyContentList(String action, long timeStamp){
+        return create().getMyContentList(action, timeStamp);
     }
 
     public static Call<ArrayResponse<Contact>> matchContacts(List<String> signatureCode){
@@ -439,21 +439,21 @@ public class HttpUtils {
      * upload images to qiniu server
      *
      * @param context  context
-     * @param paths    image file path
+     * @param files    image file
      * @param listener {@link UploadCallback}
      */
-    public static void upLoadImages(final Context context, final List<String> paths,
+    public static void upLoadImages(final Context context, final List<File> files,
                                     final UploadCallback<String> listener) {
         final OnValidTokenListener onValidTokenListener = new OnValidTokenListener() {
             @Override
             public void onValidToken(String token) {
-                doUploadFiles(paths, token, listener);
+                doUploadFiles(files, token, listener);
             }
 
             @Override
             public void onInvalidToken() {
                 ToastUtil.show(context, "图片上传失败");
-                Log.e("upload", "invalid token");
+                LogUtil.e("upload", "invalid token");
             }
         };
         create().getUploadToken().enqueue(new Callback<SimpleResponse>() {
@@ -478,14 +478,14 @@ public class HttpUtils {
 
     }
 
-    private static void doUploadFiles(final List<String> paths, String token,
+    private static void doUploadFiles(final List<File> files, String token,
                                       final UploadCallback<String> listener) {
         fileKeys = Collections.synchronizedList(new ArrayList<String>());
         final boolean[] fail = {false};
-        for (String path : paths) {
+        for (File file : files) {
             if(fail[0])
                 return;
-            getUploadManager().put(path, null, token,
+            getUploadManager().put(file, null, token,
                     new UpCompletionHandler() {
                         @Override
                         public void complete(String key, ResponseInfo info, JSONObject response) {
@@ -493,18 +493,18 @@ public class HttpUtils {
                                 try {
                                     // store the file key.
                                     fileKeys.add(response.getString("key"));
-                                    Log.d("qiniu_upload", response.getString("key"));
+                                    LogUtil.d("qiniu_upload", response.getString("key"));
                                     uploadCount.addAndGet(1);
                                 } catch (JSONException e) {
                                     e.printStackTrace();
                                 }
-                                if (uploadCount.get() == paths.size()) {
+                                if (uploadCount.get() == files.size()) {
                                     listener.uploadAll(fileKeys);
                                     // reset uploadCount.
                                     uploadCount.getAndSet(0);
                                 }
                             } else {
-                                Log.e("qiniu_upload", info.error);
+                                LogUtil.e("qiniu_upload", info.error);
                                 fail[0] = true;// multiple thread may cause problem
                                 listener.uploadFail(info.error);
                             }

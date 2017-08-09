@@ -9,40 +9,34 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.donutcn.memo.R;
 import com.donutcn.memo.X5testActivity;
-import com.donutcn.memo.entity.ContentResponse;
 import com.donutcn.memo.type.PublishType;
 import com.donutcn.memo.utils.DensityUtils;
-import com.donutcn.memo.utils.HttpUtils;
-import com.donutcn.memo.utils.ToastUtil;
+import com.donutcn.memo.utils.UserStatus;
 import com.donutcn.memo.utils.WindowUtils;
 import com.tencent.smtt.sdk.WebSettings;
 import com.tencent.smtt.sdk.WebView;
 import com.tencent.smtt.sdk.WebViewClient;
-import com.zzhoujay.richtext.CacheType;
-import com.zzhoujay.richtext.ImageHolder;
-import com.zzhoujay.richtext.RichText;
-
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 public class ArticlePage extends AppCompatActivity implements View.OnClickListener {
 
     private BottomSheetBehavior behavior;
     private BottomSheetDialog dialog;
     private Button mInteractive;
-    private TextView mTitle, mDate, mAuthor, mReadCount, mContent, mWant;
+    private TextView mName, mUpvote, mComment, mWant;
     private ScrollView mScrollView;
+    private ImageView mUserIcon;
 
     private PublishType mType = PublishType.ARTICLE;
 
-    private String mTitleStr, mAuthorStr, mDateStr, mReadCountStr, mContentStr;
-    private String mContentId;
+    private String mContentUrl, mUsername, mIconUrl;
+    private int mUpvoteCount, mCommentCount;
     // comment height
     private int commentHeight;
 
@@ -51,36 +45,60 @@ public class ArticlePage extends AppCompatActivity implements View.OnClickListen
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_article_page);
         WindowUtils.setStatusBarColor(this, R.color.colorPrimary, true);
-        initView();
-        mContentId = getIntent().getStringExtra("contentId");
-//        if(mContent != null){
-//            HttpUtils.getContentById(mContentId).enqueue(new Callback<ContentResponse>() {
-//                @Override
-//                public void onResponse(Call<ContentResponse> call, Response<ContentResponse> response) {
-//                    ContentResponse res = response.body();
-//                    if(res.isOk()){
-//                        mTitleStr = res.getTitle();
-//                        mAuthorStr = res.getAuthor();
-//                        mDateStr = res.getDate();
-//                        mReadCountStr = res.getReadCount();
-//                        mContentStr = res.getContentStr();
-//                        mType = res.getType();
-//                        showContent();
-//                    }else {
-//                        ToastUtil.show(ArticlePage.this, "该文章不存在");
-//                    }
-//                }
-//
-//                @Override
-//                public void onFailure(Call<ContentResponse> call, Throwable t) {
-//                    t.printStackTrace();
-//                    ToastUtil.show(ArticlePage.this, "连接失败");
-//                }
-//            });
-//        }
 
+        mContentUrl = getIntent().getStringExtra("url");
+        mUsername = getIntent().getStringExtra("name");
+        mIconUrl = getIntent().getStringExtra("userIcon");
+        String type = getIntent().getStringExtra("type");
+        mType = PublishType.getType(type);
+        mUpvoteCount = Integer.valueOf(getIntent().getStringExtra("upvote"));
+        mCommentCount = Integer.valueOf(getIntent().getStringExtra("comment"));
+        boolean self = getIntent().getBooleanExtra("self", false);
+
+        initView();
+        // set user icon.
+        if (self) {
+            mIconUrl = UserStatus.getCurrentUser().getIconUrl();
+            mUsername = UserStatus.getCurrentUser().getName();
+        }
+        if (mIconUrl != null && !mIconUrl.equals("")) {
+            Glide.with(this).load(mIconUrl).centerCrop().into(mUserIcon);
+        } else {
+            mUserIcon.setImageResource(R.mipmap.user_default_icon);
+        }
+        showContent();
+    }
+
+    /**
+     * create a bottom sheet dialog.
+     */
+    private void showBSDialog(@LayoutRes int layout) {
+        dialog = new BottomSheetDialog(this);
+        final View view = LayoutInflater.from(this).inflate(layout, null);
+        dialog.setContentView(view);
+        View parent = (View) view.getParent();
+        behavior = BottomSheetBehavior.from(parent);
+        behavior.setPeekHeight(DensityUtils.dp2px(this, 512));
+
+        if (layout == R.layout.bottom_dialog_info) {
+            TextView action = (TextView) parent.findViewById(R.id.interactive_type);
+            action.setText(getString(R.string.interactive_enroll));
+        } else if (layout == R.layout.bottom_dialog_reply) {
+            TextView action = (TextView) parent.findViewById(R.id.interactive_reply_submit);
+            if (mType == PublishType.QA) {
+                action.setText(getString(R.string.btn_dialog_answer));
+            } else if (mType == PublishType.ARTICLE || mType == PublishType.ALBUM) {
+                // set the submit button text.
+                action.setText(getString(R.string.btn_dialog_submit));
+            }
+        }
+
+        dialog.show();
+    }
+
+    private void showContent(){
         WebView webView = (WebView) findViewById(R.id.webView);
-        webView.loadUrl("http://ascexz.320.io/GoodPage/API/index_api/see_article_api/" + mContentId);
+        webView.loadUrl(mContentUrl);
 
         WebSettings settings = webView.getSettings();
         settings.setJavaScriptEnabled(true);
@@ -100,19 +118,6 @@ public class ArticlePage extends AppCompatActivity implements View.OnClickListen
                 return true;
             }
         });
-    }
-
-    private void showContent(){
-        mTitle.setText(mTitleStr);
-        mDate.setText(mDateStr);
-        mAuthor.setText(mAuthorStr);
-        mReadCount.setText(getString(R.string.placeholder_article_read_count, mReadCountStr));
-        RichText.fromHtml(mContentStr)
-                .bind(this)
-                .autoFix(true)
-                .cache(CacheType.ALL)
-                .scaleType(ImageHolder.ScaleType.FIT_AUTO)
-                .into(mContent);
         switch (mType) {
             case ARTICLE:
                 mWant.setText(getString(R.string.interactive_want_article));
@@ -175,22 +180,24 @@ public class ArticlePage extends AppCompatActivity implements View.OnClickListen
     }
 
     public void initView() {
-//        mTitle = (TextView) findViewById(R.id.article_title);
-//        mDate = (TextView) findViewById(R.id.article_date);
-//        mAuthor = (TextView) findViewById(R.id.article_author);
-//        mReadCount = (TextView) findViewById(R.id.article_read_count);
-//        mContent = (TextView) findViewById(R.id.article_content);
-//        mScrollView = (ScrollView) findViewById(R.id.article_scroll);
+        mName = (TextView) findViewById(R.id.article_author_name);
+        mUserIcon = (ImageView) findViewById(R.id.article_author_icon);
 
-        mInteractive = (Button) findViewById(R.id.interactive);
         mWant = (TextView) findViewById(R.id.interactive_bottom_want);
+        mUpvote = (TextView) findViewById(R.id.interactive_upvote_count);
+        mComment = (TextView) findViewById(R.id.interactive_comment_count);
+        mInteractive = (Button) findViewById(R.id.interactive);
+        mName.setText(mUsername);
+        mUpvote.setText(String.valueOf(mUpvoteCount));
+        mComment.setText(String.valueOf(mCommentCount));
 
         findViewById(R.id.interactive_bottom_publish).setOnClickListener(this);
         findViewById(R.id.interactive_bottom_upvote).setOnClickListener(this);
         findViewById(R.id.interactive_bottom_comment).setOnClickListener(this);
+        findViewById(R.id.author_info_container).setOnClickListener(this);
     }
 
-    public void onMore(View view) {
+    public void onMoreOption(View view) {
 
     }
 
@@ -200,33 +207,6 @@ public class ArticlePage extends AppCompatActivity implements View.OnClickListen
 
     public void onBack(View view) {
         finish();
-    }
-
-    /**
-     * create a bottom sheet dialog.
-     */
-    private void showBSDialog(@LayoutRes int layout) {
-        dialog = new BottomSheetDialog(this);
-        final View view = LayoutInflater.from(this).inflate(layout, null);
-        dialog.setContentView(view);
-        View parent = (View) view.getParent();
-        behavior = BottomSheetBehavior.from(parent);
-        behavior.setPeekHeight(DensityUtils.dp2px(this, 512));
-
-        if (layout == R.layout.bottom_dialog_info) {
-            TextView action = (TextView) parent.findViewById(R.id.interactive_type);
-            action.setText(getString(R.string.interactive_enroll));
-        } else if (layout == R.layout.bottom_dialog_reply) {
-            TextView action = (TextView) parent.findViewById(R.id.interactive_reply_submit);
-            if (mType == PublishType.QA) {
-                action.setText(getString(R.string.btn_dialog_answer));
-            } else if (mType == PublishType.ARTICLE || mType == PublishType.ALBUM) {
-                // set the submit button text.
-                action.setText(getString(R.string.btn_dialog_submit));
-            }
-        }
-
-        dialog.show();
     }
 
     @Override
@@ -248,7 +228,10 @@ public class ArticlePage extends AppCompatActivity implements View.OnClickListen
                 startActivity(new Intent(this, X5testActivity.class));
                 break;
             case R.id.interactive_bottom_comment:
-                mScrollView.smoothScrollTo(0, commentHeight);
+//                mScrollView.smoothScrollTo(0, commentHeight);
+                break;
+            // top user icon.
+            case R.id.author_info_container:
                 break;
         }
     }
@@ -256,6 +239,5 @@ public class ArticlePage extends AppCompatActivity implements View.OnClickListen
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        RichText.clear(this);
     }
 }

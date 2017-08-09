@@ -14,7 +14,6 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -29,17 +28,17 @@ import android.widget.TextView;
 import com.donutcn.memo.R;
 import com.donutcn.memo.entity.ContentResponse;
 import com.donutcn.memo.entity.SimpleResponse;
+import com.donutcn.memo.event.FinishCompressEvent;
 import com.donutcn.memo.listener.UploadCallback;
 import com.donutcn.memo.type.PublishType;
-import com.donutcn.memo.utils.DensityUtils;
 import com.donutcn.memo.utils.HttpUtils;
+import com.donutcn.memo.utils.LogUtil;
 import com.donutcn.memo.utils.PermissionCheck;
 import com.donutcn.memo.utils.RecognizerResultParser;
 import com.donutcn.memo.utils.SpfsUtils;
 import com.donutcn.memo.utils.StringUtil;
 import com.donutcn.memo.utils.ToastUtil;
 import com.donutcn.memo.utils.WindowUtils;
-import com.donutcn.widgetlib.ShadowDrawable;
 import com.google.gson.internal.LinkedTreeMap;
 import com.iflytek.cloud.ErrorCode;
 import com.iflytek.cloud.InitListener;
@@ -51,13 +50,17 @@ import com.iflytek.cloud.SpeechRecognizer;
 import com.iflytek.cloud.ui.RecognizerDialog;
 import com.iflytek.cloud.ui.RecognizerDialogListener;
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 import jp.wasabeef.richeditor.RichEditor;
 import me.iwf.photopicker.PhotoPicker;
@@ -66,6 +69,7 @@ import me.shihao.library.XRadioGroup;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+import top.zibin.luban.Luban;
 
 public class PublishActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -80,8 +84,9 @@ public class PublishActivity extends AppCompatActivity implements View.OnClickLi
     private SpeechRecognizer mIat;
     private RecognizerDialog mIatDialog;
     // use HashMap to store the result.
-    private HashMap<String, String> mIatResults = new LinkedHashMap<>();
-    private ArrayList<String> selectedPhotos = new ArrayList<>();
+    private Map<String, String> mIatResults = new LinkedHashMap<>();
+    private List<String> selectedPhotos = new ArrayList<>();
+    private List<File> photoFiles = new ArrayList<>();
 
     private final String[] mContentTypes = PublishType.toStringArray();
     private LinkedTreeMap mExtraInfo;
@@ -244,7 +249,7 @@ public class PublishActivity extends AppCompatActivity implements View.OnClickLi
                 if(response.body() != null){
                     if(response.body().isOk()){
                         ToastUtil.show(mContext, "发布成功");
-                        Log.e("publish", response.body().toString());
+                        LogUtil.d("publish", response.body().toString());
                         openSharePage(String.valueOf(response.body().getField("article_id")),
                                 (String) response.body().getField("url"),
                                 (String) response.body().getField("title"),
@@ -280,28 +285,37 @@ public class PublishActivity extends AppCompatActivity implements View.OnClickLi
                 WindowUtils.toggleKeyboard(this, v, false);
                 mPublishDialog.show();
                 // if in edit mode, same image will not be reuploaded.
-                selectedPhotos = (ArrayList<String>) StringUtil.getImgSrcList(mContentStr);
+                selectedPhotos = StringUtil.getImgSrcList(mContentStr);
                 if(mSelectedType.equals(mContentTypes[0])
                         || mSelectedType.equals(mContentTypes[1])
                         || mSelectedType.equals(mContentTypes[5])){
                     if(selectedPhotos.size() == 0){
                         publishContent(null);
                     }else {
-                        HttpUtils.upLoadImages(this, selectedPhotos, new UploadCallback<String>() {
+                        final int count = selectedPhotos.size();
+                        // compress the image files.
+                        new Thread(new Runnable() {
                             @Override
-                            public void uploadProgress(int progress, int total) {
+                            public void run() {
+                                for(int i = 0; i < selectedPhotos.size(); i++){
+                                    try {
+                                        File file = Luban.with(PublishActivity.this)
+                                                .load(new File(selectedPhotos.get(i)))
+                                                .get();
+                                        if(file != null){
+                                            photoFiles.add(file);
+                                        }
+                                    } catch (IOException e) {
+                                        e.printStackTrace();
+                                    }
+                                }
+                                if(count == photoFiles.size()){
+                                    EventBus.getDefault().post(new FinishCompressEvent(true));
+                                } else {
+                                    EventBus.getDefault().post(new FinishCompressEvent(false));
+                                }
                             }
-                            @Override
-                            public void uploadAll(List<String> keys) {
-                                publishContent(keys);
-                            }
-
-                            @Override
-                            public void uploadFail(String error) {
-                                mPublishDialog.cancel();
-                                ToastUtil.show(mContext, "找不到图片，请重新选择1");
-                            }
-                        });
+                        }).start();
                     }
                 }else {
                     startCompletePage();
@@ -359,6 +373,29 @@ public class PublishActivity extends AppCompatActivity implements View.OnClickLi
             case R.id.clear:
                 mContent.removeFormat();
                 break;
+        }
+    }
+
+    @Subscribe
+    public void onFinishCompressEvent(FinishCompressEvent event){
+        if(event.isSuccess()){
+            HttpUtils.upLoadImages(PublishActivity.this, photoFiles, new UploadCallback<String>() {
+                @Override
+                public void uploadProgress(int progress, int total) {
+                }
+                @Override
+                public void uploadAll(List<String> keys) {
+                    publishContent(keys);
+                }
+
+                @Override
+                public void uploadFail(String error) {
+                    mPublishDialog.cancel();
+                    ToastUtil.show(mContext, "找不到图片，请重新选择1");
+                }
+            });
+        } else {
+            ToastUtil.show(this, "图片上传失败, 压缩错误");
         }
     }
 
@@ -612,6 +649,9 @@ public class PublishActivity extends AppCompatActivity implements View.OnClickLi
             List<String> photos = null;
             if (data != null) {
                 photos = data.getStringArrayListExtra(PhotoPicker.KEY_SELECTED_PHOTOS);
+                for(String s : photos){
+                    LogUtil.d("select_photo", s);
+                }
             }
             selectedPhotos.clear();
 
@@ -670,6 +710,18 @@ public class PublishActivity extends AppCompatActivity implements View.OnClickLi
 
     public void onBack(View view) {
         storeDraft();
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        EventBus.getDefault().register(this);
+    }
+
+    @Override
+    protected void onStop() {
+        EventBus.getDefault().unregister(this);
+        super.onStop();
     }
 
     @Override

@@ -331,7 +331,7 @@ public class FriendsFragment extends BaseScrollFragment {
                     String username = UserStatus.getCurrentUser().getUsername();
                     // remove duplicate numbers and your own number.
                     if (contactIdMap.containsKey(number)
-                            || (username != null && contactIdMap.containsKey(username))) {
+                            || (username != null && username.equals(number))) {
                         // do nothing
                     } else {
                         // create a contact object.
