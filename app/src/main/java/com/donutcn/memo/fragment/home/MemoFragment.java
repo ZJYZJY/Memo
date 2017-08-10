@@ -38,8 +38,6 @@ import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnLoadmoreListener;
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
-import com.umeng.socialize.media.UMImage;
-import com.umeng.socialize.media.UMWeb;
 import com.yanzhenjie.recyclerview.swipe.Closeable;
 import com.yanzhenjie.recyclerview.swipe.OnSwipeMenuItemClickListener;
 import com.yanzhenjie.recyclerview.swipe.SwipeMenu;
@@ -141,7 +139,7 @@ public class MemoFragment extends BaseScrollFragment {
             @Override
             public void onFailure(Call<ArrayResponse<BriefContent>> call, Throwable t) {
                 t.printStackTrace();
-                ToastUtil.show(getContext(), "连接失败");
+                ToastUtil.show(mContext, "连接失败");
                 mRefreshLayout.finishRefresh();
             }
         });
@@ -163,7 +161,7 @@ public class MemoFragment extends BaseScrollFragment {
                     } else if(response.body().unAuthorized()){
 
                     } else if(response.body().isFail()) {
-                        ToastUtil.show(getContext(), "已经到底部了");
+                        ToastUtil.show(mContext, "已经到底部了");
                         mRefreshLayout.finishLoadmore();
                         mRefreshLayout.setLoadmoreFinished(true);
                     }
@@ -174,7 +172,7 @@ public class MemoFragment extends BaseScrollFragment {
             @Override
             public void onFailure(Call<ArrayResponse<BriefContent>> call, Throwable t) {
                 t.printStackTrace();
-                ToastUtil.show(getContext(), "连接失败");
+                ToastUtil.show(mContext, "连接失败");
                 mRefreshLayout.finishLoadmore();
             }
         });
@@ -314,6 +312,7 @@ public class MemoFragment extends BaseScrollFragment {
                         mList.remove(position);
                         mAdapter.notifyItemRemoved(position);
                         ToastUtil.show(mContext, "删除成功");
+                        FileCacheUtil.setCache(mContext, new Gson().toJson(mList));
                     }
                 }else {
                     ToastUtil.show(mContext, "删除失败");

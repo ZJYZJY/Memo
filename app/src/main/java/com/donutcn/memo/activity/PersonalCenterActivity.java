@@ -13,7 +13,6 @@ import com.donutcn.memo.R;
 import com.donutcn.memo.entity.User;
 import com.donutcn.memo.event.LoginStateEvent;
 import com.donutcn.memo.helper.LoginHelper;
-import com.donutcn.memo.utils.UserStatus;
 import com.donutcn.memo.utils.WindowUtils;
 import com.donutcn.widgetlib.widget.CircleImageView;
 import com.tencent.bugly.beta.Beta;
@@ -77,16 +76,10 @@ public class PersonalCenterActivity extends AppCompatActivity implements View.On
         if(event.isLogin()){
             User user = event.getUser();
             String iconUrl = user.getIconUrl();
-            if(iconUrl == null || iconUrl.equals("")){
-                mUserIcon.setImageResource(R.mipmap.user_default_icon);
-                ((CircleImageView)mUserIcon).setBorderColor(getResources().getColor(R.color.border_gray));
-                ((CircleImageView)mUserIcon).setBorderWidth(1);
-            }else {
+            if(iconUrl != null && !iconUrl.equals("")){
                 Glide.with(this).load(iconUrl).centerCrop().into(mUserIcon);
             }
-            mNickname.setText(user.getName() == null ? user.getPhoneNum() : user.getName());
-        } else {
-//            mUserIcon.setImageResource(R.drawable.mine);
+            mNickname.setText(user.getName() == null ? user.getPhone() : user.getName());
         }
     }
 

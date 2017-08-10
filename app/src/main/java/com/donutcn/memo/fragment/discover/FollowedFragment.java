@@ -9,31 +9,21 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 import com.donutcn.memo.R;
 import com.donutcn.memo.activity.ArticlePage;
-import com.donutcn.memo.activity.SearchActivity;
 import com.donutcn.memo.adapter.MemoAdapter;
 import com.donutcn.memo.base.BaseScrollFragment;
-import com.donutcn.memo.entity.ArrayResponse;
 import com.donutcn.memo.entity.BriefContent;
 import com.donutcn.memo.event.ReceiveNewMessagesEvent;
 import com.donutcn.memo.event.RequestRefreshEvent;
-import com.donutcn.memo.helper.ShareHelper;
 import com.donutcn.memo.listener.OnItemClickListener;
 import com.donutcn.memo.type.ItemLayoutType;
-import com.donutcn.memo.utils.CollectionUtil;
-import com.donutcn.memo.utils.HttpUtils;
-import com.donutcn.memo.utils.LogUtil;
-import com.donutcn.memo.utils.ToastUtil;
 import com.donutcn.memo.view.ListViewDecoration;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnLoadmoreListener;
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
-import com.umeng.socialize.media.UMImage;
-import com.umeng.socialize.media.UMWeb;
 import com.yanzhenjie.recyclerview.swipe.Closeable;
 import com.yanzhenjie.recyclerview.swipe.OnSwipeMenuItemClickListener;
 import com.yanzhenjie.recyclerview.swipe.SwipeMenu;
@@ -44,21 +34,14 @@ import com.yanzhenjie.recyclerview.swipe.SwipeMenuRecyclerView;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 
-import java.util.ArrayList;
 import java.util.List;
 
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
-
-public class RecommendFragment extends BaseScrollFragment implements View.OnClickListener {
+public class FollowedFragment extends BaseScrollFragment {
 
     private SwipeMenuRecyclerView mHaoYe_rv;
     private SmartRefreshLayout mRefreshLayout;
-    private TextView mSearch_tv;
 
-    private MemoAdapter mAdapter;
-    private List<BriefContent> mList;
+    private List<BriefContent> list;
     private Context mContext;
 
     @Override
@@ -76,7 +59,7 @@ public class RecommendFragment extends BaseScrollFragment implements View.OnClic
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_recommend, container, false);
+        return inflater.inflate(R.layout.fragment_latest, container, false);
     }
 
     @Override
@@ -84,10 +67,8 @@ public class RecommendFragment extends BaseScrollFragment implements View.OnClic
         mHaoYe_rv = (SwipeMenuRecyclerView) view.findViewById(R.id.recycler_view);
         setRecyclerView(mHaoYe_rv);
         mRefreshLayout = (SmartRefreshLayout) view.findViewById(R.id.swipe_layout);
-        mSearch_tv = (TextView) view.findViewById(R.id.recommend_search);
         mRefreshLayout.setOnRefreshListener(mRefreshListener);
         mRefreshLayout.setOnLoadmoreListener(mLoadmoreListener);
-        mSearch_tv.setOnClickListener(this);
 
         mHaoYe_rv.setLayoutManager(new LinearLayoutManager(mContext));
         mHaoYe_rv.addItemDecoration(new ListViewDecoration(getContext(), R.dimen.item_decoration_height));
@@ -100,84 +81,27 @@ public class RecommendFragment extends BaseScrollFragment implements View.OnClic
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        mList = new ArrayList<>();
-        mAdapter = new MemoAdapter(mContext, mList, ItemLayoutType.AVATAR_IMG);
-        mAdapter.setOnItemClickListener(mOnItemClickListener);
-        mHaoYe_rv.setAdapter(mAdapter);
         Refresh();
     }
 
     public void Refresh() {
-        HttpUtils.getRecommendContent("down", mList.size() == 0 ? 0 : mList.get(0).getTimeStamp())
-                .enqueue(new Callback<ArrayResponse<BriefContent>>() {
-            @Override
-            public void onResponse(Call<ArrayResponse<BriefContent>> call, Response<ArrayResponse<BriefContent>> response) {
-                if(response.body() != null){
-                    LogUtil.d("refresh", response.body().toString());
-                    if(response.body().isOk()){
-                        mList.addAll(0, response.body().getData());
-                        mList = CollectionUtil.removeDuplicateWithOrder(mList);
-                        mAdapter.setDataSet(mList);
-                        mAdapter.notifyDataSetChanged();
-                    }
-                }
-                mRefreshLayout.finishRefresh();
-            }
+        MemoAdapter adapter = new MemoAdapter(mContext, list, ItemLayoutType.AVATAR_IMG);
+        adapter.setOnItemClickListener(mOnItemClickListener);
 
-            @Override
-            public void onFailure(Call<ArrayResponse<BriefContent>> call, Throwable t) {
-                t.printStackTrace();
-                ToastUtil.show(getContext(), "推荐连接失败");
-                mRefreshLayout.finishRefresh();
-            }
-        });
-    }
-
-    public void LoadMore() {
-        HttpUtils.getRecommendContent("up", mList.get(mList.size() - 1).getTimeStamp())
-                .enqueue(new Callback<ArrayResponse<BriefContent>>() {
-            @Override
-            public void onResponse(Call<ArrayResponse<BriefContent>> call, Response<ArrayResponse<BriefContent>> response) {
-                if(response.body() != null){
-                    LogUtil.d("load", response.body().toString());
-                    if(response.body().isOk()){
-                        mList.addAll(mList.size(), response.body().getData());
-                        mAdapter.setDataSet(mList);
-                        mAdapter.notifyDataSetChanged();
-                        mRefreshLayout.finishLoadmore();
-                    }else if(response.body().unAuthorized()){
-
-                    } else if(response.body().isFail()) {
-                        ToastUtil.show(getContext(), "已经到底部了");
-                        mRefreshLayout.finishLoadmore();
-                        mRefreshLayout.setLoadmoreFinished(true);
-                    }
-                }
-                mRefreshLayout.finishLoadmore();
-            }
-
-            @Override
-            public void onFailure(Call<ArrayResponse<BriefContent>> call, Throwable t) {
-                t.printStackTrace();
-                ToastUtil.show(getContext(), "推荐连接失败");
-                mRefreshLayout.finishLoadmore();
-            }
-        });
+        mHaoYe_rv.setAdapter(adapter);
     }
 
     private OnRefreshListener mRefreshListener = new OnRefreshListener() {
         @Override
         public void onRefresh(RefreshLayout refreshlayout) {
-            Refresh();
+            refreshlayout.finishRefresh(1000);
         }
     };
 
     private OnLoadmoreListener mLoadmoreListener = new OnLoadmoreListener() {
         @Override
         public void onLoadmore(RefreshLayout refreshlayout) {
-            if(mList.size() > 0){
-                LoadMore();
-            }
+            refreshlayout.finishLoadmore(1000);
         }
     };
 
@@ -207,27 +131,12 @@ public class RecommendFragment extends BaseScrollFragment implements View.OnClic
     private OnItemClickListener mOnItemClickListener = new OnItemClickListener() {
         @Override
         public void onItemClick(int position) {
-            EventBus.getDefault().post(new ReceiveNewMessagesEvent(2, position));
-            Intent intent = new Intent(getContext(), ArticlePage.class);
-            intent.putExtra("userId", mList.get(position).getUserId());
-            intent.putExtra("url", mList.get(position).getUrl());
-            intent.putExtra("name", mList.get(position).getName());
-            intent.putExtra("userIcon", mList.get(position).getUserIcon());
-            intent.putExtra("type", mList.get(position).getType());
-            intent.putExtra("upvote", mList.get(position).getUpVote());
-            intent.putExtra("comment", mList.get(position).getComment());
+            EventBus.getDefault().post(new ReceiveNewMessagesEvent(3, position));
+            Intent intent = new Intent(mContext, ArticlePage.class);
+            intent.putExtra("contentId", list.get(position).getId());
             startActivity(intent);
         }
     };
-
-    @Override
-    public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.recommend_search:
-                startActivity(new Intent(getContext(), SearchActivity.class));
-                break;
-        }
-    }
 
     /**
      * Menu onClickListener
@@ -247,13 +156,7 @@ public class RecommendFragment extends BaseScrollFragment implements View.OnClic
             closeable.smoothCloseMenu();
 
             if (direction == SwipeMenuRecyclerView.RIGHT_DIRECTION) {
-                if(menuPosition == 0) {
-                    new ShareHelper(mContext).openShareBoard(
-                            mList.get(adapterPosition).getUrl(),
-                            mList.get(adapterPosition).getTitle(),
-                            mList.get(adapterPosition).getImage0(),
-                            mList.get(adapterPosition).getContent());
-                }
+
             }
         }
     };
@@ -261,6 +164,7 @@ public class RecommendFragment extends BaseScrollFragment implements View.OnClic
     @Override
     public void onResume() {
         super.onResume();
+        Refresh();
     }
 
     @Override
@@ -271,7 +175,7 @@ public class RecommendFragment extends BaseScrollFragment implements View.OnClic
 
     @Subscribe
     public void onRequestRefreshEvent(RequestRefreshEvent event){
-        if(event.getRefreshPosition() == 2){
+        if(event.getRefreshPosition() == 4){
             mHaoYe_rv.scrollToPosition(0);
             mRefreshLayout.autoRefresh(0);
         }

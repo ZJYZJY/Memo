@@ -200,7 +200,11 @@ public class SocialShareActivity extends AppCompatActivity implements View.OnCli
     }
 
     public void onBack(View view) {
-        finish();
+        Intent intent = new Intent(this, PublishActivity.class);
+        intent.putExtra("editMode", true);
+        intent.putExtra("contentId", contentId);
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        startActivity(intent);
     }
 
     @Override

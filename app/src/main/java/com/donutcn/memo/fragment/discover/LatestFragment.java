@@ -176,7 +176,7 @@ public class LatestFragment extends BaseScrollFragment {
 
     @Subscribe
     public void onRequestRefreshEvent(RequestRefreshEvent event){
-        if(event.getRefreshPosition() == 4){
+        if(event.getRefreshPosition() == 3){
             mHaoYe_rv.scrollToPosition(0);
             mRefreshLayout.autoRefresh(0);
         }

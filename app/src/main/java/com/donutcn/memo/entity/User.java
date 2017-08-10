@@ -1,6 +1,6 @@
 package com.donutcn.memo.entity;
 
-import com.donutcn.memo.utils.UserStatus;
+import java.util.List;
 
 /**
  * com.donutcn.memo.entity
@@ -9,29 +9,39 @@ import com.donutcn.memo.utils.UserStatus;
 
 public class User {
 
-    private String username;
-    private String phoneNum;
-    private String gender;
-    private String iconUrl;
-
+    private String userId;
     private String openId;
     private String name;
+    private String username;
+    private String phone;
+    private String email;
+    private String gender;
+    private String iconUrl;
+    private String signature;
+    private List<String> followedUser;
 
-    private int loginType;
+    public User(){}
 
-    public User(String phoneNum, String iconUrl) {
-        this.loginType = UserStatus.PHONE_LOGIN;
-        this.phoneNum = phoneNum;
+    public User(String phone, String name, String iconUrl) {
+        this.phone = phone;
+        this.name = name;
         this.iconUrl = iconUrl;
     }
 
     public User(String openId, String name, String gender, String iconUrl){
-        this.loginType = UserStatus.WECHAT_LOGIN;
         this.openId = openId;
         this.name = name;
         this.name = name;
         this.gender = gender;
         this.iconUrl = iconUrl;
+    }
+
+    public String getUserId() {
+        return userId;
+    }
+
+    public void setUserId(String userId) {
+        this.userId = userId;
     }
 
     public String getOpenId() {
@@ -58,12 +68,20 @@ public class User {
         this.username = username;
     }
 
-    public String getPhoneNum() {
-        return phoneNum;
+    public String getPhone() {
+        return phone;
     }
 
-    public void setPhoneNum(String phoneNum) {
-        this.phoneNum = phoneNum;
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     public String getGender() {
@@ -80,5 +98,29 @@ public class User {
 
     public void setIconUrl(String iconUrl) {
         this.iconUrl = iconUrl;
+    }
+
+    public String getSignature() {
+        return signature;
+    }
+
+    public void setSignature(String signature) {
+        this.signature = signature;
+    }
+
+    public List<String> getFollowedUser() {
+        return followedUser;
+    }
+
+    public void setFollowedUser(List<String> followedUser) {
+        this.followedUser = followedUser;
+    }
+
+    public void follow(String userId, boolean follow){
+        if(follow){
+            getFollowedUser().add(userId);
+        }else {
+            getFollowedUser().remove(userId);
+        }
     }
 }

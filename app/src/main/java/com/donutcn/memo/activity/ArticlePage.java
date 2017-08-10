@@ -15,7 +15,6 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.donutcn.memo.R;
-import com.donutcn.memo.X5testActivity;
 import com.donutcn.memo.type.PublishType;
 import com.donutcn.memo.utils.DensityUtils;
 import com.donutcn.memo.utils.UserStatus;
@@ -35,7 +34,7 @@ public class ArticlePage extends AppCompatActivity implements View.OnClickListen
 
     private PublishType mType = PublishType.ARTICLE;
 
-    private String mContentUrl, mUsername, mIconUrl;
+    private String mContentUrl, mUsername, mIconUrl, mUserId;
     private int mUpvoteCount, mCommentCount;
     // comment height
     private int commentHeight;
@@ -46,6 +45,7 @@ public class ArticlePage extends AppCompatActivity implements View.OnClickListen
         setContentView(R.layout.activity_article_page);
         WindowUtils.setStatusBarColor(this, R.color.colorPrimary, true);
 
+        mUserId = getIntent().getStringExtra("userId");
         mContentUrl = getIntent().getStringExtra("url");
         mUsername = getIntent().getStringExtra("name");
         mIconUrl = getIntent().getStringExtra("userIcon");
@@ -54,13 +54,13 @@ public class ArticlePage extends AppCompatActivity implements View.OnClickListen
         mUpvoteCount = Integer.valueOf(getIntent().getStringExtra("upvote"));
         mCommentCount = Integer.valueOf(getIntent().getStringExtra("comment"));
         boolean self = getIntent().getBooleanExtra("self", false);
-
-        initView();
-        // set user icon.
         if (self) {
             mIconUrl = UserStatus.getCurrentUser().getIconUrl();
             mUsername = UserStatus.getCurrentUser().getName();
         }
+
+        initView();
+        // set user icon.
         if (mIconUrl != null && !mIconUrl.equals("")) {
             Glide.with(this).load(mIconUrl).centerCrop().into(mUserIcon);
         } else {
@@ -225,13 +225,22 @@ public class ArticlePage extends AppCompatActivity implements View.OnClickListen
                 startActivity(intent);
                 break;
             case R.id.interactive_bottom_upvote:
-                startActivity(new Intent(this, X5testActivity.class));
+
                 break;
             case R.id.interactive_bottom_comment:
 //                mScrollView.smoothScrollTo(0, commentHeight);
                 break;
             // top user icon.
             case R.id.author_info_container:
+                if(mUserId != null && !mUserId.equals("")){
+                    if(!mUserId.equals(UserStatus.getCurrentUser().getUserId())){
+                        Intent intent1 = new Intent(this, AuthorPage.class);
+                        intent1.putExtra("userId", mUserId);
+                        startActivity(intent1);
+                    } else {
+                        // Todo : open my own info page.
+                    }
+                }
                 break;
         }
     }

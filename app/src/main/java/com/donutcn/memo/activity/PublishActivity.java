@@ -713,6 +713,31 @@ public class PublishActivity extends AppCompatActivity implements View.OnClickLi
     }
 
     @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        mEditMode = intent.getBooleanExtra("editMode", false);
+        if(mEditMode){
+            mContentId = intent.getStringExtra("contentId");
+            pullContentInfo(mContentId);
+        } else {
+            PublishType type = (PublishType) intent.getSerializableExtra("type");
+            if (type != null) {
+                mSelectedType = type.toString();
+                mPublishType.setText(mSelectedType);
+            } else {
+                mSelectedType = SpfsUtils.readString(this, SpfsUtils.CACHE, "publishType", mSelectedType);
+                mTitleStr = SpfsUtils.readString(this, SpfsUtils.CACHE, "publishTitle", "");
+                mContentStr = SpfsUtils.readString(this, SpfsUtils.CACHE, "publishContent", "");
+                if (!isContentEmpty()) {
+                    mPublishType.setText(mSelectedType);
+                    mTitle.setText(mTitleStr);
+                    mContent.setHtml(mContentStr);
+                }
+            }
+        }
+    }
+
+    @Override
     protected void onStart() {
         super.onStart();
         EventBus.getDefault().register(this);

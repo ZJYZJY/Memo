@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 
@@ -17,8 +16,8 @@ import com.donutcn.memo.fragment.discover.DiscoverFragment;
 import com.donutcn.memo.fragment.home.HomeFragment;
 import com.donutcn.memo.helper.LoginHelper;
 import com.donutcn.memo.utils.HttpUtils;
+import com.donutcn.memo.utils.LogUtil;
 import com.donutcn.memo.utils.ToastUtil;
-import com.donutcn.memo.utils.UserStatus;
 import com.donutcn.memo.utils.WindowUtils;
 import com.donutcn.widgetlib.widget.CheckableImageButton;
 import com.umeng.socialize.UMShareAPI;
@@ -50,19 +49,25 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         if (getIntent().getBooleanExtra("unlogin", false)) {
             mDefaultItem = 1;
         } else {
+            // sync user info.
             getWindow().getDecorView().postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    HttpUtils.test().enqueue(new Callback<SimpleResponse>() {
+                    HttpUtils.syncUserInfo().enqueue(new Callback<SimpleResponse>() {
                         @Override
                         public void onResponse(Call<SimpleResponse> call, Response<SimpleResponse> response) {
                             if (response.body() != null) {
-                                // check if the cookie is out of date.
-                                if (response.body().unAuthorized()) {
-                                    Log.e("unAuthorized", response.body().toString());
+                                LogUtil.d("sync", response.body().toString());
+                                if(response.body().isOk()){
+                                    LoginHelper.syncUserInfo(MainActivity.this, response.body().getData());
+                                } else if (response.body().unAuthorized()) {
+                                    // check if the cookie is out of date.
+                                    LogUtil.e("unAuthorized", response.body().toString());
                                     ToastUtil.show(MainActivity.this, "登录授权过期，请重新登录");
                                     LoginHelper.logout(MainActivity.this);
                                 }
+                            } else {
+                                ToastUtil.show(MainActivity.this, "连接失败，服务器未知错误");
                             }
                         }
 
@@ -73,7 +78,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         }
                     });
                 }
-            }, 3000);
+            }, 1500);
         }
 
         mViewPager = (ViewPager) findViewById(R.id.main_viewpager);

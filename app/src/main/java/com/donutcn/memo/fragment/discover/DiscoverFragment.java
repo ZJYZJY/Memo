@@ -14,6 +14,7 @@ import android.widget.ImageView;
 import com.bumptech.glide.Glide;
 import com.donutcn.memo.R;
 import com.donutcn.memo.activity.AuthorPage;
+import com.donutcn.memo.activity.PersonalCenterActivity;
 import com.donutcn.memo.adapter.TabFragmentPagerAdapter;
 import com.donutcn.memo.event.LoginStateEvent;
 import com.donutcn.memo.event.ReceiveNewMessagesEvent;
@@ -57,8 +58,8 @@ public class DiscoverFragment extends Fragment implements OnTabSelectListener {
             @Override
             public void onClick(View v) {
                 if(!LoginHelper.ifRequestLogin(getContext(), "请先登录")){
-//                startActivity(new Intent(getContext(), PersonalCenterActivity.class));
-                    startActivity(new Intent(getContext(), AuthorPage.class));
+                startActivity(new Intent(getContext(), PersonalCenterActivity.class));
+//                    startActivity(new Intent(getContext(), AuthorPage.class));
                 }
             }
         });

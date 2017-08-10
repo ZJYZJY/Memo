@@ -105,7 +105,11 @@ public class MemoAdapter extends BasePublishAdapter<MemoAdapter.DefaultViewHolde
                 list.get(position).getName(), typeStr));
         Date date = StringUtil.string2Date(list.get(position).getTime());
         DateFormat dateFormat = new DynamicTimeFormat("%s");
-        holder.mTime.setText(dateFormat.format(date));
+        if(list.get(position).isPrivate()){
+            holder.mTime.setText(mContext.getString(R.string.placeholder_content_private, dateFormat.format(date)));
+        } else {
+            holder.mTime.setText(dateFormat.format(date));
+        }
 //        holder.mUpvote.setText(list.get(position).getUpVote());
 //        holder.mComment.setText(list.get(position).getComment());
 

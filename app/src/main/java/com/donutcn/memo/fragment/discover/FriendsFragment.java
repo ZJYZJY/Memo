@@ -221,7 +221,7 @@ public class FriendsFragment extends BaseScrollFragment {
 
     @Subscribe
     public void onRequestRefreshEvent(RequestRefreshEvent event){
-        if(event.getRefreshPosition() == 3){
+        if(event.getRefreshPosition() == 5){
             mHaoYe_rv.scrollToPosition(0);
             mRefreshLayout.autoRefresh(0);
         }

@@ -19,6 +19,10 @@ public class BriefContent {
     private String id;
 
     @Expose
+    @SerializedName(value = "user_id")
+    private String userId;
+
+    @Expose
     @SerializedName(value = "name")
     private String name;
 
@@ -45,6 +49,10 @@ public class BriefContent {
     @Expose
     @SerializedName(value = "type")
     private String type;
+
+    @Expose
+    @SerializedName(value = "is_private")
+    private int isPrivate;
 
     @Expose
     @SerializedName(value = "read_total")
@@ -87,6 +95,10 @@ public class BriefContent {
         return id;
     }
 
+    public String getUserId() {
+        return userId;
+    }
+
     public String getUrl() {
         return url;
     }
@@ -113,6 +125,10 @@ public class BriefContent {
 
     public String getType() {
         return type;
+    }
+
+    public boolean isPrivate() {
+        return isPrivate == 1;
     }
 
     public String getReadCount() {
@@ -159,12 +175,14 @@ public class BriefContent {
         try {
             json.put("article_id", id);
             json.put("head_portrait", userIcon);
+            json.put("user_id", userId);
             json.put("name", name);
             json.put("url", url);
             json.put("title", title);
             json.put("create_time", time);
             json.put("content", content);
             json.put("type", type);
+            json.put("is_private", isPrivate);
             json.put("read_total", readCount);
             json.put("praise", upVote);
             json.put("comment_total", comment);

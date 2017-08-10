@@ -1,6 +1,7 @@
 package com.donutcn.memo.activity;
 
 import android.app.FragmentTransaction;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Handler;
@@ -23,7 +24,7 @@ import com.donutcn.memo.fragment.SplashFragment;
 import com.donutcn.memo.helper.LoginHelper;
 import com.donutcn.memo.utils.CountDownTimerUtils;
 import com.donutcn.memo.utils.HttpUtils;
-import com.donutcn.memo.utils.SpfsUtils;
+import com.donutcn.memo.utils.LogUtil;
 import com.donutcn.memo.utils.ToastUtil;
 import com.donutcn.memo.utils.UserStatus;
 import com.donutcn.memo.utils.WindowUtils;
@@ -49,6 +50,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     private EditText mRegPhone, mRegPassword, mRegCode;
     private RelativeLayout mLoginContainer;
     private SplashFragment splashFragment;
+    private ProgressDialog mDialog;
 
     private CountDownTimerUtils authCodeTimer;
     private Handler mSplashHandler = new Handler();
@@ -66,6 +68,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             showSplashFragment();
         }
         initView();
+        mDialog = new ProgressDialog(this);
+        mDialog.setMessage("正在登录中...");
     }
 
     public void initView() {
@@ -98,25 +102,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         @Override
         public void run() {
             if(loginState){
-                int loginType = SpfsUtils.readInt(
-                        getApplicationContext(), SpfsUtils.USER, "login_type", UserStatus.PHONE_LOGIN);
-                String phoneNumber = null;
-                if(loginType == UserStatus.PHONE_LOGIN){
-                    phoneNumber = SpfsUtils.readString(
-                            getApplicationContext(), SpfsUtils.USER, "phoneNumber", "");
-                }
-                String name = SpfsUtils.readString(
-                        getApplicationContext(), SpfsUtils.USER, "name", "");
-                String gender = SpfsUtils.readString(
-                        getApplicationContext(), SpfsUtils.USER, "gender", "");
-                String iconurl = SpfsUtils.readString(
-                        getApplicationContext(), SpfsUtils.USER, "iconurl", "");
-                Map<String, String> data = new HashMap<>();
-                data.put("phone", phoneNumber);
-                data.put("name", name);
-                data.put("gender", gender);
-                data.put("iconurl", iconurl);
-                LoginHelper.login(getApplicationContext(), loginType, data);
+                LoginHelper.autoLogin(LoginActivity.this);
                 startActivity(new Intent(LoginActivity.this, MainActivity.class));
             }else {
                 Intent intent = getIntent();
@@ -186,16 +172,16 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         Map<String, String> data = new HashMap<>();
         data.put("username", username);
         data.put("password", password);
+        mDialog.show();
         HttpUtils.login(UserStatus.PHONE_LOGIN, data).enqueue(new Callback<SimpleResponse>() {
             @Override
             public void onResponse(Call<SimpleResponse> call, Response<SimpleResponse> response) {
+                mDialog.cancel();
                 if (response.body() != null && response.body().isOk()) {
                     if (response.body().isOk()) {
                         ToastUtil.show(LoginActivity.this, "登录成功");
-                        Map<String, String> data = new HashMap<>();
-                        data.put("phone", username);
-                        data.put("iconurl", (String) response.body().getField("head_portrait"));
-                        LoginHelper.login(getApplicationContext(), UserStatus.PHONE_LOGIN, data);
+                        LoginHelper.login(getApplicationContext(),
+                                UserStatus.PHONE_LOGIN, response.body().getData());
                         Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                         startActivity(intent);
@@ -209,6 +195,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
             @Override
             public void onFailure(Call<SimpleResponse> call, Throwable t) {
+                mDialog.cancel();
                 ToastUtil.show(LoginActivity.this, "登录连接失败");
                 t.printStackTrace();
             }
@@ -229,16 +216,16 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             ToastUtil.show(this, "密码不能为空");
             return;
         }
+        mDialog.show();
         HttpUtils.modifyUser(phoneNumber, authCode, password, ACTION_REGISTER).enqueue(new Callback<SimpleResponse>() {
             @Override
             public void onResponse(Call<SimpleResponse> call, Response<SimpleResponse> response) {
+                mDialog.cancel();
                 if(response.body() != null){
                     if(response.body().isOk()){
                         ToastUtil.show(LoginActivity.this, "注册成功");
-                        Map<String, String> data = new HashMap<>();
-                        data.put("phone", phoneNumber);
-                        data.put("iconurl", (String) response.body().getField("head_portrait"));
-                        LoginHelper.login(getApplicationContext(), UserStatus.PHONE_LOGIN, data);
+                        LoginHelper.login(getApplicationContext(),
+                                UserStatus.PHONE_LOGIN, response.body().getData());
                         Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                         startActivity(intent);
@@ -252,6 +239,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
             @Override
             public void onFailure(Call<SimpleResponse> call, Throwable t) {
+                mDialog.cancel();
                 ToastUtil.show(LoginActivity.this, "注册连接失败");
                 t.printStackTrace();
             }
@@ -316,6 +304,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                     attemptToRegister();
                 break;
             case R.id.login_with_wechat:
+                mDialog.show();
                 UMShareAPI.get(this).getPlatformInfo(this, SHARE_MEDIA.WEIXIN, umAuthListener);
                 break;
             case R.id.enter_without_login:
@@ -339,14 +328,16 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             //授权开始的回调
         }
         @Override
-        public void onComplete(SHARE_MEDIA platform, int action, final Map<String, String> data) {
+        public void onComplete(SHARE_MEDIA platform, int action, Map<String, String> data) {
             HttpUtils.login(UserStatus.WECHAT_LOGIN, data).enqueue(new Callback<SimpleResponse>() {
                 @Override
                 public void onResponse(Call<SimpleResponse> call, Response<SimpleResponse> response) {
+                    mDialog.cancel();
+                    LogUtil.d("wechat_login", response.body().toString());
                     if(response.body() != null && response.body().isOk()){
+                        LoginHelper.login(getApplicationContext(),
+                                UserStatus.WECHAT_LOGIN, response.body().getData());
                         ToastUtil.show(LoginActivity.this, "登录成功");
-                        data.put("name", (String) response.body().getField("name"));
-                        LoginHelper.login(getApplicationContext(), UserStatus.WECHAT_LOGIN, data);
                         Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                         startActivity(intent);
@@ -357,6 +348,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
                 @Override
                 public void onFailure(Call<SimpleResponse> call, Throwable t) {
+                    mDialog.cancel();
                     t.printStackTrace();
                     ToastUtil.show(LoginActivity.this, "连接失败，请检查你的网络");
                 }
@@ -365,12 +357,14 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
         @Override
         public void onError(SHARE_MEDIA platform, int action, Throwable t) {
+            mDialog.cancel();
             t.printStackTrace();
             Toast.makeText( getApplicationContext(), "授权失败", Toast.LENGTH_SHORT).show();
         }
 
         @Override
         public void onCancel(SHARE_MEDIA platform, int action) {
+            mDialog.cancel();
             Toast.makeText( getApplicationContext(), "授权取消", Toast.LENGTH_SHORT).show();
         }
     };

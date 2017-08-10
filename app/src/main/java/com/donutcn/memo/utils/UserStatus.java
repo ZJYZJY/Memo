@@ -1,17 +1,12 @@
 package com.donutcn.memo.utils;
 
 import android.content.Context;
-import android.content.Intent;
 
 import com.donutcn.memo.App;
-import com.donutcn.memo.ContactDao;
-import com.donutcn.memo.DaoSession;
-import com.donutcn.memo.activity.LoginActivity;
 import com.donutcn.memo.entity.User;
-import com.donutcn.memo.event.LoginStateEvent;
 
-import org.greenrobot.eventbus.EventBus;
-
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Map;
 
 /**
@@ -26,13 +21,40 @@ public class UserStatus {
 
     private static User USER = null;
 
-    public static void setCurrentUser(String phoneNum, String iconUrl) {
-        USER = new User(phoneNum, iconUrl);
+    private static int loginType;
+
+    public static void setCurrentUser(Map<String, String> data) {
+        if (USER == null)
+            USER = new User();
+        USER.setUserId(data.get("user_id"));
+        USER.setOpenId(data.get("openid"));
+        USER.setName(data.get("name"));
+        USER.setGender(data.get("sex"));
+        USER.setIconUrl(data.get("head_portrait"));
+        USER.setPhone(data.get("tel_number"));
+        USER.setUsername(data.get("username"));
+        USER.setSignature(data.get("self_introduction"));
+        USER.setEmail(data.get("email"));
+        String str = data.get("concern");
+        if(str != null && !str.equals("")) {
+            USER.setFollowedUser(Arrays.asList(str.split("-")));
+        } else {
+            USER.setFollowedUser(new ArrayList<String>());
+        }
     }
 
-    public static void setCurrentUser(String openId, String name, String gender, String iconUrl) {
-        USER = new User(openId, name, gender, iconUrl);
-    }
+//    public static void setCurrentUser(Map<String, String> data) {
+//        if (USER == null)
+//            USER = new User();
+//        USER.setOpenId(data.get("openid"));
+//        USER.setName(data.get("name"));
+//        USER.setGender(data.get("gender"));
+//        USER.setIconUrl(data.get("iconurl"));
+//        USER.setPhone(data.get("phone"));
+//        USER.setUsername(data.get("username"));
+//        USER.setSignature(data.get("signature"));
+//        USER.setEmail(data.get("email"));
+//    }
 
     public static User getCurrentUser() {
         return USER;

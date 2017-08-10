@@ -17,6 +17,8 @@ public class SpfsUtils {
     }
 
     public static void write(Context context, String type, String key, Object value) {
+        if(value == null)
+            return;
         SharedPreferences spfs = context.getApplicationContext().getSharedPreferences(ROOT_NAME + type, Context.MODE_PRIVATE);
         Editor editor = spfs.edit();
         if (value instanceof String) {

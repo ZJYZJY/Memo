@@ -166,6 +166,7 @@ public class HttpUtils {
         /**
          * get publish content by id.
          */
+        @Deprecated
         @GET(APIPath.GET_CONTENT)
         Call<ContentResponse> getContentById(@Path("id") String id);
 
@@ -206,6 +207,18 @@ public class HttpUtils {
         @GET(APIPath.MODIFY_MY_CONTENT)
         Call<ContentResponse> modifyMyContent(@Path("id") String id);
 
+        @GET(APIPath.SYNC_USER_INFO)
+        Call<SimpleResponse> syncUserInfo();
+
+        @POST(APIPath.MODIFY_USER_INFO)
+        Call<SimpleResponse> modifyUserInfo(@Body RequestBody info);
+
+        @GET(APIPath.FOLLOW_USER)
+        Call<SimpleResponse> follow(@Path("userId") String userId, @Path("action") int action);
+
+        @GET(APIPath.GET_USER_INFO)
+        Call<SimpleResponse> getUserById(@Path("userId") String userId);
+
         /**
          * cookie test.
          */
@@ -215,36 +228,25 @@ public class HttpUtils {
 
     private class APIPath {
         private static final String LOGIN = "login_api";
-
         private static final String GET_AUTH_CODE = "login_api/authcode_api";
-
         private static final String REGISTER = "login_api/register";
-
         private static final String MODIFY_PASSWORD = "login_api/edituser_api";
-
         private static final String LOGOUT = "login_api/login_out_api";
-
         private static final String GET_UPLOAD_TOKEN = "private_api/upload_api";
-
         private static final String PUBLISH_CONTENT = "private_api/create_article_api";
-
         private static final String GET_RECOMMEND = "index_api/index/{action}/{timestamp}";
-
         private static final String SEARCH_CONTENT = "index_api/search_api";
-
         private static final String GET_CONTENT = "index_api/see_article_api/{id}";
-
         private static final String SET_CONTENT_PRIVATE = "private_api/is_private_api";
-
         private static final String COMPLETE_INFO = "private_api/article_field_api";
-
         private static final String GET_MY_CONTENT = "private_api/index/{action}/{timestamp}";
-
         private static final String MATCH_CONTACTS = "private_api/myfriend_api";
-
         private static final String DELETE_CONTENT = "private_api/delete_article_api/{id}";
-
         private static final String MODIFY_MY_CONTENT = "private_api/the_article_api/{id}";
+        private static final String SYNC_USER_INFO = "user_api/get_myinfo_api";
+        private static final String MODIFY_USER_INFO = "user_api/edit_userinfo_api";
+        private static final String FOLLOW_USER = "user_api/add_concern_api/{userId}/{action}";
+        private static final String GET_USER_INFO = "index_api/app_myindex_api/{userId}";
     }
 
     public static Call<SimpleResponse> login(int loginType, Map<String, String> data) {
@@ -344,6 +346,7 @@ public class HttpUtils {
         return create().searchContent(request);
     }
 
+    @Deprecated
     public static Call<ContentResponse> getContentById(String id){
         return create().getContentById(id);
     }
@@ -429,6 +432,32 @@ public class HttpUtils {
 
     public static Call<ContentResponse> modifyMyContent(String id){
         return create().modifyMyContent(id);
+    }
+
+    public static Call<SimpleResponse> syncUserInfo(){
+        return create().syncUserInfo();
+    }
+
+    public static Call<SimpleResponse> modifyUserInfo(Map<String, String> info){
+        JSONObject json = new JSONObject();
+        try {
+            json.put("name", info.get("name"));
+            json.put("head_portrait", info.get("head_portrait"));
+            json.put("self_introduction", info.get("self_introduction"));
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        RequestBody request = RequestBody
+                .create(okhttp3.MediaType.parse("application/json; charset=utf-8"), json.toString());
+        return create().modifyUserInfo(request);
+    }
+
+    public static Call<SimpleResponse> follow(String userId, int action){
+        return create().follow(userId, action);
+    }
+
+    public static Call<SimpleResponse> getUserById(String userId){
+        return create().getUserById(userId);
     }
 
     public static Call<SimpleResponse> test() {

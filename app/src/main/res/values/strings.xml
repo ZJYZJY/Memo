@@ -29,6 +29,7 @@
     <string name="placeholder_search_item_author">%1$s %2$s</string>
     <string name="placeholder_publish_author_type">%1$s 发布%2$s</string>
     <string name="placeholder_share_title">《%1$s》</string>
+    <string name="placeholder_content_private">私密 / %1$s </string>
 
     <string name="placeholder_message_resume">新增 %1$d 人投递简历，目前已收到 %2$d 份简历！</string>
     <string name="placeholder_message_enroll">新增 %1$d 人报名参加活动，目前已收到 %2$d 人报名！</string>

@@ -41,7 +41,7 @@
             android:layout_below="@+id/personal_center_toolbar"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="@dimen/margin_top_img"
-            android:src="@mipmap/user_icon" />
+            android:src="@mipmap/user_default_icon" />
 
         <TextView
             android:id="@+id/personal_center_user_name"
