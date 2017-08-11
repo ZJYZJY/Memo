@@ -40,7 +40,7 @@
             android:layout_width="@dimen/icon_toolbar_user"
             android:layout_height="@dimen/icon_toolbar_user"
             android:layout_gravity="center_vertical"
-            android:src="@mipmap/user_icon"
+            android:src="@mipmap/user_default_icon"
             app:civ_border_color="@color/border_gray"
             app:civ_border_width="@dimen/px_line" />
 

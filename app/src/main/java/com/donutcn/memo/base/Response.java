@@ -29,6 +29,9 @@ public abstract class Response<T> {
     /** Unauthorized request. */
     private static final int UNAUTHORIZED = 401;
 
+    /** Not Found . */
+    private static final int NOT_FOUND = 404;
+
     public boolean isOk() {
         return code == SUCCESS;
     }
@@ -39,6 +42,10 @@ public abstract class Response<T> {
 
     public boolean isFail(){
         return code == FAIL;
+    }
+
+    public boolean notFound(){
+        return code == NOT_FOUND;
     }
 
     public int getCode(){

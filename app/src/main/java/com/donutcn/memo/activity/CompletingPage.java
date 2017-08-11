@@ -205,13 +205,14 @@ public class CompletingPage extends AppCompatActivity {
             public void onResponse(Call<SimpleResponse> call, Response<SimpleResponse> response) {
                 if (response.body() != null) {
                     if(response.body().isOk()){
-                        mContentId = String.valueOf(response.body().getField("article_id"));
+                        mContentId = response.body().getField("article_id");
                         Intent mShareIntent = new Intent(mContext, SocialShareActivity.class);
                         mShareIntent.putExtra("contentId", mContentId);
-                        mShareIntent.putExtra("contentUrl", (String) response.body().getField("url"));
+                        mShareIntent.putExtra("contentUrl", String.valueOf(response.body().getField("url")));
                         mShareIntent.putExtra("title", (String) response.body().getField("title"));
                         mShareIntent.putExtra("content", (String) response.body().getField("content"));
                         mShareIntent.putExtra("picUrl", (String) response.body().getField("picurl"));
+                        mShareIntent.putExtra("isPrivate", Integer.valueOf((String) response.body().getField("is_private")));
                         completeInfo(mShareIntent);
                     }
                 } else {

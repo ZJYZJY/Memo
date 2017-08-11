@@ -6,7 +6,8 @@ import com.donutcn.memo.App;
 import com.donutcn.memo.entity.User;
 
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -35,26 +36,16 @@ public class UserStatus {
         USER.setUsername(data.get("username"));
         USER.setSignature(data.get("self_introduction"));
         USER.setEmail(data.get("email"));
-        String str = data.get("concern");
+        String str = data.get("follow");
         if(str != null && !str.equals("")) {
-            USER.setFollowedUser(Arrays.asList(str.split("-")));
+            String[] followed = str.split("-");
+            List<String> list = new ArrayList<>();
+            Collections.addAll(list, followed);
+            USER.setFollowedUser(list);
         } else {
             USER.setFollowedUser(new ArrayList<String>());
         }
     }
-
-//    public static void setCurrentUser(Map<String, String> data) {
-//        if (USER == null)
-//            USER = new User();
-//        USER.setOpenId(data.get("openid"));
-//        USER.setName(data.get("name"));
-//        USER.setGender(data.get("gender"));
-//        USER.setIconUrl(data.get("iconurl"));
-//        USER.setPhone(data.get("phone"));
-//        USER.setUsername(data.get("username"));
-//        USER.setSignature(data.get("signature"));
-//        USER.setEmail(data.get("email"));
-//    }
 
     public static User getCurrentUser() {
         return USER;

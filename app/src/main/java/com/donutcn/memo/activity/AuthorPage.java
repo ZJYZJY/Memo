@@ -16,6 +16,7 @@ import com.donutcn.memo.R;
 import com.donutcn.memo.adapter.MemoAdapter;
 import com.donutcn.memo.entity.BriefContent;
 import com.donutcn.memo.entity.SimpleResponse;
+import com.donutcn.memo.event.ChangeContentEvent;
 import com.donutcn.memo.helper.LoginHelper;
 import com.donutcn.memo.listener.OnItemClickListener;
 import com.donutcn.memo.type.ItemLayoutType;
@@ -28,6 +29,7 @@ import com.donutcn.memo.utils.WindowUtils;
 import com.donutcn.memo.view.ListViewDecoration;
 import com.google.gson.internal.LinkedTreeMap;
 
+import org.greenrobot.eventbus.EventBus;
 import org.json.JSONException;
 
 import java.util.List;
@@ -123,7 +125,8 @@ public class AuthorPage extends AppCompatActivity implements OnItemClickListener
                             LogUtil.d("follow", response.body().toString());
                             if(response.body().isOk()){
                                 ToastUtil.show(AuthorPage.this, copyAction == 1 ? "关注成功" : "取消关注成功");
-                                UserStatus.getCurrentUser().follow(mUserId, copyAction == 1);
+                                UserStatus.getCurrentUser().follow(AuthorPage.this, mUserId, copyAction == 1);
+                                EventBus.getDefault().postSticky(new ChangeContentEvent(mUserId, copyAction == 1 ? 2 : 1));
                             } else if (response.body().unAuthorized()) {
                                 ToastUtil.show(AuthorPage.this, "登录授权过期，请重新登录");
                                 LoginHelper.logout(AuthorPage.this);
@@ -162,7 +165,8 @@ public class AuthorPage extends AppCompatActivity implements OnItemClickListener
     public void loadData(List<LinkedTreeMap> data){
         WindowUtils.setToolBarTitle(this, (String) mUserInfo.get("name"));
         mAuthorName.setText((String) mUserInfo.get("name"));
-        mAuthorSign.setText((String) mUserInfo.get("self_introduction"));
+        String signature = (String) mUserInfo.get("self_introduction");
+        mAuthorSign.setText(signature == null ? "这个人很懒什么也没写~" : signature);
         Glide.with(this).load((String) mUserInfo.get("head_portrait")).centerCrop().into(mUserIcon);
 
         try {
@@ -170,7 +174,6 @@ public class AuthorPage extends AppCompatActivity implements OnItemClickListener
         } catch (JSONException e) {
             e.printStackTrace();
         }
-
         MemoAdapter adapter = new MemoAdapter(this, mList, ItemLayoutType.TYPE_TAG);
         adapter.setOnItemClickListener(this);
         mRecyclerView.setAdapter(adapter);

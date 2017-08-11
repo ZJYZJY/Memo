@@ -23,7 +23,7 @@
     <string name="toast_min_vote_items">至少有两个投票选项</string>
 
     <!--placeholder-->
-    <string name="placeholder_author_publish_count">已发布好页（%1$d）</string>
+    <string name="placeholder_author_publish_count">已发布内容（%1$d）</string>
     <string name="placeholder_article_read_count">阅读 %1$s</string>
     <string name="placeholder_search_item_info">阅读 %1$s - 评论 %2$s - 喜欢 %3$s</string>
     <string name="placeholder_search_item_author">%1$s %2$s</string>

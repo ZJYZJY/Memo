@@ -19,6 +19,7 @@ import com.donutcn.memo.entity.ArrayResponse;
 import com.donutcn.memo.entity.BriefContent;
 import com.donutcn.memo.entity.SimpleResponse;
 import com.donutcn.memo.event.ReceiveNewMessagesEvent;
+import com.donutcn.memo.event.ChangeContentEvent;
 import com.donutcn.memo.event.RequestRefreshEvent;
 import com.donutcn.memo.helper.ShareHelper;
 import com.donutcn.memo.type.ItemLayoutType;
@@ -119,7 +120,7 @@ public class MemoFragment extends BaseScrollFragment {
     }
 
     public void Refresh() {
-        HttpUtils.getMyContentList("down", mList.size() == 0 ? 0 : mList.get(0).getTimeStamp())
+        HttpUtils.getContentList(0, "down", mList.size() == 0 ? 0 : mList.get(0).getTimeStamp())
                 .enqueue(new Callback<ArrayResponse<BriefContent>>() {
             @Override
             public void onResponse(Call<ArrayResponse<BriefContent>> call, Response<ArrayResponse<BriefContent>> response) {
@@ -146,7 +147,7 @@ public class MemoFragment extends BaseScrollFragment {
     }
 
     public void LoadMore() {
-        HttpUtils.getMyContentList("up", mList.get(mList.size() - 1).getTimeStamp())
+        HttpUtils.getContentList(0, "up", mList.get(mList.size() - 1).getTimeStamp())
                 .enqueue(new Callback<ArrayResponse<BriefContent>>() {
             @Override
             public void onResponse(Call<ArrayResponse<BriefContent>> call, Response<ArrayResponse<BriefContent>> response) {
@@ -240,6 +241,7 @@ public class MemoFragment extends BaseScrollFragment {
         public void onItemClick(int position) {
             EventBus.getDefault().post(new ReceiveNewMessagesEvent(0, position));
             Intent intent = new Intent(mContext, ArticlePage.class);
+            intent.putExtra("contentId", mList.get(position).getId());
             intent.putExtra("url", mList.get(position).getUrl());
             intent.putExtra("type", mList.get(position).getType());
             intent.putExtra("upvote", mList.get(position).getUpVote());
@@ -309,6 +311,7 @@ public class MemoFragment extends BaseScrollFragment {
                 LogUtil.d("delete", response.body().getMessage());
                 if(response.body() != null){
                     if(response.body().isOk()){
+                        EventBus.getDefault().postSticky(new ChangeContentEvent(mList.get(position).getId(), 0));
                         mList.remove(position);
                         mAdapter.notifyItemRemoved(position);
                         ToastUtil.show(mContext, "删除成功");

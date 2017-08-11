@@ -31,7 +31,7 @@ public class SearchActivity extends AppCompatActivity implements OnItemClickList
     private EditText mSearch_et;
     private SearchListAdapter mAdapter;
 
-    private ArrayList<BriefContent> list;
+    private ArrayList<BriefContent> mList;
     private String mKeyWords;
 
     @Override
@@ -45,8 +45,8 @@ public class SearchActivity extends AppCompatActivity implements OnItemClickList
 
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         mRecyclerView.addItemDecoration(new ListViewDecoration(this, R.dimen.item_decoration_height, 8, 8));
-        list = new ArrayList<>();
-        mAdapter = new SearchListAdapter(SearchActivity.this, list);
+        mList = new ArrayList<>();
+        mAdapter = new SearchListAdapter(SearchActivity.this, mList);
         mAdapter.setOnItemClickListener(SearchActivity.this);
         mRecyclerView.setAdapter(mAdapter);
 
@@ -69,8 +69,8 @@ public class SearchActivity extends AppCompatActivity implements OnItemClickList
             @Override
             public void onResponse(Call<ArrayResponse<BriefContent>> call, Response<ArrayResponse<BriefContent>> response) {
                 if(response.body() != null && response.body().isOk()){
-                    list.clear();
-                    list.addAll(response.body().getData());
+                    mList.clear();
+                    mList.addAll(response.body().getData());
                     mAdapter.setKeyword(mKeyWords);
                     mAdapter.notifyDataSetChanged();
                 }else {
@@ -89,7 +89,13 @@ public class SearchActivity extends AppCompatActivity implements OnItemClickList
     @Override
     public void onItemClick(int position) {
         Intent intent = new Intent(this, ArticlePage.class);
-        intent.putExtra("contentId", list.get(position).getId());
+        intent.putExtra("userId", mList.get(position).getUserId());
+        intent.putExtra("url", mList.get(position).getUrl());
+        intent.putExtra("name", mList.get(position).getName());
+        intent.putExtra("userIcon", mList.get(position).getUserIcon());
+        intent.putExtra("type", mList.get(position).getType());
+        intent.putExtra("upvote", mList.get(position).getUpVote());
+        intent.putExtra("comment", mList.get(position).getComment());
         startActivity(intent);
     }
 
@@ -99,7 +105,7 @@ public class SearchActivity extends AppCompatActivity implements OnItemClickList
 
     public void onCancel(View view){
         mSearch_et.getText().clear();
-        list.clear();
+        mList.clear();
         mAdapter.notifyDataSetChanged();
         WindowUtils.toggleKeyboard(this, mSearch_et, true);
     }

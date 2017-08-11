@@ -75,17 +75,21 @@ public class LoginHelper {
     }
 
     private static void writeUserPreference(Context context, Map<String, String> data){
+        SpfsUtils.write(context, SpfsUtils.USER, "userId", data.get("user_id"));
         SpfsUtils.write(context, SpfsUtils.USER, "name", data.get("name"));
         SpfsUtils.write(context, SpfsUtils.USER, "gender", data.get("sex"));
         SpfsUtils.write(context, SpfsUtils.USER, "email", data.get("email"));
-        SpfsUtils.write(context, SpfsUtils.USER, "iconurl", data.get("head_portrait"));
+        SpfsUtils.write(context, SpfsUtils.USER, "iconUrl", data.get("head_portrait"));
         SpfsUtils.write(context, SpfsUtils.USER, "phone", data.get("tel_number"));
         SpfsUtils.write(context, SpfsUtils.USER, "username", data.get("username"));
         SpfsUtils.write(context, SpfsUtils.USER, "signature", data.get("self_introduction"));
+        SpfsUtils.write(context, SpfsUtils.USER, "follow", data.get("follow"));
     }
 
     private static Map<String, String> readUserPreference(Context context){
         Map<String, String> data = new HashMap<>();
+        data.put("user_id", SpfsUtils.readString(
+                context.getApplicationContext(), SpfsUtils.USER, "userId", ""));
         data.put("name", SpfsUtils.readString(
                 context.getApplicationContext(), SpfsUtils.USER, "name", ""));
         data.put("sex", SpfsUtils.readString(
@@ -93,13 +97,15 @@ public class LoginHelper {
         data.put("email", SpfsUtils.readString(
                 context.getApplicationContext(), SpfsUtils.USER, "email", ""));
         data.put("head_portrait", SpfsUtils.readString(
-                context.getApplicationContext(), SpfsUtils.USER, "iconurl", ""));
+                context.getApplicationContext(), SpfsUtils.USER, "iconUrl", ""));
         data.put("tel_number", SpfsUtils.readString(
                 context.getApplicationContext(), SpfsUtils.USER, "phone", ""));
         data.put("username", SpfsUtils.readString(
                 context.getApplicationContext(), SpfsUtils.USER, "username", ""));
         data.put("self_introduction", SpfsUtils.readString(
                 context.getApplicationContext(), SpfsUtils.USER, "signature", ""));
+        data.put("follow", SpfsUtils.readString(
+                context.getApplicationContext(), SpfsUtils.USER, "follow", ""));
         return data;
     }
 }

@@ -1,5 +1,10 @@
 package com.donutcn.memo.entity;
 
+import android.content.Context;
+
+import com.donutcn.memo.utils.LogUtil;
+import com.donutcn.memo.utils.SpfsUtils;
+
 import java.util.List;
 
 /**
@@ -21,20 +26,6 @@ public class User {
     private List<String> followedUser;
 
     public User(){}
-
-    public User(String phone, String name, String iconUrl) {
-        this.phone = phone;
-        this.name = name;
-        this.iconUrl = iconUrl;
-    }
-
-    public User(String openId, String name, String gender, String iconUrl){
-        this.openId = openId;
-        this.name = name;
-        this.name = name;
-        this.gender = gender;
-        this.iconUrl = iconUrl;
-    }
 
     public String getUserId() {
         return userId;
@@ -116,11 +107,20 @@ public class User {
         this.followedUser = followedUser;
     }
 
-    public void follow(String userId, boolean follow){
+    public void follow(Context context, String userId, boolean follow){
         if(follow){
             getFollowedUser().add(userId);
+            String str = SpfsUtils.readString(
+                    context.getApplicationContext(), SpfsUtils.USER, "follow", "");
+            SpfsUtils.write(context, SpfsUtils.USER, "follow", str + userId + "-");
+            LogUtil.d("followed_cache", "followed:" + str + userId + "-");
         }else {
             getFollowedUser().remove(userId);
+            String str = SpfsUtils.readString(
+                    context.getApplicationContext(), SpfsUtils.USER, "follow", "");
+            SpfsUtils.write(context, SpfsUtils.USER, "follow",
+                    str.substring(0, str.length() - userId.length() - 1));
+            LogUtil.d("followed_cache", "followed:" + str.substring(0, str.length() - userId.length() - 1));
         }
     }
 }

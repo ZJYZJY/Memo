@@ -15,13 +15,23 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.donutcn.memo.R;
+import com.donutcn.memo.entity.SimpleResponse;
+import com.donutcn.memo.event.ChangeContentEvent;
 import com.donutcn.memo.type.PublishType;
 import com.donutcn.memo.utils.DensityUtils;
+import com.donutcn.memo.utils.HttpUtils;
+import com.donutcn.memo.utils.ToastUtil;
 import com.donutcn.memo.utils.UserStatus;
 import com.donutcn.memo.utils.WindowUtils;
 import com.tencent.smtt.sdk.WebSettings;
 import com.tencent.smtt.sdk.WebView;
 import com.tencent.smtt.sdk.WebViewClient;
+
+import org.greenrobot.eventbus.EventBus;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class ArticlePage extends AppCompatActivity implements View.OnClickListener {
 
@@ -34,7 +44,7 @@ public class ArticlePage extends AppCompatActivity implements View.OnClickListen
 
     private PublishType mType = PublishType.ARTICLE;
 
-    private String mContentUrl, mUsername, mIconUrl, mUserId;
+    private String mContentId, mContentUrl, mUsername, mIconUrl, mUserId;
     private int mUpvoteCount, mCommentCount;
     // comment height
     private int commentHeight;
@@ -45,6 +55,37 @@ public class ArticlePage extends AppCompatActivity implements View.OnClickListen
         setContentView(R.layout.activity_article_page);
         WindowUtils.setStatusBarColor(this, R.color.colorPrimary, true);
 
+        mContentId = getIntent().getStringExtra("contentId");
+        HttpUtils.verifyContentById(mContentId).enqueue(new Callback<SimpleResponse>() {
+            @Override
+            public void onResponse(Call<SimpleResponse> call, Response<SimpleResponse> response) {
+                if(response.body() != null){
+                    if(response.body().isOk()){
+                        initView();
+                        showContent();
+                    } else if(response.body().notFound()){
+                        ToastUtil.show(ArticlePage.this, "该文章不存在，或已经被删除");
+                        EventBus.getDefault().postSticky(new ChangeContentEvent(mContentId, 0));
+                        finish();
+                    } else {
+                        ToastUtil.show(ArticlePage.this, "连接失败，服务器未知错误");
+                    }
+                } else {
+                    ToastUtil.show(ArticlePage.this, "连接失败，服务器未知错误");
+                }
+            }
+
+            @Override
+            public void onFailure(Call<SimpleResponse> call, Throwable t) {
+                t.printStackTrace();
+                ToastUtil.show(ArticlePage.this, "连接失败，请检查你的网络");
+            }
+        });
+
+
+    }
+
+    public void initView() {
         mUserId = getIntent().getStringExtra("userId");
         mContentUrl = getIntent().getStringExtra("url");
         mUsername = getIntent().getStringExtra("name");
@@ -59,41 +100,28 @@ public class ArticlePage extends AppCompatActivity implements View.OnClickListen
             mUsername = UserStatus.getCurrentUser().getName();
         }
 
-        initView();
+        mName = (TextView) findViewById(R.id.article_author_name);
+        mUserIcon = (ImageView) findViewById(R.id.article_author_icon);
+
+        mWant = (TextView) findViewById(R.id.interactive_bottom_want);
+        mUpvote = (TextView) findViewById(R.id.interactive_upvote_count);
+        mComment = (TextView) findViewById(R.id.interactive_comment_count);
+        mInteractive = (Button) findViewById(R.id.interactive);
+        mName.setText(mUsername);
+        mUpvote.setText(String.valueOf(mUpvoteCount));
+        mComment.setText(String.valueOf(mCommentCount));
+
+        findViewById(R.id.interactive_bottom_publish).setOnClickListener(this);
+        findViewById(R.id.interactive_bottom_upvote).setOnClickListener(this);
+        findViewById(R.id.interactive_bottom_comment).setOnClickListener(this);
+        findViewById(R.id.author_info_container).setOnClickListener(this);
+
         // set user icon.
         if (mIconUrl != null && !mIconUrl.equals("")) {
             Glide.with(this).load(mIconUrl).centerCrop().into(mUserIcon);
         } else {
             mUserIcon.setImageResource(R.mipmap.user_default_icon);
         }
-        showContent();
-    }
-
-    /**
-     * create a bottom sheet dialog.
-     */
-    private void showBSDialog(@LayoutRes int layout) {
-        dialog = new BottomSheetDialog(this);
-        final View view = LayoutInflater.from(this).inflate(layout, null);
-        dialog.setContentView(view);
-        View parent = (View) view.getParent();
-        behavior = BottomSheetBehavior.from(parent);
-        behavior.setPeekHeight(DensityUtils.dp2px(this, 512));
-
-        if (layout == R.layout.bottom_dialog_info) {
-            TextView action = (TextView) parent.findViewById(R.id.interactive_type);
-            action.setText(getString(R.string.interactive_enroll));
-        } else if (layout == R.layout.bottom_dialog_reply) {
-            TextView action = (TextView) parent.findViewById(R.id.interactive_reply_submit);
-            if (mType == PublishType.QA) {
-                action.setText(getString(R.string.btn_dialog_answer));
-            } else if (mType == PublishType.ARTICLE || mType == PublishType.ALBUM) {
-                // set the submit button text.
-                action.setText(getString(R.string.btn_dialog_submit));
-            }
-        }
-
-        dialog.show();
     }
 
     private void showContent(){
@@ -179,22 +207,31 @@ public class ArticlePage extends AppCompatActivity implements View.OnClickListen
         }
     }
 
-    public void initView() {
-        mName = (TextView) findViewById(R.id.article_author_name);
-        mUserIcon = (ImageView) findViewById(R.id.article_author_icon);
+    /**
+     * create a bottom sheet dialog.
+     */
+    private void showBSDialog(@LayoutRes int layout) {
+        dialog = new BottomSheetDialog(this);
+        final View view = LayoutInflater.from(this).inflate(layout, null);
+        dialog.setContentView(view);
+        View parent = (View) view.getParent();
+        behavior = BottomSheetBehavior.from(parent);
+        behavior.setPeekHeight(DensityUtils.dp2px(this, 512));
 
-        mWant = (TextView) findViewById(R.id.interactive_bottom_want);
-        mUpvote = (TextView) findViewById(R.id.interactive_upvote_count);
-        mComment = (TextView) findViewById(R.id.interactive_comment_count);
-        mInteractive = (Button) findViewById(R.id.interactive);
-        mName.setText(mUsername);
-        mUpvote.setText(String.valueOf(mUpvoteCount));
-        mComment.setText(String.valueOf(mCommentCount));
+        if (layout == R.layout.bottom_dialog_info) {
+            TextView action = (TextView) parent.findViewById(R.id.interactive_type);
+            action.setText(getString(R.string.interactive_enroll));
+        } else if (layout == R.layout.bottom_dialog_reply) {
+            TextView action = (TextView) parent.findViewById(R.id.interactive_reply_submit);
+            if (mType == PublishType.QA) {
+                action.setText(getString(R.string.btn_dialog_answer));
+            } else if (mType == PublishType.ARTICLE || mType == PublishType.ALBUM) {
+                // set the submit button text.
+                action.setText(getString(R.string.btn_dialog_submit));
+            }
+        }
 
-        findViewById(R.id.interactive_bottom_publish).setOnClickListener(this);
-        findViewById(R.id.interactive_bottom_upvote).setOnClickListener(this);
-        findViewById(R.id.interactive_bottom_comment).setOnClickListener(this);
-        findViewById(R.id.author_info_container).setOnClickListener(this);
+        dialog.show();
     }
 
     public void onMoreOption(View view) {

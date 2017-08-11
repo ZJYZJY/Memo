@@ -35,6 +35,7 @@ public class SocialShareActivity extends AppCompatActivity implements View.OnCli
 
     private UMWeb mUMWeb;
     private String contentId, contentUrl, title, content, picUrl;
+    private int isPrivate;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,6 +45,7 @@ public class SocialShareActivity extends AppCompatActivity implements View.OnCli
         WindowUtils.setToolBarButton(this, R.string.btn_share_homepage);
         WindowUtils.setStatusBarColor(this, R.color.colorPrimary, true);
 
+        isPrivate = getIntent().getIntExtra("isPrivate", 0);
         contentId = getIntent().getStringExtra("contentId");
         contentUrl = getIntent().getStringExtra("contentUrl");
         title = getIntent().getStringExtra("title");
@@ -60,6 +62,7 @@ public class SocialShareActivity extends AppCompatActivity implements View.OnCli
 
     public void initView() {
         mSwith = (SwitchView) findViewById(R.id.social_content_private);
+        mSwith.setOpened(isPrivate == 0);
         mSwith.setOnStateChangedListener(new SwitchView.OnStateChangedListener() {
             @Override
             public void toggleToOn(SwitchView view) {

@@ -31,7 +31,7 @@
                         android:id="@+id/author_icon"
                         android:layout_width="@dimen/icon_author"
                         android:layout_height="@dimen/icon_author"
-                        android:src="@mipmap/user_icon" />
+                        android:src="@mipmap/user_default_icon" />
 
                     <LinearLayout
                         android:id="@+id/author_status"

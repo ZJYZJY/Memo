@@ -254,7 +254,8 @@ public class PublishActivity extends AppCompatActivity implements View.OnClickLi
                                 (String) response.body().getField("url"),
                                 (String) response.body().getField("title"),
                                 (String) response.body().getField("content"),
-                                (String) response.body().getField("picurl"));
+                                (String) response.body().getField("picurl"),
+                                Integer.valueOf((String) response.body().getField("is_private")));
                     }
                 }else {
                     ToastUtil.show(mContext, "发布失败");
@@ -399,13 +400,15 @@ public class PublishActivity extends AppCompatActivity implements View.OnClickLi
         }
     }
 
-    private void openSharePage(String contentId, String contentUrl, String title, String content, String picUrl) {
+    private void openSharePage(String contentId, String contentUrl, String title,
+                               String content, String picUrl, int isPrivate) {
         Intent intent = new Intent(this, SocialShareActivity.class);
         intent.putExtra("contentId", contentId);
         intent.putExtra("contentUrl", contentUrl);
         intent.putExtra("title", title);
         intent.putExtra("content", content);
         intent.putExtra("picUrl", picUrl);
+        intent.putExtra("isPrivate", isPrivate);
         startActivity(intent);
     }
 

@@ -88,7 +88,7 @@ public class DiscoverFragment extends Fragment implements OnTabSelectListener {
     @Override
     public void onTabSelect(int position) {
         // if not the recommend page, request to login.
-        if(position != 0){
+        if(position != 0 && position != 1){
             LoginHelper.ifRequestLogin(getContext(), "请先登录");
         }
         mTabLayout.hideMsg(position);

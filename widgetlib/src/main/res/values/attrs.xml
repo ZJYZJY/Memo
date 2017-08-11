@@ -37,4 +37,11 @@
         <attr name="civ_border_overlay" format="boolean" />
         <attr name="civ_fill_color" format="color" />
     </declare-styleable>
+
+    <declare-styleable name="RippleButton">
+        <attr name="rb_text" format="reference|string" />
+        <attr name="rb_checked_text" format="reference|string" />
+        <attr name="rb_color" format="color|reference" />
+        <attr name="rb_checked_color" format="color|reference" />
+    </declare-styleable>
 </resources>

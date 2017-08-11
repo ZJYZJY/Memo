@@ -151,11 +151,26 @@ public class HttpUtils {
         Call<SimpleResponse> publishContent(@Body RequestBody content);
 
         /**
+         * complete publish content info.
+         */
+        @GET(APIPath.GET_MY_CONTENT)
+        Call<ArrayResponse<BriefContent>> getMyContentList(@Path("action") String action,
+                                                           @Path("timestamp") long timeStamp);
+
+        /**
          * refresh recommend content.
          */
         @GET(APIPath.GET_RECOMMEND)
         Call<ArrayResponse<BriefContent>> getRecommendContent(@Path("action") String action,
                                                               @Path("timestamp") long timeStamp);
+
+        @GET(APIPath.GET_FOLLOWED_CONTENT)
+        Call<ArrayResponse<BriefContent>> getFollowedContent(@Path("action") String action,
+                                                             @Path("timestamp") long timeStamp);
+
+        @GET(APIPath.GET_LATEST_CONTENT)
+        Call<ArrayResponse<BriefContent>> getLatestContent(@Path("action") String action,
+                                                           @Path("timestamp") long timeStamp);
 
         /**
          * refresh recommend content.
@@ -181,13 +196,6 @@ public class HttpUtils {
          */
         @POST(APIPath.COMPLETE_INFO)
         Call<SimpleResponse> completeInfo(@Body RequestBody content);
-
-        /**
-         * complete publish content info.
-         */
-        @GET(APIPath.GET_MY_CONTENT)
-        Call<ArrayResponse<BriefContent>> getMyContentList(@Path("action") String action,
-                                                           @Path("timestamp") long timeStamp);
 
         /**
          * match user contact friends.
@@ -219,6 +227,9 @@ public class HttpUtils {
         @GET(APIPath.GET_USER_INFO)
         Call<SimpleResponse> getUserById(@Path("userId") String userId);
 
+        @GET(APIPath.VERIFY_CONTENT)
+        Call<SimpleResponse> verifyContentById(@Path("id") String id);
+
         /**
          * cookie test.
          */
@@ -227,26 +238,29 @@ public class HttpUtils {
     }
 
     private class APIPath {
-        private static final String LOGIN = "login_api";
-        private static final String GET_AUTH_CODE = "login_api/authcode_api";
-        private static final String REGISTER = "login_api/register";
-        private static final String MODIFY_PASSWORD = "login_api/edituser_api";
-        private static final String LOGOUT = "login_api/login_out_api";
-        private static final String GET_UPLOAD_TOKEN = "private_api/upload_api";
-        private static final String PUBLISH_CONTENT = "private_api/create_article_api";
-        private static final String GET_RECOMMEND = "index_api/index/{action}/{timestamp}";
-        private static final String SEARCH_CONTENT = "index_api/search_api";
-        private static final String GET_CONTENT = "index_api/see_article_api/{id}";
-        private static final String SET_CONTENT_PRIVATE = "private_api/is_private_api";
-        private static final String COMPLETE_INFO = "private_api/article_field_api";
-        private static final String GET_MY_CONTENT = "private_api/index/{action}/{timestamp}";
-        private static final String MATCH_CONTACTS = "private_api/myfriend_api";
-        private static final String DELETE_CONTENT = "private_api/delete_article_api/{id}";
-        private static final String MODIFY_MY_CONTENT = "private_api/the_article_api/{id}";
-        private static final String SYNC_USER_INFO = "user_api/get_myinfo_api";
-        private static final String MODIFY_USER_INFO = "user_api/edit_userinfo_api";
-        private static final String FOLLOW_USER = "user_api/add_concern_api/{userId}/{action}";
-        private static final String GET_USER_INFO = "index_api/app_myindex_api/{userId}";
+        private static final String LOGIN = "login";
+        private static final String GET_AUTH_CODE = "login/authcode";
+        private static final String REGISTER = "login/register";
+        private static final String MODIFY_PASSWORD = "login/edituser";
+        private static final String LOGOUT = "login/logout";
+        private static final String GET_UPLOAD_TOKEN = "authorised/upload";
+        private static final String PUBLISH_CONTENT = "authorised/create_article";
+        private static final String GET_MY_CONTENT = "authorised/index/{action}/{timestamp}";
+        private static final String GET_RECOMMEND = "index/index/{action}/{timestamp}";
+        private static final String GET_FOLLOWED_CONTENT = "authorised/my_follow/{action}/{timestamp}";
+        private static final String GET_LATEST_CONTENT = "index/latest/{action}/{timestamp}";
+        private static final String SEARCH_CONTENT = "index/search";
+        private static final String GET_CONTENT = "index/see_article/{id}";
+        private static final String SET_CONTENT_PRIVATE = "authorised/is_private";
+        private static final String COMPLETE_INFO = "authorised/article_field";
+        private static final String MATCH_CONTACTS = "authorised/myfriend";
+        private static final String DELETE_CONTENT = "authorised/delete_article/{id}";
+        private static final String MODIFY_MY_CONTENT = "authorised/the_article/{id}";
+        private static final String SYNC_USER_INFO = "user/get_myinfo";
+        private static final String MODIFY_USER_INFO = "user/edit_userinfo";
+        private static final String FOLLOW_USER = "user/follow/{userId}/{action}";
+        private static final String GET_USER_INFO = "index/app_myindex/{userId}";
+        private static final String VERIFY_CONTENT = "index/verify_content/{id}";
     }
 
     public static Call<SimpleResponse> login(int loginType, Map<String, String> data) {
@@ -330,8 +344,19 @@ public class HttpUtils {
         return create().publishContent(request);
     }
 
-    public static Call<ArrayResponse<BriefContent>> getRecommendContent(String action, long timeStamp) {
-        return create().getRecommendContent(action, timeStamp);
+    public static Call<ArrayResponse<BriefContent>> getContentList(int type, String action, long timeStamp) {
+        switch (type) {
+            case 0:
+                return create().getMyContentList(action, timeStamp);
+            case 1:
+                return create().getRecommendContent(action, timeStamp);
+            case 2:
+                return create().getLatestContent(action, timeStamp);
+            case 3:
+                return create().getFollowedContent(action, timeStamp);
+            default:
+                return null;
+        }
     }
 
     public static Call<ArrayResponse<BriefContent>> searchContent(String key){
@@ -405,10 +430,6 @@ public class HttpUtils {
         return create().completeInfo(request);
     }
 
-    public static Call<ArrayResponse<BriefContent>> getMyContentList(String action, long timeStamp){
-        return create().getMyContentList(action, timeStamp);
-    }
-
     public static Call<ArrayResponse<Contact>> matchContacts(List<String> signatureCode){
         JSONObject json = new JSONObject();
         JSONArray array = new JSONArray();
@@ -458,6 +479,10 @@ public class HttpUtils {
 
     public static Call<SimpleResponse> getUserById(String userId){
         return create().getUserById(userId);
+    }
+
+    public static Call<SimpleResponse> verifyContentById(String id){
+        return create().verifyContentById(id);
     }
 
     public static Call<SimpleResponse> test() {
