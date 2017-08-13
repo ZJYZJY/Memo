@@ -111,7 +111,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.main_bottom_home:
-                LoginHelper.ifRequestLogin(this, "请先登录");
+                if(LoginHelper.ifRequestLogin(this, "请先登录")){
+                    return;
+                }
                 if(mHome.isChecked()){
                     EventBus.getDefault().post(new RequestRefreshEvent(
                             mHomeFragment.getCurrentPagePosition()));

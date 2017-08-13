@@ -24,6 +24,8 @@
         android:layout_centerVertical="true"
         android:layout_marginEnd="@dimen/margin_large"
         android:layout_marginRight="@dimen/margin_large"
-        android:padding="@dimen/padding_normal_icon"
-        android:src="@drawable/mine" />
+        android:padding="@dimen/padding_micro"
+        android:src="@drawable/mine"
+        app:civ_border_color="@color/border_gray"
+        app:civ_border_width="@dimen/px_line" />
 </RelativeLayout>

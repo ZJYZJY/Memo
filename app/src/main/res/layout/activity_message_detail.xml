@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
+    android:orientation="vertical">
+
+    <include layout="@layout/toolbar_without_btn" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/px_line"
+        android:background="@color/border_gray" />
+
+    <RelativeLayout
+        android:id="@+id/detail_content_reference"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="?android:selectableItemBackground"
+        android:padding="@dimen/padding_large">
+
+        <TextView
+            android:id="@+id/detail_content_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:text="360智能硬件招聘开始了"
+            android:textColor="@color/text_title_gray" />
+
+        <TextView
+            android:id="@+id/detail_content_date"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_toLeftOf="@+id/detail_arrow"
+            android:layout_toStartOf="@+id/detail_arrow"
+            android:text="2017-8-10"
+            android:textColor="@color/text_title_gray" />
+
+        <ImageView
+            android:id="@+id/detail_arrow"
+            android:layout_width="@dimen/icon_small_icon"
+            android:layout_height="@dimen/icon_small_icon"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:src="@drawable/forward_arrow" />
+    </RelativeLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/px_line"
+        android:background="@color/border_gray" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/padding_large"
+        android:text="新收到1封简历，共收到2封"
+        android:textColor="@color/textPrimaryDark" />
+
+    <com.scwang.smartrefresh.layout.SmartRefreshLayout
+        android:id="@+id/swipe_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <com.yanzhenjie.recyclerview.swipe.SwipeMenuRecyclerView
+            android:id="@+id/recycler_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+    </com.scwang.smartrefresh.layout.SmartRefreshLayout>
+</LinearLayout>

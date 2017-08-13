@@ -9,21 +9,25 @@
     <color name="background_gray">#ebebeb</color>
     <color name="background_black_light">#41464b</color>
     <color name="background_black">#252a2f</color>
+
     <color name="border_gray">#dddddd</color>
     <color name="border_dark">#a1a1a1</color>
 
+    <!--gradual gray color-->
     <color name="text_light">#cdcdcd</color>
     <color name="textPrimary">#a09f9f</color>
     <color name="textPrimaryDark">#3b3b3b</color>
+    <!--activity title text color-->
     <color name="text_title_gray">#7e7e7e</color>
     <color name="text_black">#181818</color>
     <color name="text_blue">#4a74a7</color>
     <color name="text_orange">#DB7A65</color>
 
+    <!--complete page confirm button-->
     <color name="red_normal">#eb4e3d</color>
     <color name="red_pressed">#c74133</color>
-    <color name="blue_normal">#46a2dd</color>
-    <color name="blue_pressed">#3982b2</color>
+    <color name="blue_normal">#3595FF</color>
+    <color name="blue_pressed">#3184e2</color>
     <color name="gray_normal">#c7c7cb</color>
     <color name="gray_pressed">#98989c</color>
 
@@ -31,8 +35,6 @@
     <color name="btn_blue_pressed">#3184e2</color>
     <color name="btn_green_normal">#38C929</color>
     <color name="btn_green_pressed">#2b9c1f</color>
-    <color name="btn_red_normal">#F4623B</color>
-    <color name="btn_red_pressed">#c04e2f</color>
 
     <color name="type_red_bg">#F4623B</color>
     <color name="type_blue_bg">#3595FF</color>

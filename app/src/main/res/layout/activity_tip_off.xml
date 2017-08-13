@@ -9,6 +9,11 @@
 
     <View
         android:layout_width="match_parent"
+        android:layout_height="@dimen/px_line"
+        android:background="@color/border_gray" />
+
+    <View
+        android:layout_width="match_parent"
         android:layout_height="@dimen/blank_item_divider" />
 
     <TextView

@@ -52,8 +52,8 @@
             android:ellipsize="end"
             android:gravity="center_vertical"
             android:maxLines="1"
-            android:paddingLeft="@dimen/padding_text_small"
-            android:paddingRight="@dimen/padding_text_small"
+            android:paddingLeft="@dimen/padding_micro"
+            android:paddingRight="@dimen/padding_micro"
             android:text="-"
             android:textSize="14sp" />
     </LinearLayout>
@@ -81,8 +81,8 @@
             android:ellipsize="end"
             android:gravity="center_vertical"
             android:maxLines="1"
-            android:paddingLeft="@dimen/padding_text_small"
-            android:paddingRight="@dimen/padding_text_small"
+            android:paddingLeft="@dimen/padding_micro"
+            android:paddingRight="@dimen/padding_micro"
             android:text="-"
             android:textSize="14sp" />
     </LinearLayout>

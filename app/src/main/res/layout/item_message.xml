@@ -2,90 +2,185 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical"
-    android:paddingBottom="@dimen/padding_small"
-    android:paddingTop="@dimen/padding_small">
+    android:background="@color/white"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:id="@+id/message_user_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="@dimen/padding_large"
+        android:paddingLeft="@dimen/padding_large"
+        android:paddingRight="@dimen/padding_large">
+
+        <com.donutcn.widgetlib.widget.CircleImageView
+            android:id="@+id/message_item_icon"
+            android:layout_width="@dimen/icon_message_user"
+            android:layout_height="@dimen/icon_message_user"
+            android:src="@mipmap/user_default_icon" />
+
+        <TextView
+            android:id="@+id/message_item_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@+id/message_item_icon"
+            android:layout_marginLeft="@dimen/margin_medium"
+            android:layout_marginStart="@dimen/margin_medium"
+            android:layout_toEndOf="@+id/message_item_icon"
+            android:layout_toRightOf="@+id/message_item_icon"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:text="landlyne"
+            android:textColor="@color/textPrimaryDark"
+            android:textSize="14sp" />
+
+        <TextView
+            android:id="@+id/message_item_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/message_item_icon"
+            android:layout_alignLeft="@+id/message_item_name"
+            android:layout_alignStart="@+id/message_item_name"
+            android:layout_toEndOf="@+id/message_item_icon"
+            android:layout_toRightOf="@+id/message_item_icon"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:text="2017-8-11 12:34 提交"
+            android:textColor="@color/textPrimary"
+            android:textSize="12sp" />
+    </RelativeLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="@dimen/message_item_height"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/margin_medium"
         android:orientation="horizontal">
 
-        <RelativeLayout
+        <LinearLayout
             android:layout_width="0dp"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:background="@color/colorPrimary">
+            android:background="@color/background_gray"
+            android:orientation="vertical"
+            android:padding="@dimen/padding_small">
 
-            <com.donutcn.widgetlib.widget.CircleImageView
-                android:id="@+id/message_item_icon"
-                android:layout_width="@dimen/icon_message_user"
-                android:layout_height="@dimen/icon_message_user"
-                android:layout_centerVertical="true"
-                android:layout_marginLeft="@dimen/margin_small"
-                android:layout_marginStart="@dimen/margin_small"
-                android:src="@mipmap/user_icon" />
-
-            <TextView
-                android:id="@+id/message_item_title"
+            <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignTop="@+id/message_item_icon"
-                android:layout_marginLeft="@dimen/margin_medium"
-                android:layout_marginStart="@dimen/margin_medium"
-                android:layout_toEndOf="@+id/message_item_icon"
-                android:layout_toRightOf="@+id/message_item_icon"
-                android:ellipsize="end"
-                android:maxLines="1"
-                android:text="360只能硬件软件工程师等你来"
-                android:textColor="@color/textPrimaryDark"
-                android:textSize="15sp" />
+                android:orientation="horizontal"
+                android:padding="@dimen/padding_text">
 
-            <TextView
-                android:id="@+id/message_item_time"
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="姓名：" />
+
+                <TextView
+                    android:id="@+id/message_item_real_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="刘义平" />
+            </LinearLayout>
+
+            <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignBottom="@+id/message_item_icon"
-                android:layout_alignLeft="@+id/message_item_title"
-                android:layout_alignStart="@+id/message_item_title"
-                android:layout_toEndOf="@+id/message_item_icon"
-                android:layout_toRightOf="@+id/message_item_icon"
-                android:text="6-15 10:32"
-                android:textColor="@color/textPrimary" />
-        </RelativeLayout>
+                android:orientation="horizontal"
+                android:padding="@dimen/padding_text">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="电话：" />
+
+                <TextView
+                    android:id="@+id/message_item_phone"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="18767549068"
+                    android:textColor="@color/text_blue" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/message_we_chat_container"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:visibility="gone"
+                android:padding="@dimen/padding_text">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="微信：" />
+
+                <TextView
+                    android:id="@+id/message_item_we_chat"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="1234543z"
+                    android:textColor="@color/text_blue" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/message_resume_container"
+                android:visibility="gone"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:padding="@dimen/padding_text">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="简历：" />
+
+                <TextView
+                    android:id="@+id/message_item_resume"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="我的简历.doc"
+                    android:textColor="@color/text_blue" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/message_email_container"
+                android:visibility="gone"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:padding="@dimen/padding_text">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="邮箱：" />
+
+                <TextView
+                    android:id="@+id/message_item_email"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="739584702@qq.com"
+                    android:textColor="@color/text_blue" />
+            </LinearLayout>
+        </LinearLayout>
 
         <Button
-            android:id="@+id/message_item_btn"
-            style="@style/Base.Widget.AppCompat.Button.Borderless"
-            android:layout_width="@dimen/message_item_btn_width"
+            android:id="@+id/message_item_delete"
+            style="@style/Widget.AppCompat.Button.Borderless"
+            android:layout_width="48dp"
             android:layout_height="match_parent"
-            android:background="@drawable/selector_blue_btn"
-            android:text="查看简历"
-            android:textColor="@color/white"
-            android:textSize="16sp" />
+            android:background="@drawable/selector_gray"
+            android:text="删除"
+            android:textColor="@color/white" />
+
+        <Button
+            android:id="@+id/message_item_download"
+            style="@style/Widget.AppCompat.Button.Borderless"
+            android:layout_width="48dp"
+            android:layout_height="match_parent"
+            android:background="@drawable/selector_blue"
+            android:text="下载"
+            android:textColor="@color/white" />
     </LinearLayout>
-
-    <TextView
-        android:id="@+id/message_item_info"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:ellipsize="end"
-        android:maxLines="1"
-        android:padding="@dimen/padding_large"
-        android:text="新增2人投递简历，目前已收到34份简历"
-        android:textColor="@color/textPrimaryDark" />
-
-    <TextView
-        android:id="@+id/message_item_extra_title"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="@dimen/margin_large"
-        android:layout_marginRight="@dimen/margin_large"
-        android:background="@color/colorPrimary"
-        android:ellipsize="end"
-        android:maxLines="2"
-        android:padding="@dimen/padding_large"
-        android:text="9成新的iPhone便宜卖了。"
-        android:textColor="@color/textPrimaryDark"
-        android:visibility="gone"/>
 </LinearLayout>

@@ -60,6 +60,7 @@ public class ArticlePage extends AppCompatActivity implements View.OnClickListen
             @Override
             public void onResponse(Call<SimpleResponse> call, Response<SimpleResponse> response) {
                 if(response.body() != null){
+                    // Todo: return content info, like userId, url, name, icon, type.
                     if(response.body().isOk()){
                         initView();
                         showContent();
@@ -270,12 +271,18 @@ public class ArticlePage extends AppCompatActivity implements View.OnClickListen
             // top user icon.
             case R.id.author_info_container:
                 if(mUserId != null && !mUserId.equals("")){
-                    if(!mUserId.equals(UserStatus.getCurrentUser().getUserId())){
+                    if(UserStatus.isLogin(this)){
+                        if(!mUserId.equals(UserStatus.getCurrentUser().getUserId())){
+                            Intent intent1 = new Intent(this, AuthorPage.class);
+                            intent1.putExtra("userId", mUserId);
+                            startActivity(intent1);
+                        } else {
+                            // Todo : open my own info page.
+                        }
+                    } else {
                         Intent intent1 = new Intent(this, AuthorPage.class);
                         intent1.putExtra("userId", mUserId);
                         startActivity(intent1);
-                    } else {
-                        // Todo : open my own info page.
                     }
                 }
                 break;

@@ -28,6 +28,10 @@ public class ArrayResponse<E> extends Response<List<E>> {
         return data == null ? 0 : data.size();
     }
 
+    /**
+     * used for user content list cache.
+     * @return string array of user content list.
+     */
     @Override
     public String toString() {
         JSONArray array = new JSONArray();

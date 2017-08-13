@@ -81,9 +81,13 @@ public class MemoAdapter extends BasePublishAdapter<MemoAdapter.DefaultViewHolde
         holder.mContentType.setText(typeStr);
         holder.mContent.setText(list.get(position).getContent());
 
-        String url0 = list.get(position).getImage0();
-        String url1 = list.get(position).getImage1();
+        // reset image view and url string.
         holder.mContainer.setVisibility(View.GONE);
+        String url0 = "";
+        String url1 = "";
+
+        url0 = list.get(position).getImage0();
+        url1 = list.get(position).getImage1();
         if(!url0.equals("")){
             holder.mContainer.setVisibility(View.VISIBLE);
             Glide.with(mContext).load(url0).into(holder.mContentPic1);

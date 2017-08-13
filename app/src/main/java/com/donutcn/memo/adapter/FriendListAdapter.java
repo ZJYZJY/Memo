@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.donutcn.memo.R;
 import com.donutcn.memo.entity.Contact;
 import com.donutcn.memo.listener.OnItemClickListener;
@@ -47,6 +48,11 @@ public class FriendListAdapter extends RecyclerView.Adapter<FriendListAdapter.Vi
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
         holder.username.setText(list.get(position).getName());
+        String iconUrl = "";
+        iconUrl = list.get(position).getAvatar();
+        if(iconUrl != null && !iconUrl.equals("")){
+            Glide.with(mContext).load(iconUrl).into(holder.avatar);
+        }
     }
 
     @Override

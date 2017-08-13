@@ -205,7 +205,7 @@ public class CompletingPage extends AppCompatActivity {
             public void onResponse(Call<SimpleResponse> call, Response<SimpleResponse> response) {
                 if (response.body() != null) {
                     if(response.body().isOk()){
-                        mContentId = response.body().getField("article_id");
+                        mContentId = String.valueOf(response.body().getField("article_id"));
                         Intent mShareIntent = new Intent(mContext, SocialShareActivity.class);
                         mShareIntent.putExtra("contentId", mContentId);
                         mShareIntent.putExtra("contentUrl", String.valueOf(response.body().getField("url")));

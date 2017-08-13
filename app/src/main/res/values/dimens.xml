@@ -24,12 +24,11 @@
     <dimen name="icon_toolbar_user">32dp</dimen>
     <dimen name="icon_toolbar_arrow">14dp</dimen>
     <dimen name="icon_normal_icon">24dp</dimen>
+    <dimen name="icon_small_icon">16dp</dimen>
     <dimen name="icon_personal_center_user">72dp</dimen>
     <dimen name="icon_message_user">42dp</dimen>
     <dimen name="icon_share">56dp</dimen>
     <dimen name="icon_vote_del">42dp</dimen>
-
-    <dimen name="icon_author_btn">16dp</dimen>
 
     <!--margin & padding-->
     <dimen name="padding_container_huge">32dp</dimen>
@@ -40,7 +39,7 @@
     <dimen name="padding_normal_icon">4dp</dimen>
     <dimen name="padding_text_large">6dp</dimen>
     <dimen name="padding_text">4dp</dimen>
-    <dimen name="padding_text_small">2dp</dimen>
+    <dimen name="padding_micro">2dp</dimen>
 
     <dimen name="margin_top_img">32dp</dimen>
     <dimen name="margin_huge">24dp</dimen>
