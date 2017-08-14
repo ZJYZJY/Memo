@@ -78,7 +78,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         }
                     });
                 }
-            }, 1500);
+            }, 1000);
         }
 
         mViewPager = (ViewPager) findViewById(R.id.main_viewpager);

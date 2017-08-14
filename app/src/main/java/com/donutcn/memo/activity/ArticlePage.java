@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ScrollView;
 import android.widget.TextView;
@@ -41,6 +42,8 @@ public class ArticlePage extends AppCompatActivity implements View.OnClickListen
     private TextView mName, mUpvote, mComment, mWant;
     private ScrollView mScrollView;
     private ImageView mUserIcon;
+    private EditText mRealName, mPhone, mWeChat, mEmail, mReply;
+    private TextView mResume;
 
     private PublishType mType = PublishType.ARTICLE;
 
@@ -60,8 +63,15 @@ public class ArticlePage extends AppCompatActivity implements View.OnClickListen
             @Override
             public void onResponse(Call<SimpleResponse> call, Response<SimpleResponse> response) {
                 if(response.body() != null){
-                    // Todo: return content info, like userId, url, name, icon, type.
                     if(response.body().isOk()){
+                        mUserId = response.body().getField("user_id");
+                        mContentUrl = response.body().getField("url");
+                        mUsername = response.body().getField("name");
+                        mIconUrl = response.body().getField("head_portrait");
+                        String type = response.body().getField("type");
+                        mType = PublishType.getType(type);
+                        mUpvoteCount = Integer.valueOf((String) response.body().getField("praise"));
+                        mCommentCount = Integer.valueOf((String) response.body().getField("comment_total"));
                         initView();
                         showContent();
                     } else if(response.body().notFound()){
@@ -87,14 +97,6 @@ public class ArticlePage extends AppCompatActivity implements View.OnClickListen
     }
 
     public void initView() {
-        mUserId = getIntent().getStringExtra("userId");
-        mContentUrl = getIntent().getStringExtra("url");
-        mUsername = getIntent().getStringExtra("name");
-        mIconUrl = getIntent().getStringExtra("userIcon");
-        String type = getIntent().getStringExtra("type");
-        mType = PublishType.getType(type);
-        mUpvoteCount = Integer.valueOf(getIntent().getStringExtra("upvote"));
-        mCommentCount = Integer.valueOf(getIntent().getStringExtra("comment"));
         boolean self = getIntent().getBooleanExtra("self", false);
         if (self) {
             mIconUrl = UserStatus.getCurrentUser().getIconUrl();
@@ -104,6 +106,7 @@ public class ArticlePage extends AppCompatActivity implements View.OnClickListen
         mName = (TextView) findViewById(R.id.article_author_name);
         mUserIcon = (ImageView) findViewById(R.id.article_author_icon);
 
+        // bottom bar
         mWant = (TextView) findViewById(R.id.interactive_bottom_want);
         mUpvote = (TextView) findViewById(R.id.interactive_upvote_count);
         mComment = (TextView) findViewById(R.id.interactive_comment_count);
@@ -111,6 +114,14 @@ public class ArticlePage extends AppCompatActivity implements View.OnClickListen
         mName.setText(mUsername);
         mUpvote.setText(String.valueOf(mUpvoteCount));
         mComment.setText(String.valueOf(mCommentCount));
+
+        // bottom dialog
+        mRealName = (EditText) findViewById(R.id.interactive_name);
+        mPhone = (EditText) findViewById(R.id.interactive_phone);
+        mWeChat = (EditText) findViewById(R.id.interactive_we_chat);
+        mEmail = (EditText) findViewById(R.id.interactive_email);
+        mResume = (TextView) findViewById(R.id.interactive_resume);
+        mReply = (EditText) findViewById(R.id.et_interactive_reply);
 
         findViewById(R.id.interactive_bottom_publish).setOnClickListener(this);
         findViewById(R.id.interactive_bottom_upvote).setOnClickListener(this);
@@ -220,10 +231,12 @@ public class ArticlePage extends AppCompatActivity implements View.OnClickListen
         behavior.setPeekHeight(DensityUtils.dp2px(this, 512));
 
         if (layout == R.layout.bottom_dialog_info) {
+            parent.findViewById(R.id.interactive_info_submit).setOnClickListener(this);
             TextView action = (TextView) parent.findViewById(R.id.interactive_type);
             action.setText(getString(R.string.interactive_enroll));
         } else if (layout == R.layout.bottom_dialog_reply) {
-            TextView action = (TextView) parent.findViewById(R.id.interactive_reply_submit);
+            Button action = (Button) parent.findViewById(R.id.interactive_reply_submit);
+            action.setOnClickListener(this);
             if (mType == PublishType.QA) {
                 action.setText(getString(R.string.btn_dialog_answer));
             } else if (mType == PublishType.ARTICLE || mType == PublishType.ALBUM) {
@@ -233,6 +246,10 @@ public class ArticlePage extends AppCompatActivity implements View.OnClickListen
         }
 
         dialog.show();
+    }
+
+    public void onUploadResume(View view){
+        // Todo:upload resume.
     }
 
     public void onMoreOption(View view) {
@@ -285,6 +302,10 @@ public class ArticlePage extends AppCompatActivity implements View.OnClickListen
                         startActivity(intent1);
                     }
                 }
+                break;
+            case R.id.interactive_reply_submit://submit reply
+                break;
+            case R.id.interactive_info_submit://submit info
                 break;
         }
     }

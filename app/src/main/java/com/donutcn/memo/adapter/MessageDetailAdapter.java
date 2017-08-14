@@ -78,9 +78,11 @@ public class MessageDetailAdapter extends SwipeMenuAdapter<MessageDetailAdapter.
         TextView weChat;
         TextView resume;
         TextView email;
+        TextView comment;
+        TextView vote;
         Badge badge;
         Button delete, download;
-        View view_weChat, view_resume, view_email;
+        View view_name, view_phone, view_weChat, view_resume, view_email, view_comment, view_vote;
         OnItemClickListener mOnItemClickListener;
 
         public ViewHolder(View itemView) {
@@ -90,16 +92,25 @@ public class MessageDetailAdapter extends SwipeMenuAdapter<MessageDetailAdapter.
             name = (TextView) itemView.findViewById(R.id.message_item_name);
             time = (TextView) itemView.findViewById(R.id.message_item_time);
             badge = new QBadgeView(mContext).bindTarget(itemView.findViewById(R.id.message_user_container));
+
             realName = (TextView) itemView.findViewById(R.id.message_item_real_name);
             phone = (TextView) itemView.findViewById(R.id.message_item_phone);
             weChat = (TextView) itemView.findViewById(R.id.message_item_we_chat);
             resume = (TextView) itemView.findViewById(R.id.message_item_resume);
             email = (TextView) itemView.findViewById(R.id.message_item_email);
+            vote = (TextView) itemView.findViewById(R.id.message_item_vote);
+            comment = (TextView) itemView.findViewById(R.id.message_item_comment);
+
             delete = (Button) itemView.findViewById(R.id.message_item_delete);
             download = (Button) itemView.findViewById(R.id.message_item_download);
+
+            view_name = itemView.findViewById(R.id.message_name_container);
+            view_phone = itemView.findViewById(R.id.message_phone_container);
             view_weChat = itemView.findViewById(R.id.message_we_chat_container);
             view_resume = itemView.findViewById(R.id.message_resume_container);
             view_email = itemView.findViewById(R.id.message_email_container);
+            view_comment = itemView.findViewById(R.id.message_comment_container);
+            view_vote = itemView.findViewById(R.id.message_vote_container);
         }
 
         @Override

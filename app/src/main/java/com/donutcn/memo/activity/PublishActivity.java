@@ -330,7 +330,7 @@ public class PublishActivity extends AppCompatActivity implements View.OnClickLi
                 PhotoPicker.builder()
                         .setPhotoCount(9)
                         .setShowCamera(true)
-                        .setPreviewEnabled(false)
+                        .setPreviewEnabled(true)
                         .start(this);
                 break;
             case R.id.pub_type_setting:

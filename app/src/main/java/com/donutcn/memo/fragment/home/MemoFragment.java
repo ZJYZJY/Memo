@@ -242,10 +242,6 @@ public class MemoFragment extends BaseScrollFragment {
             EventBus.getDefault().post(new ReceiveNewMessagesEvent(0, position));
             Intent intent = new Intent(mContext, ArticlePage.class);
             intent.putExtra("contentId", mList.get(position).getId());
-            intent.putExtra("url", mList.get(position).getUrl());
-            intent.putExtra("type", mList.get(position).getType());
-            intent.putExtra("upvote", mList.get(position).getUpVote());
-            intent.putExtra("comment", mList.get(position).getComment());
             intent.putExtra("self", true);
             startActivity(intent);
         }

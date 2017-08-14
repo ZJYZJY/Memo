@@ -65,6 +65,7 @@
             android:padding="@dimen/padding_small">
 
             <LinearLayout
+                android:id="@+id/message_name_container"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
@@ -83,6 +84,7 @@
             </LinearLayout>
 
             <LinearLayout
+                android:id="@+id/message_phone_container"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
@@ -162,6 +164,46 @@
                     android:layout_height="wrap_content"
                     android:text="739584702@qq.com"
                     android:textColor="@color/text_blue" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/message_comment_container"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:padding="@dimen/padding_text"
+                android:visibility="gone">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="评论：" />
+
+                <TextView
+                    android:id="@+id/message_item_comment"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="文章写的还不错" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/message_vote_container"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:padding="@dimen/padding_text"
+                android:visibility="gone">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="投票项：" />
+
+                <TextView
+                    android:id="@+id/message_item_vote"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="全聚德" />
             </LinearLayout>
         </LinearLayout>
 

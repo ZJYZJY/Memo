@@ -211,13 +211,6 @@ public class RecommendFragment extends BaseScrollFragment implements View.OnClic
             EventBus.getDefault().post(new ReceiveNewMessagesEvent(2, position));
             Intent intent = new Intent(getContext(), ArticlePage.class);
             intent.putExtra("contentId", mList.get(position).getId());
-            intent.putExtra("userId", mList.get(position).getUserId());
-            intent.putExtra("url", mList.get(position).getUrl());
-            intent.putExtra("name", mList.get(position).getName());
-            intent.putExtra("userIcon", mList.get(position).getUserIcon());
-            intent.putExtra("type", mList.get(position).getType());
-            intent.putExtra("upvote", mList.get(position).getUpVote());
-            intent.putExtra("comment", mList.get(position).getComment());
             startActivity(intent);
         }
     };

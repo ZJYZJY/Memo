@@ -25,14 +25,16 @@ public class User {
     private String signature;
     private List<String> followedUser;
 
-    public User(){}
+    public User() {
+    }
 
     public String getUserId() {
         return userId;
     }
 
     public void setUserId(String userId) {
-        this.userId = userId;
+        if (userId != null)
+            this.userId = userId;
     }
 
     public String getOpenId() {
@@ -40,7 +42,8 @@ public class User {
     }
 
     public void setOpenId(String openId) {
-        this.openId = openId;
+        if (openId != null)
+            this.openId = openId;
     }
 
     public String getName() {
@@ -48,7 +51,8 @@ public class User {
     }
 
     public void setName(String name) {
-        this.name = name;
+        if (name != null)
+            this.name = name;
     }
 
     public String getUsername() {
@@ -56,7 +60,8 @@ public class User {
     }
 
     public void setUsername(String username) {
-        this.username = username;
+        if (username != null)
+            this.username = username;
     }
 
     public String getPhone() {
@@ -64,7 +69,8 @@ public class User {
     }
 
     public void setPhone(String phone) {
-        this.phone = phone;
+        if (phone != null)
+            this.phone = phone;
     }
 
     public String getEmail() {
@@ -72,31 +78,44 @@ public class User {
     }
 
     public void setEmail(String email) {
-        this.email = email;
+        if (email != null)
+            this.email = email;
     }
 
     public String getGender() {
-        return gender;
+        if (gender == null || gender.equals(""))
+            return null;
+        else
+            return gender;
     }
 
     public void setGender(String gender) {
-        this.gender = gender;
+        if (gender != null)
+            this.gender = gender;
     }
 
     public String getIconUrl() {
-        return iconUrl;
+        if (iconUrl == null || iconUrl.equals(""))
+            return null;
+        else
+            return iconUrl;
     }
 
     public void setIconUrl(String iconUrl) {
-        this.iconUrl = iconUrl;
+        if (iconUrl != null)
+            this.iconUrl = iconUrl;
     }
 
     public String getSignature() {
-        return signature;
+        if (signature == null || signature.equals(""))
+            return null;
+        else
+            return signature;
     }
 
     public void setSignature(String signature) {
-        this.signature = signature;
+        if (signature != null)
+            this.signature = signature;
     }
 
     public List<String> getFollowedUser() {
@@ -107,14 +126,14 @@ public class User {
         this.followedUser = followedUser;
     }
 
-    public void follow(Context context, String userId, boolean follow){
-        if(follow){
+    public void follow(Context context, String userId, boolean follow) {
+        if (follow) {
             getFollowedUser().add(userId);
             String str = SpfsUtils.readString(
                     context.getApplicationContext(), SpfsUtils.USER, "follow", "");
             SpfsUtils.write(context, SpfsUtils.USER, "follow", str + userId + "-");
             LogUtil.d("followed_cache", "followed:" + str + userId + "-");
-        }else {
+        } else {
             getFollowedUser().remove(userId);
             String str = SpfsUtils.readString(
                     context.getApplicationContext(), SpfsUtils.USER, "follow", "");

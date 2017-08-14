@@ -14,7 +14,6 @@ import com.donutcn.memo.entity.User;
 import com.donutcn.memo.event.LoginStateEvent;
 import com.donutcn.memo.helper.LoginHelper;
 import com.donutcn.memo.utils.WindowUtils;
-import com.donutcn.widgetlib.widget.CircleImageView;
 import com.tencent.bugly.beta.Beta;
 
 import org.greenrobot.eventbus.EventBus;
@@ -22,8 +21,8 @@ import org.greenrobot.eventbus.Subscribe;
 
 public class PersonalCenterActivity extends AppCompatActivity implements View.OnClickListener {
 
-    private RelativeLayout mAuth, mNotify, mFeedback, mAbout, mSignout;
-    private TextView mNickname, mVersionNum;
+    private RelativeLayout mAuth, mNotify, mFeedback, mAbout, mLogout;
+    private TextView mNickname, mSignature, mVersionNum;
     private ImageView mUserIcon;
 
     @Override
@@ -38,23 +37,28 @@ public class PersonalCenterActivity extends AppCompatActivity implements View.On
     public void initView(){
         mUserIcon = (ImageView) findViewById(R.id.personal_center_user_icon);
         mNickname = (TextView) findViewById(R.id.personal_center_user_name);
+        mSignature = (TextView) findViewById(R.id.personal_center_user_signature);
         mAuth = (RelativeLayout) findViewById(R.id.authentication);
         mNotify = (RelativeLayout) findViewById(R.id.notification_settings);
         mFeedback = (RelativeLayout) findViewById(R.id.feedback);
         mAbout = (RelativeLayout) findViewById(R.id.about);
-        mSignout = (RelativeLayout) findViewById(R.id.log_out);
+        mLogout = (RelativeLayout) findViewById(R.id.log_out);
         mVersionNum = (TextView) findViewById(R.id.version_number);
 
+        mUserIcon.setOnClickListener(this);
         mAuth.setOnClickListener(this);
         mNotify.setOnClickListener(this);
         mFeedback.setOnClickListener(this);
         mAbout.setOnClickListener(this);
-        mSignout.setOnClickListener(this);
+        mLogout.setOnClickListener(this);
     }
 
     @Override
     public void onClick(View v) {
         switch (v.getId()){
+            case R.id.personal_center_user_icon:
+                startActivity(new Intent(this, EditInfoPage.class));
+                break;
             case R.id.authentication:
                 startActivity(new Intent(this, TipOffActivity.class));
                 break;
@@ -80,6 +84,12 @@ public class PersonalCenterActivity extends AppCompatActivity implements View.On
                 Glide.with(this).load(iconUrl).centerCrop().into(mUserIcon);
             }
             mNickname.setText(user.getName() == null ? user.getPhone() : user.getName());
+            String signature = user.getSignature();
+            if(signature != null && !signature.equals("")){
+                mSignature.setText(signature);
+            } else {
+                mSignature.setText("还没有编辑个人签名");
+            }
         }
     }
 

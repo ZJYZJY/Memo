@@ -140,7 +140,8 @@
         <!-- android:theme="@style/Theme.UMDefault" /> -->
         <!-- *************************    related to Share END **************************** -->
         <activity android:name=".activity.ResetPasswordPage" />
-        <activity android:name=".activity.MessageDetail"></activity>
+        <activity android:name=".activity.MessageDetail" />
+        <activity android:name=".activity.EditInfoPage"></activity>
     </application>
 
 </manifest>

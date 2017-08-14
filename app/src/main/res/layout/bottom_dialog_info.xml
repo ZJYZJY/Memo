@@ -45,6 +45,7 @@
                 </RelativeLayout>
 
                 <EditText
+                    android:id="@+id/interactive_name"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/margin_large"
@@ -54,35 +55,56 @@
                     android:textSize="16sp" />
 
                 <EditText
+                    android:id="@+id/interactive_phone"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/margin_large"
                     android:background="@drawable/edit_text_box_bg"
                     android:hint="@string/completing_phone_cb"
+                    android:maxLength="11"
                     android:padding="@dimen/padding_medium"
-                    android:textSize="16sp" />
+                    android:textSize="16sp"
+                    android:inputType="phone" />
 
                 <EditText
+                    android:id="@+id/interactive_we_chat"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/margin_large"
                     android:background="@drawable/edit_text_box_bg"
                     android:hint="@string/completing_wechat_cb"
                     android:padding="@dimen/padding_medium"
-                    android:textSize="16sp" />
+                    android:textSize="16sp"
+                    android:visibility="gone" />
 
                 <EditText
+                    android:id="@+id/interactive_email"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/margin_large"
                     android:background="@drawable/edit_text_box_bg"
                     android:hint="@string/completing_email_cb"
+                    android:inputType="textEmailAddress"
                     android:padding="@dimen/padding_medium"
-                    android:textSize="16sp" />
+                    android:textSize="16sp"
+                    android:visibility="gone"/>
+
+                <TextView
+                    android:id="@+id/interactive_resume"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/margin_large"
+                    android:background="@drawable/edit_text_box_bg"
+                    android:padding="@dimen/padding_medium"
+                    android:textSize="16sp"
+                    android:onClick="onUploadResume"
+                    android:text="上传简历"
+                    android:visibility="gone"/>
             </LinearLayout>
         </android.support.v4.widget.NestedScrollView>
 
         <Button
+            android:id="@+id/interactive_info_submit"
             style="@style/Widget.AppCompat.Button.Borderless"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
