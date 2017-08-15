@@ -10,22 +10,14 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 import com.donutcn.memo.R;
 import com.donutcn.memo.activity.ArticlePage;
 import com.donutcn.memo.adapter.MemoAdapter;
-import com.donutcn.memo.entity.ArrayResponse;
 import com.donutcn.memo.entity.BriefContent;
-import com.donutcn.memo.event.ReceiveNewMessagesEvent;
-import com.donutcn.memo.event.RequestRefreshEvent;
 import com.donutcn.memo.helper.ShareHelper;
 import com.donutcn.memo.listener.OnItemClickListener;
 import com.donutcn.memo.type.ItemLayoutType;
-import com.donutcn.memo.utils.CollectionUtil;
-import com.donutcn.memo.utils.HttpUtils;
-import com.donutcn.memo.utils.LogUtil;
-import com.donutcn.memo.utils.ToastUtil;
 import com.donutcn.memo.view.ListViewDecoration;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
@@ -39,12 +31,9 @@ import com.yanzhenjie.recyclerview.swipe.SwipeMenuItem;
 import com.yanzhenjie.recyclerview.swipe.SwipeMenuRecyclerView;
 
 import org.greenrobot.eventbus.EventBus;
-import org.greenrobot.eventbus.Subscribe;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import retrofit2.*;
 
 public abstract class BaseMemoFragment extends BaseScrollFragment {
 

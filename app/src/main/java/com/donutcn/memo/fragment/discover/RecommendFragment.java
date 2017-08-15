@@ -229,7 +229,7 @@ public class RecommendFragment extends BaseScrollFragment implements View.OnClic
     private OnItemClickListener mOnItemClickListener = new OnItemClickListener() {
         @Override
         public void onItemClick(int position) {
-            EventBus.getDefault().post(new ReceiveNewMessagesEvent(2, position));
+            EventBus.getDefault().postSticky(new ReceiveNewMessagesEvent(2, position));
             Intent intent = new Intent(getContext(), ArticlePage.class);
             intent.putExtra("contentId", mList.get(position).getId());
             startActivity(intent);

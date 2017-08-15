@@ -111,26 +111,7 @@ public class PublishActivity extends AppCompatActivity implements View.OnClickLi
         initView();
         setUpRichTextEditor();
         mContext = this;
-        mEditMode = getIntent().getBooleanExtra("editMode", false);
-        if(mEditMode){
-            mContentId = getIntent().getStringExtra("contentId");
-            pullContentInfo(mContentId);
-        }else {
-            PublishType type = (PublishType) getIntent().getSerializableExtra("type");
-            if (type != null) {
-                mSelectedType = type.toString();
-                mPublishType.setText(mSelectedType);
-            } else {
-                mSelectedType = SpfsUtils.readString(this, SpfsUtils.CACHE, "publishType", mSelectedType);
-                mTitleStr = SpfsUtils.readString(this, SpfsUtils.CACHE, "publishTitle", "");
-                mContentStr = SpfsUtils.readString(this, SpfsUtils.CACHE, "publishContent", "");
-                if (!isContentEmpty()) {
-                    mPublishType.setText(mSelectedType);
-                    mTitle.setText(mTitleStr);
-                    mContent.setHtml(mContentStr);
-                }
-            }
-        }
+        onNewIntent(getIntent());
 
         mIat = SpeechRecognizer.createRecognizer(this, mInitListener);
         mIatDialog = new RecognizerDialog(this, mInitListener);
@@ -718,23 +699,31 @@ public class PublishActivity extends AppCompatActivity implements View.OnClickLi
     @Override
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
-        mEditMode = intent.getBooleanExtra("editMode", false);
-        if(mEditMode){
-            mContentId = intent.getStringExtra("contentId");
-            pullContentInfo(mContentId);
+        String action = intent.getAction();
+        if(action != null && action.equals(Intent.ACTION_VIEW)){
+            // start from web page.
+            String data = intent.getDataString();
+            int index = Integer.valueOf(data.substring(data.lastIndexOf("/") + 1));
+            mSelectedType = PublishType.values()[index].toString();
         } else {
-            PublishType type = (PublishType) intent.getSerializableExtra("type");
-            if (type != null) {
-                mSelectedType = type.toString();
-                mPublishType.setText(mSelectedType);
+            mEditMode = intent.getBooleanExtra("editMode", false);
+            if(mEditMode){
+                mContentId = intent.getStringExtra("contentId");
+                pullContentInfo(mContentId);
             } else {
-                mSelectedType = SpfsUtils.readString(this, SpfsUtils.CACHE, "publishType", mSelectedType);
-                mTitleStr = SpfsUtils.readString(this, SpfsUtils.CACHE, "publishTitle", "");
-                mContentStr = SpfsUtils.readString(this, SpfsUtils.CACHE, "publishContent", "");
-                if (!isContentEmpty()) {
+                PublishType type = (PublishType) intent.getSerializableExtra("type");
+                if (type != null) {
+                    mSelectedType = type.toString();
                     mPublishType.setText(mSelectedType);
-                    mTitle.setText(mTitleStr);
-                    mContent.setHtml(mContentStr);
+                } else {
+                    mSelectedType = SpfsUtils.readString(this, SpfsUtils.CACHE, "publishType", mSelectedType);
+                    mTitleStr = SpfsUtils.readString(this, SpfsUtils.CACHE, "publishTitle", "");
+                    mContentStr = SpfsUtils.readString(this, SpfsUtils.CACHE, "publishContent", "");
+                    if (!isContentEmpty()) {
+                        mPublishType.setText(mSelectedType);
+                        mTitle.setText(mTitleStr);
+                        mContent.setHtml(mContentStr);
+                    }
                 }
             }
         }

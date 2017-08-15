@@ -261,7 +261,7 @@ public class MemoFragment extends BaseScrollFragment {
     private OnItemClickListener mOnItemClickListener = new OnItemClickListener() {
         @Override
         public void onItemClick(int position) {
-            EventBus.getDefault().post(new ReceiveNewMessagesEvent(0, position));
+            EventBus.getDefault().postSticky(new ReceiveNewMessagesEvent(0, position));
             Intent intent = new Intent(mContext, ArticlePage.class);
             intent.putExtra("contentId", mList.get(position).getId());
             intent.putExtra("self", true);

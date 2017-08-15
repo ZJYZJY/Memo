@@ -101,7 +101,7 @@ public class HomeFragment extends Fragment implements OnTabSelectListener {
         super.onStop();
     }
 
-    @Subscribe
+    @Subscribe(sticky = true)
     public void onReceiveNewMessagesEvent(ReceiveNewMessagesEvent event){
         if(event.getMessagePos() <= 1){
             mTabLayout.showMsg(event.getMessagePos(), event.getMessageCount());

@@ -53,7 +53,7 @@ public class HttpUtils {
 
     /** server address. */
     private static final String SERVER_HOST = "ascexz.320.io";
-    private static final String PATH = "http://" + SERVER_HOST + "/GoodPage/API/";
+    public static final String PATH = "http://" + SERVER_HOST + "/GoodPage/API/";
 
     private static Retrofit instance;
     private static ClearableCookieJar cookieJar;

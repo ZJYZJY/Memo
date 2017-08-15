@@ -106,7 +106,7 @@ public class MessageFragment extends BaseScrollFragment {
     private OnItemClickListener mOnItemClickListener = new OnItemClickListener() {
         @Override
         public void onItemClick(int position) {
-            EventBus.getDefault().post(new ReceiveNewMessagesEvent(1, position));
+            EventBus.getDefault().postSticky(new ReceiveNewMessagesEvent(1, position));
             Intent intent = new Intent(mContext, MessageDetail.class);
             intent.putExtra("message_id", mList.get(position).getId());
             startActivity(intent);

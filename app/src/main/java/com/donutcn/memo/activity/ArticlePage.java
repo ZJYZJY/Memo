@@ -1,6 +1,7 @@
 package com.donutcn.memo.activity;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.support.annotation.LayoutRes;
 import android.support.design.widget.BottomSheetBehavior;
 import android.support.design.widget.BottomSheetDialog;
@@ -22,6 +23,7 @@ import com.donutcn.memo.event.ChangeContentEvent;
 import com.donutcn.memo.type.PublishType;
 import com.donutcn.memo.utils.DensityUtils;
 import com.donutcn.memo.utils.HttpUtils;
+import com.donutcn.memo.utils.LogUtil;
 import com.donutcn.memo.utils.ToastUtil;
 import com.donutcn.memo.utils.UserStatus;
 import com.donutcn.memo.utils.WindowUtils;
@@ -30,6 +32,8 @@ import com.tencent.smtt.sdk.WebView;
 import com.tencent.smtt.sdk.WebViewClient;
 
 import org.greenrobot.eventbus.EventBus;
+
+import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -61,7 +65,13 @@ public class ArticlePage extends AppCompatActivity implements View.OnClickListen
         WindowUtils.setStatusBarColor(this, R.color.colorPrimary, true);
 
         glide = Glide.with(this);
-        mContentId = getIntent().getStringExtra("contentId");
+        String action = getIntent().getAction();
+        if(action != null && action.equals(Intent.ACTION_VIEW)){
+            String data = getIntent().getDataString();
+            mContentId = data.substring(data.lastIndexOf("/") + 6);
+        } else {
+            mContentId = getIntent().getStringExtra("contentId");
+        }
         HttpUtils.verifyContentById(mContentId).enqueue(new Callback<SimpleResponse>() {
             @Override
             public void onResponse(Call<SimpleResponse> call, Response<SimpleResponse> response) {
@@ -142,23 +152,43 @@ public class ArticlePage extends AppCompatActivity implements View.OnClickListen
     private void showContent(){
         WebView webView = (WebView) findViewById(R.id.webView);
         webView.loadUrl(mContentUrl);
+//        webView.loadUrl("http://192.168.1.110:3000/");
 
         WebSettings settings = webView.getSettings();
         settings.setJavaScriptEnabled(true);
+//        LogUtil.d(settings.getUserAgentString());
+//        settings.setUserAgent(settings.getUserAgentString() + "app/Memo");
 
         // 设置加载进来的页面自适应手机屏幕
         settings.setUseWideViewPort(true);
         settings.setLoadWithOverviewMode(true);
 
-        settings.setSupportZoom(true);
-        settings.setBuiltInZoomControls(true);
-        settings.setDisplayZoomControls(true);
+        settings.setSupportZoom(false);
+        settings.setBuiltInZoomControls(false);
+        settings.setDisplayZoomControls(false);
 
         webView.setWebViewClient(new WebViewClient() {
             @Override
             public boolean shouldOverrideUrlLoading(WebView view, String url) {
-                view.loadUrl(url);
-                return true;
+                if(url.startsWith(HttpUtils.PATH)){
+                    Uri uri = Uri.parse(url);
+                    List<String> param = uri.getPathSegments();
+                    if(param.get(2).equals("index")){
+                        if(param.get(3).equals("see_article")){
+                            Intent intent = new Intent(ArticlePage.this, ArticlePage.class);
+                            intent.setAction(Intent.ACTION_VIEW);
+                            intent.setData(uri);
+                            startActivity(intent);
+                        } else if(param.get(3).equals("web_myindex")){
+                            Intent intent = new Intent(ArticlePage.this, AuthorPage.class);
+                            intent.setAction(Intent.ACTION_VIEW);
+                            intent.setData(uri);
+                            startActivity(intent);
+                        }
+                    }
+                    return true;
+                }
+                return false;
             }
         });
         switch (mType) {

@@ -112,7 +112,7 @@ public class DiscoverFragment extends Fragment implements OnTabSelectListener {
         super.onStop();
     }
 
-    @Subscribe
+    @Subscribe(sticky = true)
     public void onReceiveNewMessagesEvent(ReceiveNewMessagesEvent event){
         if(event.getMessagePos() >= 2){
             mTabLayout.showMsg(event.getMessagePos() - 2, event.getMessageCount());

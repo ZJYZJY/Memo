@@ -59,7 +59,13 @@ public class AuthorPage extends AppCompatActivity implements OnItemClickListener
         WindowUtils.setStatusBarColor(this, R.color.colorPrimary, true);
 
         initView();
-        mUserId = getIntent().getStringExtra("userId");
+        String action = getIntent().getAction();
+        if(action != null && action.equals(Intent.ACTION_VIEW)){
+            String data = getIntent().getDataString();
+            mUserId = data.substring(data.lastIndexOf("/") + 6);
+        } else {
+            mUserId = getIntent().getStringExtra("userId");
+        }
         if(UserStatus.getCurrentUser().getFollowedUser().contains(mUserId)){
             // if already followed.
             setFollowed(true);

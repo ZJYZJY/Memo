@@ -88,7 +88,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         mForget = (TextView) findViewById(R.id.forget_password);
         authCodeTimer = new CountDownTimerUtils(mMsgCode, 60*1000, 1000);
 
-
         mToLogin.setOnClickListener(this);
         mToRegister.setOnClickListener(this);
         mLogin.setOnClickListener(this);

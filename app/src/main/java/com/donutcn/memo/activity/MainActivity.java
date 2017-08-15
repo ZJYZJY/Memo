@@ -1,6 +1,9 @@
 package com.donutcn.memo.activity;
 
+import android.content.ComponentName;
 import android.content.Intent;
+import android.content.ServiceConnection;
+import android.os.IBinder;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -16,6 +19,7 @@ import com.donutcn.memo.fragment.SplashFragment;
 import com.donutcn.memo.fragment.discover.DiscoverFragment;
 import com.donutcn.memo.fragment.home.HomeFragment;
 import com.donutcn.memo.helper.LoginHelper;
+import com.donutcn.memo.service.MemoMessageService;
 import com.donutcn.memo.utils.HttpUtils;
 import com.donutcn.memo.utils.LogUtil;
 import com.donutcn.memo.utils.ToastUtil;
@@ -37,6 +41,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public SplashFragment splashFragment;
     private HomeFragment mHomeFragment;
     private DiscoverFragment mDiscoverFragment;
+
+    private Intent mServiceIntent;
+    private MemoMessageService.MessageBinder mBinder;
 
     private long mExitTime = 0;
     private int mDefaultItem;
@@ -80,6 +87,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     });
                 }
             }, 1000);
+            mServiceIntent = new Intent(this, MemoMessageService.class);
+            startService(mServiceIntent);
+            bindService(mServiceIntent, connection, BIND_AUTO_CREATE);
         }
 
         mViewPager = (ViewPager) findViewById(R.id.main_viewpager);
@@ -140,6 +150,19 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
     }
 
+    private ServiceConnection connection = new ServiceConnection() {
+
+        @Override
+        public void onServiceDisconnected(ComponentName name) {
+        }
+
+        @Override
+        public void onServiceConnected(ComponentName name, IBinder service) {
+            mBinder = (MemoMessageService.MessageBinder) service;
+
+        }
+    };
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -151,6 +174,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         if(splashFragment == null){
             super.onBackPressed();
         }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        unbindService(connection);
+        startService(mServiceIntent);
     }
 
     public boolean onKeyDown(int keyCode, KeyEvent event) {
