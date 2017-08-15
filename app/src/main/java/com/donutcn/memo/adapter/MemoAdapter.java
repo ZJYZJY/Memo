@@ -8,6 +8,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.RequestManager;
 import com.donutcn.memo.R;
 import com.donutcn.memo.base.BasePublishAdapter;
 import com.donutcn.memo.entity.BriefContent;
@@ -26,6 +27,7 @@ public class MemoAdapter extends BasePublishAdapter<MemoAdapter.DefaultViewHolde
     private List<BriefContent> list;
     private int mLayoutType;
     private Context mContext;
+    private RequestManager glide;
 
     private OnItemClickListener mOnItemClickListener;
 
@@ -33,6 +35,7 @@ public class MemoAdapter extends BasePublishAdapter<MemoAdapter.DefaultViewHolde
         this.mContext = context;
         this.list = list;
         this.mLayoutType = layoutType;
+        glide = Glide.with(mContext);
     }
 
     public void setDataSet(List<BriefContent> list){
@@ -66,10 +69,19 @@ public class MemoAdapter extends BasePublishAdapter<MemoAdapter.DefaultViewHolde
     }
 
     @Override
+    public void onViewRecycled(DefaultViewHolder holder) {
+        super.onViewRecycled(holder);
+        holder.mContainer.setVisibility(View.GONE);
+        Glide.clear(holder.mContentPic1);
+        Glide.clear(holder.mContentPic2);
+        holder.mContentPic1.setBackgroundColor(mContext.getResources().getColor(R.color.white));
+        holder.mContentPic2.setBackgroundColor(mContext.getResources().getColor(R.color.white));
+    }
+
+    @Override
     public DefaultViewHolder onCompatCreateViewHolder(View realContentView, int viewType) {
         DefaultViewHolder viewHolder = new DefaultViewHolder(realContentView);
         viewHolder.mOnItemClickListener = mOnItemClickListener;
-
         return viewHolder;
     }
 
@@ -90,16 +102,16 @@ public class MemoAdapter extends BasePublishAdapter<MemoAdapter.DefaultViewHolde
         url1 = list.get(position).getImage1();
         if(!url0.equals("")){
             holder.mContainer.setVisibility(View.VISIBLE);
-            Glide.with(mContext).load(url0).into(holder.mContentPic1);
+            glide.load(url0).into(holder.mContentPic1);
         }
         if(!url1.equals("")){
             holder.mContainer.setVisibility(View.VISIBLE);
-            Glide.with(mContext).load(url1).into(holder.mContentPic2);
+            glide.load(url1).into(holder.mContentPic2);
         }
         String iconUrl = list.get(position).getUserIcon();
         if(mLayoutType == ItemLayoutType.AVATAR_IMG){
             if(iconUrl != null && !iconUrl.equals("")){
-                Glide.with(mContext).load(iconUrl).centerCrop().into(holder.mImage);
+                glide.load(iconUrl).centerCrop().into(holder.mImage);
             } else {
                 holder.mImage.setImageResource(R.mipmap.user_default_icon);
             }

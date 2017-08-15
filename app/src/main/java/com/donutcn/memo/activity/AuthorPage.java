@@ -12,6 +12,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.RequestManager;
 import com.donutcn.memo.R;
 import com.donutcn.memo.adapter.MemoAdapter;
 import com.donutcn.memo.entity.BriefContent;
@@ -46,6 +47,7 @@ public class AuthorPage extends AppCompatActivity implements OnItemClickListener
     private TextView mFollowText, mAuthorName, mAuthorSign;
     private ImageView mUserIcon;
 
+    private RequestManager glide;
     private List<BriefContent> mList;
     private LinkedTreeMap mUserInfo;
     private String mUserId;
@@ -89,6 +91,7 @@ public class AuthorPage extends AppCompatActivity implements OnItemClickListener
     }
 
     public void initView(){
+        glide = Glide.with(this);
         mRecyclerView = (RecyclerView) findViewById(R.id.recycler_view);
         mCollapsingToolbar = (CollapsingToolbarLayout) findViewById(R.id.author_collapsing_toolbar);
         mUserIcon = (ImageView) findViewById(R.id.author_icon);
@@ -135,7 +138,7 @@ public class AuthorPage extends AppCompatActivity implements OnItemClickListener
                                 LoginHelper.logout(AuthorPage.this);
                             } else if(response.body().isFail()){
                                 setFollowed(copyAction != 1);
-                                ToastUtil.show(AuthorPage.this, "关注失败");
+                                ToastUtil.show(AuthorPage.this, copyAction == 1 ? "关注" : "取消关注失败");
                             }
                         } else {
                             setFollowed(copyAction != 1);
@@ -173,7 +176,7 @@ public class AuthorPage extends AppCompatActivity implements OnItemClickListener
         mAuthorName.setText((String) mUserInfo.get("name"));
         String signature = (String) mUserInfo.get("self_introduction");
         mAuthorSign.setText(signature == null ? "这个人很懒什么也没写~" : signature);
-        Glide.with(this).load((String) mUserInfo.get("head_portrait")).centerCrop().into(mUserIcon);
+        glide.load((String) mUserInfo.get("head_portrait")).centerCrop().into(mUserIcon);
 
         try {
             mList = CollectionUtil.covertLinkedTreeMap(data, BriefContent.class);

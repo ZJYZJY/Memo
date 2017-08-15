@@ -5,16 +5,19 @@ import android.content.Intent;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.RequestManager;
 import com.donutcn.memo.R;
 import com.donutcn.memo.entity.SimpleResponse;
 import com.donutcn.memo.event.LoginStateEvent;
 import com.donutcn.memo.listener.UploadCallback;
+import com.donutcn.memo.utils.DensityUtils;
 import com.donutcn.memo.utils.HttpUtils;
 import com.donutcn.memo.utils.LogUtil;
 import com.donutcn.memo.utils.ToastUtil;
@@ -43,6 +46,7 @@ public class EditInfoPage extends AppCompatActivity implements View.OnClickListe
     private TextView mNickname, mGender, mSignature;
 
     private List<File> mIconFile;
+    private RequestManager glide;
 
     private static final int MODIFY_NAME = 0;
     private static final int MODIFY_GENDER = 1;
@@ -65,6 +69,7 @@ public class EditInfoPage extends AppCompatActivity implements View.OnClickListe
     }
 
     public void initView(){
+        glide = Glide.with(this);
         mUserIcon = (ImageView) findViewById(R.id.edit_info_icon);
         mNickname = (TextView) findViewById(R.id.edit_info_nickname);
         mGender = (TextView) findViewById(R.id.edit_info_gender);
@@ -72,7 +77,7 @@ public class EditInfoPage extends AppCompatActivity implements View.OnClickListe
 
         String iconUrl = UserStatus.getCurrentUser().getIconUrl();
         if(iconUrl != null){
-            Glide.with(this).load(iconUrl).centerCrop().into(mUserIcon);
+            glide.load(iconUrl).centerCrop().into(mUserIcon);
         }
         mNickname.setText(UserStatus.getCurrentUser().getName());
         String gender = UserStatus.getCurrentUser().getGender();
@@ -102,16 +107,42 @@ public class EditInfoPage extends AppCompatActivity implements View.OnClickListe
                         .start(this);
                 break;
             case R.id.edit_info_nickname_container:
-                final EditText nickname = new EditText(this);
+                View view = LayoutInflater.from(this).inflate(R.layout.dialog_edit_text, null);
+                final EditText nickname = (EditText) view.findViewById(R.id.edit_user_info_et);
+                String name = UserStatus.getCurrentUser().getName();
+                nickname.setText(name);
+                nickname.setSelection(name.length());
                 new AlertDialog.Builder(this)
                         .setTitle("给自己起个昵称吧")
-                        .setView(nickname)
+                        .setView(view)
                         .setPositiveButton("确定", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
                                 Map<String, String> data = new HashMap<>();
                                 data.put("name", nickname.getText().toString());
                                 modifyInfo(data, MODIFY_NAME);
+                            }
+                        })
+                        .setNegativeButton("取消", null)
+                        .show();
+                break;
+            case R.id.edit_info_signature_container:
+                View view1 = LayoutInflater.from(this).inflate(R.layout.dialog_edit_text, null);
+                final EditText signature = (EditText) view1.findViewById(R.id.edit_user_info_et);
+                String sign = UserStatus.getCurrentUser().getSignature();
+                if(sign != null){
+                    signature.setText(sign);
+                    signature.setSelection(sign.length());
+                }
+                new AlertDialog.Builder(this)
+                        .setTitle("个性签名")
+                        .setView(view1)
+                        .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                Map<String, String> data = new HashMap<>();
+                                data.put("self_introduction", signature.getText().toString());
+                                modifyInfo(data, MODIFY_SIGNATURE);
                             }
                         })
                         .setNegativeButton("取消", null)
@@ -129,22 +160,6 @@ public class EditInfoPage extends AppCompatActivity implements View.OnClickListe
                         })
                         .show();
                 break;
-            case R.id.edit_info_signature_container:
-                final EditText signature = new EditText(this);
-                new AlertDialog.Builder(this)
-                        .setTitle("个性签名")
-                        .setView(signature)
-                        .setPositiveButton("确定", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                Map<String, String> data = new HashMap<>();
-                                data.put("self_introduction", signature.getText().toString());
-                                modifyInfo(data, MODIFY_SIGNATURE);
-                            }
-                        })
-                        .setNegativeButton("取消", null)
-                        .show();
-                break;
         }
     }
 
@@ -153,8 +168,8 @@ public class EditInfoPage extends AppCompatActivity implements View.OnClickListe
             @Override
             public void onResponse(Call<SimpleResponse> call, Response<SimpleResponse> response) {
                 if(response.body() != null){
+                    LogUtil.d(response.body().toString());
                     if(response.body().isOk()){
-                        ToastUtil.show(EditInfoPage.this, "设置成功");
                         switch (type){
                             case MODIFY_NAME:
                                 mNickname.setText(data.get("name"));
@@ -169,6 +184,7 @@ public class EditInfoPage extends AppCompatActivity implements View.OnClickListe
                                 mSignature.setText(data.get("self_introduction"));
                                 break;
                         }
+                        ToastUtil.show(EditInfoPage.this, "设置成功");
                         UserStatus.setCurrentUser(data);
                         EventBus.getDefault().postSticky(new LoginStateEvent(true, UserStatus.getCurrentUser()));
                     } else {

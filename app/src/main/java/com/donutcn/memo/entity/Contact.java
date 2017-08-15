@@ -18,7 +18,7 @@ public class Contact {
     @Id
     @Expose
     @SerializedName("user_id")
-    private long contactId; //id
+    private String userId; //id
 
     private String displayName;//姓名
 
@@ -36,10 +36,10 @@ public class Contact {
     private String sortKey; // 排序用的
     private String lookUpKey;
 
-    @Generated(hash = 616731164)
-    public Contact(long contactId, String displayName, String name, String avatar,
+    @Generated(hash = 1689543450)
+    public Contact(String userId, String displayName, String name, String avatar,
             String phoneNum, String sortKey, String lookUpKey) {
-        this.contactId = contactId;
+        this.userId = userId;
         this.displayName = displayName;
         this.name = name;
         this.avatar = avatar;
@@ -68,12 +68,12 @@ public class Contact {
         this.avatar = avatar;
     }
 
-    public long getContactId() {
-        return contactId;
+    public String getUserId() {
+        return userId;
     }
 
-    public void setContactId(int contactId) {
-        this.contactId = contactId;
+    public void setUserId(String userId) {
+        this.userId = userId;
     }
 
     public String getDisplayName() {
@@ -106,9 +106,5 @@ public class Contact {
 
     public void setLookUpKey(String lookUpKey) {
         this.lookUpKey = lookUpKey;
-    }
-
-    public void setContactId(long contactId) {
-        this.contactId = contactId;
     }
 }

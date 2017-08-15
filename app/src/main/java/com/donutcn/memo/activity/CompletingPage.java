@@ -216,7 +216,7 @@ public class CompletingPage extends AppCompatActivity {
                         completeInfo(mShareIntent);
                     }
                 } else {
-                    ToastUtil.show(mContext, "发布失败");
+                    ToastUtil.show(mContext, "发布失败，服务器未知错误");
                 }
             }
 
@@ -240,7 +240,7 @@ public class CompletingPage extends AppCompatActivity {
                         finish();
                     }
                 } else {
-                    ToastUtil.show(mContext, "发布信息完善失败");
+                    ToastUtil.show(mContext, "完善失败，服务器未知错误");
                 }
             }
 

@@ -4,6 +4,7 @@ import android.app.ProgressDialog;
 import android.content.AsyncQueryHandler;
 import android.content.ContentResolver;
 import android.content.Context;
+import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.provider.ContactsContract;
@@ -17,6 +18,7 @@ import android.view.ViewGroup;
 
 import com.donutcn.memo.App;
 import com.donutcn.memo.R;
+import com.donutcn.memo.activity.AuthorPage;
 import com.donutcn.memo.adapter.FriendListAdapter;
 import com.donutcn.memo.base.BaseScrollFragment;
 import com.donutcn.memo.entity.ArrayResponse;
@@ -58,7 +60,7 @@ public class FriendsFragment extends BaseScrollFragment {
     private View mContainer, mNoMatch;
 
     private FriendListAdapter mAdapter;
-    private static ArrayList<Contact> mTempList;
+    private static List<Contact> mTempList;
     private static List<Contact> mContactsList;
     private Context mContext;
     private ContactDao mContactDao;
@@ -151,7 +153,9 @@ public class FriendsFragment extends BaseScrollFragment {
     private OnItemClickListener mOnItemClickListener = new OnItemClickListener() {
         @Override
         public void onItemClick(int position) {
-
+            Intent intent = new Intent(mContext, AuthorPage.class);
+            intent.putExtra("userId", mContactsList.get(position).getUserId());
+            startActivity(intent);
         }
     };
 
@@ -159,16 +163,12 @@ public class FriendsFragment extends BaseScrollFragment {
         if(PermissionCheck.checkContactsPermission(this)){
             final ProgressDialog dialog = new ProgressDialog(mContext);
             dialog.setTitle("正在匹配联系人");
-            dialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+//            dialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
             dialog.setCanceledOnTouchOutside(false);
             dialog.show();
             getContactsAsync(new UploadCallback<Contact>() {
                 @Override
-                public void uploadProgress(int progress, int total) {
-                    dialog.setMax(total);
-                    dialog.setProgress(progress);
-                }
-
+                public void uploadProgress(int progress, int total) {}
                 @Override
                 public void uploadAll(List<Contact> list) {
                     mAdapter = new FriendListAdapter(mContext, mContactsList);
@@ -190,17 +190,17 @@ public class FriendsFragment extends BaseScrollFragment {
                     for(Contact contact : mContactsList) {
                         Contact findContact = mContactDao
                                 .queryBuilder()
-                                .where(ContactDao.Properties.ContactId.eq(contact.getContactId()))
+                                .where(ContactDao.Properties.UserId.eq(contact.getUserId()))
                                 .build().unique();
                         if(findContact != null){
-                            mContactDao.deleteByKey(findContact.getContactId());
+                            mContactDao.deleteByKey(findContact.getUserId());
                         }
                         mContactDao.insert(contact);
                     }
                 }
-
                 @Override
                 public void uploadFail(String error) {
+                    ToastUtil.show(mContext, error);
                 }
             });
         }else {
@@ -240,9 +240,7 @@ public class FriendsFragment extends BaseScrollFragment {
         ContactsQueryHandler qh = new ContactsQueryHandler(getContext().getContentResolver(),
                 new OnQueryListener<Contact>() {
                     @Override
-                    public void onQueryProgress(int progress, int total) {
-                    }
-
+                    public void onQueryProgress(int progress, int total) {}
                     @Override
                     public void onQueryComplete(List<Contact> list) {
                         uploadSignatureCode(list, listener);
@@ -259,48 +257,35 @@ public class FriendsFragment extends BaseScrollFragment {
     }
 
     // upload signature code for matching friends.
-    private void uploadSignatureCode(List<Contact> list, final UploadCallback<Contact> listener){
+    private void uploadSignatureCode(final List<Contact> list, final UploadCallback<Contact> listener) {
         List<String> codes = new ArrayList<>();
-        int count = 0, record = 0;
-        int  currentTime = 0;
-        final int times = list.size() / 20 + 1;
-        for(int i = 0; i < list.size(); i++){
+        for (int i = 0; i < list.size(); i++) {
             String code = StringUtil.getMD5(list.get(i).getPhoneNum());
             codes.add(code);
-            count++;
-            record++;
-            // upload 20 contacts at a time.
-            if(count == 20 || i == list.size() - 1){
-                listener.uploadProgress(record, list.size());
-                count = 0;
-                currentTime++;
-                final int finalCurrentTime = currentTime;
-                HttpUtils.matchContacts(codes).enqueue(new Callback<ArrayResponse<Contact>>() {
-                    @Override
-                    public void onResponse(Call<ArrayResponse<Contact>> call,
-                                           Response<ArrayResponse<Contact>> response) {
-                        if(response.body() != null){
-                            if(response.body().isOk()){
-                                int length = response.body().size();
-                                for (int i = 0; i < length; i++){
-                                    mContactsList.add(response.body().getData().get(i));
-                                }
-                                if(finalCurrentTime == times){
-                                    listener.uploadAll(mContactsList);
-                                }
-                            }
-                        }else {
-                            Log.e("match_code", "匹配失败");
-                        }
-                    }
-
-                    @Override
-                    public void onFailure(Call<ArrayResponse<Contact>> call, Throwable t) {
-                        t.printStackTrace();
-                    }
-                });
-            }
         }
+        HttpUtils.matchContacts(codes).enqueue(new Callback<ArrayResponse<Contact>>() {
+            @Override
+            public void onResponse(Call<ArrayResponse<Contact>> call,
+                                   Response<ArrayResponse<Contact>> response) {
+                if (response.body() != null) {
+                    if (response.body().isOk()) {
+                        mContactsList.addAll(response.body().getData());
+                        listener.uploadAll(mContactsList);
+                    } else {
+                        listener.uploadFail("匹配失败，" + response.body().getMessage());
+                    }
+                } else {
+                    Log.e("match_code", "匹配失败");
+                    listener.uploadFail("匹配失败，服务器未知错误");
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ArrayResponse<Contact>> call, Throwable t) {
+                t.printStackTrace();
+                listener.uploadFail("连接失败，请检查你的网络连接");
+            }
+        });
     }
 
     static class ContactsQueryHandler extends AsyncQueryHandler {
@@ -339,7 +324,7 @@ public class FriendsFragment extends BaseScrollFragment {
                         contact.setDisplayName(name);
                         contact.setPhoneNum(number);
                         contact.setSortKey(sortKey);
-                        contact.setContactId(contactId);
+//                        contact.setUserId(contactId);
                         contact.setLookUpKey(lookUpKey);
                         mTempList.add(contact);
                         contactIdMap.put(number, contact);

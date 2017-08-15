@@ -463,6 +463,7 @@ public class HttpUtils {
         JSONObject json = new JSONObject();
         try {
             json.put("name", info.get("name"));
+            json.put("sex", info.get("sex"));
             json.put("head_portrait", info.get("head_portrait"));
             json.put("self_introduction", info.get("self_introduction"));
         } catch (JSONException e) {

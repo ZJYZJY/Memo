@@ -6,6 +6,7 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -53,6 +54,8 @@ public abstract class BaseMemoFragment extends BaseScrollFragment {
     public MemoAdapter mAdapter;
     public List<BriefContent> mList;
     public Context mContext;
+    public boolean isLoadMore = false;
+    public boolean canLoadMore = true;
 
     @Override
     public void onAttach(Context context) {
@@ -82,6 +85,19 @@ public abstract class BaseMemoFragment extends BaseScrollFragment {
 
         mMemo_rv.setLayoutManager(new LinearLayoutManager(mContext));
         mMemo_rv.addItemDecoration(new ListViewDecoration(getContext(), R.dimen.item_decoration_height));
+        mMemo_rv.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+                int lastVisibleItem = ((LinearLayoutManager)recyclerView.getLayoutManager()).findLastVisibleItemPosition();
+                if(lastVisibleItem + 5 >= mAdapter.getItemCount()){
+                    if(!isLoadMore && canLoadMore){
+                        isLoadMore = true;
+                        LoadMore();
+                    }
+                }
+            }
+        });
 
         // set up swipe menu.
         mMemo_rv.setSwipeMenuCreator(mSwipeMenuCreator);
@@ -112,7 +128,8 @@ public abstract class BaseMemoFragment extends BaseScrollFragment {
     public OnLoadmoreListener mLoadmoreListener = new OnLoadmoreListener() {
         @Override
         public void onLoadmore(RefreshLayout refreshlayout) {
-            if(mList.size() > 0){
+            if(mList.size() > 0 && !isLoadMore && canLoadMore){
+                isLoadMore = true;
                 LoadMore();
             }
         }

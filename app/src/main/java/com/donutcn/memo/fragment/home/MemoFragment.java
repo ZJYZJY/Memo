@@ -8,6 +8,7 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -58,12 +59,14 @@ import retrofit2.Response;
 
 public class MemoFragment extends BaseScrollFragment {
 
-    private SwipeMenuRecyclerView mHaoYe_rv;
+    private SwipeMenuRecyclerView mMemo_rv;
     public SmartRefreshLayout mRefreshLayout;
 
     private MemoAdapter mAdapter;
     private List<BriefContent> mList;
     private Context mContext;
+    private boolean isLoadMore = false;
+    private boolean canLoadMore = true;
 
     @Override
     public void onAttach(Context context) {
@@ -85,19 +88,33 @@ public class MemoFragment extends BaseScrollFragment {
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-        mHaoYe_rv = (SwipeMenuRecyclerView) view.findViewById(R.id.recycler_view);
-        setRecyclerView(mHaoYe_rv);
+        mMemo_rv = (SwipeMenuRecyclerView) view.findViewById(R.id.recycler_view);
+        setRecyclerView(mMemo_rv);
         mRefreshLayout = (SmartRefreshLayout) view.findViewById(R.id.swipe_layout);
         mRefreshLayout.setOnRefreshListener(mRefreshListener);
         mRefreshLayout.setOnLoadmoreListener(mLoadmoreListener);
 //        mRefreshLayout.setEnableLoadmore(true);
 
-        mHaoYe_rv.setLayoutManager(new LinearLayoutManager(mContext));
-        mHaoYe_rv.addItemDecoration(new ListViewDecoration(mContext, R.dimen.item_decoration_height));
+        mMemo_rv.setLayoutManager(new LinearLayoutManager(mContext));
+        mMemo_rv.addItemDecoration(new ListViewDecoration(mContext, R.dimen.item_decoration_height));
+        // preload data.
+        mMemo_rv.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+                int lastVisibleItem = ((LinearLayoutManager)recyclerView.getLayoutManager()).findLastVisibleItemPosition();
+                if(lastVisibleItem + 5 >= mAdapter.getItemCount()){
+                    if(!isLoadMore && canLoadMore){
+                        isLoadMore = true;
+                        LoadMore();
+                    }
+                }
+            }
+        });
 
         // set up swipe menu.
-        mHaoYe_rv.setSwipeMenuCreator(mSwipeMenuCreator);
-        mHaoYe_rv.setSwipeMenuItemClickListener(mHaoYeItemClickListener);
+        mMemo_rv.setSwipeMenuCreator(mSwipeMenuCreator);
+        mMemo_rv.setSwipeMenuItemClickListener(mHaoYeItemClickListener);
     }
 
     @Override
@@ -106,7 +123,7 @@ public class MemoFragment extends BaseScrollFragment {
         mList = new ArrayList<>();
         mAdapter = new MemoAdapter(mContext, mList, ItemLayoutType.TYPE_TAG);
         mAdapter.setOnItemClickListener(mOnItemClickListener);
-        mHaoYe_rv.setAdapter(mAdapter);
+        mMemo_rv.setAdapter(mAdapter);
         if(UserStatus.isLogin(mContext)){
             String cache = FileCacheUtil.getCache(mContext, "docs_cache.txt", FileCacheUtil.CACHE_LONG_TIMEOUT);
             if(cache.equals(""))
@@ -130,7 +147,8 @@ public class MemoFragment extends BaseScrollFragment {
                         mList.addAll(0, response.body().getData());
                         mList = CollectionUtil.removeDuplicateWithOrder(mList);
                         mAdapter.setDataSet(mList);
-                        mAdapter.notifyDataSetChanged();
+//                        mAdapter.notifyDataSetChanged();
+                        mMemo_rv.setAdapter(mAdapter);
                         FileCacheUtil.setCache(mContext, new Gson().toJson(mList));
                     }
                 }
@@ -162,11 +180,13 @@ public class MemoFragment extends BaseScrollFragment {
                     } else if(response.body().unAuthorized()){
 
                     } else if(response.body().isFail()) {
-                        ToastUtil.show(mContext, "已经到底部了");
+//                        ToastUtil.show(mContext, "已经到底部了");
+                        canLoadMore = false;
                         mRefreshLayout.finishLoadmore();
                         mRefreshLayout.setLoadmoreFinished(true);
                     }
                 }
+                isLoadMore = false;
                 mRefreshLayout.finishLoadmore();
             }
 
@@ -174,6 +194,7 @@ public class MemoFragment extends BaseScrollFragment {
             public void onFailure(Call<ArrayResponse<BriefContent>> call, Throwable t) {
                 t.printStackTrace();
                 ToastUtil.show(mContext, "连接失败");
+                isLoadMore = false;
                 mRefreshLayout.finishLoadmore();
             }
         });
@@ -189,7 +210,8 @@ public class MemoFragment extends BaseScrollFragment {
     private OnLoadmoreListener mLoadmoreListener = new OnLoadmoreListener() {
         @Override
         public void onLoadmore(RefreshLayout refreshlayout) {
-            if(mList.size() > 0){
+            if(mList.size() > 0 && !isLoadMore && canLoadMore){
+                isLoadMore = true;
                 LoadMore();
             }
         }
@@ -341,7 +363,7 @@ public class MemoFragment extends BaseScrollFragment {
     @Subscribe
     public void onRequestRefreshEvent(RequestRefreshEvent event){
         if(event.getRefreshPosition() == 0){
-            mHaoYe_rv.scrollToPosition(0);
+            mMemo_rv.scrollToPosition(0);
             mRefreshLayout.autoRefresh(0);
         }
     }

@@ -6,6 +6,7 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -59,6 +60,8 @@ public class RecommendFragment extends BaseScrollFragment implements View.OnClic
     private MemoAdapter mAdapter;
     private List<BriefContent> mList;
     private Context mContext;
+    private boolean isLoadMore = false;
+    private boolean canLoadMore = true;
 
     @Override
     public void onAttach(Context context) {
@@ -90,6 +93,19 @@ public class RecommendFragment extends BaseScrollFragment implements View.OnClic
 
         mMemo_rv.setLayoutManager(new LinearLayoutManager(mContext));
         mMemo_rv.addItemDecoration(new ListViewDecoration(getContext(), R.dimen.item_decoration_height));
+        mMemo_rv.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+                int lastVisibleItem = ((LinearLayoutManager)recyclerView.getLayoutManager()).findLastVisibleItemPosition();
+                if(lastVisibleItem + 5 >= mAdapter.getItemCount()){
+                    if(!isLoadMore && canLoadMore){
+                        isLoadMore = true;
+                        LoadMore();
+                    }
+                }
+            }
+        });
 
         // set up swipe menu.
         mMemo_rv.setSwipeMenuCreator(mSwipeMenuCreator);
@@ -118,7 +134,8 @@ public class RecommendFragment extends BaseScrollFragment implements View.OnClic
                         mList.addAll(0, response.body().getData());
                         mList = CollectionUtil.removeDuplicateWithOrder(mList);
                         mAdapter.setDataSet(mList);
-                        mAdapter.notifyDataSetChanged();
+//                        mAdapter.notifyDataSetChanged();
+                        mMemo_rv.setAdapter(mAdapter);
                     }
                 }
                 mRefreshLayout.finishRefresh();
@@ -149,11 +166,13 @@ public class RecommendFragment extends BaseScrollFragment implements View.OnClic
                     }else if(response.body().unAuthorized()){
 
                     } else if(response.body().isFail()) {
-                        ToastUtil.show(getContext(), "已经到底部了");
+//                        ToastUtil.show(getContext(), "已经到底部了");
+                        canLoadMore = false;
                         mRefreshLayout.finishLoadmore();
                         mRefreshLayout.setLoadmoreFinished(true);
                     }
                 }
+                isLoadMore = false;
                 mRefreshLayout.finishLoadmore();
             }
 
@@ -161,6 +180,7 @@ public class RecommendFragment extends BaseScrollFragment implements View.OnClic
             public void onFailure(Call<ArrayResponse<BriefContent>> call, Throwable t) {
                 t.printStackTrace();
                 ToastUtil.show(getContext(), "推荐连接失败");
+                isLoadMore = false;
                 mRefreshLayout.finishLoadmore();
             }
         });
@@ -176,7 +196,8 @@ public class RecommendFragment extends BaseScrollFragment implements View.OnClic
     private OnLoadmoreListener mLoadmoreListener = new OnLoadmoreListener() {
         @Override
         public void onLoadmore(RefreshLayout refreshlayout) {
-            if(mList.size() > 0){
+            if(mList.size() > 0 && !isLoadMore && canLoadMore){
+                isLoadMore = true;
                 LoadMore();
             }
         }

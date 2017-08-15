@@ -15,6 +15,7 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.RequestManager;
 import com.donutcn.memo.R;
 import com.donutcn.memo.entity.SimpleResponse;
 import com.donutcn.memo.event.ChangeContentEvent;
@@ -46,6 +47,7 @@ public class ArticlePage extends AppCompatActivity implements View.OnClickListen
     private TextView mResume;
 
     private PublishType mType = PublishType.ARTICLE;
+    private RequestManager glide;
 
     private String mContentId, mContentUrl, mUsername, mIconUrl, mUserId;
     private int mUpvoteCount, mCommentCount;
@@ -58,6 +60,7 @@ public class ArticlePage extends AppCompatActivity implements View.OnClickListen
         setContentView(R.layout.activity_article_page);
         WindowUtils.setStatusBarColor(this, R.color.colorPrimary, true);
 
+        glide = Glide.with(this);
         mContentId = getIntent().getStringExtra("contentId");
         HttpUtils.verifyContentById(mContentId).enqueue(new Callback<SimpleResponse>() {
             @Override
@@ -130,7 +133,7 @@ public class ArticlePage extends AppCompatActivity implements View.OnClickListen
 
         // set user icon.
         if (mIconUrl != null && !mIconUrl.equals("")) {
-            Glide.with(this).load(mIconUrl).centerCrop().into(mUserIcon);
+            glide.load(mIconUrl).centerCrop().into(mUserIcon);
         } else {
             mUserIcon.setImageResource(R.mipmap.user_default_icon);
         }
@@ -308,10 +311,5 @@ public class ArticlePage extends AppCompatActivity implements View.OnClickListen
             case R.id.interactive_info_submit://submit info
                 break;
         }
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
     }
 }

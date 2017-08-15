@@ -9,6 +9,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.RequestManager;
 import com.donutcn.memo.R;
 import com.donutcn.memo.entity.User;
 import com.donutcn.memo.event.LoginStateEvent;
@@ -25,6 +26,8 @@ public class PersonalCenterActivity extends AppCompatActivity implements View.On
     private TextView mNickname, mSignature, mVersionNum;
     private ImageView mUserIcon;
 
+    private RequestManager glide;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -35,6 +38,7 @@ public class PersonalCenterActivity extends AppCompatActivity implements View.On
     }
 
     public void initView(){
+        glide = Glide.with(this);
         mUserIcon = (ImageView) findViewById(R.id.personal_center_user_icon);
         mNickname = (TextView) findViewById(R.id.personal_center_user_name);
         mSignature = (TextView) findViewById(R.id.personal_center_user_signature);
@@ -81,7 +85,7 @@ public class PersonalCenterActivity extends AppCompatActivity implements View.On
             User user = event.getUser();
             String iconUrl = user.getIconUrl();
             if(iconUrl != null && !iconUrl.equals("")){
-                Glide.with(this).load(iconUrl).centerCrop().into(mUserIcon);
+                glide.load(iconUrl).centerCrop().into(mUserIcon);
             }
             mNickname.setText(user.getName() == null ? user.getPhone() : user.getName());
             String signature = user.getSignature();

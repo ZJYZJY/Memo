@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.RequestManager;
 import com.donutcn.memo.R;
 import com.donutcn.memo.activity.AuthorPage;
 import com.donutcn.memo.activity.PersonalCenterActivity;
@@ -35,11 +36,13 @@ public class DiscoverFragment extends Fragment implements OnTabSelectListener {
     private ImageView mUserCenter_iv;
 
     private Context mContext;
+    private RequestManager glide;
 
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
         this.mContext = context;
+        glide = Glide.with(mContext);
     }
 
     @Override
@@ -66,6 +69,7 @@ public class DiscoverFragment extends Fragment implements OnTabSelectListener {
         mPagerAdapter = new TabFragmentPagerAdapter(
                 getActivity().getSupportFragmentManager(), getContext(), 1);
         mViewPager = (ViewPager) view.findViewById(R.id.dis_viewpager);
+        mViewPager.setOffscreenPageLimit(3);
         mViewPager.setAdapter(mPagerAdapter);
         mTabLayout = (SlidingTabLayout) view.findViewById(R.id.sliding_tabs);
         mTabLayout.setViewPager(mViewPager);
@@ -122,7 +126,7 @@ public class DiscoverFragment extends Fragment implements OnTabSelectListener {
             if(iconUrl == null || iconUrl.equals("")){
                 mUserCenter_iv.setImageResource(R.mipmap.user_default_icon);
             }else {
-                Glide.with(mContext).load(iconUrl).centerCrop().into(mUserCenter_iv);
+                glide.load(iconUrl).centerCrop().into(mUserCenter_iv);
             }
         } else {
             mUserCenter_iv.setImageResource(R.drawable.mine);

@@ -31,7 +31,8 @@ public class LatestFragment extends BaseMemoFragment {
                                 mList.addAll(0, response.body().getData());
                                 mList = CollectionUtil.removeDuplicateWithOrder(mList);
                                 mAdapter.setDataSet(mList);
-                                mAdapter.notifyDataSetChanged();
+//                                mAdapter.notifyDataSetChanged();
+                                mMemo_rv.setAdapter(mAdapter);
                             }
                         }
                         mRefreshLayout.finishRefresh();
@@ -63,11 +64,13 @@ public class LatestFragment extends BaseMemoFragment {
                             }else if(response.body().unAuthorized()){
 
                             } else if(response.body().isFail()) {
-                                ToastUtil.show(getContext(), "已经到底部了");
+//                                ToastUtil.show(getContext(), "已经到底部了");
+                                canLoadMore = false;
                                 mRefreshLayout.finishLoadmore();
                                 mRefreshLayout.setLoadmoreFinished(true);
                             }
                         }
+                        isLoadMore = false;
                         mRefreshLayout.finishLoadmore();
                     }
 
@@ -75,6 +78,7 @@ public class LatestFragment extends BaseMemoFragment {
                     public void onFailure(Call<ArrayResponse<BriefContent>> call, Throwable t) {
                         t.printStackTrace();
                         ToastUtil.show(getContext(), "最新连接失败");
+                        isLoadMore = false;
                         mRefreshLayout.finishLoadmore();
                     }
                 });

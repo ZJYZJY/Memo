@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.View;
 
+import com.bumptech.glide.Glide;
 import com.donutcn.memo.R;
 import com.donutcn.memo.adapter.ViewPagerAdapter;
 import com.donutcn.memo.entity.SimpleResponse;

@@ -144,11 +144,17 @@ public class BriefContent {
     }
 
     public String getImage0() {
-        return imgUrl0;
+        if(imgUrl0 != null)
+            return imgUrl0;
+        else
+            return "";
     }
 
     public String getImage1() {
-        return imgUrl1;
+        if(imgUrl1 != null)
+            return imgUrl1;
+        else
+            return "";
     }
 
     public long getTimeStamp() {

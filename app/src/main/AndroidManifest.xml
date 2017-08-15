@@ -141,7 +141,12 @@
         <!-- *************************    related to Share END **************************** -->
         <activity android:name=".activity.ResetPasswordPage" />
         <activity android:name=".activity.MessageDetail" />
-        <activity android:name=".activity.EditInfoPage"></activity>
+        <activity android:name=".activity.EditInfoPage" />
+
+        <service
+            android:name=".service.MemoMessageService"
+            android:enabled="true"
+            android:exported="false"></service>
     </application>
 
 </manifest>
