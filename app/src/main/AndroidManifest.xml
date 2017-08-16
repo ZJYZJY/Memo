@@ -59,7 +59,7 @@
 
                 <data
                     android:host="ascexz.320.io"
-                    android:pathPrefix="/GoodPage/API/main"
+                    android:pathPrefix="/main"
                     android:scheme="http" />
             </intent-filter>
         </activity>
@@ -75,7 +75,7 @@
 
                 <data
                     android:host="ascexz.320.io"
-                    android:pathPrefix="/GoodPage/API/publish"
+                    android:pathPrefix="/GoodPage/publish"
                     android:scheme="http" />
             </intent-filter>
         </activity>
@@ -89,7 +89,7 @@
 
                 <data
                     android:host="ascexz.320.io"
-                    android:pathPrefix="/GoodPage/API/index/see_article"
+                    android:pathPrefix="/GoodPage/content"
                     android:scheme="http" />
             </intent-filter>
         </activity>
@@ -102,7 +102,7 @@
 
                 <data
                     android:host="ascexz.320.io"
-                    android:pathPrefix="/GoodPage/API/index/app_myindex"
+                    android:pathPrefix="/GoodPage/author"
                     android:scheme="http" />
             </intent-filter>
         </activity>

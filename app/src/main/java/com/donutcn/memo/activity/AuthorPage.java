@@ -62,7 +62,7 @@ public class AuthorPage extends AppCompatActivity implements OnItemClickListener
         String action = getIntent().getAction();
         if(action != null && action.equals(Intent.ACTION_VIEW)){
             String data = getIntent().getDataString();
-            mUserId = data.substring(data.lastIndexOf("/") + 6);
+            mUserId = data.substring(data.lastIndexOf("/") + 1);
         } else {
             mUserId = getIntent().getStringExtra("userId");
         }

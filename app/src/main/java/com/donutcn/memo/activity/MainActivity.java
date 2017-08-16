@@ -179,8 +179,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        unbindService(connection);
-        startService(mServiceIntent);
+        if(mServiceIntent != null){
+            unbindService(connection);
+            stopService(mServiceIntent);
+        }
     }
 
     public boolean onKeyDown(int keyCode, KeyEvent event) {

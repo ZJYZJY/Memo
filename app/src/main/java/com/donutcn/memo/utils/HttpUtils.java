@@ -7,6 +7,8 @@ import com.donutcn.memo.entity.BriefContent;
 import com.donutcn.memo.entity.Contact;
 import com.donutcn.memo.entity.ContentResponse;
 import com.donutcn.memo.entity.SimpleResponse;
+import com.donutcn.memo.helper.RouterHelper;
+import com.donutcn.memo.helper.RouterHelper.APIPath;
 import com.donutcn.memo.listener.UploadCallback;
 import com.donutcn.memo.type.PublishType;
 import com.franmontiel.persistentcookiejar.ClearableCookieJar;
@@ -32,6 +34,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import okhttp3.Cookie;
+import okhttp3.HttpUrl;
 import okhttp3.OkHttpClient;
 import okhttp3.RequestBody;
 import retrofit2.Call;
@@ -51,11 +55,10 @@ import retrofit2.http.Path;
 
 public class HttpUtils {
 
-    /** server address. */
-    private static final String SERVER_HOST = "ascexz.320.io";
-    public static final String PATH = "http://" + SERVER_HOST + "/GoodPage/API/";
+    public static final String PATH = RouterHelper.getApiUri().toString();
 
     private static Retrofit instance;
+    private static OkHttpClient okHttpClient;
     private static ClearableCookieJar cookieJar;
     private static UploadManager uploadManager;
 
@@ -66,7 +69,7 @@ public class HttpUtils {
         if (instance == null) {
             cookieJar = new PersistentCookieJar(
                     new SetCookieCache(), new SharedPrefsCookiePersistor(context));
-            OkHttpClient okHttpClient = new OkHttpClient.Builder()
+            okHttpClient = new OkHttpClient.Builder()
                     .cookieJar(cookieJar)
                     .build();
             Gson gson = new GsonBuilder()
@@ -82,6 +85,24 @@ public class HttpUtils {
 
     private static synchronized RRPageService create() {
         return instance.create(RRPageService.class);
+    }
+
+    private static List<Cookie> getCookies(){
+        HttpUrl httpUrl = new HttpUrl.Builder().scheme(RouterHelper.scheme()).host(RouterHelper.host()).build();
+        return okHttpClient.cookieJar().loadForRequest(httpUrl);
+    }
+
+    public static String cookieHeader() {
+        List<Cookie> cookies = getCookies();
+        StringBuilder cookieHeader = new StringBuilder();
+        for (int i = 0, size = cookies.size(); i < size; i++) {
+            if (i > 0) {
+                cookieHeader.append("; ");
+            }
+            Cookie cookie = cookies.get(i);
+            cookieHeader.append(cookie.name()).append('=').append(cookie.value());
+        }
+        return cookieHeader.toString();
     }
 
     public static void clearCookies() {
@@ -235,32 +256,6 @@ public class HttpUtils {
          */
         @POST("article_api/ceshi")
         Call<SimpleResponse> test();
-    }
-
-    private class APIPath {
-        private static final String LOGIN = "login";
-        private static final String GET_AUTH_CODE = "login/authcode";
-        private static final String REGISTER = "login/register";
-        private static final String MODIFY_PASSWORD = "login/edituser";
-        private static final String LOGOUT = "login/logout";
-        private static final String GET_UPLOAD_TOKEN = "authorised/upload";
-        private static final String PUBLISH_CONTENT = "authorised/create_article";
-        private static final String GET_MY_CONTENT = "authorised/index/{action}/{timestamp}";
-        private static final String GET_RECOMMEND = "index/index/{action}/{timestamp}";
-        private static final String GET_FOLLOWED_CONTENT = "authorised/my_follow/{action}/{timestamp}";
-        private static final String GET_LATEST_CONTENT = "index/latest/{action}/{timestamp}";
-        private static final String SEARCH_CONTENT = "index/search";
-        private static final String GET_CONTENT = "index/see_article/{id}";
-        private static final String SET_CONTENT_PRIVATE = "authorised/is_private";
-        private static final String COMPLETE_INFO = "authorised/article_field";
-        private static final String MATCH_CONTACTS = "authorised/myfriend";
-        private static final String DELETE_CONTENT = "authorised/delete_article/{id}";
-        private static final String MODIFY_MY_CONTENT = "authorised/the_article/{id}";
-        private static final String SYNC_USER_INFO = "user/get_myinfo";
-        private static final String MODIFY_USER_INFO = "user/edit_userinfo";
-        private static final String FOLLOW_USER = "user/follow/{userId}/{action}";
-        private static final String GET_USER_INFO = "index/app_myindex/{userId}";
-        private static final String VERIFY_CONTENT = "index/verify_content/{id}";
     }
 
     public static Call<SimpleResponse> login(int loginType, Map<String, String> data) {

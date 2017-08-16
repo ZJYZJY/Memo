@@ -99,7 +99,7 @@ public class RecommendFragment extends BaseScrollFragment implements View.OnClic
                 super.onScrolled(recyclerView, dx, dy);
                 int lastVisibleItem = ((LinearLayoutManager)recyclerView.getLayoutManager()).findLastVisibleItemPosition();
                 if(lastVisibleItem + 5 >= mAdapter.getItemCount()){
-                    if(!isLoadMore && canLoadMore){
+                    if(mList.size() > 0 && !isLoadMore && canLoadMore){
                         isLoadMore = true;
                         LoadMore();
                     }

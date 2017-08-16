@@ -705,6 +705,7 @@ public class PublishActivity extends AppCompatActivity implements View.OnClickLi
             String data = intent.getDataString();
             int index = Integer.valueOf(data.substring(data.lastIndexOf("/") + 1));
             mSelectedType = PublishType.values()[index].toString();
+            mPublishType.setText(mSelectedType);
         } else {
             mEditMode = intent.getBooleanExtra("editMode", false);
             if(mEditMode){

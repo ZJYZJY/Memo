@@ -151,10 +151,9 @@ public static final int *;
 -dontwarn okio.**
 -dontwarn javax.annotation.**
 
+# PersistentCookieJar
 -dontwarn com.franmontiel.persistentcookiejar.**
 -keep class com.franmontiel.persistentcookiejar.**
-
-# PersistentCookieJar
 -keepclassmembers class * implements java.io.Serializable {
     static final long serialVersionUID;
     private static final java.io.ObjectStreamField[] serialPersistentFields;

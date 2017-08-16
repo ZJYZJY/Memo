@@ -200,6 +200,7 @@ public class FriendsFragment extends BaseScrollFragment {
                 }
                 @Override
                 public void uploadFail(String error) {
+                    dialog.dismiss();
                     ToastUtil.show(mContext, error);
                 }
             });

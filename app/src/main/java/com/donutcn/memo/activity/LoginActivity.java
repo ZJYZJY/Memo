@@ -141,7 +141,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         // check the login state.
         loginState = UserStatus.isLogin(getApplicationContext());
         // delay 3s to remove the splash fragment.
-        mSplashHandler.postDelayed(showMainPage, 1000);
+        mSplashHandler.postDelayed(showMainPage, 500);
     }
 
     private void removeSplashFragment(){

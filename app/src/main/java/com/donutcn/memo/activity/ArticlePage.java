@@ -1,5 +1,6 @@
 package com.donutcn.memo.activity;
 
+import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.support.annotation.LayoutRes;
@@ -12,6 +13,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
@@ -20,20 +22,21 @@ import com.bumptech.glide.RequestManager;
 import com.donutcn.memo.R;
 import com.donutcn.memo.entity.SimpleResponse;
 import com.donutcn.memo.event.ChangeContentEvent;
+import com.donutcn.memo.helper.RouterHelper;
 import com.donutcn.memo.type.PublishType;
 import com.donutcn.memo.utils.DensityUtils;
 import com.donutcn.memo.utils.HttpUtils;
-import com.donutcn.memo.utils.LogUtil;
 import com.donutcn.memo.utils.ToastUtil;
 import com.donutcn.memo.utils.UserStatus;
 import com.donutcn.memo.utils.WindowUtils;
+import com.tencent.smtt.sdk.CookieManager;
+import com.tencent.smtt.sdk.CookieSyncManager;
+import com.tencent.smtt.sdk.WebChromeClient;
 import com.tencent.smtt.sdk.WebSettings;
 import com.tencent.smtt.sdk.WebView;
 import com.tencent.smtt.sdk.WebViewClient;
 
 import org.greenrobot.eventbus.EventBus;
-
-import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -52,6 +55,7 @@ public class ArticlePage extends AppCompatActivity implements View.OnClickListen
 
     private PublishType mType = PublishType.ARTICLE;
     private RequestManager glide;
+    private Context mContext;
 
     private String mContentId, mContentUrl, mUsername, mIconUrl, mUserId;
     private int mUpvoteCount, mCommentCount;
@@ -64,11 +68,12 @@ public class ArticlePage extends AppCompatActivity implements View.OnClickListen
         setContentView(R.layout.activity_article_page);
         WindowUtils.setStatusBarColor(this, R.color.colorPrimary, true);
 
+        mContext = this;
         glide = Glide.with(this);
         String action = getIntent().getAction();
         if(action != null && action.equals(Intent.ACTION_VIEW)){
             String data = getIntent().getDataString();
-            mContentId = data.substring(data.lastIndexOf("/") + 6);
+            mContentId = data.substring(data.lastIndexOf("/") + 1);
         } else {
             mContentId = getIntent().getStringExtra("contentId");
         }
@@ -149,48 +154,62 @@ public class ArticlePage extends AppCompatActivity implements View.OnClickListen
         }
     }
 
+    public static void synCookies(Context context, String url) {
+        CookieSyncManager.createInstance(context);
+        CookieManager cookieManager = CookieManager.getInstance();
+        cookieManager.setAcceptCookie(true);
+        cookieManager.removeSessionCookie();//移除
+        cookieManager.setCookie(url, HttpUtils.cookieHeader());//cookies是在HttpClient中获得的cookie
+        CookieSyncManager.getInstance().sync();
+    }
+
     private void showContent(){
+        final ProgressBar progressBar = (ProgressBar) findViewById(R.id.web_progress);
         WebView webView = (WebView) findViewById(R.id.webView);
-        webView.loadUrl(mContentUrl);
-//        webView.loadUrl("http://192.168.1.110:3000/");
 
         WebSettings settings = webView.getSettings();
         settings.setJavaScriptEnabled(true);
 //        LogUtil.d(settings.getUserAgentString());
 //        settings.setUserAgent(settings.getUserAgentString() + "app/Memo");
-
         // 设置加载进来的页面自适应手机屏幕
         settings.setUseWideViewPort(true);
         settings.setLoadWithOverviewMode(true);
+//        settings.setJavaScriptEnabled(true);
 
-        settings.setSupportZoom(false);
-        settings.setBuiltInZoomControls(false);
-        settings.setDisplayZoomControls(false);
-
+//        settings.setSupportZoom(false);
+//        settings.setBuiltInZoomControls(false);
+//        settings.setDisplayZoomControls(false);
         webView.setWebViewClient(new WebViewClient() {
             @Override
             public boolean shouldOverrideUrlLoading(WebView view, String url) {
-                if(url.startsWith(HttpUtils.PATH)){
+                if (url.startsWith(RouterHelper.getBaseUri().toString())) {
                     Uri uri = Uri.parse(url);
-                    List<String> param = uri.getPathSegments();
-                    if(param.get(2).equals("index")){
-                        if(param.get(3).equals("see_article")){
-                            Intent intent = new Intent(ArticlePage.this, ArticlePage.class);
-                            intent.setAction(Intent.ACTION_VIEW);
-                            intent.setData(uri);
-                            startActivity(intent);
-                        } else if(param.get(3).equals("web_myindex")){
-                            Intent intent = new Intent(ArticlePage.this, AuthorPage.class);
-                            intent.setAction(Intent.ACTION_VIEW);
-                            intent.setData(uri);
-                            startActivity(intent);
-                        }
+                    if (RouterHelper.confirmIntent(uri, "content")) {
+                        RouterHelper.openPageWithUri(mContext, uri, ArticlePage.class);
+                    } else if (RouterHelper.confirmIntent(uri, "author")) {
+                        RouterHelper.openPageWithUri(mContext, uri, AuthorPage.class);
+                    } else if(RouterHelper.confirmIntent(uri, "publish")){
+                        RouterHelper.openPageWithUri(mContext, uri, PublishActivity.class);
                     }
                     return true;
                 }
                 return false;
             }
         });
+        webView.setWebChromeClient(new WebChromeClient(){
+            @Override
+            public void onProgressChanged(WebView webView, int i) {
+                if(i == 100){
+                    progressBar.setVisibility(View.GONE);
+                }
+                else{
+                    progressBar.setVisibility(View.VISIBLE);
+                    progressBar.setProgress(i);
+                }
+            }
+        });
+        webView.loadUrl(mContentUrl);
+
         switch (mType) {
             case ARTICLE:
                 mWant.setText(getString(R.string.interactive_want_article));

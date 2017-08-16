@@ -80,7 +80,7 @@ public abstract class BaseMemoFragment extends BaseScrollFragment {
                 super.onScrolled(recyclerView, dx, dy);
                 int lastVisibleItem = ((LinearLayoutManager)recyclerView.getLayoutManager()).findLastVisibleItemPosition();
                 if(lastVisibleItem + 5 >= mAdapter.getItemCount()){
-                    if(!isLoadMore && canLoadMore){
+                    if(mList.size() > 0 && !isLoadMore && canLoadMore){
                         isLoadMore = true;
                         LoadMore();
                     }
@@ -100,7 +100,6 @@ public abstract class BaseMemoFragment extends BaseScrollFragment {
         mAdapter = new MemoAdapter(mContext, mList, ItemLayoutType.AVATAR_IMG);
         mAdapter.setOnItemClickListener(mOnItemClickListener);
         mMemo_rv.setAdapter(mAdapter);
-        Refresh();
     }
 
     public abstract void Refresh();

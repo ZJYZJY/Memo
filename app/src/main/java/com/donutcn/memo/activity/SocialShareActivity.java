@@ -66,7 +66,7 @@ public class SocialShareActivity extends AppCompatActivity implements View.OnCli
         mSwith.setOnStateChangedListener(new SwitchView.OnStateChangedListener() {
             @Override
             public void toggleToOn(SwitchView view) {
-                // not private
+                // set public
                 setPrivate(view.isOpened(), view);
             }
 
