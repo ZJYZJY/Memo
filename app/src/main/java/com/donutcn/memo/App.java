@@ -18,6 +18,8 @@ import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.constant.SpinnerStyle;
 import com.scwang.smartrefresh.layout.footer.ClassicsFooter;
 import com.scwang.smartrefresh.layout.header.ClassicsHeader;
+import com.tencent.android.tpush.XGPushConfig;
+import com.tencent.android.tpush.XGPushManager;
 import com.tencent.bugly.Bugly;
 import com.tencent.bugly.crashreport.CrashReport;
 import com.tencent.smtt.sdk.QbSdk;
@@ -56,6 +58,11 @@ public class App extends Application {
         daoSession = new DaoMaster(db).newSession();
 
         HttpUtils.create(getApplicationContext());
+        //开启信鸽的日志输出
+        XGPushConfig.enableDebug(this, true);
+//        XGPushConfig.setAccessId(getApplicationContext(), 2100265112);
+//        XGPushConfig.setAccessKey(getApplicationContext(), "A95K4WQ6E2QU");
+
         RichText.initCacheDir(this);
         SpeechUtility.createUtility(this, SpeechConstant.APPID + "=59647377");
         QbSdk.initX5Environment(getApplicationContext(), null);
@@ -127,6 +134,8 @@ public class App extends Application {
     @Override
     public void onTerminate() {
         super.onTerminate();
+        // unregister push service.
+        XGPushManager.unregisterPush(this);
         RichText.recycle();
     }
 }

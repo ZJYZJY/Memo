@@ -1,5 +1,6 @@
 package com.donutcn.memo.activity;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -61,7 +62,10 @@ public class MessageDetail extends AppCompatActivity implements OnItemClickListe
         findViewById(R.id.detail_content_reference).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                Intent intent = new Intent(MessageDetail.this, ArticlePage.class);
+                // Todo:pass the content id to ArticlePage.
+                intent.putExtra("contentId", "id");
+                startActivity(intent);
             }
         });
 

@@ -23,8 +23,12 @@ import com.donutcn.memo.service.MemoMessageService;
 import com.donutcn.memo.utils.HttpUtils;
 import com.donutcn.memo.utils.LogUtil;
 import com.donutcn.memo.utils.ToastUtil;
+import com.donutcn.memo.utils.UserStatus;
 import com.donutcn.memo.utils.WindowUtils;
 import com.donutcn.widgetlib.widget.CheckableImageButton;
+import com.tencent.android.tpush.XGIOperateCallback;
+import com.tencent.android.tpush.XGPushConfig;
+import com.tencent.android.tpush.XGPushManager;
 import com.umeng.socialize.UMShareAPI;
 
 import org.greenrobot.eventbus.EventBus;
@@ -90,6 +94,20 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             mServiceIntent = new Intent(this, MemoMessageService.class);
             startService(mServiceIntent);
             bindService(mServiceIntent, connection, BIND_AUTO_CREATE);
+
+            // register push service
+            XGPushManager.registerPush(getApplicationContext(),
+                    UserStatus.getCurrentUser().getUserId(), new XGIOperateCallback() {
+                @Override
+                public void onSuccess(Object o, int i) {
+                    LogUtil.d("XGPush", "注册成功，设备token为：" + o);
+                }
+
+                @Override
+                public void onFail(Object o, int i, String s) {
+                    LogUtil.d("XGPush", "注册失败，错误码：" + i + ",错误信息：" + s);
+                }
+            });
         }
 
         mViewPager = (ViewPager) findViewById(R.id.main_viewpager);

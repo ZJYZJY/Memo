@@ -89,13 +89,7 @@ public class SearchActivity extends AppCompatActivity implements OnItemClickList
     @Override
     public void onItemClick(int position) {
         Intent intent = new Intent(this, ArticlePage.class);
-        intent.putExtra("userId", mList.get(position).getUserId());
-        intent.putExtra("url", mList.get(position).getUrl());
-        intent.putExtra("name", mList.get(position).getName());
-        intent.putExtra("userIcon", mList.get(position).getUserIcon());
-        intent.putExtra("type", mList.get(position).getType());
-        intent.putExtra("upvote", mList.get(position).getUpVote());
-        intent.putExtra("comment", mList.get(position).getComment());
+        intent.putExtra("contentId", mList.get(position).getId());
         startActivity(intent);
     }
 

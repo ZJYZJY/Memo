@@ -179,11 +179,17 @@ public class ArticlePage extends AppCompatActivity implements View.OnClickListen
 //        settings.setSupportZoom(false);
 //        settings.setBuiltInZoomControls(false);
 //        settings.setDisplayZoomControls(false);
+        synCookies(mContext, mContentUrl);
         webView.setWebViewClient(new WebViewClient() {
             @Override
             public boolean shouldOverrideUrlLoading(WebView view, String url) {
-                if (url.startsWith(RouterHelper.getBaseUri().toString())) {
-                    Uri uri = Uri.parse(url);
+                Uri uri = Uri.parse(url);
+                if(url.startsWith(RouterHelper.getApiUri().toString())){
+//                    if(RouterHelper.confirmRequest(uri, "follow")){
+//                        UserStatus.getCurrentUser().follow(mContext, mUserId, true);
+//                    }
+                    return false;
+                } else if (url.startsWith(RouterHelper.getBaseUri().toString())) {
                     if (RouterHelper.confirmIntent(uri, "content")) {
                         RouterHelper.openPageWithUri(mContext, uri, ArticlePage.class);
                     } else if (RouterHelper.confirmIntent(uri, "author")) {

@@ -45,6 +45,7 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 import retrofit2.http.Body;
 import retrofit2.http.GET;
+import retrofit2.http.Headers;
 import retrofit2.http.POST;
 import retrofit2.http.Path;
 
@@ -123,6 +124,7 @@ public class HttpUtils {
          *
          * @param user user info
          */
+        @Headers("requestType:android-app")
         @POST(APIPath.LOGIN)
         Call<SimpleResponse> login(@Body RequestBody user);
 
@@ -179,7 +181,7 @@ public class HttpUtils {
                                                            @Path("timestamp") long timeStamp);
 
         /**
-         * refresh recommend content.
+         * refresh content.
          */
         @GET(APIPath.GET_RECOMMEND)
         Call<ArrayResponse<BriefContent>> getRecommendContent(@Path("action") String action,
@@ -209,6 +211,7 @@ public class HttpUtils {
         /**
          * change the content access level.
          */
+        @Headers("requestType:android-app")
         @POST(APIPath.SET_CONTENT_PRIVATE)
         Call<SimpleResponse> setPrivate(@Body RequestBody content);
 
@@ -227,21 +230,25 @@ public class HttpUtils {
         /**
          * delete user publish content.
          */
+        @Headers("requestType:android-app")
         @GET(APIPath.DELETE_CONTENT)
         Call<SimpleResponse> deleteContent(@Path("id") String id);
 
         /**
          * modify user publish content.
          */
+        @Headers("requestType:android-app")
         @GET(APIPath.MODIFY_MY_CONTENT)
         Call<ContentResponse> modifyMyContent(@Path("id") String id);
 
         @GET(APIPath.SYNC_USER_INFO)
         Call<SimpleResponse> syncUserInfo();
 
+        @Headers("requestType:android-app")
         @POST(APIPath.MODIFY_USER_INFO)
         Call<SimpleResponse> modifyUserInfo(@Body RequestBody info);
 
+        @Headers("requestType:android-app")
         @GET(APIPath.FOLLOW_USER)
         Call<SimpleResponse> follow(@Path("userId") String userId, @Path("action") int action);
 

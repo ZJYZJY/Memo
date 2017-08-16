@@ -14,14 +14,12 @@ import android.widget.ImageView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.RequestManager;
 import com.donutcn.memo.R;
-import com.donutcn.memo.activity.AuthorPage;
 import com.donutcn.memo.activity.PersonalCenterActivity;
 import com.donutcn.memo.adapter.TabFragmentPagerAdapter;
 import com.donutcn.memo.event.LoginStateEvent;
 import com.donutcn.memo.event.ReceiveNewMessagesEvent;
 import com.donutcn.memo.event.RequestRefreshEvent;
 import com.donutcn.memo.helper.LoginHelper;
-import com.donutcn.memo.utils.UserStatus;
 import com.flyco.tablayout.SlidingTabLayout;
 import com.flyco.tablayout.listener.OnTabSelectListener;
 
@@ -37,6 +35,9 @@ public class DiscoverFragment extends Fragment implements OnTabSelectListener {
 
     private Context mContext;
     private RequestManager glide;
+    private long recommendRefresh = 0;
+    private long latestRefresh = 0;
+    private long followedRefresh = 0;
 
     @Override
     public void onAttach(Context context) {
@@ -97,6 +98,28 @@ public class DiscoverFragment extends Fragment implements OnTabSelectListener {
                 return;
             }
         }
+        // refresh strategy.
+        switch (position){
+            case 0:
+                if (recommendRefresh == 0 || System.currentTimeMillis() - recommendRefresh > 3 * 60 * 1000) {
+                    EventBus.getDefault().post(new RequestRefreshEvent(2));
+                    recommendRefresh = System.currentTimeMillis();
+                }
+                break;
+            case 1:
+                if (latestRefresh == 0 || System.currentTimeMillis() - latestRefresh > 3 * 60 * 1000) {
+                    EventBus.getDefault().post(new RequestRefreshEvent(3));
+                    latestRefresh = System.currentTimeMillis();
+                }
+                break;
+            case 2:
+                if (followedRefresh == 0 || System.currentTimeMillis() - followedRefresh > 3 * 60 * 1000) {
+                    EventBus.getDefault().post(new RequestRefreshEvent(4));
+                    followedRefresh = System.currentTimeMillis();
+                }
+                break;
+        }
+
         mTabLayout.hideMsg(position);
     }
 

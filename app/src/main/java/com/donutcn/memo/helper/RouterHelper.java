@@ -36,6 +36,10 @@ public class RouterHelper {
         return uri.getPathSegments().get(1).equals(intent);
     }
 
+    public static boolean confirmRequest(Uri uri, String request){
+        return uri.getPathSegments().get(3).equals(request);
+    }
+
     public static void openPageWithUri(Context context, Uri uri, Class<?> cls){
         Intent intent = new Intent(context, cls);
         intent.setAction(Intent.ACTION_VIEW);
