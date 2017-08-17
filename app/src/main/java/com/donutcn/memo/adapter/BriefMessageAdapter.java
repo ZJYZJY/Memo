@@ -9,6 +9,8 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.RequestManager;
 import com.donutcn.memo.R;
 import com.donutcn.memo.entity.BriefMessage;
 import com.donutcn.memo.listener.OnItemClickListener;
@@ -24,12 +26,14 @@ public class BriefMessageAdapter extends SwipeMenuAdapter<BriefMessageAdapter.Vi
 
     private List<BriefMessage> list;
     private Context mContext;
+    private RequestManager glide;
 
     private OnItemClickListener mOnItemClickListener;
 
     public BriefMessageAdapter(Context context, List<BriefMessage> list) {
         this.mContext = context;
         this.list = list;
+        glide = Glide.with(context);
     }
 
     public void setOnItemClickListener(OnItemClickListener onItemClickListener) {
@@ -99,7 +103,26 @@ public class BriefMessageAdapter extends SwipeMenuAdapter<BriefMessageAdapter.Vi
                 .setShowShadow(false)
                 .setBadgeGravity(Gravity.CENTER | Gravity.END)
                 .setGravityOffset(32, true)
-                .setBadgeNumber(6);
+                .setBadgeNumber(list.get(position).getNewMsgCount());
+        holder.mTitle.setText(list.get(position).getTitle());
+        String subTitle = list.get(position).getSubTitle();
+        PublishType type = PublishType.getType(list.get(position).getType());
+        if(type == null){
+            // private letter
+            glide.load(list.get(position).getType()).centerCrop().into(holder.mImage);
+        } else {
+            int count = list.get(position).getNewMsgCount();
+            if(count > 0){
+                holder.mSubTitle.setText(mContext.getString(
+                        R.string.placeholder_new_reply, count, type.getReply()));
+            } else {
+                holder.mSubTitle.setText(mContext.getString(
+                        R.string.placeholder_no_new_reply, type.getReply()));
+            }
+        }
+        if(subTitle != null && !subTitle.equals("")){
+            holder.mSubTitle.setText(subTitle);
+        }
     }
 
     class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {

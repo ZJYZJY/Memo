@@ -91,9 +91,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     });
                 }
             }, 1000);
-            mServiceIntent = new Intent(this, MemoMessageService.class);
-            startService(mServiceIntent);
-            bindService(mServiceIntent, connection, BIND_AUTO_CREATE);
+//            mServiceIntent = new Intent(this, MemoMessageService.class);
+//            startService(mServiceIntent);
+//            bindService(mServiceIntent, connection, BIND_AUTO_CREATE);
 
             // register push service
             XGPushManager.registerPush(getApplicationContext(),
@@ -197,10 +197,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        if(mServiceIntent != null){
-            unbindService(connection);
-            stopService(mServiceIntent);
-        }
+//        if(mServiceIntent != null){
+//            unbindService(connection);
+//            stopService(mServiceIntent);
+//        }
     }
 
     public boolean onKeyDown(int keyCode, KeyEvent event) {

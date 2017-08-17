@@ -32,8 +32,8 @@
     <string name="placeholder_share_title">《%1$s》</string>
     <string name="placeholder_content_private">私密 / %1$s </string>
 
-    <string name="placeholder_message_resume">新增 %1$d 人投递简历，目前已收到 %2$d 份简历！</string>
-    <string name="placeholder_message_enroll">新增 %1$d 人报名参加活动，目前已收到 %2$d 人报名！</string>
+    <string name="placeholder_new_reply">收到%1$d个新的%2$s</string>
+    <string name="placeholder_no_new_reply">没有新的%1$s</string>
 
     <!--hint-->
     <string name="hint_search_text_box">搜索 好页 里的信息</string>

@@ -17,7 +17,7 @@ import com.donutcn.memo.R;
 import com.donutcn.memo.activity.PersonalCenterActivity;
 import com.donutcn.memo.adapter.TabFragmentPagerAdapter;
 import com.donutcn.memo.event.LoginStateEvent;
-import com.donutcn.memo.event.ReceiveNewMessagesEvent;
+import com.donutcn.memo.event.ChangeRedDotEvent;
 import com.donutcn.memo.event.RequestRefreshEvent;
 import com.donutcn.memo.helper.LoginHelper;
 import com.flyco.tablayout.SlidingTabLayout;
@@ -75,9 +75,6 @@ public class DiscoverFragment extends Fragment implements OnTabSelectListener {
         mTabLayout = (SlidingTabLayout) view.findViewById(R.id.sliding_tabs);
         mTabLayout.setViewPager(mViewPager);
         mTabLayout.setOnTabSelectListener(this);
-        mTabLayout.showDot(0);
-        mTabLayout.showMsg(1, 3);
-        mTabLayout.showMsg(2, 2);
         return view;
     }
 
@@ -136,9 +133,9 @@ public class DiscoverFragment extends Fragment implements OnTabSelectListener {
     }
 
     @Subscribe(sticky = true)
-    public void onReceiveNewMessagesEvent(ReceiveNewMessagesEvent event){
-        if(event.getMessagePos() >= 2){
-            mTabLayout.showMsg(event.getMessagePos() - 2, event.getMessageCount());
+    public void onChangeRedDotEvent(ChangeRedDotEvent event){
+        if(event.getDotPosition() >= 2){
+            mTabLayout.showMsg(event.getDotPosition() - 2, event.getCount());
         }
     }
 

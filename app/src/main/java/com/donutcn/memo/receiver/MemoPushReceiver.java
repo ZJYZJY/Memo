@@ -4,12 +4,18 @@ import android.content.Context;
 import android.content.Intent;
 
 import com.donutcn.memo.activity.MainActivity;
+import com.donutcn.memo.entity.BriefMessage;
+import com.donutcn.memo.event.ChangeRedDotEvent;
 import com.donutcn.memo.utils.LogUtil;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.tencent.android.tpush.XGPushBaseReceiver;
 import com.tencent.android.tpush.XGPushClickedResult;
 import com.tencent.android.tpush.XGPushRegisterResult;
 import com.tencent.android.tpush.XGPushShowedResult;
 import com.tencent.android.tpush.XGPushTextMessage;
+
+import org.greenrobot.eventbus.EventBus;
 
 import static com.donutcn.memo.type.PushType.NEW_CONTENT;
 import static com.donutcn.memo.type.PushType.NEW_MESSAGE;
@@ -44,16 +50,21 @@ public class MemoPushReceiver extends XGPushBaseReceiver {
      */
     @Override
     public void onTextMessage(Context context, XGPushTextMessage pushMsg) {
-        LogUtil.d(pushMsg.toString());
         String title = pushMsg.getTitle();
-        if(title.equals(NEW_CONTENT)){
+        String content = pushMsg.getContent();
+        Gson gson = new GsonBuilder()
+                .excludeFieldsWithoutExposeAnnotation()
+                .create();
+        if (title.equals(NEW_CONTENT)) {
 
-        } else if(title.equals(NEW_MESSAGE)){
-
-        } else if(title.equals(SYNC_INFO)){
-            String content = pushMsg.getContent();
+        } else if (title.equals(NEW_MESSAGE)) {
+            BriefMessage briefMsg = gson.fromJson(content, BriefMessage.class);
+            EventBus.getDefault().postSticky(briefMsg);
+            EventBus.getDefault().postSticky(new ChangeRedDotEvent(1, 0));
+        } else if (title.equals(SYNC_INFO)) {
 
         }
+
     }
 
     /**

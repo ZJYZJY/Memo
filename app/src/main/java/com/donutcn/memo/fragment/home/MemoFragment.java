@@ -19,7 +19,7 @@ import com.donutcn.memo.base.BaseScrollFragment;
 import com.donutcn.memo.entity.ArrayResponse;
 import com.donutcn.memo.entity.BriefContent;
 import com.donutcn.memo.entity.SimpleResponse;
-import com.donutcn.memo.event.ReceiveNewMessagesEvent;
+import com.donutcn.memo.event.ChangeRedDotEvent;
 import com.donutcn.memo.event.ChangeContentEvent;
 import com.donutcn.memo.event.RequestRefreshEvent;
 import com.donutcn.memo.helper.ShareHelper;
@@ -261,7 +261,6 @@ public class MemoFragment extends BaseScrollFragment {
     private OnItemClickListener mOnItemClickListener = new OnItemClickListener() {
         @Override
         public void onItemClick(int position) {
-            EventBus.getDefault().postSticky(new ReceiveNewMessagesEvent(0, position));
             Intent intent = new Intent(mContext, ArticlePage.class);
             intent.putExtra("contentId", mList.get(position).getId());
             intent.putExtra("self", true);

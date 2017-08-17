@@ -9,19 +9,21 @@ import java.util.ArrayList;
 
 public enum PublishType {
 
-    ARTICLE("文章"),
-    ALBUM("相册"),
-    ACTIVITY("活动"),
-    VOTE("投票"),
-    RECRUIT("招聘"),
-    QA("问答"),
-    RESERVE("预订"),
-    SALE("二手");
+    ARTICLE("文章", "评论"),
+    ALBUM("相册", "评论"),
+    ACTIVITY("活动", "报名"),
+    VOTE("投票", "投票"),
+    RECRUIT("招聘", "简历"),
+    QA("问答", "回答"),
+    RESERVE("预订", "预订"),
+    SALE("二手", "订单");
 
     private String mType;
+    private String mReply;
 
-    PublishType(String type){
+    PublishType(String type, String reply){
         this.mType = type;
+        this.mReply = reply;
     }
 
     /**
@@ -47,6 +49,10 @@ public enum PublishType {
                 return item;
         }
         return null;
+    }
+
+    public String getReply(){
+        return this.mReply;
     }
 
     @Override

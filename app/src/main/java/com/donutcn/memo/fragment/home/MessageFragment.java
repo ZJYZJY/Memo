@@ -14,13 +14,12 @@ import com.donutcn.memo.activity.MessageDetail;
 import com.donutcn.memo.adapter.BriefMessageAdapter;
 import com.donutcn.memo.base.BaseScrollFragment;
 import com.donutcn.memo.entity.BriefMessage;
-import com.donutcn.memo.event.ReceiveNewMessagesEvent;
+import com.donutcn.memo.event.ChangeRedDotEvent;
 import com.donutcn.memo.event.RequestRefreshEvent;
 import com.donutcn.memo.listener.OnItemClickListener;
 import com.donutcn.memo.view.ListViewDecoration;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
-import com.scwang.smartrefresh.layout.listener.OnLoadmoreListener;
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
 import com.yanzhenjie.recyclerview.swipe.SwipeMenuRecyclerView;
 
@@ -63,7 +62,7 @@ public class MessageFragment extends BaseScrollFragment {
         setRecyclerView(mMessage_rv);
         mRefreshLayout = (SmartRefreshLayout) view.findViewById(R.id.swipe_layout);
         mRefreshLayout.setOnRefreshListener(mRefreshListener);
-        mRefreshLayout.setOnLoadmoreListener(mLoadmoreListener);
+        mRefreshLayout.setEnableLoadmore(false);
 
         mMessage_rv.setLayoutManager(new LinearLayoutManager(mContext));
         mMessage_rv.addItemDecoration(new ListViewDecoration(mContext, R.dimen.item_decoration_height));
@@ -80,12 +79,9 @@ public class MessageFragment extends BaseScrollFragment {
     }
 
     public void Refresh() {
-        mList.add(new BriefMessage());
-        mList.add(new BriefMessage());
-        mList.add(new BriefMessage());
-        mList.add(new BriefMessage());
 
-        mAdapter.notifyDataSetChanged();
+
+//        mAdapter.notifyDataSetChanged();
         mRefreshLayout.finishRefresh();
     }
 
@@ -96,26 +92,32 @@ public class MessageFragment extends BaseScrollFragment {
         }
     };
 
-    private OnLoadmoreListener mLoadmoreListener = new OnLoadmoreListener() {
-        @Override
-        public void onLoadmore(RefreshLayout refreshlayout) {
-            refreshlayout.finishLoadmore(1000);
-        }
-    };
-
     private OnItemClickListener mOnItemClickListener = new OnItemClickListener() {
         @Override
         public void onItemClick(int position) {
-            EventBus.getDefault().postSticky(new ReceiveNewMessagesEvent(1, position));
+            EventBus.getDefault().postSticky(new ChangeRedDotEvent(1, -1));
+            clearRedDot(mList.get(position).getId());
             Intent intent = new Intent(mContext, MessageDetail.class);
             intent.putExtra("message_id", mList.get(position).getId());
             startActivity(intent);
         }
     };
 
-    @Override
-    public void onResume() {
-        super.onResume();
+    private BriefMessage sameMessage(String id){
+        for(BriefMessage msg : mList){
+            if(msg.getId().equals(id)){
+                return msg;
+            }
+        }
+        return null;
+    }
+
+    private void clearRedDot(String id){
+        for(BriefMessage msg : mList){
+            if(msg.getId().equals(id)){
+                msg.setNewMsgCount(0);
+            }
+        }
     }
 
     @Override
@@ -130,5 +132,23 @@ public class MessageFragment extends BaseScrollFragment {
             mMessage_rv.scrollToPosition(0);
             mRefreshLayout.autoRefresh(0);
         }
+    }
+
+    /**
+     * receive new push message
+     * @param event message object.
+     */
+    @Subscribe(sticky = true)
+    public void onReceiveBriefMessage(BriefMessage event){
+        BriefMessage msg = sameMessage(event.getId());
+        if (msg == null) {
+            mList.add(0, event);
+        } else {
+            int msgCount = msg.getNewMsgCount();
+            event.setNewMsgCount(event.getNewMsgCount() + msgCount);
+            mList.remove(msg);
+            mList.add(0, event);
+        }
+        mAdapter.notifyDataSetChanged();
     }
 }

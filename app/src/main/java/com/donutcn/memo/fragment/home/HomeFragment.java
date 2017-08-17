@@ -17,9 +17,8 @@ import com.donutcn.memo.R;
 import com.donutcn.memo.activity.PersonalCenterActivity;
 import com.donutcn.memo.adapter.TabFragmentPagerAdapter;
 import com.donutcn.memo.event.LoginStateEvent;
-import com.donutcn.memo.event.ReceiveNewMessagesEvent;
+import com.donutcn.memo.event.ChangeRedDotEvent;
 import com.donutcn.memo.event.RequestRefreshEvent;
-import com.donutcn.widgetlib.widget.CircleImageView;
 import com.flyco.tablayout.SlidingTabLayout;
 import com.flyco.tablayout.listener.OnTabSelectListener;
 
@@ -35,6 +34,8 @@ public class HomeFragment extends Fragment implements OnTabSelectListener {
 
     private Context mContext;
     private RequestManager glide;
+    private int memoCount = 0;
+    private int msgCount = 0;
 
     @Override
     public void onAttach(Context context) {
@@ -70,8 +71,6 @@ public class HomeFragment extends Fragment implements OnTabSelectListener {
         mTabLayout = (SlidingTabLayout) view.findViewById(R.id.sliding_tabs);
         mTabLayout.setViewPager(mViewPager);
         mTabLayout.setOnTabSelectListener(this);
-        mTabLayout.showMsg(0, 2);
-        mTabLayout.showDot(1);
         return view;
     }
 
@@ -91,6 +90,11 @@ public class HomeFragment extends Fragment implements OnTabSelectListener {
 
     @Override
     public void onTabReselect(int position) {
+        if(position == 0){
+            memoCount = 0;
+        } else {
+            msgCount = 0;
+        }
         mTabLayout.hideMsg(position);
         EventBus.getDefault().post(new RequestRefreshEvent(getCurrentPagePosition()));
     }
@@ -102,9 +106,17 @@ public class HomeFragment extends Fragment implements OnTabSelectListener {
     }
 
     @Subscribe(sticky = true)
-    public void onReceiveNewMessagesEvent(ReceiveNewMessagesEvent event){
-        if(event.getMessagePos() <= 1){
-            mTabLayout.showMsg(event.getMessagePos(), event.getMessageCount());
+    public void onChangeRedDotEvent(ChangeRedDotEvent event){
+        if(event.getDotPosition() == 0){
+            memoCount = memoCount + event.getCount();
+            mTabLayout.showMsg(event.getDotPosition(), memoCount);
+        } else if(event.getDotPosition() == 1){
+            if(event.getCount() == -1){
+                mTabLayout.hideMsg(1);
+            } else {
+                msgCount =  msgCount + event.getCount();
+                mTabLayout.showMsg(event.getDotPosition(), msgCount);
+            }
         }
     }
 

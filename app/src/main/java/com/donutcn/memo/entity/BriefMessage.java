@@ -1,6 +1,5 @@
 package com.donutcn.memo.entity;
 
-import com.donutcn.memo.type.PublishType;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
@@ -18,6 +17,10 @@ public class BriefMessage {
     @SerializedName(value = "id")
     private String id;
 
+    /**
+     * if message type is private letter, 'type' will return icon url of usr.
+     * else 'type' is {@link com.donutcn.memo.type.PublishType}
+     */
     @Expose
     @SerializedName(value = "type")
     private String type;
@@ -32,7 +35,7 @@ public class BriefMessage {
 
     @Expose
     @SerializedName(value = "msg_count")
-    private String newMsgCount;
+    private int newMsgCount;
 
     public String getId() {
         return id;
@@ -50,8 +53,16 @@ public class BriefMessage {
         return subTitle;
     }
 
-    public String getNewMsgCount() {
+    public int getNewMsgCount() {
         return newMsgCount;
+    }
+
+    public void setSubTitle(String subTitle) {
+        this.subTitle = subTitle;
+    }
+
+    public void setNewMsgCount(int newMsgCount) {
+        this.newMsgCount = newMsgCount;
     }
 
     public JSONObject toJson() {

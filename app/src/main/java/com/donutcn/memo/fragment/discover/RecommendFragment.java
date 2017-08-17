@@ -19,7 +19,7 @@ import com.donutcn.memo.adapter.MemoAdapter;
 import com.donutcn.memo.base.BaseScrollFragment;
 import com.donutcn.memo.entity.ArrayResponse;
 import com.donutcn.memo.entity.BriefContent;
-import com.donutcn.memo.event.ReceiveNewMessagesEvent;
+import com.donutcn.memo.event.ChangeRedDotEvent;
 import com.donutcn.memo.event.ChangeContentEvent;
 import com.donutcn.memo.event.RequestRefreshEvent;
 import com.donutcn.memo.helper.ShareHelper;
@@ -144,7 +144,7 @@ public class RecommendFragment extends BaseScrollFragment implements View.OnClic
             @Override
             public void onFailure(Call<ArrayResponse<BriefContent>> call, Throwable t) {
                 t.printStackTrace();
-                ToastUtil.show(getContext(), "推荐连接失败");
+                ToastUtil.show(mContext, "推荐连接失败");
                 mRefreshLayout.finishRefresh();
             }
         });
@@ -229,7 +229,6 @@ public class RecommendFragment extends BaseScrollFragment implements View.OnClic
     private OnItemClickListener mOnItemClickListener = new OnItemClickListener() {
         @Override
         public void onItemClick(int position) {
-            EventBus.getDefault().postSticky(new ReceiveNewMessagesEvent(2, position));
             Intent intent = new Intent(getContext(), ArticlePage.class);
             intent.putExtra("contentId", mList.get(position).getId());
             startActivity(intent);
