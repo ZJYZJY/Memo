@@ -17,7 +17,10 @@ import com.donutcn.memo.entity.BriefMessage;
 import com.donutcn.memo.event.ChangeRedDotEvent;
 import com.donutcn.memo.event.RequestRefreshEvent;
 import com.donutcn.memo.listener.OnItemClickListener;
+import com.donutcn.memo.utils.FileCacheUtil;
 import com.donutcn.memo.view.ListViewDecoration;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
@@ -28,6 +31,8 @@ import org.greenrobot.eventbus.Subscribe;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static com.donutcn.memo.utils.FileCacheUtil.MESSAGE_LIST_CACHE;
 
 public class MessageFragment extends BaseScrollFragment {
 
@@ -75,7 +80,14 @@ public class MessageFragment extends BaseScrollFragment {
         mAdapter = new BriefMessageAdapter(mContext, mList);
         mAdapter.setOnItemClickListener(mOnItemClickListener);
         mMessage_rv.setAdapter(mAdapter);
-        Refresh();
+        String cache = FileCacheUtil.getCache(mContext, MESSAGE_LIST_CACHE, FileCacheUtil.CACHE_LONG_TIMEOUT);
+        if(cache.equals(""))
+            Refresh();
+        else{
+            List<BriefMessage> temp = new Gson().fromJson(cache, new TypeToken<List<BriefMessage>>(){}.getType());
+            mList.addAll(temp);
+            mAdapter.notifyDataSetChanged();
+        }
     }
 
     public void Refresh() {
@@ -83,6 +95,7 @@ public class MessageFragment extends BaseScrollFragment {
 
 //        mAdapter.notifyDataSetChanged();
         mRefreshLayout.finishRefresh();
+        FileCacheUtil.setMessageListCache(mContext, new Gson().toJson(mList));
     }
 
     private OnRefreshListener mRefreshListener = new OnRefreshListener() {
@@ -149,6 +162,7 @@ public class MessageFragment extends BaseScrollFragment {
             mList.remove(msg);
             mList.add(0, event);
         }
+        FileCacheUtil.setMessageListCache(mContext, new Gson().toJson(mList));
         mAdapter.notifyDataSetChanged();
     }
 }

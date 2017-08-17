@@ -16,18 +16,24 @@ import static android.content.Context.MODE_PRIVATE;
 
 public class FileCacheUtil {
 
-    public static final String docCache = "docs_cache.txt";//缓存文件
+    public static final String CONTENT_LIST_CACHE = "content_list.txt";//缓存文件
 
-    public static final int CACHE_SHORT_TIMEOUT = 1000 * 60 * 5; // 5 分钟
+    public static final String MESSAGE_LIST_CACHE = "message_list.txt";//缓存文件
 
-    public static final int CACHE_LONG_TIMEOUT = 1000 * 60 * 60; // 60 分钟
+    public static final int CACHE_SHORT_TIMEOUT = 1000 * 60 * 10; // 10 minutes
+
+    public static final int CACHE_LONG_TIMEOUT = 1000 * 60 * 60; // 60 minutes
 
     public static void setCache(Context context, String content, String cacheFileName) {
         setCache(context, content, cacheFileName, MODE_PRIVATE);
     }
 
-    public static void setCache(Context context, String content) {
-        setCache(context, content, docCache, MODE_PRIVATE);
+    public static void setContentCache(Context context, String content) {
+        setCache(context, content, CONTENT_LIST_CACHE, MODE_PRIVATE);
+    }
+
+    public static void setMessageListCache(Context context, String content) {
+        setCache(context, content, MESSAGE_LIST_CACHE, MODE_PRIVATE);
     }
 
     /**
@@ -38,7 +44,7 @@ public class FileCacheUtil {
         clear(context, cacheFileName);
         FileOutputStream fos = null;
         try {
-            LogUtil.d("write", content);
+            LogUtil.d("write_" + cacheFileName, content);
             //打开文件输出流，接收参数是文件名和模式
             fos = context.openFileOutput(cacheFileName, mode);
             fos.write(content.getBytes());
@@ -85,7 +91,7 @@ public class FileCacheUtil {
                 }
             }
         }
-        LogUtil.d("read", sBuf.toString());
+        LogUtil.d("read_" + cacheFileName, sBuf.toString());
         return sBuf.toString();
     }
 

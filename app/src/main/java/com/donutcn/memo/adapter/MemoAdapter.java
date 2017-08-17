@@ -38,10 +38,6 @@ public class MemoAdapter extends BasePublishAdapter<MemoAdapter.DefaultViewHolde
         glide = Glide.with(mContext);
     }
 
-    public void setDataSet(List<BriefContent> list){
-        this.list = list;
-    }
-
     public void setOnItemClickListener(OnItemClickListener onItemClickListener) {
         this.mOnItemClickListener = onItemClickListener;
     }
@@ -138,9 +134,9 @@ public class MemoAdapter extends BasePublishAdapter<MemoAdapter.DefaultViewHolde
                 case ACTIVITY:
                 case VOTE:
                 case QA:
+                case RECRUIT:
                     holder.mContentType.setBackgroundResource(R.drawable.type_green_bg);
                     break;
-                case RECRUIT:
                 case RESERVE:
                 case SALE:
                     holder.mContentType.setBackgroundResource(R.drawable.type_red_bg);

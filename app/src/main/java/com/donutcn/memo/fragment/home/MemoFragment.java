@@ -19,7 +19,6 @@ import com.donutcn.memo.base.BaseScrollFragment;
 import com.donutcn.memo.entity.ArrayResponse;
 import com.donutcn.memo.entity.BriefContent;
 import com.donutcn.memo.entity.SimpleResponse;
-import com.donutcn.memo.event.ChangeRedDotEvent;
 import com.donutcn.memo.event.ChangeContentEvent;
 import com.donutcn.memo.event.RequestRefreshEvent;
 import com.donutcn.memo.helper.ShareHelper;
@@ -56,6 +55,8 @@ import java.util.List;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+
+import static com.donutcn.memo.utils.FileCacheUtil.CONTENT_LIST_CACHE;
 
 public class MemoFragment extends BaseScrollFragment {
 
@@ -125,12 +126,12 @@ public class MemoFragment extends BaseScrollFragment {
         mAdapter.setOnItemClickListener(mOnItemClickListener);
         mMemo_rv.setAdapter(mAdapter);
         if(UserStatus.isLogin(mContext)){
-            String cache = FileCacheUtil.getCache(mContext, "docs_cache.txt", FileCacheUtil.CACHE_LONG_TIMEOUT);
+            String cache = FileCacheUtil.getCache(mContext, CONTENT_LIST_CACHE, FileCacheUtil.CACHE_SHORT_TIMEOUT);
             if(cache.equals(""))
                 Refresh();
             else{
-                mList = new Gson().fromJson(cache, new TypeToken<List<BriefContent>>(){}.getType());
-                mAdapter.setDataSet(mList);
+                List<BriefContent> temp = new Gson().fromJson(cache, new TypeToken<List<BriefContent>>(){}.getType());
+                mList.addAll(temp);
                 mAdapter.notifyDataSetChanged();
             }
         }
@@ -146,10 +147,9 @@ public class MemoFragment extends BaseScrollFragment {
                     if(response.body().isOk()){
                         mList.addAll(0, response.body().getData());
                         mList = CollectionUtil.removeDuplicateWithOrder(mList);
-                        mAdapter.setDataSet(mList);
-//                        mAdapter.notifyDataSetChanged();
-                        mMemo_rv.setAdapter(mAdapter);
-                        FileCacheUtil.setCache(mContext, new Gson().toJson(mList));
+                        mAdapter.notifyDataSetChanged();
+//                        mMemo_rv.setAdapter(mAdapter);
+                        FileCacheUtil.setContentCache(mContext, new Gson().toJson(mList));
                     }
                 }
                 mRefreshLayout.finishRefresh();
@@ -173,10 +173,9 @@ public class MemoFragment extends BaseScrollFragment {
                     LogUtil.d("load", response.body().toString());
                     if(response.body().isOk()){
                         mList.addAll(mList.size(), response.body().getData());
-                        mAdapter.setDataSet(mList);
                         mAdapter.notifyDataSetChanged();
                         mRefreshLayout.finishLoadmore();
-                        FileCacheUtil.setCache(mContext, new Gson().toJson(mList));
+                        FileCacheUtil.setContentCache(mContext, new Gson().toJson(mList));
                     } else if(response.body().unAuthorized()){
 
                     } else if(response.body().isFail()) {
@@ -332,7 +331,7 @@ public class MemoFragment extends BaseScrollFragment {
                         mList.remove(position);
                         mAdapter.notifyItemRemoved(position);
                         ToastUtil.show(mContext, "删除成功");
-                        FileCacheUtil.setCache(mContext, new Gson().toJson(mList));
+                        FileCacheUtil.setContentCache(mContext, new Gson().toJson(mList));
                     }
                 }else {
                     ToastUtil.show(mContext, "删除失败");

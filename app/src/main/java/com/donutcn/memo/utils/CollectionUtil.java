@@ -32,7 +32,9 @@ public class CollectionUtil {
             if (set.add(element))
                 newList.add(element);
         }
-        return newList;
+        list.clear();
+        list.addAll(newList);
+        return list;
     }
 
     /**

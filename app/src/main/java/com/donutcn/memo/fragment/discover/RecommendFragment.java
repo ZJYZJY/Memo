@@ -19,7 +19,6 @@ import com.donutcn.memo.adapter.MemoAdapter;
 import com.donutcn.memo.base.BaseScrollFragment;
 import com.donutcn.memo.entity.ArrayResponse;
 import com.donutcn.memo.entity.BriefContent;
-import com.donutcn.memo.event.ChangeRedDotEvent;
 import com.donutcn.memo.event.ChangeContentEvent;
 import com.donutcn.memo.event.RequestRefreshEvent;
 import com.donutcn.memo.helper.ShareHelper;
@@ -133,9 +132,8 @@ public class RecommendFragment extends BaseScrollFragment implements View.OnClic
                     if(response.body().isOk()){
                         mList.addAll(0, response.body().getData());
                         mList = CollectionUtil.removeDuplicateWithOrder(mList);
-                        mAdapter.setDataSet(mList);
-//                        mAdapter.notifyDataSetChanged();
-                        mMemo_rv.setAdapter(mAdapter);
+                        mAdapter.notifyDataSetChanged();
+//                        mMemo_rv.setAdapter(mAdapter);
                     }
                 }
                 mRefreshLayout.finishRefresh();
@@ -160,7 +158,6 @@ public class RecommendFragment extends BaseScrollFragment implements View.OnClic
                     LogUtil.d("load", response.body().toString());
                     if(response.body().isOk()){
                         mList.addAll(mList.size(), response.body().getData());
-                        mAdapter.setDataSet(mList);
                         mAdapter.notifyDataSetChanged();
                         mRefreshLayout.finishLoadmore();
                     }else if(response.body().unAuthorized()){

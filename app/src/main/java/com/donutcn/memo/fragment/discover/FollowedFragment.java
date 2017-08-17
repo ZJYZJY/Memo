@@ -33,9 +33,8 @@ public class FollowedFragment extends BaseMemoFragment {
                             if(response.body().isOk()){
                                 mList.addAll(0, response.body().getData());
                                 mList = CollectionUtil.removeDuplicateWithOrder(mList);
-                                mAdapter.setDataSet(mList);
-//                                mAdapter.notifyDataSetChanged();
-                                mMemo_rv.setAdapter(mAdapter);
+                                mAdapter.notifyDataSetChanged();
+//                                mMemo_rv.setAdapter(mAdapter);
                             }
                         }
                         mRefreshLayout.finishRefresh();
@@ -61,7 +60,6 @@ public class FollowedFragment extends BaseMemoFragment {
                             LogUtil.d("load", response.body().toString());
                             if(response.body().isOk()){
                                 mList.addAll(mList.size(), response.body().getData());
-                                mAdapter.setDataSet(mList);
                                 mAdapter.notifyDataSetChanged();
                                 mRefreshLayout.finishLoadmore();
                             }else if(response.body().unAuthorized()){

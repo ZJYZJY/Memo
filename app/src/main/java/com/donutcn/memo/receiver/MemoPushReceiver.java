@@ -64,7 +64,6 @@ public class MemoPushReceiver extends XGPushBaseReceiver {
         } else if (title.equals(SYNC_INFO)) {
 
         }
-
     }
 
     /**

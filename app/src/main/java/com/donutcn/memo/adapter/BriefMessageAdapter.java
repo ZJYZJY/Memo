@@ -56,44 +56,6 @@ public class BriefMessageAdapter extends SwipeMenuAdapter<BriefMessageAdapter.Vi
         ViewHolder viewHolder = new ViewHolder(realContentView);
         viewHolder.mOnItemClickListener = mOnItemClickListener;
 
-        PublishType p = PublishType.RECRUIT;
-        switch (p){
-            case ARTICLE:
-                viewHolder.mImage.setBackgroundResource(R.drawable.type_blue_img_bg);
-                viewHolder.mImage.setImageResource(R.drawable.type_article);
-                break;
-            case ALBUM:
-                viewHolder.mImage.setBackgroundResource(R.drawable.type_blue_img_bg);
-                viewHolder.mImage.setImageResource(R.drawable.type_album);
-                break;
-            case ACTIVITY:
-                viewHolder.mImage.setBackgroundResource(R.drawable.type_green_img_bg);
-                viewHolder.mImage.setImageResource(R.drawable.type_activity);
-                break;
-            case VOTE:
-                viewHolder.mImage.setBackgroundResource(R.drawable.type_green_img_bg);
-                viewHolder.mImage.setImageResource(R.drawable.type_vote);
-                break;
-            case RECRUIT:
-                viewHolder.mImage.setBackgroundResource(R.drawable.type_red_img_bg);
-                viewHolder.mImage.setImageResource(R.drawable.type_recruit);
-                break;
-            case QA:
-                viewHolder.mImage.setBackgroundResource(R.drawable.type_green_img_bg);
-                viewHolder.mImage.setImageResource(R.drawable.type_article);// lack of resources "type_qa"
-                break;
-            case RESERVE:
-                viewHolder.mImage.setBackgroundResource(R.drawable.type_red_img_bg);
-                viewHolder.mImage.setImageResource(R.drawable.type_reserve);
-                break;
-            case SALE:
-                viewHolder.mImage.setBackgroundResource(R.drawable.type_red_img_bg);
-                viewHolder.mImage.setImageResource(R.drawable.type_sale);
-                break;
-            default:
-                viewHolder.mImage.setBackgroundColor(mContext.getResources().getColor(R.color.white));
-                break;
-        }
         return viewHolder;
     }
 
@@ -118,6 +80,32 @@ public class BriefMessageAdapter extends SwipeMenuAdapter<BriefMessageAdapter.Vi
             } else {
                 holder.mSubTitle.setText(mContext.getString(
                         R.string.placeholder_no_new_reply, type.getReply()));
+            }
+            switch (type){
+                case ARTICLE:
+                    holder.mImage.setImageResource(R.drawable.icon_message_article);
+                    break;
+                case ALBUM:
+                    holder.mImage.setImageResource(R.drawable.icon_message_album);
+                    break;
+                case ACTIVITY:
+                    holder.mImage.setImageResource(R.drawable.icon_message_activity);
+                    break;
+                case VOTE:
+                    holder.mImage.setImageResource(R.drawable.icon_message_vote);
+                    break;
+                case RECRUIT:
+                    holder.mImage.setImageResource(R.drawable.icon_message_recruit);
+                    break;
+                case QA:
+                    holder.mImage.setImageResource(R.drawable.icon_message_qa);
+                    break;
+                case RESERVE:
+                    holder.mImage.setImageResource(R.drawable.icon_message_reserve);
+                    break;
+                case SALE:
+                    holder.mImage.setImageResource(R.drawable.icon_message_sale);
+                    break;
             }
         }
         if(subTitle != null && !subTitle.equals("")){

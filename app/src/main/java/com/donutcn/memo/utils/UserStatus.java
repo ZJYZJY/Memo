@@ -63,7 +63,8 @@ public class UserStatus {
         SpfsUtils.clear(context, SpfsUtils.CACHE);
         SpfsUtils.clear(context, SpfsUtils.USER);
         // clear local cache.
-        FileCacheUtil.clear(context, FileCacheUtil.docCache);
+        FileCacheUtil.clear(context, FileCacheUtil.CONTENT_LIST_CACHE);
+        FileCacheUtil.clear(context, FileCacheUtil.MESSAGE_LIST_CACHE);
         // clear the local database.
         ((App)context.getApplicationContext()).getDaoSession().getContactDao().deleteAll();
     }
