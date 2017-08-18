@@ -9,16 +9,28 @@ import com.donutcn.memo.entity.User;
 
 public class LoginStateEvent {
 
-    private boolean state;
+    public static int LOGIN = 0;
+    public static int SYNC = 1;
+    public static int LOGOUT = 2;
+
+    private int state;
     private User user;
 
-    public LoginStateEvent(boolean state, User user){
+    public LoginStateEvent(int state, User user){
         this.state = state;
         this.user = user;
     }
 
     public boolean isLogin() {
-        return state;
+        return state == LOGIN;
+    }
+
+    public boolean isSync(){
+        return state == SYNC;
+    }
+
+    public boolean isLogout(){
+        return state == LOGOUT;
     }
 
     public User getUser() {

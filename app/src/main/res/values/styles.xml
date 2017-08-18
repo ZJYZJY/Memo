@@ -14,10 +14,15 @@
     </style>
 
     <style name="AppTheme_NoActionBar" parent="Theme.AppCompat.Light.NoActionBar">
-        <!--<item name="android:colorPrimary">@color/colorPrimary</item>-->
-        <!--<item name="android:colorPrimaryDark">@color/colorPrimaryDark</item>-->
-        <!--<item name="android:colorAccent">@color/colorAccent</item>-->
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
         <!--<item name="android:statusBarColor">@color/colorPrimaryDark</item>-->
         <!--<item name="android:actionBarStyle">@style/ToolBar_Main</item>-->
+    </style>
+
+    <style name="AnimPopup" parent="@android:style/Animation">
+        <item name="android:windowEnterAnimation">@anim/greeting_popup_fade_in</item>
+        <item name="android:windowExitAnimation">@anim/greeting_popup_fade_out</item>
     </style>
 </resources>

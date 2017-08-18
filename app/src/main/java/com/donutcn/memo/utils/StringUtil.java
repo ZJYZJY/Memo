@@ -4,6 +4,7 @@ import java.io.UnsupportedEncodingException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -15,6 +16,8 @@ import java.util.regex.Pattern;
  */
 
 public class StringUtil {
+
+    private static String moments[] = {"中午", "凌晨", "上午", "下午", "晚上"};
 
     /**
      * get the image src from html text.
@@ -66,6 +69,11 @@ public class StringUtil {
         int min = Integer.valueOf(time[1]);
         int sec = Integer.valueOf(time[2]);
         return new Date(year, month, day, hrs, min, sec);
+    }
+
+    public static String getMoment(){
+        int hour = Calendar.getInstance().get(Calendar.HOUR_OF_DAY);
+        return hour == 12 ? moments[0] : moments[hour / 6 + 1];
     }
 
     public static String getMD5(String val) {

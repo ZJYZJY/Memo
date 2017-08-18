@@ -27,7 +27,6 @@
         android:layout_toRightOf="@+id/back_arrow"
         android:layout_toStartOf="@+id/search_cancel"
         android:background="@drawable/search_bar_bg"
-        android:textCursorDrawable="@drawable/custom_cursor"
         android:hint="@string/hint_search"
         android:maxLines="1"
         android:paddingLeft="@dimen/padding_large"

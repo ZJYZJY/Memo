@@ -56,8 +56,8 @@ public class DynamicTimeFormat extends SimpleDateFormat {
         /*
          * 0:00~6:00    凌晨
          * 6:00~12:00   早上
-         * 12:00        中午
-         * 12:00~18:00  下午
+         * 12:00~13:00  中午
+         * 13:00~18:00  下午
          * 18:00~24:00  晚上
          */
         String moment = hour == 12 ? moments[0] : moments[hour / 6 + 1];

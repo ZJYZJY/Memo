@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/greeting_container"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/shadow"
+    android:gravity="center">
+
+    <LinearLayout
+        android:id="@+id/greeting_body"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/margin_top_img"
+        android:layout_marginRight="@dimen/margin_top_img"
+        android:orientation="vertical">
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/greeting_popup_head">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:layout_toLeftOf="@+id/greeting_close"
+                android:layout_toStartOf="@+id/greeting_close"
+                android:orientation="vertical"
+                android:padding="@dimen/padding_container">
+
+                <TextView
+                    android:id="@+id/greeting_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="XXX，下午好"
+                    android:textColor="@color/white" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/margin_small"
+                    android:text="@string/placeholder_publish_greeting_ask"
+                    android:textColor="@color/white" />
+            </LinearLayout>
+
+            <ImageView
+                android:id="@+id/greeting_close"
+                android:layout_width="@dimen/icon_small_icon"
+                android:layout_height="@dimen/icon_small_icon"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentTop="true"
+                android:layout_margin="@dimen/margin_small"
+                android:src="@drawable/icon_type_close" />
+        </RelativeLayout>
+
+        <GridView
+            android:id="@+id/greeting_grid"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:background="@drawable/greeting_popup_body"
+            android:columnWidth="64dp"
+            android:numColumns="4"
+            android:stretchMode="columnWidth" />
+    </LinearLayout>
+</RelativeLayout>

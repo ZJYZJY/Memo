@@ -81,7 +81,7 @@ public class PersonalCenterActivity extends AppCompatActivity implements View.On
 
     @Subscribe(sticky = true)
     public void onLoginStateEvent(LoginStateEvent event){
-        if(event.isLogin()){
+        if(event.isLogin() || event.isSync()){
             User user = event.getUser();
             String iconUrl = user.getIconUrl();
             if(iconUrl != null && !iconUrl.equals("")){

@@ -29,6 +29,8 @@
     <string name="placeholder_search_item_info">阅读 %1$s - 评论 %2$s - 喜欢 %3$s</string>
     <string name="placeholder_search_item_author">%1$s %2$s</string>
     <string name="placeholder_publish_author_type">%1$s 发布%2$s</string>
+    <string name="placeholder_publish_greeting_name">%1$s，%2$s好</string>
+    <string name="placeholder_publish_greeting_ask">今天要发布什么？</string>
     <string name="placeholder_share_title">《%1$s》</string>
     <string name="placeholder_content_private">私密 / %1$s </string>
 
@@ -100,6 +102,16 @@
     <string name="completing_resume_cb">上传简历</string>
 
     <!--publish content type-->
+    <string-array name="publish_content">
+        <item name="article">文章</item>
+        <item name="album">相册</item>
+        <item name="activity">活动</item>
+        <item name="vote">投票</item>
+        <item name="recruit">招聘</item>
+        <item name="qa">问答</item>
+        <item name="reserve">预订</item>
+        <item name="sale">二手</item>
+    </string-array>
     <string name="publish_content_article">文章</string>
     <string name="publish_content_album">相册</string>
     <string name="publish_content_activity">活动</string>

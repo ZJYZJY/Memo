@@ -18,9 +18,6 @@ import com.donutcn.memo.utils.ToastUtil;
 import com.donutcn.memo.utils.UserStatus;
 import com.donutcn.memo.utils.WindowUtils;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -61,6 +58,9 @@ public class ResetPasswordPage extends AppCompatActivity implements View.OnClick
         if(TextUtils.isEmpty(phoneNumber)){
             ToastUtil.show(this, "请输入手机号码");
             return;
+        } else if(!isValidPhoneNumber(phoneNumber)){
+            ToastUtil.show(this, "请检查手机号是否正确");
+            return;
         }
         mGetAuthCode.setClickable(false);
         mGetAuthCode.setBackgroundResource(R.drawable.disabled_gray_btn_bg);
@@ -74,7 +74,7 @@ public class ResetPasswordPage extends AppCompatActivity implements View.OnClick
                     } else {
                         mGetAuthCode.setClickable(true);
                         mGetAuthCode.setBackgroundResource(R.drawable.selector_radius_blue_btn);
-                        ToastUtil.show(ResetPasswordPage.this, "验证码发送失败，" + response.body().getMessage());
+                        ToastUtil.show(ResetPasswordPage.this, response.body().getMessage());
                     }
                 } else {
                     ToastUtil.show(ResetPasswordPage.this, "验证码发送失败 ，服务器未知错误");
@@ -98,11 +98,14 @@ public class ResetPasswordPage extends AppCompatActivity implements View.OnClick
         if (TextUtils.isEmpty(phoneNumber)) {
             ToastUtil.show(this, "手机号不能为空");
             return;
-        } else if (TextUtils.isEmpty(phoneNumber)) {
+        } else if (TextUtils.isEmpty(authCode)) {
             ToastUtil.show(this, "验证码不能为空");
             return;
-        } else if (TextUtils.isEmpty(phoneNumber)) {
+        } else if (TextUtils.isEmpty(password)) {
             ToastUtil.show(this, "密码不能为空");
+            return;
+        } else if(!isValidPassword(password)){
+            ToastUtil.show(this, "密码不能少于6位");
             return;
         }
         HttpUtils.modifyUser(phoneNumber, authCode, password, ACTION_MODIFY).enqueue(new Callback<SimpleResponse>() {
@@ -130,6 +133,14 @@ public class ResetPasswordPage extends AppCompatActivity implements View.OnClick
                 t.printStackTrace();
             }
         });
+    }
+
+    private boolean isValidPhoneNumber(String number){
+        return number.length() == 11;
+    }
+
+    private boolean isValidPassword(String password){
+        return password.length() >= 6;
     }
 
     @Override

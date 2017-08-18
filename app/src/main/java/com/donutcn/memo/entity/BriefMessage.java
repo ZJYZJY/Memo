@@ -34,6 +34,10 @@ public class BriefMessage {
     private String subTitle;
 
     @Expose
+    @SerializedName(value = "time")
+    private String time;
+
+    @Expose
     @SerializedName(value = "msg_count")
     private int newMsgCount;
 
@@ -51,6 +55,10 @@ public class BriefMessage {
 
     public String getSubTitle() {
         return subTitle;
+    }
+
+    public String getTime() {
+        return time;
     }
 
     public int getNewMsgCount() {
@@ -72,6 +80,7 @@ public class BriefMessage {
             json.put("type", type);
             json.put("title", title);
             json.put("sub_title", subTitle);
+            json.put("time", time);
             json.put("msg_count", newMsgCount);
         } catch (JSONException e) {
             e.printStackTrace();

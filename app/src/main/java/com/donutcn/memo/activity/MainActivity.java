@@ -1,25 +1,21 @@
 package com.donutcn.memo.activity;
 
-import android.content.ComponentName;
 import android.content.Intent;
-import android.content.ServiceConnection;
-import android.os.IBinder;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.View;
 
-import com.bumptech.glide.Glide;
 import com.donutcn.memo.R;
 import com.donutcn.memo.adapter.ViewPagerAdapter;
 import com.donutcn.memo.entity.SimpleResponse;
+import com.donutcn.memo.event.LoginStateEvent;
 import com.donutcn.memo.event.RequestRefreshEvent;
 import com.donutcn.memo.fragment.SplashFragment;
 import com.donutcn.memo.fragment.discover.DiscoverFragment;
 import com.donutcn.memo.fragment.home.HomeFragment;
 import com.donutcn.memo.helper.LoginHelper;
-import com.donutcn.memo.service.MemoMessageService;
 import com.donutcn.memo.utils.HttpUtils;
 import com.donutcn.memo.utils.LogUtil;
 import com.donutcn.memo.utils.ToastUtil;
@@ -27,11 +23,11 @@ import com.donutcn.memo.utils.UserStatus;
 import com.donutcn.memo.utils.WindowUtils;
 import com.donutcn.widgetlib.widget.CheckableImageButton;
 import com.tencent.android.tpush.XGIOperateCallback;
-import com.tencent.android.tpush.XGPushConfig;
 import com.tencent.android.tpush.XGPushManager;
 import com.umeng.socialize.UMShareAPI;
 
 import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -47,7 +43,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private DiscoverFragment mDiscoverFragment;
 
     private Intent mServiceIntent;
-    private MemoMessageService.MessageBinder mBinder;
 
     private long mExitTime = 0;
     private int mDefaultItem;
@@ -91,23 +86,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     });
                 }
             }, 1000);
-//            mServiceIntent = new Intent(this, MemoMessageService.class);
-//            startService(mServiceIntent);
-//            bindService(mServiceIntent, connection, BIND_AUTO_CREATE);
-
-            // register push service
-            XGPushManager.registerPush(getApplicationContext(),
-                    UserStatus.getCurrentUser().getUserId(), new XGIOperateCallback() {
-                @Override
-                public void onSuccess(Object o, int i) {
-                    LogUtil.d("XGPush", "注册成功，设备token为：" + o);
-                }
-
-                @Override
-                public void onFail(Object o, int i, String s) {
-                    LogUtil.d("XGPush", "注册失败，错误码：" + i + ",错误信息：" + s);
-                }
-            });
         }
 
         mViewPager = (ViewPager) findViewById(R.id.main_viewpager);
@@ -140,9 +118,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.main_bottom_home:
-                if(LoginHelper.ifRequestLogin(this, "请先登录")){
-                    return;
-                }
                 if(mHome.isChecked()){
                     EventBus.getDefault().post(new RequestRefreshEvent(
                             mHomeFragment.getCurrentPagePosition()));
@@ -163,23 +138,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 }
                 break;
             case R.id.main_bottom_pub:
+                if(LoginHelper.ifRequestLogin(this, "请先登录")){
+                    return;
+                }
                 startActivity(new Intent(this, PublishActivity.class));
                 break;
         }
     }
-
-    private ServiceConnection connection = new ServiceConnection() {
-
-        @Override
-        public void onServiceDisconnected(ComponentName name) {
-        }
-
-        @Override
-        public void onServiceConnected(ComponentName name, IBinder service) {
-            mBinder = (MemoMessageService.MessageBinder) service;
-
-        }
-    };
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -195,12 +160,20 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     @Override
+    protected void onStart() {
+        super.onStart();
+        EventBus.getDefault().register(this);
+    }
+
+    @Override
+    protected void onStop() {
+        EventBus.getDefault().unregister(this);
+        super.onStop();
+    }
+
+    @Override
     protected void onDestroy() {
         super.onDestroy();
-//        if(mServiceIntent != null){
-//            unbindService(connection);
-//            stopService(mServiceIntent);
-//        }
     }
 
     public boolean onKeyDown(int keyCode, KeyEvent event) {
@@ -219,5 +192,24 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             return true;
         }
         return super.onKeyDown(keyCode, event);
+    }
+
+    @Subscribe(sticky = true)
+    public void onLoginStateEvent(LoginStateEvent event) {
+        if (event.isLogin()) {
+            // register push service
+            XGPushManager.registerPush(getApplicationContext(),
+                    UserStatus.getCurrentUser().getUserId(), new XGIOperateCallback() {
+                @Override
+                public void onSuccess(Object o, int i) {
+                    LogUtil.d("XGPush", "注册成功，设备token为：" + o);
+                }
+
+                @Override
+                public void onFail(Object o, int i, String s) {
+                    LogUtil.d("XGPush", "注册失败，错误码：" + i + ",错误信息：" + s);
+                }
+            });
+        }
     }
 }

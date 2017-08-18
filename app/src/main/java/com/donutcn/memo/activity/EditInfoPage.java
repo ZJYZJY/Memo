@@ -17,7 +17,6 @@ import com.donutcn.memo.R;
 import com.donutcn.memo.entity.SimpleResponse;
 import com.donutcn.memo.event.LoginStateEvent;
 import com.donutcn.memo.listener.UploadCallback;
-import com.donutcn.memo.utils.DensityUtils;
 import com.donutcn.memo.utils.HttpUtils;
 import com.donutcn.memo.utils.LogUtil;
 import com.donutcn.memo.utils.ToastUtil;
@@ -186,7 +185,7 @@ public class EditInfoPage extends AppCompatActivity implements View.OnClickListe
                         }
                         ToastUtil.show(EditInfoPage.this, "设置成功");
                         UserStatus.setCurrentUser(data);
-                        EventBus.getDefault().postSticky(new LoginStateEvent(true, UserStatus.getCurrentUser()));
+                        EventBus.getDefault().postSticky(new LoginStateEvent(LoginStateEvent.SYNC, UserStatus.getCurrentUser()));
                     } else {
                         ToastUtil.show(EditInfoPage.this, "设置失败");
                     }

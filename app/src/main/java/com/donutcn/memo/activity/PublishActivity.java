@@ -14,15 +14,19 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.GridView;
 import android.widget.HorizontalScrollView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.RadioButton;
+import android.widget.SimpleAdapter;
 import android.widget.TextView;
 
 import com.donutcn.memo.R;
@@ -38,6 +42,7 @@ import com.donutcn.memo.utils.RecognizerResultParser;
 import com.donutcn.memo.utils.SpfsUtils;
 import com.donutcn.memo.utils.StringUtil;
 import com.donutcn.memo.utils.ToastUtil;
+import com.donutcn.memo.utils.UserStatus;
 import com.donutcn.memo.utils.WindowUtils;
 import com.google.gson.internal.LinkedTreeMap;
 import com.iflytek.cloud.ErrorCode;
@@ -58,6 +63,7 @@ import org.json.JSONObject;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -80,6 +86,7 @@ public class PublishActivity extends AppCompatActivity implements View.OnClickLi
     private LinearLayout mAddPic, mTypeSet, mTemplate, mSpeech;
     private HorizontalScrollView mTools;
     private ImageView mKeyboard, mSpeechClose;
+    private ProgressDialog mPublishDialog;
 
     private SpeechRecognizer mIat;
     private RecognizerDialog mIatDialog;
@@ -99,7 +106,11 @@ public class PublishActivity extends AppCompatActivity implements View.OnClickLi
     private static final String strategy = "?imageMogr2/auto-orient/thumbnail/!60p/format/jpg" +
             "/interlace/1/blur/1x0/quality/50|imageslim";
     private Context mContext;
-    private ProgressDialog mPublishDialog;
+    // gridView adapter.
+    private String[] iconName;
+    private int[] icon = { R.drawable.icon_type_article, R.drawable.icon_type_album,
+            R.drawable.icon_type_activity, R.drawable.icon_type_vote, R.drawable.icon_type_recruit,
+            R.drawable.icon_type_qa, R.drawable.icon_type_reserve, R.drawable.icon_type_sale};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -118,7 +129,21 @@ public class PublishActivity extends AppCompatActivity implements View.OnClickLi
 
         mPublishDialog = new ProgressDialog(this);
         mPublishDialog.setMessage("正在上传中...");
+
+//        getWindow().getDecorView().postDelayed(showGreeting, 200);
     }
+
+    private Runnable showGreeting = new Runnable() {
+        @Override
+        public void run() {
+            if(hasWindowFocus()){
+                showGreetingMenu();
+                getWindow().getDecorView().removeCallbacks(this);
+            } else {
+                getWindow().getDecorView().postDelayed(this, 200);
+            }
+        }
+    };
 
     private InitListener mInitListener = new InitListener() {
         @Override
@@ -349,7 +374,6 @@ public class PublishActivity extends AppCompatActivity implements View.OnClickLi
                 mContent.setBlockquote();
                 break;
             case R.id.link:
-                mContent.insertLink("http://www.baidu.com", null);
                 showLinkDialog();
                 break;
             case R.id.clear:
@@ -451,36 +475,96 @@ public class PublishActivity extends AppCompatActivity implements View.OnClickLi
         popupWindow.showAsDropDown(view);
     }
 
+    private void showGreetingMenu(){
+        final View rootView = getWindow().getDecorView().findViewById(android.R.id.content);
+        final View popWindowView = getLayoutInflater().inflate(R.layout.publish_greeting_popup, null);
+        final PopupWindow popupWindow = new PopupWindow(popWindowView,
+                ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT, true);
+        popupWindow.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        popupWindow.setAnimationStyle(R.style.AnimPopup);
+        popupWindow.setClippingEnabled(false);
+        popupWindow.setOnDismissListener(new PopupWindow.OnDismissListener() {
+            @Override
+            public void onDismiss() {
+                if(mSelectedType.equals(mContentTypes[1])){
+                    mAddPic.performClick();
+                } else {
+                    mTitle.requestFocus();
+                    WindowUtils.toggleKeyboard(mContext, rootView, true);
+                }
+            }
+        });
+        // header
+        TextView name = (TextView) popWindowView.findViewById(R.id.greeting_name);
+        GridView gridView = (GridView) popWindowView.findViewById(R.id.greeting_grid);
+        name.setText(getString(R.string.placeholder_publish_greeting_name,
+                UserStatus.getCurrentUser().getName(), StringUtil.getMoment()));
+        // body
+        String[] from ={"image", "text"};
+        int[] to = {R.id.image, R.id.text};
+        iconName = getResources().getStringArray(R.array.publish_content);
+        SimpleAdapter adapter = new SimpleAdapter(mContext, getData(), R.layout.publish_greeting_item, from, to);
+        gridView.setAdapter(adapter);
+        gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                mSelectedType = mContentTypes[position];
+                mPublishType.setText(mSelectedType);
+                popupWindow.dismiss();
+            }
+        });
+        // close popup window
+        popWindowView.findViewById(R.id.greeting_close).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                popupWindow.dismiss();
+            }
+        });
+        popWindowView.findViewById(R.id.greeting_container).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                popupWindow.dismiss();
+            }
+        });
+        popWindowView.findViewById(R.id.greeting_body).setOnClickListener(null);
+        popupWindow.showAtLocation(rootView, Gravity.CENTER, 0, 0);
+    }
+
+    private List<Map<String, Object>> getData() {
+        List<Map<String, Object>> list = new ArrayList<>();
+        for (int i = 0; i < icon.length; i++) {
+            Map<String, Object> map = new HashMap<>();
+            map.put("image", icon[i]);
+            map.put("text", iconName[i]);
+            list.add(map);
+        }
+        return list;
+    }
+
     private void showLinkDialog() {
-//        final int start = mContent.getSelectionStart();
-//        final int end = mContent.getSelectionEnd();
-//
-//        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-//        builder.setCancelable(false);
-//
-//        View view = getLayoutInflater().inflate(R.layout.dialog_publish_link, null, false);
-//        final EditText editText = (EditText) view.findViewById(R.id.publish_link_dialog);
-//        builder.setView(view)
-//                .setTitle(R.string.dialog_publish_title)
-//                .setPositiveButton(R.string.btn_dialog_ok, new DialogInterface.OnClickListener() {
-//                    @Override
-//                    public void onClick(DialogInterface dialog, int which) {
-//                        String link = editText.getText().toString().trim();
-//                        if (TextUtils.isEmpty(link)) {
-//                            return;
-//                        }
-//                        link = getResources().getText(R.string.hint_publish_link_dialog) + link;
-//                        // When KnifeText lose focus, use this method
-//                        mContent.link(link, start, end);
-//                    }
-//                })
-//                .setNegativeButton(R.string.btn_dialog_cancel, null)
-//                .create()
-//                .show();
+        AlertDialog.Builder builder = new AlertDialog.Builder(this).setCancelable(false);
+        View view = getLayoutInflater().inflate(R.layout.dialog_publish_link, null, false);
+        final EditText editText = (EditText) view.findViewById(R.id.publish_link_dialog);
+        builder.setView(view)
+                .setTitle(R.string.dialog_publish_title)
+                .setPositiveButton(R.string.btn_dialog_ok, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        String link = editText.getText().toString().trim();
+                        if (TextUtils.isEmpty(link)) {
+                            return;
+                        }
+                        link = getResources().getText(R.string.hint_publish_link_dialog) + link;
+                        mContent.insertLink(link, null);
+                    }
+                })
+                .setNegativeButton(R.string.btn_dialog_cancel, null)
+                .create()
+                .show();
     }
 
     private boolean isContentEmpty() {
-        return mTitleStr == "" && (mContentStr == "" || mContentStr == "<br>");
+        return mTitleStr.equals("") && (mContentStr.equals("") || mContentStr.equals("<br>"));
     }
 
     public void startSpeech() {
@@ -724,6 +808,8 @@ public class PublishActivity extends AppCompatActivity implements View.OnClickLi
                         mPublishType.setText(mSelectedType);
                         mTitle.setText(mTitleStr);
                         mContent.setHtml(mContentStr);
+                    } else {
+                        getWindow().getDecorView().postDelayed(showGreeting, 200);
                     }
                 }
             }

@@ -26,19 +26,20 @@ public class LoginHelper {
 
     public static void login(Context context, int loginType, Map<String, String> data) {
         SpfsUtils.write(context, SpfsUtils.USER, "loginFlag", true);
-        LogUtil.d("login_info", data.toString());
         SpfsUtils.write(context, SpfsUtils.USER, "login_type", loginType);
-
-        writeUserPreference(context, data);
-        UserStatus.setCurrentUser(data);
+        if(data != null){
+            LogUtil.d("login_info", data.toString());
+            writeUserPreference(context, data);
+            UserStatus.setCurrentUser(data);
+        }
         // post login event
-        EventBus.getDefault().postSticky(new LoginStateEvent(true, getCurrentUser()));
+        EventBus.getDefault().postSticky(new LoginStateEvent(LoginStateEvent.LOGIN, getCurrentUser()));
     }
 
     public static void logout(Context context) {
         UserStatus.clear(context);
         // post logout event
-        EventBus.getDefault().postSticky(new LoginStateEvent(false, null));
+        EventBus.getDefault().postSticky(new LoginStateEvent(LoginStateEvent.LOGOUT, null));
         // go back to LoginActivity
         Intent intent = new Intent(context, LoginActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
@@ -56,7 +57,7 @@ public class LoginHelper {
     public static void syncUserInfo(Context context, Map<String, String> data){
         writeUserPreference(context, data);
         UserStatus.setCurrentUser(data);
-        EventBus.getDefault().postSticky(new LoginStateEvent(true, getCurrentUser()));
+        EventBus.getDefault().postSticky(new LoginStateEvent(LoginStateEvent.SYNC, getCurrentUser()));
     }
 
     public static boolean ifRequestLogin(Context context, String message) {

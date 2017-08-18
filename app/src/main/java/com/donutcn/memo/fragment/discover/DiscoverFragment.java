@@ -141,7 +141,7 @@ public class DiscoverFragment extends Fragment implements OnTabSelectListener {
 
     @Subscribe(sticky = true)
     public void onLoginStateEvent(LoginStateEvent event){
-        if(event.isLogin()){
+        if(event.isLogin() || event.isSync()){
             String iconUrl = event.getUser().getIconUrl();
             if(iconUrl == null || iconUrl.equals("")){
                 mUserCenter_iv.setImageResource(R.mipmap.user_default_icon);
