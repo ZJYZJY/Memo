@@ -53,12 +53,6 @@ public abstract class BaseMemoFragment extends BaseScrollFragment {
     }
 
     @Override
-    public void onStart() {
-        super.onStart();
-        EventBus.getDefault().register(this);
-    }
-
-    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         return inflater.inflate(R.layout.fragment_memo, container, false);
@@ -96,6 +90,7 @@ public abstract class BaseMemoFragment extends BaseScrollFragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        EventBus.getDefault().register(this);
         mList = new ArrayList<>();
         mAdapter = new MemoAdapter(mContext, mList, ItemLayoutType.AVATAR_IMG);
         mAdapter.setOnItemClickListener(mOnItemClickListener);
@@ -198,8 +193,8 @@ public abstract class BaseMemoFragment extends BaseScrollFragment {
     }
 
     @Override
-    public void onStop() {
+    public void onDestroy() {
         EventBus.getDefault().unregister(this);
-        super.onStop();
+        super.onDestroy();
     }
 }

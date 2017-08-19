@@ -1,5 +1,7 @@
 package com.donutcn.memo.fragment.discover;
 
+import android.support.v7.util.DiffUtil;
+
 import com.donutcn.memo.base.BaseMemoFragment;
 import com.donutcn.memo.entity.ArrayResponse;
 import com.donutcn.memo.entity.BriefContent;
@@ -8,6 +10,7 @@ import com.donutcn.memo.event.RequestRefreshEvent;
 import com.donutcn.memo.utils.CollectionUtil;
 import com.donutcn.memo.utils.HttpUtils;
 import com.donutcn.memo.utils.LogUtil;
+import com.donutcn.memo.utils.MemoDiffUtil;
 import com.donutcn.memo.utils.ToastUtil;
 
 import org.greenrobot.eventbus.Subscribe;
@@ -31,9 +34,11 @@ public class FollowedFragment extends BaseMemoFragment {
                         if(response.body() != null){
                             LogUtil.d("refresh", response.body().toString());
                             if(response.body().isOk()){
+                                List<BriefContent> old = mList;
                                 mList.addAll(0, response.body().getData());
                                 mList = CollectionUtil.removeDuplicateWithOrder(mList);
-                                mAdapter.notifyDataSetChanged();
+                                DiffUtil.calculateDiff(new MemoDiffUtil(old, mList), true).dispatchUpdatesTo(mAdapter);
+//                                mAdapter.notifyDataSetChanged();
 //                                mMemo_rv.setAdapter(mAdapter);
                             }
                         }
@@ -59,7 +64,9 @@ public class FollowedFragment extends BaseMemoFragment {
                         if(response.body() != null){
                             LogUtil.d("load", response.body().toString());
                             if(response.body().isOk()){
+                                List<BriefContent> old = mList;
                                 mList.addAll(mList.size(), response.body().getData());
+                                DiffUtil.calculateDiff(new MemoDiffUtil(old, mList), true).dispatchUpdatesTo(mAdapter);
                                 mAdapter.notifyDataSetChanged();
                                 mRefreshLayout.finishLoadmore();
                             }else if(response.body().unAuthorized()){
@@ -106,6 +113,7 @@ public class FollowedFragment extends BaseMemoFragment {
             }
         } else if (event.getType() == 1) {
             String userId = event.getId();
+            List<BriefContent> old = mList;
             List<BriefContent> toBeRemoved = new ArrayList<>();
             for (int i = 0; i < mList.size(); i++) {
                 if (mList.get(i).getUserId().equals(userId)) {
@@ -113,7 +121,8 @@ public class FollowedFragment extends BaseMemoFragment {
                 }
             }
             mList.removeAll(toBeRemoved);
-            mAdapter.notifyDataSetChanged();
+            DiffUtil.calculateDiff(new MemoDiffUtil(old, mList), true).dispatchUpdatesTo(mAdapter);
+//            mAdapter.notifyDataSetChanged();
         } else if (event.getType() == 2) {
             mList.clear();
             mRefreshLayout.autoRefresh(0);

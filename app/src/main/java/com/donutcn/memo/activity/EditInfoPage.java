@@ -14,6 +14,7 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.RequestManager;
 import com.donutcn.memo.R;
+import com.donutcn.memo.constant.FieldConfig;
 import com.donutcn.memo.entity.SimpleResponse;
 import com.donutcn.memo.event.LoginStateEvent;
 import com.donutcn.memo.listener.UploadCallback;
@@ -245,7 +246,7 @@ public class EditInfoPage extends AppCompatActivity implements View.OnClickListe
             @Override
             public void uploadAll(List<String> keys) {
                 final Map<String, String> data = new HashMap<>();
-                data.put("head_portrait", HOST + keys.get(0) + strategy);
+                data.put(FieldConfig.USER_ICON_URL, HOST + keys.get(0) + strategy);
                 modifyInfo(data, MODIFY_AVATAR);
             }
             @Override

@@ -1,5 +1,6 @@
 package com.donutcn.memo.entity;
 
+import com.donutcn.memo.constant.FieldConfig;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
@@ -14,40 +15,52 @@ import org.json.JSONObject;
 public class MessageItem {
 
     @Expose
-    @SerializedName(value = "reply_id")
+    @SerializedName(FieldConfig.REPLY_ID)
     private String id;
 
     @Expose
-    @SerializedName(value = "icon")
+    @SerializedName(FieldConfig.USER_ICON_URL)
     private String iconUrl;
 
     @Expose
-    @SerializedName(value = "name")
+    @SerializedName(FieldConfig.USER_NICKNAME)
     private String name;
 
     @Expose
-    @SerializedName(value = "time")
+    @SerializedName(FieldConfig.REPLY_TIME)
     private String time;
 
     @Expose
-    @SerializedName(value = "type")
+    @SerializedName(FieldConfig.REPLY_REAL_NAME)
     private String realName;
 
     @Expose
-    @SerializedName(value = "phone")
+    @SerializedName(FieldConfig.REPLY_PHONE)
     private String phone;
 
     @Expose
-    @SerializedName(value = "email")
+    @SerializedName(FieldConfig.REPLY_EMAIL)
     private String email;
 
     @Expose
-    @SerializedName(value = "wechat")
+    @SerializedName(FieldConfig.REPLY_WE_CHAT)
     private String weChat;
 
     @Expose
-    @SerializedName(value = "resume")
+    @SerializedName(FieldConfig.REPLY_RESUME)
     private String resume;
+
+    @Expose
+    @SerializedName(FieldConfig.REPLY_RESUME_URL)
+    private String resumeUrl;
+
+    @Expose
+    @SerializedName(FieldConfig.REPLY_COMMENT)
+    private String comment;
+
+    public String getId() {
+        return id;
+    }
 
     public String getIconUrl() {
         return iconUrl;
@@ -81,18 +94,24 @@ public class MessageItem {
         return resume;
     }
 
+    public String getResumeUrl() {
+        return resumeUrl;
+    }
+
     public JSONObject toJson() {
         JSONObject json = new JSONObject();
         try {
-            json.put("reply_id", id);
-            json.put("iconUrl", iconUrl);
-            json.put("name", name);
-            json.put("time", time);
-            json.put("realName", realName);
-            json.put("phone", phone);
-            json.put("email", email);
-            json.put("weChat", weChat);
-            json.put("resume", resume);
+            json.put(FieldConfig.REPLY_ID, id);
+            json.put(FieldConfig.USER_ICON_URL, iconUrl);
+            json.put(FieldConfig.USER_NICKNAME, name);
+            json.put(FieldConfig.REPLY_TIME, time);
+            json.put(FieldConfig.REPLY_REAL_NAME, realName);
+            json.put(FieldConfig.REPLY_PHONE, phone);
+            json.put(FieldConfig.REPLY_EMAIL, email);
+            json.put(FieldConfig.REPLY_WE_CHAT, weChat);
+            json.put(FieldConfig.REPLY_RESUME, resume);
+            json.put(FieldConfig.REPLY_RESUME_URL, resumeUrl);
+            json.put(FieldConfig.REPLY_COMMENT, resumeUrl);
         } catch (JSONException e) {
             e.printStackTrace();
         }

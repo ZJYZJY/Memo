@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v7.util.DiffUtil;
 import android.support.v7.widget.LinearLayoutManager;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,6 +19,7 @@ import com.donutcn.memo.event.ChangeRedDotEvent;
 import com.donutcn.memo.event.RequestRefreshEvent;
 import com.donutcn.memo.listener.OnItemClickListener;
 import com.donutcn.memo.utils.FileCacheUtil;
+import com.donutcn.memo.utils.MessageDiffUtil;
 import com.donutcn.memo.view.ListViewDecoration;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -52,7 +54,6 @@ public class MessageFragment extends BaseScrollFragment {
     @Override
     public void onStart() {
         super.onStart();
-        EventBus.getDefault().register(this);
     }
 
     @Override
@@ -75,6 +76,7 @@ public class MessageFragment extends BaseScrollFragment {
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        EventBus.getDefault().register(this);
         super.onActivityCreated(savedInstanceState);
         mList = new ArrayList<>();
         mAdapter = new BriefMessageAdapter(mContext, mList);
@@ -92,7 +94,8 @@ public class MessageFragment extends BaseScrollFragment {
 
     public void Refresh() {
 
-
+        List<BriefMessage> old = mList;
+        DiffUtil.calculateDiff(new MessageDiffUtil(old, mList), true).dispatchUpdatesTo(mAdapter);
 //        mAdapter.notifyDataSetChanged();
         mRefreshLayout.finishRefresh();
         FileCacheUtil.setMessageListCache(mContext, new Gson().toJson(mList));
@@ -135,8 +138,13 @@ public class MessageFragment extends BaseScrollFragment {
 
     @Override
     public void onStop() {
-        EventBus.getDefault().unregister(this);
         super.onStop();
+    }
+
+    @Override
+    public void onDestroy() {
+        EventBus.getDefault().unregister(this);
+        super.onDestroy();
     }
 
     @Subscribe
@@ -154,6 +162,7 @@ public class MessageFragment extends BaseScrollFragment {
     @Subscribe(sticky = true)
     public void onReceiveBriefMessage(BriefMessage event){
         BriefMessage msg = sameMessage(event.getId());
+        List<BriefMessage> old = mList;
         if (msg == null) {
             mList.add(0, event);
         } else {
@@ -162,7 +171,7 @@ public class MessageFragment extends BaseScrollFragment {
             mList.remove(msg);
             mList.add(0, event);
         }
+        DiffUtil.calculateDiff(new MessageDiffUtil(old, mList), true).dispatchUpdatesTo(mAdapter);
         FileCacheUtil.setMessageListCache(mContext, new Gson().toJson(mList));
-        mAdapter.notifyDataSetChanged();
     }
 }

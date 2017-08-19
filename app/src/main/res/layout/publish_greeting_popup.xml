@@ -41,7 +41,8 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/margin_small"
                     android:text="@string/placeholder_publish_greeting_ask"
-                    android:textColor="@color/white" />
+                    android:textColor="@color/white"
+                    android:textSize="15sp" />
             </LinearLayout>
 
             <ImageView

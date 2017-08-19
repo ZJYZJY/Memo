@@ -2,6 +2,7 @@ package com.donutcn.memo.utils;
 
 import android.content.Context;
 
+import com.donutcn.memo.constant.FieldConfig;
 import com.donutcn.memo.entity.ArrayResponse;
 import com.donutcn.memo.entity.BriefContent;
 import com.donutcn.memo.entity.Contact;
@@ -124,7 +125,7 @@ public class HttpUtils {
          *
          * @param user user info
          */
-        @Headers("requestType:android-app")
+        @Headers(FieldConfig.REQUEST_HEADER)
         @POST(APIPath.LOGIN)
         Call<SimpleResponse> login(@Body RequestBody user);
 
@@ -211,7 +212,7 @@ public class HttpUtils {
         /**
          * change the content access level.
          */
-        @Headers("requestType:android-app")
+        @Headers(FieldConfig.REQUEST_HEADER)
         @POST(APIPath.SET_CONTENT_PRIVATE)
         Call<SimpleResponse> setPrivate(@Body RequestBody content);
 
@@ -230,25 +231,25 @@ public class HttpUtils {
         /**
          * delete user publish content.
          */
-        @Headers("requestType:android-app")
+        @Headers(FieldConfig.REQUEST_HEADER)
         @GET(APIPath.DELETE_CONTENT)
         Call<SimpleResponse> deleteContent(@Path("id") String id);
 
         /**
          * modify user publish content.
          */
-        @Headers("requestType:android-app")
+        @Headers(FieldConfig.REQUEST_HEADER)
         @GET(APIPath.MODIFY_MY_CONTENT)
         Call<ContentResponse> modifyMyContent(@Path("id") String id);
 
         @GET(APIPath.SYNC_USER_INFO)
         Call<SimpleResponse> syncUserInfo();
 
-        @Headers("requestType:android-app")
+        @Headers(FieldConfig.REQUEST_HEADER)
         @POST(APIPath.MODIFY_USER_INFO)
         Call<SimpleResponse> modifyUserInfo(@Body RequestBody info);
 
-        @Headers("requestType:android-app")
+        @Headers(FieldConfig.REQUEST_HEADER)
         @GET(APIPath.FOLLOW_USER)
         Call<SimpleResponse> follow(@Path("userId") String userId, @Path("action") int action);
 
@@ -269,11 +270,11 @@ public class HttpUtils {
         JSONObject json = new JSONObject();
         try {
             if(loginType == UserStatus.PHONE_LOGIN){
-                json.put("username", data.get("username"));
+                json.put(FieldConfig.USER_NAME, data.get(FieldConfig.USER_NAME));
                 json.put("password", data.get("password"));
             }else if(loginType == UserStatus.WECHAT_LOGIN){
-                json.put("openid", data.get("openid"));
-                json.put("name", data.get("name"));
+                json.put(FieldConfig.USER_OPEN_ID, data.get(FieldConfig.USER_OPEN_ID));
+                json.put(FieldConfig.USER_NICKNAME, data.get(FieldConfig.USER_NICKNAME));
                 json.put("gender", data.get("gender"));
                 json.put("iconurl", data.get("iconurl"));
             }
@@ -288,7 +289,7 @@ public class HttpUtils {
     public static Call<SimpleResponse> getVerifiedCode(String phoneNumber, String action) {
         JSONObject json = new JSONObject();
         try {
-            json.put("tel_number", phoneNumber);
+            json.put(FieldConfig.USER_PHONE, phoneNumber);
             json.put("action", action);
         } catch (JSONException e) {
             e.printStackTrace();
@@ -302,7 +303,7 @@ public class HttpUtils {
                                                   String password, int action) {
         JSONObject json = new JSONObject();
         try {
-            json.put("tel_number", phoneNumber);
+            json.put(FieldConfig.USER_PHONE, phoneNumber);
             json.put("authcode", authCode);
             json.put("password", password);
         } catch (JSONException e) {
@@ -320,7 +321,7 @@ public class HttpUtils {
     public static Call<SimpleResponse> logout(String phoneNumber) {
         JSONObject json = new JSONObject();
         try {
-            json.put("username", phoneNumber);
+            json.put(FieldConfig.USER_NAME, phoneNumber);
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -332,11 +333,11 @@ public class HttpUtils {
     public static Call<SimpleResponse> publishContent(String id, String title, String type, String content) {
         JSONObject json = new JSONObject();
         try {
-            json.put("title", title);
-            json.put("type", type);
-            json.put("content", content);
+            json.put(FieldConfig.CONTENT_TITLE, title);
+            json.put(FieldConfig.CONTENT_TYPE, type);
+            json.put(FieldConfig.CONTENT, content);
             if(id !=null) {
-                json.put("article_id", id);
+                json.put(FieldConfig.CONTENT_ID, id);
             }
         } catch (JSONException e) {
             e.printStackTrace();
@@ -381,8 +382,8 @@ public class HttpUtils {
     public static Call<SimpleResponse> setPrivate(String id, int isPrivate) {
         JSONObject json = new JSONObject();
         try {
-            json.put("article_id", id);
-            json.put("is_private", isPrivate);
+            json.put(FieldConfig.CONTENT_ID, id);
+            json.put(FieldConfig.CONTENT_RIGHTS, isPrivate);
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -393,7 +394,8 @@ public class HttpUtils {
 
     public static Call<SimpleResponse>
     completeInfo(String id, PublishType type, String field1, String field2, String field3,
-                 boolean needApply, int extra1, int extra2, List<String> voteItems, boolean editMode) {
+                 boolean needApply, int extra1, int extra2, List<String> voteItems,
+                 boolean isSingleVote, boolean editMode) {
         JSONObject json = new JSONObject();
         try {
             json.put("article_id", id);
@@ -416,6 +418,7 @@ public class HttpUtils {
                     json.put("field2", field2);
                     break;
                 case VOTE:
+                    json.put("is_single", isSingleVote ? 1 : 0);
                     JSONObject items = new JSONObject();
                     for (int i = 0; i < voteItems.size(); i++) {
                         items.put(String.valueOf(i), voteItems.get(i));
@@ -464,10 +467,10 @@ public class HttpUtils {
     public static Call<SimpleResponse> modifyUserInfo(Map<String, String> info){
         JSONObject json = new JSONObject();
         try {
-            json.put("name", info.get("name"));
-            json.put("sex", info.get("sex"));
-            json.put("head_portrait", info.get("head_portrait"));
-            json.put("self_introduction", info.get("self_introduction"));
+            json.put(FieldConfig.USER_NICKNAME, info.get(FieldConfig.USER_NICKNAME));
+            json.put(FieldConfig.USER_GENDER, info.get(FieldConfig.USER_GENDER));
+            json.put(FieldConfig.USER_ICON_URL, info.get(FieldConfig.USER_ICON_URL));
+            json.put(FieldConfig.USER_SIGNATURE, info.get(FieldConfig.USER_SIGNATURE));
         } catch (JSONException e) {
             e.printStackTrace();
         }

@@ -45,12 +45,6 @@ public class HomeFragment extends Fragment implements OnTabSelectListener {
     }
 
     @Override
-    public void onStart() {
-        super.onStart();
-        EventBus.getDefault().register(this);
-    }
-
-    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_home, container, false);
@@ -81,6 +75,7 @@ public class HomeFragment extends Fragment implements OnTabSelectListener {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        EventBus.getDefault().register(this);
     }
 
     @Override
@@ -100,9 +95,9 @@ public class HomeFragment extends Fragment implements OnTabSelectListener {
     }
 
     @Override
-    public void onStop() {
+    public void onDestroy() {
         EventBus.getDefault().unregister(this);
-        super.onStop();
+        super.onDestroy();
     }
 
     @Subscribe(sticky = true)

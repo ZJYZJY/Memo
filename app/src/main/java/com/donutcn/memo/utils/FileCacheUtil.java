@@ -22,7 +22,7 @@ public class FileCacheUtil {
 
     public static final int CACHE_SHORT_TIMEOUT = 1000 * 60 * 10; // 10 minutes
 
-    public static final int CACHE_LONG_TIMEOUT = 1000 * 60 * 60; // 60 minutes
+    public static final int CACHE_LONG_TIMEOUT = 1000 * 60 * 60 * 24; // 24 * 60 minutes
 
     public static void setCache(Context context, String content, String cacheFileName) {
         setCache(context, content, cacheFileName, MODE_PRIVATE);

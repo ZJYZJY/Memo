@@ -52,40 +52,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         WindowUtils.setStatusBarColor(this, R.color.colorPrimary, true);
+        EventBus.getDefault().register(this);
 
         if (getIntent().getBooleanExtra("unlogin", false)) {
             mDefaultItem = 1;
-        } else {
-            // sync user info.
-            getWindow().getDecorView().postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    HttpUtils.syncUserInfo().enqueue(new Callback<SimpleResponse>() {
-                        @Override
-                        public void onResponse(Call<SimpleResponse> call, Response<SimpleResponse> response) {
-                            if (response.body() != null) {
-                                LogUtil.d("sync", response.body().toString());
-                                if(response.body().isOk()){
-                                    LoginHelper.syncUserInfo(MainActivity.this, response.body().getData());
-                                } else if (response.body().unAuthorized()) {
-                                    // check if the cookie is out of date.
-                                    LogUtil.e("unAuthorized", response.body().toString());
-                                    ToastUtil.show(MainActivity.this, "登录授权过期，请重新登录");
-                                    LoginHelper.logout(MainActivity.this);
-                                }
-                            } else {
-                                ToastUtil.show(MainActivity.this, "连接失败，服务器未知错误");
-                            }
-                        }
-
-                        @Override
-                        public void onFailure(Call<SimpleResponse> call, Throwable t) {
-                            t.printStackTrace();
-                            ToastUtil.show(MainActivity.this, "连接失败，请检查你的网络连接");
-                        }
-                    });
-                }
-            }, 1000);
         }
 
         mViewPager = (ViewPager) findViewById(R.id.main_viewpager);
@@ -160,19 +130,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     @Override
-    protected void onStart() {
-        super.onStart();
-        EventBus.getDefault().register(this);
-    }
-
-    @Override
-    protected void onStop() {
-        EventBus.getDefault().unregister(this);
-        super.onStop();
-    }
-
-    @Override
     protected void onDestroy() {
+        EventBus.getDefault().unregister(this);
         super.onDestroy();
     }
 

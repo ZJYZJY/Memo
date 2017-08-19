@@ -3,6 +3,7 @@ package com.donutcn.memo.utils;
 import android.content.Context;
 
 import com.donutcn.memo.App;
+import com.donutcn.memo.constant.FieldConfig;
 import com.donutcn.memo.entity.User;
 
 import java.util.ArrayList;
@@ -27,16 +28,16 @@ public class UserStatus {
     public static void setCurrentUser(Map<String, String> data) {
         if (USER == null)
             USER = new User();
-        USER.setUserId(data.get("user_id"));
-        USER.setOpenId(data.get("openid"));
-        USER.setName(data.get("name"));
-        USER.setGender(data.get("sex"));
-        USER.setIconUrl(data.get("head_portrait"));
-        USER.setPhone(data.get("tel_number"));
-        USER.setUsername(data.get("username"));
-        USER.setSignature(data.get("self_introduction"));
-        USER.setEmail(data.get("email"));
-        String str = data.get("follow");
+        USER.setUserId(data.get(FieldConfig.USER_ID));
+        USER.setOpenId(data.get(FieldConfig.USER_OPEN_ID));
+        USER.setName(data.get(FieldConfig.USER_NICKNAME));
+        USER.setGender(data.get(FieldConfig.USER_GENDER));
+        USER.setIconUrl(data.get(FieldConfig.USER_ICON_URL));
+        USER.setPhone(data.get(FieldConfig.USER_PHONE));
+        USER.setUsername(data.get(FieldConfig.USER_NAME));
+        USER.setSignature(data.get(FieldConfig.USER_SIGNATURE));
+        USER.setEmail(data.get(FieldConfig.USER_EMAIL));
+        String str = data.get(FieldConfig.USER_FOLLOW);
         if(str != null && !str.equals("")) {
             String[] followed = str.split("-");
             List<String> list = new ArrayList<>();

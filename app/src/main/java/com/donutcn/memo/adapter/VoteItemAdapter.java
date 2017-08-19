@@ -11,6 +11,8 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.TextView;
 
 import com.donutcn.memo.R;
@@ -124,7 +126,9 @@ public class VoteItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
                 @Override
                 public void onClick(View v) {
                     Log.e("res", mVoteItemStr.toString());
-                    EventBus.getDefault().post(new FinishEditVoteItemsEvent(mVoteItemStr.subList(mUnEditable, mVoteItemStr.size())));
+                    int id = ((FooterViewHolder) holder).choiceMode.getCheckedRadioButtonId();
+                    EventBus.getDefault().post(new FinishEditVoteItemsEvent(
+                            mVoteItemStr.subList(mUnEditable, mVoteItemStr.size()), id == R.id.single_choice));
                 }
             });
         } else if (position == 0) {
@@ -226,11 +230,16 @@ public class VoteItemAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     private class FooterViewHolder extends RecyclerView.ViewHolder {
 
         TextView addItem;
+        RadioGroup choiceMode;
+        RadioButton single, multiple;
         Button finish;
 
         public FooterViewHolder(View itemView) {
             super(itemView);
             addItem = (TextView) itemView.findViewById(R.id.vote_add);
+            choiceMode = (RadioGroup) itemView.findViewById(R.id.choice_mode);
+            single = (RadioButton) itemView.findViewById(R.id.single_choice);
+            multiple = (RadioButton) itemView.findViewById(R.id.multiple_choice);
             finish = (Button) itemView.findViewById(R.id.completing_finish);
         }
     }

@@ -20,6 +20,7 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.RequestManager;
 import com.donutcn.memo.R;
+import com.donutcn.memo.constant.FieldConfig;
 import com.donutcn.memo.entity.SimpleResponse;
 import com.donutcn.memo.event.ChangeContentEvent;
 import com.donutcn.memo.helper.RouterHelper;
@@ -57,7 +58,7 @@ public class ArticlePage extends AppCompatActivity implements View.OnClickListen
     private RequestManager glide;
     private Context mContext;
 
-    private String mContentId, mContentUrl, mUsername, mIconUrl, mUserId;
+    private String mContentId, mContentUrl, mNameStr, mIconUrl, mUserId;
     private int mUpvoteCount, mCommentCount;
     // comment height
     private int commentHeight;
@@ -82,14 +83,14 @@ public class ArticlePage extends AppCompatActivity implements View.OnClickListen
             public void onResponse(Call<SimpleResponse> call, Response<SimpleResponse> response) {
                 if(response.body() != null){
                     if(response.body().isOk()){
-                        mUserId = response.body().getField("user_id");
-                        mContentUrl = response.body().getField("url");
-                        mUsername = response.body().getField("name");
-                        mIconUrl = response.body().getField("head_portrait");
-                        String type = response.body().getField("type");
+                        mUserId = response.body().getField(FieldConfig.USER_ID);
+                        mContentUrl = response.body().getField(FieldConfig.CONTENT_URL);
+                        mNameStr = response.body().getField(FieldConfig.USER_NICKNAME);
+                        mIconUrl = response.body().getField(FieldConfig.USER_ICON_URL);
+                        String type = response.body().getField(FieldConfig.CONTENT_TYPE);
                         mType = PublishType.getType(type);
-                        mUpvoteCount = Integer.valueOf((String) response.body().getField("praise"));
-                        mCommentCount = Integer.valueOf((String) response.body().getField("comment_total"));
+                        mUpvoteCount = Integer.valueOf((String) response.body().getField(FieldConfig.CONTENT_UP_VOTE_COUNT));
+                        mCommentCount = Integer.valueOf((String) response.body().getField(FieldConfig.CONTENT_COMM_COUNT));
                         initView();
                         showContent();
                     } else if(response.body().notFound()){
@@ -118,7 +119,7 @@ public class ArticlePage extends AppCompatActivity implements View.OnClickListen
         boolean self = getIntent().getBooleanExtra("self", false);
         if (self) {
             mIconUrl = UserStatus.getCurrentUser().getIconUrl();
-            mUsername = UserStatus.getCurrentUser().getName();
+            mNameStr = UserStatus.getCurrentUser().getName();
         }
 
         mName = (TextView) findViewById(R.id.article_author_name);
@@ -129,7 +130,7 @@ public class ArticlePage extends AppCompatActivity implements View.OnClickListen
         mUpvote = (TextView) findViewById(R.id.interactive_upvote_count);
         mComment = (TextView) findViewById(R.id.interactive_comment_count);
         mInteractive = (Button) findViewById(R.id.interactive);
-        mName.setText(mUsername);
+        mName.setText(mNameStr);
         mUpvote.setText(String.valueOf(mUpvoteCount));
         mComment.setText(String.valueOf(mCommentCount));
 

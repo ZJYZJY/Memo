@@ -30,7 +30,7 @@
     <string name="placeholder_search_item_author">%1$s %2$s</string>
     <string name="placeholder_publish_author_type">%1$s 发布%2$s</string>
     <string name="placeholder_publish_greeting_name">%1$s，%2$s好</string>
-    <string name="placeholder_publish_greeting_ask">今天要发布什么？</string>
+    <string name="placeholder_publish_greeting_ask">今天想要发布什么？</string>
     <string name="placeholder_share_title">《%1$s》</string>
     <string name="placeholder_content_private">私密 / %1$s </string>
 
@@ -100,6 +100,8 @@
     <string name="completing_wechat_cb">微信</string>
     <string name="completing_email_cb">邮箱</string>
     <string name="completing_resume_cb">上传简历</string>
+    <string name="completing_vote_single">单选</string>
+    <string name="completing_vote_multiple">多选</string>
 
     <!--publish content type-->
     <string-array name="publish_content">
@@ -132,6 +134,8 @@
     <string name="social_share_picture">生成图片分享</string>
     <string name="social_share_copy_link">复制链接</string>
     <string name="social_share_more">更多</string>
+
+    <string name="author_page_not_signature">这个人很懒什么也没写~</string>
 
     <!--interactive type-->
     <string name="interactive_comment">我要留言</string>

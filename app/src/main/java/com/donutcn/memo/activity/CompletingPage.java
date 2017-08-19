@@ -12,6 +12,7 @@ import android.widget.EditText;
 
 import com.donutcn.memo.R;
 import com.donutcn.memo.adapter.VoteItemAdapter;
+import com.donutcn.memo.constant.FieldConfig;
 import com.donutcn.memo.entity.SimpleResponse;
 import com.donutcn.memo.event.FinishEditVoteItemsEvent;
 import com.donutcn.memo.type.PublishType;
@@ -43,6 +44,7 @@ public class CompletingPage extends AppCompatActivity {
     private Context mContext;
     private PublishType mContentType;
     private List<String> mVoteItems;
+    private boolean isSingleVote = true;
     private String mContentId;
     private String field1Str, field2Str, field3Str;
     private String mContentStr, mTitleStr;
@@ -205,14 +207,14 @@ public class CompletingPage extends AppCompatActivity {
             public void onResponse(Call<SimpleResponse> call, Response<SimpleResponse> response) {
                 if (response.body() != null) {
                     if(response.body().isOk()){
-                        mContentId = String.valueOf(response.body().getField("article_id"));
+                        mContentId = String.valueOf(response.body().getField(FieldConfig.CONTENT_ID));
                         Intent mShareIntent = new Intent(mContext, SocialShareActivity.class);
                         mShareIntent.putExtra("contentId", mContentId);
-                        mShareIntent.putExtra("contentUrl", String.valueOf(response.body().getField("url")));
-                        mShareIntent.putExtra("title", (String) response.body().getField("title"));
-                        mShareIntent.putExtra("content", (String) response.body().getField("content"));
+                        mShareIntent.putExtra("contentUrl", String.valueOf(response.body().getField(FieldConfig.CONTENT_URL)));
+                        mShareIntent.putExtra("title", (String) response.body().getField(FieldConfig.CONTENT_TITLE));
+                        mShareIntent.putExtra("content", (String) response.body().getField(FieldConfig.CONTENT));
                         mShareIntent.putExtra("picUrl", (String) response.body().getField("picurl"));
-                        mShareIntent.putExtra("isPrivate", Integer.valueOf((String) response.body().getField("is_private")));
+                        mShareIntent.putExtra("isPrivate", Integer.valueOf((String) response.body().getField(FieldConfig.CONTENT_RIGHTS)));
                         completeInfo(mShareIntent);
                     }
                 } else {
@@ -230,7 +232,7 @@ public class CompletingPage extends AppCompatActivity {
 
     private void completeInfo(final Intent intent) {
         HttpUtils.completeInfo(mContentId, mContentType, field1Str, field2Str, field3Str, needToApply,
-                needExtra1, needExtra2, mVoteItems, mEditMode).enqueue(new Callback<SimpleResponse>() {
+                needExtra1, needExtra2, mVoteItems, isSingleVote, mEditMode).enqueue(new Callback<SimpleResponse>() {
             @Override
             public void onResponse(Call<SimpleResponse> call, Response<SimpleResponse> response) {
                 if (response.body() != null) {
@@ -255,6 +257,7 @@ public class CompletingPage extends AppCompatActivity {
     @Subscribe
     public void onFinishEditVoteItemsEvent(FinishEditVoteItemsEvent event){
         mVoteItems = event.getVoteItem();
+        isSingleVote = event.isSingle();
         onFinish(null);
     }
 

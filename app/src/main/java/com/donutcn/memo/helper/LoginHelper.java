@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 
 import com.donutcn.memo.activity.LoginActivity;
+import com.donutcn.memo.constant.FieldConfig;
 import com.donutcn.memo.event.LoginStateEvent;
 import com.donutcn.memo.utils.LogUtil;
 import com.donutcn.memo.utils.SpfsUtils;
@@ -76,36 +77,36 @@ public class LoginHelper {
     }
 
     private static void writeUserPreference(Context context, Map<String, String> data){
-        SpfsUtils.write(context, SpfsUtils.USER, "userId", data.get("user_id"));
-        SpfsUtils.write(context, SpfsUtils.USER, "name", data.get("name"));
-        SpfsUtils.write(context, SpfsUtils.USER, "gender", data.get("sex"));
-        SpfsUtils.write(context, SpfsUtils.USER, "email", data.get("email"));
-        SpfsUtils.write(context, SpfsUtils.USER, "iconUrl", data.get("head_portrait"));
-        SpfsUtils.write(context, SpfsUtils.USER, "phone", data.get("tel_number"));
-        SpfsUtils.write(context, SpfsUtils.USER, "username", data.get("username"));
-        SpfsUtils.write(context, SpfsUtils.USER, "signature", data.get("self_introduction"));
-        SpfsUtils.write(context, SpfsUtils.USER, "follow", data.get("follow"));
+        SpfsUtils.write(context, SpfsUtils.USER, "userId", data.get(FieldConfig.USER_ID));
+        SpfsUtils.write(context, SpfsUtils.USER, "name", data.get(FieldConfig.USER_NICKNAME));
+        SpfsUtils.write(context, SpfsUtils.USER, "gender", data.get(FieldConfig.USER_GENDER));
+        SpfsUtils.write(context, SpfsUtils.USER, "email", data.get(FieldConfig.USER_EMAIL));
+        SpfsUtils.write(context, SpfsUtils.USER, "iconUrl", data.get(FieldConfig.USER_ICON_URL));
+        SpfsUtils.write(context, SpfsUtils.USER, "phone", data.get(FieldConfig.USER_PHONE));
+        SpfsUtils.write(context, SpfsUtils.USER, "username", data.get(FieldConfig.USER_NAME));
+        SpfsUtils.write(context, SpfsUtils.USER, "signature", data.get(FieldConfig.USER_SIGNATURE));
+        SpfsUtils.write(context, SpfsUtils.USER, "follow", data.get(FieldConfig.USER_FOLLOW));
     }
 
     private static Map<String, String> readUserPreference(Context context){
         Map<String, String> data = new HashMap<>();
-        data.put("user_id", SpfsUtils.readString(
+        data.put(FieldConfig.USER_ID, SpfsUtils.readString(
                 context.getApplicationContext(), SpfsUtils.USER, "userId", ""));
-        data.put("name", SpfsUtils.readString(
+        data.put(FieldConfig.USER_NICKNAME, SpfsUtils.readString(
                 context.getApplicationContext(), SpfsUtils.USER, "name", ""));
-        data.put("sex", SpfsUtils.readString(
+        data.put(FieldConfig.USER_GENDER, SpfsUtils.readString(
                 context.getApplicationContext(), SpfsUtils.USER, "gender", ""));
-        data.put("email", SpfsUtils.readString(
+        data.put(FieldConfig.USER_EMAIL, SpfsUtils.readString(
                 context.getApplicationContext(), SpfsUtils.USER, "email", ""));
-        data.put("head_portrait", SpfsUtils.readString(
+        data.put(FieldConfig.USER_ICON_URL, SpfsUtils.readString(
                 context.getApplicationContext(), SpfsUtils.USER, "iconUrl", ""));
-        data.put("tel_number", SpfsUtils.readString(
+        data.put(FieldConfig.USER_PHONE, SpfsUtils.readString(
                 context.getApplicationContext(), SpfsUtils.USER, "phone", ""));
-        data.put("username", SpfsUtils.readString(
+        data.put(FieldConfig.USER_NAME, SpfsUtils.readString(
                 context.getApplicationContext(), SpfsUtils.USER, "username", ""));
-        data.put("self_introduction", SpfsUtils.readString(
+        data.put(FieldConfig.USER_SIGNATURE, SpfsUtils.readString(
                 context.getApplicationContext(), SpfsUtils.USER, "signature", ""));
-        data.put("follow", SpfsUtils.readString(
+        data.put(FieldConfig.USER_FOLLOW, SpfsUtils.readString(
                 context.getApplicationContext(), SpfsUtils.USER, "follow", ""));
         return data;
     }

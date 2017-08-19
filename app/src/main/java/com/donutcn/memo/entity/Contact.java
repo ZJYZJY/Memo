@@ -1,5 +1,6 @@
 package com.donutcn.memo.entity;
 
+import com.donutcn.memo.constant.FieldConfig;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
@@ -17,21 +18,21 @@ public class Contact {
 
     @Id
     @Expose
-    @SerializedName("user_id")
+    @SerializedName(FieldConfig.USER_ID)
     private String userId; //id
 
     private String displayName;//姓名
 
     @Expose
-    @SerializedName("name")
+    @SerializedName(FieldConfig.USER_NICKNAME)
     private String name;
 
     @Expose
-    @SerializedName("head_portrait")
+    @SerializedName(FieldConfig.USER_ICON_URL)
     private String avatar;
 
     @Expose
-    @SerializedName("username")
+    @SerializedName(FieldConfig.USER_NAME)
     private String phoneNum; // 电话号码
     private String sortKey; // 排序用的
     private String lookUpKey;

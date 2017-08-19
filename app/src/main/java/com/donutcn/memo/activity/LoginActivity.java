@@ -102,26 +102,32 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         public void run() {
             if(loginState){
                 LoginHelper.autoLogin(LoginActivity.this);
+                HttpUtils.syncUserInfo().enqueue(new Callback<SimpleResponse>() {
+                    @Override
+                    public void onResponse(Call<SimpleResponse> call, Response<SimpleResponse> response) {
+                        if (response.body() != null) {
+                            LogUtil.d("sync", response.body().toString());
+                            if(response.body().isOk()){
+                                LoginHelper.syncUserInfo(LoginActivity.this, response.body().getData());
+                            } else if (response.body().unAuthorized()) {
+                                // check if the cookie is out of date.
+                                LogUtil.e("unAuthorized", response.body().toString());
+                                ToastUtil.show(LoginActivity.this, "登录授权过期，请重新登录");
+                                LoginHelper.logout(LoginActivity.this);
+                            }
+                        } else {
+                            ToastUtil.show(LoginActivity.this, "连接失败，服务器未知错误");
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<SimpleResponse> call, Throwable t) {
+                        t.printStackTrace();
+                        ToastUtil.show(LoginActivity.this, "连接失败，请检查你的网络连接");
+                    }
+                });
                 startActivity(new Intent(LoginActivity.this, MainActivity.class));
             }else {
-                Intent intent = getIntent();
-                String scheme = intent.getScheme();
-                Uri uri = intent.getData();
-                System.out.println("scheme:"+scheme);
-                if (uri != null) {
-                    String host = uri.getHost();
-                    String dataString = intent.getDataString();
-                    String id = uri.getQueryParameter("d");
-                    String path = uri.getPath();
-                    String path1 = uri.getEncodedPath();
-                    String queryString = uri.getQuery();
-                    System.out.println("host:"+host);
-                    System.out.println("dataString:"+dataString);
-                    System.out.println("id:"+id);
-                    System.out.println("path:"+path);
-                    System.out.println("path1:"+path1);
-                    System.out.println("queryString:"+queryString);
-                }
                 removeSplashFragment();
             }
         }
@@ -288,12 +294,14 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 mToRegister.setTextColor(getResources().getColor(R.color.textPrimaryDark));
                 findViewById(R.id.login_et).setVisibility(View.VISIBLE);
                 findViewById(R.id.register_et).setVisibility(View.GONE);
+                mLogin.setText(getString(R.string.btn_login));
                 break;
             case R.id.switch_to_register:
                 mToRegister.setTextColor(getResources().getColor(R.color.text_blue));
                 mToLogin.setTextColor(getResources().getColor(R.color.textPrimaryDark));
                 findViewById(R.id.register_et).setVisibility(View.VISIBLE);
                 findViewById(R.id.login_et).setVisibility(View.GONE);
+                mLogin.setText(getString(R.string.btn_register));
                 break;
             case R.id.login_btn:
                 WindowUtils.toggleKeyboard(this, v, false);

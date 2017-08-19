@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
 
     <TextView
         android:id="@+id/vote_add"
@@ -16,15 +17,42 @@
     <View
         android:layout_width="match_parent"
         android:layout_height="@dimen/dp_line"
-        android:layout_below="@+id/vote_add"
+        android:background="@color/border_gray" />
+
+    <RadioGroup
+        android:id="@+id/choice_mode"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/colorPrimary"
+        android:orientation="horizontal"
+        android:padding="@dimen/padding_small">
+
+        <RadioButton
+            android:id="@+id/single_choice"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:checked="true"
+            android:text="@string/completing_vote_single" />
+
+        <RadioButton
+            android:id="@+id/multiple_choice"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/completing_vote_multiple" />
+    </RadioGroup>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_line"
         android:background="@color/border_gray" />
 
     <Button
         android:id="@+id/completing_finish"
         android:layout_width="@dimen/completing_okBtn_width"
         android:layout_height="@dimen/completing_okBtn_height"
-        android:layout_below="@+id/vote_add"
-        android:layout_centerHorizontal="true"
+        android:layout_gravity="center_horizontal"
         android:layout_marginTop="@dimen/completing_okBtn_margin"
         android:background="@drawable/selector_radius_red_btn"
         android:onClick="onFinish"
@@ -34,6 +62,5 @@
 
     <View
         android:layout_width="match_parent"
-        android:layout_height="@dimen/blank_item_divider"
-        android:layout_below="@+id/completing_finish" />
-</RelativeLayout>
+        android:layout_height="@dimen/blank_item_divider" />
+</LinearLayout>

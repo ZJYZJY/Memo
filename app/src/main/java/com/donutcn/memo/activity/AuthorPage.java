@@ -15,6 +15,7 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.RequestManager;
 import com.donutcn.memo.R;
 import com.donutcn.memo.adapter.MemoAdapter;
+import com.donutcn.memo.constant.FieldConfig;
 import com.donutcn.memo.entity.BriefContent;
 import com.donutcn.memo.entity.SimpleResponse;
 import com.donutcn.memo.event.ChangeContentEvent;
@@ -178,11 +179,11 @@ public class AuthorPage extends AppCompatActivity implements OnItemClickListener
     }
 
     public void loadData(List<LinkedTreeMap> data){
-        WindowUtils.setToolBarTitle(this, (String) mUserInfo.get("name"));
-        mAuthorName.setText((String) mUserInfo.get("name"));
-        String signature = (String) mUserInfo.get("self_introduction");
-        mAuthorSign.setText(signature == null ? "这个人很懒什么也没写~" : signature);
-        glide.load((String) mUserInfo.get("head_portrait")).centerCrop().into(mUserIcon);
+        WindowUtils.setToolBarTitle(this, (String) mUserInfo.get(FieldConfig.USER_NICKNAME));
+        mAuthorName.setText((String) mUserInfo.get(FieldConfig.USER_NICKNAME));
+        String signature = (String) mUserInfo.get(FieldConfig.USER_SIGNATURE);
+        mAuthorSign.setText(signature == null ? getString(R.string.author_page_not_signature) : signature);
+        glide.load((String) mUserInfo.get(FieldConfig.USER_ICON_URL)).centerCrop().into(mUserIcon);
 
         try {
             mList = CollectionUtil.covertLinkedTreeMap(data, BriefContent.class);

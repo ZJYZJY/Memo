@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v7.util.DiffUtil;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -27,6 +28,7 @@ import com.donutcn.memo.type.ItemLayoutType;
 import com.donutcn.memo.utils.CollectionUtil;
 import com.donutcn.memo.utils.HttpUtils;
 import com.donutcn.memo.utils.LogUtil;
+import com.donutcn.memo.utils.MemoDiffUtil;
 import com.donutcn.memo.utils.ToastUtil;
 import com.donutcn.memo.view.ListViewDecoration;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
@@ -69,12 +71,6 @@ public class RecommendFragment extends BaseScrollFragment implements View.OnClic
     }
 
     @Override
-    public void onStart() {
-        super.onStart();
-        EventBus.getDefault().register(this);
-    }
-
-    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         return inflater.inflate(R.layout.fragment_recommend, container, false);
@@ -114,6 +110,7 @@ public class RecommendFragment extends BaseScrollFragment implements View.OnClic
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        EventBus.getDefault().register(this);
         mList = new ArrayList<>();
         mAdapter = new MemoAdapter(mContext, mList, ItemLayoutType.AVATAR_IMG);
         mAdapter.setOnItemClickListener(mOnItemClickListener);
@@ -130,9 +127,11 @@ public class RecommendFragment extends BaseScrollFragment implements View.OnClic
                 if(response.body() != null){
                     LogUtil.d("refresh", response.body().toString());
                     if(response.body().isOk()){
+                        List<BriefContent> old = mList;
                         mList.addAll(0, response.body().getData());
                         mList = CollectionUtil.removeDuplicateWithOrder(mList);
-                        mAdapter.notifyDataSetChanged();
+                        DiffUtil.calculateDiff(new MemoDiffUtil(old, mList), true).dispatchUpdatesTo(mAdapter);
+//                        mAdapter.notifyDataSetChanged();
 //                        mMemo_rv.setAdapter(mAdapter);
                     }
                 }
@@ -157,8 +156,10 @@ public class RecommendFragment extends BaseScrollFragment implements View.OnClic
                 if(response.body() != null){
                     LogUtil.d("load", response.body().toString());
                     if(response.body().isOk()){
+                        List<BriefContent> old = mList;
                         mList.addAll(mList.size(), response.body().getData());
-                        mAdapter.notifyDataSetChanged();
+                        DiffUtil.calculateDiff(new MemoDiffUtil(old, mList), true).dispatchUpdatesTo(mAdapter);
+//                        mAdapter.notifyDataSetChanged();
                         mRefreshLayout.finishLoadmore();
                     }else if(response.body().unAuthorized()){
 
@@ -277,9 +278,9 @@ public class RecommendFragment extends BaseScrollFragment implements View.OnClic
     }
 
     @Override
-    public void onStop() {
+    public void onDestroy() {
         EventBus.getDefault().unregister(this);
-        super.onStop();
+        super.onDestroy();
     }
 
     @Subscribe

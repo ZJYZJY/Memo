@@ -87,9 +87,9 @@ public class PublishActivity extends AppCompatActivity implements View.OnClickLi
     private HorizontalScrollView mTools;
     private ImageView mKeyboard, mSpeechClose;
     private ProgressDialog mPublishDialog;
+    private ProgressDialog mSpeechDialog;
 
     private SpeechRecognizer mIat;
-    private RecognizerDialog mIatDialog;
     // use HashMap to store the result.
     private Map<String, String> mIatResults = new LinkedHashMap<>();
     private List<String> selectedPhotos = new ArrayList<>();
@@ -125,10 +125,11 @@ public class PublishActivity extends AppCompatActivity implements View.OnClickLi
         onNewIntent(getIntent());
 
         mIat = SpeechRecognizer.createRecognizer(this, mInitListener);
-        mIatDialog = new RecognizerDialog(this, mInitListener);
 
         mPublishDialog = new ProgressDialog(this);
         mPublishDialog.setMessage("正在上传中...");
+
+        mSpeechDialog = new ProgressDialog(this);
 
 //        getWindow().getDecorView().postDelayed(showGreeting, 200);
     }
@@ -570,9 +571,10 @@ public class PublishActivity extends AppCompatActivity implements View.OnClickLi
     public void startSpeech() {
         // set up SpeechRecognizer parameter.
         setParam();
+        mIat.startListening(mRecognizerListener);
         // show the listening dialog.
-        mIatDialog.setListener(mRecognizerDialogListener);
-        mIatDialog.show();
+//        mIatDialog.setListener(mRecognizerDialogListener);
+//        mIatDialog.show();
     }
 
     private RichEditor.OnTextChangeListener mContentTextChangeListener = new RichEditor.OnTextChangeListener() {
@@ -597,23 +599,6 @@ public class PublishActivity extends AppCompatActivity implements View.OnClickLi
         public void afterTextChanged(Editable s) {
             mTitleStr = s.toString();
         }
-    };
-
-    /**
-     * RecognizerDialogListener with UI.
-     */
-    private RecognizerDialogListener mRecognizerDialogListener = new RecognizerDialogListener() {
-        public void onResult(RecognizerResult results, boolean isLast) {
-            printResult(results);
-            if (isLast) {
-                mContentTextChangeListener.onTextChange(mContent.getHtml());
-            }
-        }
-
-        public void onError(SpeechError error) {
-            ToastUtil.show(mContext, error.getPlainDescription(true));
-        }
-
     };
 
     private void printResult(RecognizerResult results) {
@@ -652,29 +637,44 @@ public class PublishActivity extends AppCompatActivity implements View.OnClickLi
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    ToastUtil.show(mContext, "当前音量" + i);
+                    LogUtil.d("当前音量" + i);
                 }
             });
         }
 
         @Override
         public void onBeginOfSpeech() {
-            ToastUtil.show(mContext, "开始了");
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    mSpeechDialog.setMessage("正在聆听...");
+                    mSpeechDialog.show();
+                }
+            });
         }
 
         @Override
         public void onEndOfSpeech() {
-            ToastUtil.show(mContext, "结束了");
         }
 
         @Override
-        public void onResult(RecognizerResult recognizerResult, boolean b) {
+        public void onResult(RecognizerResult recognizerResult, boolean isLast) {
+            mSpeechDialog.setMessage("正在识别...");
             printResult(recognizerResult);
+            if(isLast){
+                mContentTextChangeListener.onTextChange(mContent.getHtml());
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        mSpeechDialog.dismiss();
+                    }
+                });
+            }
         }
 
         @Override
         public void onError(SpeechError speechError) {
-
+            LogUtil.e(speechError.getPlainDescription(true));
         }
 
         @Override

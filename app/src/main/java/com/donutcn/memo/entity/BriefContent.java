@@ -1,5 +1,6 @@
 package com.donutcn.memo.entity;
 
+import com.donutcn.memo.constant.FieldConfig;
 import com.donutcn.memo.utils.StringUtil;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
@@ -15,63 +16,63 @@ import org.json.JSONObject;
 public class BriefContent {
 
     @Expose
-    @SerializedName(value = "article_id")
+    @SerializedName(FieldConfig.CONTENT_ID)
     private String id;
 
     @Expose
-    @SerializedName(value = "user_id")
+    @SerializedName(FieldConfig.USER_ID)
     private String userId;
 
     @Expose
-    @SerializedName(value = "name")
+    @SerializedName(FieldConfig.USER_NICKNAME)
     private String name;
 
     @Expose
-    @SerializedName(value = "head_portrait")
+    @SerializedName(FieldConfig.USER_ICON_URL)
     private String userIcon;
 
     @Expose
-    @SerializedName(value = "url")
+    @SerializedName(FieldConfig.CONTENT_URL)
     private String url;
 
     @Expose
-    @SerializedName(value = "title")
+    @SerializedName(FieldConfig.CONTENT_TITLE)
     private String title;
 
     @Expose
-    @SerializedName(value = "create_time")
+    @SerializedName(FieldConfig.CONTENT_TIME)
     private String time;
 
     @Expose
-    @SerializedName(value = "content")
+    @SerializedName(FieldConfig.CONTENT)
     private String content;
 
     @Expose
-    @SerializedName(value = "type")
+    @SerializedName(FieldConfig.CONTENT_TYPE)
     private String type;
 
     @Expose
-    @SerializedName(value = "is_private")
+    @SerializedName(FieldConfig.CONTENT_RIGHTS)
     private int isPrivate;
 
     @Expose
-    @SerializedName(value = "read_total")
+    @SerializedName(FieldConfig.CONTENT_READ_COUNT)
     private int readCount;
 
     @Expose
-    @SerializedName(value = "praise")
+    @SerializedName(FieldConfig.CONTENT_UP_VOTE_COUNT)
     private int upVote;
 
     @Expose
-    @SerializedName(value = "comment_total")
+    @SerializedName(FieldConfig.CONTENT_COMM_COUNT)
     private int comment;
 
     @Expose
-    @SerializedName(value = "url1")
+    @SerializedName(FieldConfig.CONTENT_IMG_URL1)
     private String imgUrl0;
 
     @Expose
-    @SerializedName(value = "url2")
+    @SerializedName(FieldConfig.CONTENT_IMG_URL2)
     private String imgUrl1;
 
     private long timeStamp;
@@ -179,21 +180,21 @@ public class BriefContent {
     public JSONObject toJson() {
         JSONObject json = new JSONObject();
         try {
-            json.put("article_id", id);
-            json.put("head_portrait", userIcon);
-            json.put("user_id", userId);
-            json.put("name", name);
-            json.put("url", url);
-            json.put("title", title);
-            json.put("create_time", time);
-            json.put("content", content);
-            json.put("type", type);
-            json.put("is_private", isPrivate);
-            json.put("read_total", readCount);
-            json.put("praise", upVote);
-            json.put("comment_total", comment);
-            json.put("url1", imgUrl0);
-            json.put("url2", imgUrl1);
+            json.put(FieldConfig.CONTENT_ID, id);
+            json.put(FieldConfig.USER_ICON_URL, userIcon);
+            json.put(FieldConfig.USER_ID, userId);
+            json.put(FieldConfig.USER_NICKNAME, name);
+            json.put(FieldConfig.CONTENT_URL, url);
+            json.put(FieldConfig.CONTENT_TITLE, title);
+            json.put(FieldConfig.CONTENT_TIME, time);
+            json.put(FieldConfig.CONTENT, content);
+            json.put(FieldConfig.CONTENT_TYPE, type);
+            json.put(FieldConfig.CONTENT_RIGHTS, isPrivate);
+            json.put(FieldConfig.CONTENT_READ_COUNT, readCount);
+            json.put(FieldConfig.CONTENT_UP_VOTE_COUNT, upVote);
+            json.put(FieldConfig.CONTENT_COMM_COUNT, comment);
+            json.put(FieldConfig.CONTENT_IMG_URL1, imgUrl0);
+            json.put(FieldConfig.CONTENT_IMG_URL2, imgUrl1);
         } catch (JSONException e) {
             e.printStackTrace();
         }

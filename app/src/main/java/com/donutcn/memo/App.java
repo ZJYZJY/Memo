@@ -64,7 +64,8 @@ public class App extends Application {
 //        XGPushConfig.setAccessKey(getApplicationContext(), "A95K4WQ6E2QU");
 
         RichText.initCacheDir(this);
-        SpeechUtility.createUtility(this, SpeechConstant.APPID + "=59647377");
+        SpeechUtility.createUtility(this, SpeechConstant.APPID + "=5996d5cb");
+        // tencent x5 webView
         QbSdk.initX5Environment(getApplicationContext(), null);
         // set the default header and footer.
         SmartRefreshLayout.setDefaultRefreshHeaderCreater(new DefaultRefreshHeaderCreater() {

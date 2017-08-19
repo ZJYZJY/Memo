@@ -10,12 +10,18 @@ import java.util.List;
 public class FinishEditVoteItemsEvent {
 
     private List<String> voteItem;
+    private boolean isSingle;
 
-    public FinishEditVoteItemsEvent(List<String> voteItem){
+    public FinishEditVoteItemsEvent(List<String> voteItem, boolean isSingle){
         this.voteItem = voteItem;
+        this.isSingle = isSingle;
     }
 
     public List<String> getVoteItem() {
         return voteItem;
+    }
+
+    public boolean isSingle() {
+        return isSingle;
     }
 }

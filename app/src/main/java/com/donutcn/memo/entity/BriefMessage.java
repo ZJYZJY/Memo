@@ -1,5 +1,6 @@
 package com.donutcn.memo.entity;
 
+import com.donutcn.memo.constant.FieldConfig;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
@@ -14,7 +15,7 @@ import org.json.JSONObject;
 public class BriefMessage {
 
     @Expose
-    @SerializedName(value = "id")
+    @SerializedName(FieldConfig.MESSAGE_ID)
     private String id;
 
     /**
@@ -22,23 +23,23 @@ public class BriefMessage {
      * else 'type' is {@link com.donutcn.memo.type.PublishType}
      */
     @Expose
-    @SerializedName(value = "type")
+    @SerializedName(FieldConfig.MESSAGE_TYPE)
     private String type;
 
     @Expose
-    @SerializedName(value = "title")
+    @SerializedName(FieldConfig.MESSAGE_TITLE)
     private String title;
 
     @Expose
-    @SerializedName(value = "sub_title")
+    @SerializedName(FieldConfig.MESSAGE_SUB_TITLE)
     private String subTitle;
 
     @Expose
-    @SerializedName(value = "time")
+    @SerializedName(FieldConfig.MESSAGE_TIME)
     private String time;
 
     @Expose
-    @SerializedName(value = "msg_count")
+    @SerializedName(FieldConfig.MESSAGE_COUNT)
     private int newMsgCount;
 
     public String getId() {
@@ -76,12 +77,12 @@ public class BriefMessage {
     public JSONObject toJson() {
         JSONObject json = new JSONObject();
         try {
-            json.put("id", id);
-            json.put("type", type);
-            json.put("title", title);
-            json.put("sub_title", subTitle);
-            json.put("time", time);
-            json.put("msg_count", newMsgCount);
+            json.put(FieldConfig.MESSAGE_ID, id);
+            json.put(FieldConfig.MESSAGE_TYPE, type);
+            json.put(FieldConfig.MESSAGE_TITLE, title);
+            json.put(FieldConfig.MESSAGE_SUB_TITLE, subTitle);
+            json.put(FieldConfig.MESSAGE_TIME, time);
+            json.put(FieldConfig.MESSAGE_COUNT, newMsgCount);
         } catch (JSONException e) {
             e.printStackTrace();
         }
