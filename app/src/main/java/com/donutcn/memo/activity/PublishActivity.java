@@ -33,6 +33,7 @@ import com.donutcn.memo.R;
 import com.donutcn.memo.entity.ContentResponse;
 import com.donutcn.memo.entity.SimpleResponse;
 import com.donutcn.memo.event.FinishCompressEvent;
+import com.donutcn.memo.helper.LoginHelper;
 import com.donutcn.memo.listener.UploadCallback;
 import com.donutcn.memo.type.PublishType;
 import com.donutcn.memo.utils.HttpUtils;
@@ -52,8 +53,6 @@ import com.iflytek.cloud.RecognizerResult;
 import com.iflytek.cloud.SpeechConstant;
 import com.iflytek.cloud.SpeechError;
 import com.iflytek.cloud.SpeechRecognizer;
-import com.iflytek.cloud.ui.RecognizerDialog;
-import com.iflytek.cloud.ui.RecognizerDialogListener;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -263,6 +262,10 @@ public class PublishActivity extends AppCompatActivity implements View.OnClickLi
                                 (String) response.body().getField("content"),
                                 (String) response.body().getField("picurl"),
                                 Integer.valueOf((String) response.body().getField("is_private")));
+                    } else if(response.body().unAuthorized()){
+                        LoginHelper.ifRequestLogin(mContext, "请先登录");
+                    } else {
+                        ToastUtil.show(mContext, "发布失败，服务器未知错误");
                     }
                 }else {
                     ToastUtil.show(mContext, "发布失败");
@@ -783,6 +786,9 @@ public class PublishActivity extends AppCompatActivity implements View.OnClickLi
     @Override
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
+        if(LoginHelper.ifRequestLogin(this, "请先登录")){
+            return;
+        }
         String action = intent.getAction();
         if(action != null && action.equals(Intent.ACTION_VIEW)){
             // start from web page.

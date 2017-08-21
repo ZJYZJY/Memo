@@ -10,7 +10,7 @@ import java.util.List;
  * com.donutcn.memo.utils
  * Created by 73958 on 2017/8/18.
  */
-
+@Deprecated
 public class MemoDiffUtil extends DiffUtil.Callback {
 
     private List<BriefContent> mOldData, mNewData;
@@ -39,28 +39,22 @@ public class MemoDiffUtil extends DiffUtil.Callback {
     public boolean areContentsTheSame(int oldItemPosition, int newItemPosition) {
         BriefContent oldItem = mOldData.get(oldItemPosition);
         BriefContent newItem = mNewData.get(newItemPosition);
-        if(oldItem.getTitle().equals(newItem.getTitle())){
+        if(!oldItem.getTitle().equals(newItem.getTitle())){
             return false;
         }
-        if(oldItem.getContent().equals(newItem.getContent())){
+        if(!oldItem.getContent().equals(newItem.getContent())){
             return false;
         }
-        if(oldItem.getComment().equals(newItem.getComment())){
+        if(!oldItem.getComment().equals(newItem.getComment())){
             return false;
         }
-        if(oldItem.getReadCount().equals(newItem.getReadCount())){
+        if(!oldItem.getReadCount().equals(newItem.getReadCount())){
             return false;
         }
-        if(oldItem.getUpVote().equals(newItem.getUpVote())){
+        if(!oldItem.getUpVote().equals(newItem.getUpVote())){
             return false;
         }
-        if(oldItem.getName().equals(newItem.getName())){
-            return false;
-        }
-        if(oldItem.getTime().equals(newItem.getTime())){
-            return false;
-        }
-        if(oldItem.getUserIcon().equals(newItem.getUserIcon())){
+        if(!oldItem.getTime().equals(newItem.getTime())){
             return false;
         }
         return true;

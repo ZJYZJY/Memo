@@ -1,94 +1,35 @@
 package com.donutcn.memo.fragment.discover;
 
-import android.support.v7.util.DiffUtil;
+import android.os.Bundle;
+import android.support.annotation.Nullable;
 
+import com.donutcn.memo.adapter.MemoAdapter;
 import com.donutcn.memo.base.BaseMemoFragment;
-import com.donutcn.memo.entity.ArrayResponse;
-import com.donutcn.memo.entity.BriefContent;
 import com.donutcn.memo.event.ChangeContentEvent;
 import com.donutcn.memo.event.RequestRefreshEvent;
-import com.donutcn.memo.utils.CollectionUtil;
-import com.donutcn.memo.utils.HttpUtils;
-import com.donutcn.memo.utils.LogUtil;
-import com.donutcn.memo.utils.MemoDiffUtil;
-import com.donutcn.memo.utils.ToastUtil;
+import com.donutcn.memo.presenter.MemoPresenter;
+import com.donutcn.memo.type.ItemLayoutType;
 
+import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 
-import java.util.List;
-
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
+import java.util.ArrayList;
 
 public class LatestFragment extends BaseMemoFragment {
 
     @Override
-    public void Refresh() {
-        HttpUtils.getContentList(2, "down", mList.size() == 0 ? 0 : mList.get(0).getTimeStamp())
-                .enqueue(new Callback<ArrayResponse<BriefContent>>() {
-                    @Override
-                    public void onResponse(Call<ArrayResponse<BriefContent>> call,
-                                           Response<ArrayResponse<BriefContent>> response) {
-                        if(response.body() != null){
-                            LogUtil.d("refresh", response.body().toString());
-                            if(response.body().isOk()){
-                                List<BriefContent> old = mList;
-                                mList.addAll(0, response.body().getData());
-                                mList = CollectionUtil.removeDuplicateWithOrder(mList);
-                                DiffUtil.calculateDiff(new MemoDiffUtil(old, mList), true).dispatchUpdatesTo(mAdapter);
-//                                mAdapter.notifyDataSetChanged();
-//                                mMemo_rv.setAdapter(mAdapter);
-                            }
-                        }
-                        mRefreshLayout.finishRefresh();
-                    }
-
-                    @Override
-                    public void onFailure(Call<ArrayResponse<BriefContent>> call, Throwable t) {
-                        t.printStackTrace();
-                        ToastUtil.show(getContext(), "最新连接失败");
-                        mRefreshLayout.finishRefresh();
-                    }
-                });
+    public void initMemoPresenter() {
+        memoPresenter = new MemoPresenter(this, 2);
     }
 
     @Override
-    public void LoadMore(){
-        HttpUtils.getContentList(2, "up", mList.get(mList.size() - 1).getTimeStamp())
-                .enqueue(new Callback<ArrayResponse<BriefContent>>() {
-                    @Override
-                    public void onResponse(Call<ArrayResponse<BriefContent>> call,
-                                           Response<ArrayResponse<BriefContent>> response) {
-                        if(response.body() != null){
-                            LogUtil.d("load", response.body().toString());
-                            if(response.body().isOk()){
-                                List<BriefContent> old = mList;
-                                mList.addAll(mList.size(), response.body().getData());
-                                DiffUtil.calculateDiff(new MemoDiffUtil(old, mList), true).dispatchUpdatesTo(mAdapter);
-//                                mAdapter.notifyDataSetChanged();
-                                mRefreshLayout.finishLoadmore();
-                            }else if(response.body().unAuthorized()){
-
-                            } else if(response.body().isFail()) {
-//                                ToastUtil.show(getContext(), "已经到底部了");
-                                canLoadMore = false;
-                                mRefreshLayout.finishLoadmore();
-                                mRefreshLayout.setLoadmoreFinished(true);
-                            }
-                        }
-                        isLoadMore = false;
-                        mRefreshLayout.finishLoadmore();
-                    }
-
-                    @Override
-                    public void onFailure(Call<ArrayResponse<BriefContent>> call, Throwable t) {
-                        t.printStackTrace();
-                        ToastUtil.show(getContext(), "最新连接失败");
-                        isLoadMore = false;
-                        mRefreshLayout.finishLoadmore();
-                    }
-                });
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        EventBus.getDefault().register(this);
+        mList = new ArrayList<>();
+        mAdapter = new MemoAdapter(mContext, mList, ItemLayoutType.AVATAR_IMG);
+        mAdapter.setOnItemClickListener(this);
+        mMemo_rv.setAdapter(mAdapter);
     }
 
     @Subscribe

@@ -80,6 +80,7 @@ public class DiscoverFragment extends Fragment implements OnTabSelectListener {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         EventBus.getDefault().register(this);
+        recommendRefresh = System.currentTimeMillis();
     }
 
     @Override

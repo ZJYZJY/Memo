@@ -94,9 +94,9 @@ public class MessageFragment extends BaseScrollFragment {
 
     public void Refresh() {
 
-        List<BriefMessage> old = mList;
-        DiffUtil.calculateDiff(new MessageDiffUtil(old, mList), true).dispatchUpdatesTo(mAdapter);
-//        mAdapter.notifyDataSetChanged();
+//        List<BriefMessage> old = mList;
+//        DiffUtil.calculateDiff(new MessageDiffUtil(old, mList), true).dispatchUpdatesTo(mAdapter);
+        mAdapter.notifyDataSetChanged();
         mRefreshLayout.finishRefresh();
         FileCacheUtil.setMessageListCache(mContext, new Gson().toJson(mList));
     }
@@ -134,6 +134,7 @@ public class MessageFragment extends BaseScrollFragment {
                 msg.setNewMsgCount(0);
             }
         }
+        FileCacheUtil.setMessageListCache(mContext, new Gson().toJson(mList));
     }
 
     @Override
@@ -162,7 +163,7 @@ public class MessageFragment extends BaseScrollFragment {
     @Subscribe(sticky = true)
     public void onReceiveBriefMessage(BriefMessage event){
         BriefMessage msg = sameMessage(event.getId());
-        List<BriefMessage> old = mList;
+//        List<BriefMessage> old = mList;
         if (msg == null) {
             mList.add(0, event);
         } else {
@@ -171,7 +172,8 @@ public class MessageFragment extends BaseScrollFragment {
             mList.remove(msg);
             mList.add(0, event);
         }
-        DiffUtil.calculateDiff(new MessageDiffUtil(old, mList), true).dispatchUpdatesTo(mAdapter);
+//        DiffUtil.calculateDiff(new MessageDiffUtil(old, mList), true).dispatchUpdatesTo(mAdapter);
+        mAdapter.notifyDataSetChanged();
         FileCacheUtil.setMessageListCache(mContext, new Gson().toJson(mList));
     }
 }

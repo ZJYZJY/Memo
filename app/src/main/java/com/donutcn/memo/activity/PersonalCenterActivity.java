@@ -33,9 +33,9 @@ public class PersonalCenterActivity extends AppCompatActivity implements View.On
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_personal_center);
         WindowUtils.setStatusBarColor(this, android.R.color.transparent, false);
-        EventBus.getDefault().register(this);
 
         initView();
+        EventBus.getDefault().register(this);
     }
 
     public void initView(){

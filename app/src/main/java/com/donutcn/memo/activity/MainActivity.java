@@ -9,14 +9,12 @@ import android.view.View;
 
 import com.donutcn.memo.R;
 import com.donutcn.memo.adapter.ViewPagerAdapter;
-import com.donutcn.memo.entity.SimpleResponse;
 import com.donutcn.memo.event.LoginStateEvent;
 import com.donutcn.memo.event.RequestRefreshEvent;
 import com.donutcn.memo.fragment.SplashFragment;
 import com.donutcn.memo.fragment.discover.DiscoverFragment;
 import com.donutcn.memo.fragment.home.HomeFragment;
 import com.donutcn.memo.helper.LoginHelper;
-import com.donutcn.memo.utils.HttpUtils;
 import com.donutcn.memo.utils.LogUtil;
 import com.donutcn.memo.utils.ToastUtil;
 import com.donutcn.memo.utils.UserStatus;
@@ -28,10 +26,6 @@ import com.umeng.socialize.UMShareAPI;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
-
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 

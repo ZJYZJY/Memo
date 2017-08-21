@@ -11,7 +11,7 @@ import java.util.List;
  * com.donutcn.memo.utils
  * Created by 73958 on 2017/8/18.
  */
-
+@Deprecated
 public class MessageDiffUtil extends DiffUtil.Callback {
 
     private List<BriefMessage> mOldData, mNewData;
@@ -40,16 +40,16 @@ public class MessageDiffUtil extends DiffUtil.Callback {
     public boolean areContentsTheSame(int oldItemPosition, int newItemPosition) {
         BriefMessage oldItem = mOldData.get(oldItemPosition);
         BriefMessage newItem = mNewData.get(newItemPosition);
-        if(oldItem.getTitle().equals(newItem.getTitle())){
+        if(!oldItem.getTitle().equals(newItem.getTitle())){
             return false;
         }
-        if(oldItem.getSubTitle().equals(newItem.getSubTitle())){
+        if(!oldItem.getSubTitle().equals(newItem.getSubTitle())){
             return false;
         }
-        if(oldItem.getNewMsgCount() == newItem.getNewMsgCount()){
+        if(oldItem.getNewMsgCount() != newItem.getNewMsgCount()){
             return false;
         }
-        if(oldItem.getTime().equals(newItem.getTime())){
+        if(!oldItem.getTime().equals(newItem.getTime())){
             return false;
         }
         return true;
