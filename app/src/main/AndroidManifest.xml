@@ -60,7 +60,7 @@
                 <data
                     android:host="ascexz.320.io"
                     android:pathPrefix="/main"
-                    android:scheme="http" />
+                    android:scheme="memo" />
             </intent-filter>
         </activity>
         <activity
@@ -76,7 +76,7 @@
                 <data
                     android:host="ascexz.320.io"
                     android:pathPrefix="/GoodPage/publish"
-                    android:scheme="http" />
+                    android:scheme="memo" />
             </intent-filter>
         </activity>
         <activity android:name=".activity.SocialShareActivity" />
@@ -90,7 +90,7 @@
                 <data
                     android:host="ascexz.320.io"
                     android:pathPrefix="/GoodPage/content"
-                    android:scheme="http" />
+                    android:scheme="memo" />
             </intent-filter>
         </activity>
         <activity android:name=".activity.AuthorPage">
@@ -103,7 +103,7 @@
                 <data
                     android:host="ascexz.320.io"
                     android:pathPrefix="/GoodPage/author"
-                    android:scheme="http" />
+                    android:scheme="memo" />
             </intent-filter>
         </activity>
         <activity android:name=".activity.SearchActivity" />

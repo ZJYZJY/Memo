@@ -11,13 +11,18 @@ import android.net.Uri;
 
 public class RouterHelper {
 
-    private static final String SCHEME = "http";
+    private static final String APP_SCHEME = "memo";
+    private static final String HTTP_SCHEME = "http";
     private static final String HOST = "ascexz.320.io";
     private static final String API_PATH = "/GoodPage/API/";
     private static final String PATH = "/GoodPage/";
 
     public static String scheme(){
-        return SCHEME;
+        return HTTP_SCHEME;
+    }
+
+    public static String appScheme(){
+        return APP_SCHEME;
     }
 
     public static String host(){
@@ -25,11 +30,11 @@ public class RouterHelper {
     }
 
     public static Uri getApiUri(){
-        return Uri.parse(SCHEME + "://" + HOST + API_PATH);
+        return Uri.parse(HTTP_SCHEME + "://" + HOST + API_PATH);
     }
 
     public static Uri getBaseUri(){
-        return Uri.parse(SCHEME + "://" + HOST + PATH);
+        return Uri.parse(HTTP_SCHEME + "://" + HOST + PATH);
     }
 
     public static boolean confirmIntent(Uri uri, String intent){

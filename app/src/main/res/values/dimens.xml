@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <dimen name="toolbar_height">48dp</dimen>
+    <dimen name="toolbar_tab_height">42dp</dimen>
     <dimen name="toolbar_top_right_width">56dp</dimen>
     <dimen name="bottom_bar_height">48dp</dimen>
-    <dimen name="bottom_item_width">42dp</dimen>
+    <dimen name="bottom_item_width">36dp</dimen>
     <dimen name="publish_bottom_toolbar_height">42dp</dimen>
     <dimen name="personal_signature_width">192dp</dimen>
     <dimen name="blank_item_divider">24dp</dimen>
@@ -28,6 +29,7 @@
     <dimen name="icon_personal_center_user">72dp</dimen>
     <dimen name="icon_message_user">42dp</dimen>
     <dimen name="icon_share">56dp</dimen>
+    <dimen name="icon_type_select">48dp</dimen>
     <dimen name="icon_vote_del">42dp</dimen>
 
     <!--margin & padding-->
@@ -41,6 +43,7 @@
     <dimen name="padding_text">4dp</dimen>
     <dimen name="padding_micro">2dp</dimen>
 
+    <dimen name="margin_dialog">42dp</dimen>
     <dimen name="margin_top_img">32dp</dimen>
     <dimen name="margin_huge">24dp</dimen>
     <dimen name="margin_large">16dp</dimen>

@@ -409,11 +409,11 @@ public class HttpUtils {
                 json.put("extra2", extra2);
             }
             switch (type) {
-                case RESERVE:
                 case SALE:
+                case RECRUIT:
                     json.put("field3", field3);
                 case ACTIVITY:
-                case RECRUIT:
+                case RESERVE:
                     json.put("field1", field1);
                     json.put("field2", field2);
                     break;
@@ -542,6 +542,9 @@ public class HttpUtils {
                                       final UploadCallback<String> listener) {
         fileKeys = Collections.synchronizedList(new ArrayList<String>());
         final boolean[] fail = {false};
+        if(files.size() == 0){
+            listener.uploadAll(null);
+        }
         for (File file : files) {
             if(fail[0])
                 return;

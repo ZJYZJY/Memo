@@ -4,15 +4,6 @@
     android:layout_height="@dimen/toolbar_height"
     android:background="@color/colorPrimary">
 
-    <ImageView
-        android:id="@+id/back_arrow"
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:background="?android:selectableItemBackground"
-        android:onClick="onBack"
-        android:padding="@dimen/padding_normal_icon"
-        android:src="@mipmap/back_arrow" />
-
     <EditText
         android:id="@+id/toolbar_search"
         android:layout_width="match_parent"
@@ -22,9 +13,7 @@
         android:layout_marginLeft="@dimen/padding_medium"
         android:layout_marginRight="@dimen/padding_medium"
         android:layout_marginTop="@dimen/padding_medium"
-        android:layout_toEndOf="@+id/back_arrow"
         android:layout_toLeftOf="@+id/search_cancel"
-        android:layout_toRightOf="@+id/back_arrow"
         android:layout_toStartOf="@+id/search_cancel"
         android:background="@drawable/search_bar_bg"
         android:hint="@string/hint_search"

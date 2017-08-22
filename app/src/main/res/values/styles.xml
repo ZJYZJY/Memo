@@ -22,7 +22,7 @@
     </style>
 
     <style name="AnimPopup" parent="@android:style/Animation">
-        <item name="android:windowEnterAnimation">@anim/greeting_popup_fade_in</item>
-        <item name="android:windowExitAnimation">@anim/greeting_popup_fade_out</item>
+        <item name="android:windowEnterAnimation">@anim/ppw_fade_in</item>
+        <item name="android:windowExitAnimation">@anim/ppw_fade_out</item>
     </style>
 </resources>

@@ -33,6 +33,9 @@ public class ToastUtil {
         if (isShow){
             if(mToast != null)
                 cancel();
+//            if(message == null){
+//                return;
+//            }
             mToast = Toast.makeText(context, message, Toast.LENGTH_SHORT);
             mToast.show();
         }

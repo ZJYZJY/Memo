@@ -55,6 +55,11 @@ public class LoginHelper {
         login(context.getApplicationContext(), loginType, data);
     }
 
+    public static int loginType(Context context){
+        return SpfsUtils.readInt(context.getApplicationContext(),
+                SpfsUtils.USER, "login_type", UserStatus.PHONE_LOGIN);
+    }
+
     public static void syncUserInfo(Context context, Map<String, String> data){
         writeUserPreference(context, data);
         UserStatus.setCurrentUser(data);

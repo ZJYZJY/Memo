@@ -83,7 +83,7 @@ public class MessageFragment extends BaseScrollFragment {
         mAdapter.setOnItemClickListener(mOnItemClickListener);
         mMessage_rv.setAdapter(mAdapter);
         String cache = FileCacheUtil.getCache(mContext, MESSAGE_LIST_CACHE, FileCacheUtil.CACHE_LONG_TIMEOUT);
-        if(cache.equals(""))
+        if("".equals(cache))
             Refresh();
         else{
             List<BriefMessage> temp = new Gson().fromJson(cache, new TypeToken<List<BriefMessage>>(){}.getType());

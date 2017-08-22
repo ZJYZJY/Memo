@@ -56,7 +56,7 @@ public class MemoFragment extends BaseMemoFragment implements FetchContent, Dele
         mMemo_rv.setAdapter(mAdapter);
         if(UserStatus.isLogin(mContext)){
             String cache = FileCacheUtil.getCache(mContext, CONTENT_LIST_CACHE, FileCacheUtil.CACHE_SHORT_TIMEOUT);
-            if(cache.equals(""))
+            if("".equals(cache))
                 memoPresenter.refresh(mList);
             else{
                 List<BriefContent> temp = new Gson().fromJson(cache, new TypeToken<List<BriefContent>>(){}.getType());

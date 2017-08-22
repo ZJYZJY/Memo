@@ -135,11 +135,13 @@ public class User {
             LogUtil.d("followed_cache", "followed:" + str + userId + "-");
         } else {
             getFollowedUser().remove(userId);
-            String str = SpfsUtils.readString(
-                    context.getApplicationContext(), SpfsUtils.USER, "follow", "");
-            SpfsUtils.write(context, SpfsUtils.USER, "follow",
-                    str.substring(0, str.length() - userId.length() - 1));
-            LogUtil.d("followed_cache", "followed:" + str.substring(0, str.length() - userId.length() - 1));
+            List<String> list = getFollowedUser();
+            StringBuilder builder = new StringBuilder("");
+            for(String s : list){
+                builder.append(s).append("-");
+            }
+            SpfsUtils.write(context, SpfsUtils.USER, "follow", builder.toString());
+            LogUtil.d("followed_cache", "followed:" + builder.toString());
         }
     }
 }

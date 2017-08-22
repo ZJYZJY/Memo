@@ -18,6 +18,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.donutcn.memo.R;
+import com.donutcn.memo.constant.FieldConfig;
 import com.donutcn.memo.entity.SimpleResponse;
 import com.donutcn.memo.fragment.SplashFragment;
 import com.donutcn.memo.helper.LoginHelper;
@@ -32,6 +33,7 @@ import com.umeng.socialize.UMShareAPI;
 import com.umeng.socialize.bean.SHARE_MEDIA;
 
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 import retrofit2.Call;
@@ -55,6 +57,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     private Handler mSplashHandler = new Handler();
 
     private boolean loginState;
+    private boolean completeInfo = false;
     private final int ACTION_REGISTER = 0;
 
     @Override
@@ -107,25 +110,40 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                         if (response.body() != null) {
                             LogUtil.d("sync", response.body().toString());
                             if(response.body().isOk()){
-                                LoginHelper.syncUserInfo(LoginActivity.this, response.body().getData());
+                                LinkedHashMap data = response.body().getData();
+                                LoginHelper.syncUserInfo(LoginActivity.this, data);
+                                // if login with phone number.
+                                if(LoginHelper.loginType(LoginActivity.this) == UserStatus.PHONE_LOGIN){
+                                    if("".equals(data.get(FieldConfig.USER_ICON_URL))
+                                            || "".equals(data.get(FieldConfig.USER_NICKNAME))){
+                                        completeInfo = true;
+                                    }
+                                }
+                                Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                                intent.putExtra("completeInfo", completeInfo);
+                                startActivity(intent);
                             } else if (response.body().unAuthorized()) {
                                 // check if the cookie is out of date.
                                 LogUtil.e("unAuthorized", response.body().toString());
                                 ToastUtil.show(LoginActivity.this, "登录授权过期，请重新登录");
                                 LoginHelper.logout(LoginActivity.this);
+                            } else {
+                                ToastUtil.show(LoginActivity.this, response.body().getMessage());
+                                removeSplashFragment();
                             }
                         } else {
                             ToastUtil.show(LoginActivity.this, "连接失败，服务器未知错误");
+                            removeSplashFragment();
                         }
                     }
 
                     @Override
                     public void onFailure(Call<SimpleResponse> call, Throwable t) {
                         t.printStackTrace();
+                        removeSplashFragment();
                         ToastUtil.show(LoginActivity.this, "连接失败，请检查你的网络连接");
                     }
                 });
-                startActivity(new Intent(LoginActivity.this, MainActivity.class));
             }else {
                 removeSplashFragment();
             }
@@ -289,14 +307,14 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.switch_to_login:
-                mToLogin.setTextColor(getResources().getColor(R.color.text_blue));
+                mToLogin.setTextColor(getResources().getColor(R.color.colorAccent));
                 mToRegister.setTextColor(getResources().getColor(R.color.textPrimaryDark));
                 findViewById(R.id.login_et).setVisibility(View.VISIBLE);
                 findViewById(R.id.register_et).setVisibility(View.GONE);
                 mLogin.setText(getString(R.string.btn_login));
                 break;
             case R.id.switch_to_register:
-                mToRegister.setTextColor(getResources().getColor(R.color.text_blue));
+                mToRegister.setTextColor(getResources().getColor(R.color.colorAccent));
                 mToLogin.setTextColor(getResources().getColor(R.color.textPrimaryDark));
                 findViewById(R.id.register_et).setVisibility(View.VISIBLE);
                 findViewById(R.id.login_et).setVisibility(View.GONE);

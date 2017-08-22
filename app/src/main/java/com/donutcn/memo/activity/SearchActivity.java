@@ -93,14 +93,14 @@ public class SearchActivity extends AppCompatActivity implements OnItemClickList
         startActivity(intent);
     }
 
-    public void onBack(View view){
-        finish();
-    }
-
     public void onCancel(View view){
-        mSearch_et.getText().clear();
-        mList.clear();
-        mAdapter.notifyDataSetChanged();
-        WindowUtils.toggleKeyboard(this, mSearch_et, true);
+        if(!"".equals(mSearch_et.getText().toString().trim())){
+            mSearch_et.getText().clear();
+            mList.clear();
+            mAdapter.notifyDataSetChanged();
+            WindowUtils.toggleKeyboard(this, mSearch_et, true);
+        } else {
+            finish();
+        }
     }
 }

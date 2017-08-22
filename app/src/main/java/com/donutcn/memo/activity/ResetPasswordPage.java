@@ -47,7 +47,7 @@ public class ResetPasswordPage extends AppCompatActivity implements View.OnClick
         mPassword = (EditText) findViewById(R.id.reset_password);
         mGetAuthCode = (TextView) findViewById(R.id.tv_get_msg_code);
         mReset = (Button) findViewById(R.id.reset_btn);
-        authCodeTimer = new CountDownTimerUtils(mMsgCode, 60*1000, 1000);
+        authCodeTimer = new CountDownTimerUtils(mGetAuthCode, 60 * 1000, 1000);
 
         mGetAuthCode.setOnClickListener(this);
         mReset.setOnClickListener(this);

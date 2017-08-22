@@ -7,12 +7,13 @@
         android:id="@+id/splash_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:visibility="gone"/>
+        android:visibility="gone" />
 
     <RelativeLayout
         android:id="@+id/login_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="@color/white"
         android:paddingBottom="@dimen/padding_container"
         android:paddingLeft="@dimen/padding_container_huge"
         android:paddingRight="@dimen/padding_container_huge"
@@ -44,28 +45,32 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
-                android:layout_marginTop="@dimen/margin_top_img"
+                android:layout_marginTop="@dimen/margin_dialog"
                 android:orientation="horizontal">
 
                 <RadioButton
                     android:id="@+id/switch_to_login"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_height="@dimen/icon_toolbar_user"
+                    android:background="@drawable/radio_btn_bg"
                     android:button="@null"
                     android:checked="true"
-                    android:padding="@dimen/padding_large"
+                    android:paddingLeft="@dimen/padding_large"
+                    android:paddingRight="@dimen/padding_large"
                     android:text="@string/btn_login"
-                    android:textColor="@color/text_blue"
+                    android:textColor="@color/colorAccent"
                     android:textSize="16sp" />
 
                 <RadioButton
                     android:id="@+id/switch_to_register"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_height="@dimen/icon_toolbar_user"
                     android:layout_marginLeft="@dimen/margin_large"
                     android:layout_marginStart="@dimen/margin_large"
+                    android:background="@drawable/radio_btn_bg"
                     android:button="@null"
-                    android:padding="@dimen/padding_large"
+                    android:paddingLeft="@dimen/padding_large"
+                    android:paddingRight="@dimen/padding_large"
                     android:text="@string/btn_register"
                     android:textSize="16sp" />
             </RadioGroup>
@@ -74,7 +79,7 @@
                 android:id="@+id/login_et"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/margin_medium"
+                android:layout_marginTop="@dimen/margin_large"
                 android:orientation="vertical">
 
                 <LinearLayout
@@ -97,9 +102,9 @@
                         android:layout_height="wrap_content"
                         android:layout_margin="@dimen/margin_micro"
                         android:background="@color/background_blank"
-                        android:maxLength="11"
                         android:hint="@string/hint_login_phone"
                         android:inputType="number"
+                        android:maxLength="11"
                         android:maxLines="1"
                         android:padding="@dimen/padding_large"
                         android:textColorHint="@color/textPrimary"
@@ -139,7 +144,7 @@
                 android:id="@+id/register_et"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/margin_medium"
+                android:layout_marginTop="@dimen/margin_large"
                 android:orientation="vertical"
                 android:visibility="gone">
 
@@ -163,9 +168,9 @@
                         android:layout_height="wrap_content"
                         android:layout_margin="@dimen/margin_micro"
                         android:background="@color/background_blank"
-                        android:maxLength="11"
                         android:hint="@string/hint_login_phone"
                         android:inputType="number"
+                        android:maxLength="11"
                         android:maxLines="1"
                         android:padding="@dimen/padding_large"
                         android:textColorHint="@color/textPrimary"
@@ -198,9 +203,9 @@
                             android:layout_height="wrap_content"
                             android:layout_margin="@dimen/margin_micro"
                             android:background="@color/background_blank"
-                            android:maxLength="6"
                             android:hint="@string/hint_login_message_code"
                             android:inputType="number"
+                            android:maxLength="6"
                             android:maxLines="1"
                             android:padding="@dimen/padding_large"
                             android:textColorHint="@color/textPrimary"

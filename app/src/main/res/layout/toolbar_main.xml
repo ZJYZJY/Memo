@@ -8,12 +8,15 @@
     <com.flyco.tablayout.SlidingTabLayout
         android:id="@+id/sliding_tabs"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="@dimen/toolbar_tab_height"
+        android:paddingLeft="@dimen/padding_large"
+        android:layout_alignParentBottom="true"
         app:tl_indicator_color="@color/colorAccent"
         app:tl_indicator_width_equal_title="true"
+        app:tl_tab_padding="@dimen/padding_large"
         app:tl_textSelectColor="@color/colorAccent"
         app:tl_textUnselectColor="@color/text_light"
-        app:tl_textsize="18sp" />
+        app:tl_textsize="17sp" />
 
     <com.donutcn.widgetlib.widget.CircleImageView
         android:id="@+id/user_center"

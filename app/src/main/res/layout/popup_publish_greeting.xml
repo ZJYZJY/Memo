@@ -10,14 +10,14 @@
         android:id="@+id/greeting_body"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="@dimen/margin_top_img"
-        android:layout_marginRight="@dimen/margin_top_img"
+        android:layout_marginLeft="@dimen/margin_dialog"
+        android:layout_marginRight="@dimen/margin_dialog"
         android:orientation="vertical">
 
         <RelativeLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@drawable/greeting_popup_head">
+            android:background="@drawable/popup_head_blue">
 
             <LinearLayout
                 android:layout_width="wrap_content"
@@ -60,9 +60,11 @@
             android:id="@+id/greeting_grid"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:background="@drawable/greeting_popup_body"
+            android:background="@drawable/popup_foot_white"
             android:columnWidth="64dp"
             android:numColumns="4"
+            android:paddingBottom="@dimen/padding_container"
+            android:paddingTop="@dimen/padding_container"
             android:stretchMode="columnWidth" />
     </LinearLayout>
 </RelativeLayout>

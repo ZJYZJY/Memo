@@ -27,6 +27,7 @@ import com.donutcn.memo.helper.RouterHelper;
 import com.donutcn.memo.type.PublishType;
 import com.donutcn.memo.utils.DensityUtils;
 import com.donutcn.memo.utils.HttpUtils;
+import com.donutcn.memo.utils.LogUtil;
 import com.donutcn.memo.utils.ToastUtil;
 import com.donutcn.memo.utils.UserStatus;
 import com.donutcn.memo.utils.WindowUtils;
@@ -170,8 +171,8 @@ public class ArticlePage extends AppCompatActivity implements View.OnClickListen
 
         WebSettings settings = webView.getSettings();
         settings.setJavaScriptEnabled(true);
-//        LogUtil.d(settings.getUserAgentString());
-//        settings.setUserAgent(settings.getUserAgentString() + "app/Memo");
+        settings.setUserAgent(settings.getUserAgentString() + "app/Memo");
+        LogUtil.d(settings.getUserAgentString());
         // 设置加载进来的页面自适应手机屏幕
         settings.setUseWideViewPort(true);
         settings.setLoadWithOverviewMode(true);
@@ -190,7 +191,7 @@ public class ArticlePage extends AppCompatActivity implements View.OnClickListen
 //                        UserStatus.getCurrentUser().follow(mContext, mUserId, true);
 //                    }
                     return false;
-                } else if (url.startsWith(RouterHelper.getBaseUri().toString())) {
+                } else if (url.startsWith(RouterHelper.appScheme())) {
                     if (RouterHelper.confirmIntent(uri, "content")) {
                         RouterHelper.openPageWithUri(mContext, uri, ArticlePage.class);
                     } else if (RouterHelper.confirmIntent(uri, "author")) {
@@ -200,7 +201,7 @@ public class ArticlePage extends AppCompatActivity implements View.OnClickListen
                     }
                     return true;
                 }
-                return false;
+                return true;
             }
         });
         webView.setWebChromeClient(new WebChromeClient(){

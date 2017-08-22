@@ -83,7 +83,7 @@ public class PublishActivity extends AppCompatActivity implements View.OnClickLi
     private RichEditor mContent;
     private Button mPublishBtn;
     private LinearLayout mAddPic, mTypeSet, mTemplate, mSpeech;
-    private HorizontalScrollView mTools;
+    private View mTools;
     private ImageView mKeyboard, mSpeechClose;
     private ProgressDialog mPublishDialog;
     private ProgressDialog mSpeechDialog;
@@ -169,7 +169,7 @@ public class PublishActivity extends AppCompatActivity implements View.OnClickLi
         mSpeech = (LinearLayout) findViewById(R.id.pub_speech_input);
         mKeyboard = (ImageView) findViewById(R.id.pub_keyboard_toggle);
         mSpeechClose = (ImageView) findViewById(R.id.pub_speech_close);
-        mTools = (HorizontalScrollView) findViewById(R.id.type_setting_tools);
+        mTools = findViewById(R.id.type_setting_tools);
 
         View view = findViewById(R.id.publish_spinner_container);
         view.setOnClickListener(this);
@@ -434,13 +434,13 @@ public class PublishActivity extends AppCompatActivity implements View.OnClickLi
     }
 
     private void showPopupMenu(View view) {
-        View popWindowView = getLayoutInflater().inflate(R.layout.publish_type_popup, null);
+        View popWindowView = getLayoutInflater().inflate(R.layout.popup_publish_type, null);
         XRadioGroup radioGroup = (XRadioGroup) popWindowView.findViewById(R.id.publish_type_container);
         final ViewGroup v1 = (ViewGroup) radioGroup.getChildAt(0);
         final ViewGroup v2 = (ViewGroup) radioGroup.getChildAt(1);
         final View img = findViewById(R.id.ic_drop_arrow);
         img.setRotation(180f);
-        PopupWindow popupWindow = new PopupWindow(popWindowView,
+        final PopupWindow popupWindow = new PopupWindow(popWindowView,
                 ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT, true);
         popupWindow.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         // select publish type.
@@ -459,6 +459,7 @@ public class PublishActivity extends AppCompatActivity implements View.OnClickLi
                 mSelectedType = btn.getText().toString();
                 mPublishType.setText(mSelectedType);
                 btn.setTextColor(getResources().getColor(R.color.white));
+                popupWindow.dismiss();
             }
         });
         int position = PublishType.getType(mSelectedType).ordinal();
@@ -481,7 +482,7 @@ public class PublishActivity extends AppCompatActivity implements View.OnClickLi
 
     private void showGreetingMenu(){
         final View rootView = getWindow().getDecorView().findViewById(android.R.id.content);
-        final View popWindowView = getLayoutInflater().inflate(R.layout.publish_greeting_popup, null);
+        final View popWindowView = getLayoutInflater().inflate(R.layout.popup_publish_greeting, null);
         final PopupWindow popupWindow = new PopupWindow(popWindowView,
                 ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT, true);
         popupWindow.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
@@ -507,7 +508,7 @@ public class PublishActivity extends AppCompatActivity implements View.OnClickLi
         String[] from ={"image", "text"};
         int[] to = {R.id.image, R.id.text};
         iconName = getResources().getStringArray(R.array.publish_content);
-        SimpleAdapter adapter = new SimpleAdapter(mContext, getData(), R.layout.publish_greeting_item, from, to);
+        SimpleAdapter adapter = new SimpleAdapter(mContext, getData(), R.layout.item_publish_greeting, from, to);
         gridView.setAdapter(adapter);
         gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override

@@ -48,6 +48,7 @@
     <string name="hint_input">请输入...</string>
     <string name="hint_search">搜索...</string>
     <string name="hint_search_cancel">取消</string>
+    <string name="hint_main_enter_name">请输入昵称</string>
 
     <string name="hint_completing_time">活动时间</string>
     <string name="hint_completing_place">举办地点</string>
@@ -91,6 +92,8 @@
     <string name="dialog_del_publish_content">确定要删除吗</string>
     <string name="dialog_publish_pos">是</string>
     <string name="dialog_publish_neg">否</string>
+    <string name="popup_main_complete_info">完善个人信息</string>
+    <string name="popup_main_click">点击上传头像</string>
 
     <!--checkbox-->
     <string name="completing_add_item">新增投票项</string>
