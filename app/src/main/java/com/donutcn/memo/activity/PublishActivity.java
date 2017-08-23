@@ -584,7 +584,11 @@ public class PublishActivity extends AppCompatActivity implements View.OnClickLi
     private RichEditor.OnTextChangeListener mContentTextChangeListener = new RichEditor.OnTextChangeListener() {
         @Override
         public void onTextChange(String text) {
-            mContentStr = text;
+            if(text != null){
+                mContentStr = text;
+            } else {
+                mContentStr = "";
+            }
         }
     };
 

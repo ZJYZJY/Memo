@@ -38,6 +38,7 @@ public class FieldConfig {
     public static final String MESSAGE_TITLE = "title";
     public static final String MESSAGE_SUB_TITLE = "sub_title";
     public static final String MESSAGE_TIME = "time";
+    public static final String MESSAGE_DATE = "date";
     public static final String MESSAGE_COUNT = "msg_count";
 
     public static final String REPLY_ID = "reply_id";
@@ -49,4 +50,6 @@ public class FieldConfig {
     public static final String REPLY_RESUME = "resume";
     public static final String REPLY_RESUME_URL = "resume_url";
     public static final String REPLY_COMMENT = "comment";
+    public static final String REPLY_VOTE = "vote";
+    public static final String REPLY_ANSWER = "answer";
 }

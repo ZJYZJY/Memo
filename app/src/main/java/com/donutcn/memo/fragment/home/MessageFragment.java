@@ -114,7 +114,10 @@ public class MessageFragment extends BaseScrollFragment {
             EventBus.getDefault().postSticky(new ChangeRedDotEvent(1, -1));
             clearRedDot(mList.get(position).getId());
             Intent intent = new Intent(mContext, MessageDetail.class);
-            intent.putExtra("message_id", mList.get(position).getId());
+            intent.putExtra("messageId", mList.get(position).getId());
+            intent.putExtra("type", mList.get(position).getType());
+            intent.putExtra("title", mList.get(position).getTitle());
+            intent.putExtra("date", mList.get(position).getDate());
             startActivity(intent);
         }
     };

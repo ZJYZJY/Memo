@@ -14,6 +14,7 @@ import android.widget.TextView;
 import com.donutcn.memo.R;
 import com.donutcn.memo.entity.MessageItem;
 import com.donutcn.memo.listener.OnItemClickListener;
+import com.donutcn.memo.type.PublishType;
 import com.yanzhenjie.recyclerview.swipe.SwipeMenuAdapter;
 
 import java.util.List;
@@ -29,19 +30,22 @@ import q.rorbin.badgeview.QBadgeView;
 public class MessageDetailAdapter extends SwipeMenuAdapter<MessageDetailAdapter.ViewHolder> {
 
     private List<MessageItem> list;
+    private String type;
     private Context mContext;
 
+    private PublishType pType;
     private OnItemClickListener mOnItemClickListener;
 
-    public MessageDetailAdapter(Context context, List<MessageItem> list) {
+    public MessageDetailAdapter(Context context, List<MessageItem> list, String type) {
         this.mContext = context;
         this.list = list;
+        this.type = type;
+        pType = PublishType.getType(type);
     }
 
     @Override
     public View onCreateContentView(ViewGroup parent, int viewType) {
-        return LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.item_message, parent, false);
+        return LayoutInflater.from(parent.getContext()).inflate(R.layout.item_message, parent, false);
     }
 
     @Override
@@ -59,6 +63,57 @@ public class MessageDetailAdapter extends SwipeMenuAdapter<MessageDetailAdapter.
                 .setGravityOffset(24, true)
                 .setBadgePadding(8, true)
                 .setBadgeText("新");
+        if(pType == null){
+            holder.view_comment.setVisibility(View.VISIBLE);
+            holder.comment.setText(list.get(position).getComment());
+        } else {
+            holder.view_name.setVisibility(View.VISIBLE);
+            holder.name.setText(list.get(position).getName());
+            holder.view_phone.setVisibility(View.VISIBLE);
+            holder.phone.setText(list.get(position).getPhone());
+            switch (pType){
+                case ARTICLE:
+                case ALBUM:
+                    holder.view_comment.setVisibility(View.VISIBLE);
+                    holder.comment.setText(list.get(position).getComment());
+                    break;
+                case VOTE:
+                    holder.view_vote.setVisibility(View.VISIBLE);
+                    holder.vote.setText(list.get(position).getVote());
+                    break;
+                case QA:
+                    holder.view_answer.setVisibility(View.VISIBLE);
+                    holder.answer.setText(list.get(position).getVote());
+                    break;
+                case ACTIVITY:
+                case RESERVE:
+                    holder.view_weChat.setVisibility(View.VISIBLE);
+                    String weChat = list.get(position).getWeChat();
+                    if(!"".equals(weChat)){
+                        holder.weChat.setText(weChat);
+                    }
+                    holder.view_email.setVisibility(View.VISIBLE);
+                    String email = list.get(position).getEmail();
+                    if(!"".equals(email)){
+                        holder.email.setText(email);
+                    }
+                    break;
+                case RECRUIT:
+                    holder.view_resume.setVisibility(View.VISIBLE);
+                    String resume = list.get(position).getWeChat();
+                    if(!"".equals(resume)){
+                        holder.weChat.setText(list.get(position).getName() + "的简历");
+                    }
+                    holder.view_email.setVisibility(View.VISIBLE);
+                    String email1 = list.get(position).getEmail();
+                    if(!"".equals(email1)){
+                        holder.email.setText(email1);
+                    }
+                    break;
+                case SALE:
+                    break;
+            }
+        }
     }
 
     @Override
@@ -81,9 +136,10 @@ public class MessageDetailAdapter extends SwipeMenuAdapter<MessageDetailAdapter.
         TextView email;
         TextView comment;
         TextView vote;
+        TextView answer;
         Badge badge;
         Button delete, download;
-        View view_name, view_phone, view_weChat, view_resume, view_email, view_comment, view_vote;
+        View view_name, view_phone, view_weChat, view_resume, view_email, view_comment, view_vote, view_answer;
         OnItemClickListener mOnItemClickListener;
 
         public ViewHolder(View itemView) {
@@ -101,6 +157,7 @@ public class MessageDetailAdapter extends SwipeMenuAdapter<MessageDetailAdapter.
             email = (TextView) itemView.findViewById(R.id.message_item_email);
             vote = (TextView) itemView.findViewById(R.id.message_item_vote);
             comment = (TextView) itemView.findViewById(R.id.message_item_comment);
+            answer = (TextView) itemView.findViewById(R.id.message_item_answer);
 
             delete = (Button) itemView.findViewById(R.id.message_item_delete);
             download = (Button) itemView.findViewById(R.id.message_item_download);
@@ -112,6 +169,7 @@ public class MessageDetailAdapter extends SwipeMenuAdapter<MessageDetailAdapter.
             view_email = itemView.findViewById(R.id.message_email_container);
             view_comment = itemView.findViewById(R.id.message_comment_container);
             view_vote = itemView.findViewById(R.id.message_vote_container);
+            view_answer = itemView.findViewById(R.id.message_answer_container);
         }
 
         @Override

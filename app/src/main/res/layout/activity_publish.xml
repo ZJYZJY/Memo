@@ -286,18 +286,18 @@
 
                 <ImageView
                     android:id="@+id/pub_keyboard_toggle"
-                    android:layout_width="@dimen/icon_normal_icon"
-                    android:layout_height="@dimen/icon_normal_icon"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
                     android:background="?android:selectableItemBackground"
-                    android:padding="@dimen/padding_micro"
+                    android:padding="@dimen/padding_large"
                     android:src="@drawable/pub_keyboard" />
 
                 <ImageView
                     android:id="@+id/pub_speech_close"
-                    android:layout_width="@dimen/icon_normal_icon"
-                    android:layout_height="@dimen/icon_normal_icon"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
                     android:background="?android:selectableItemBackground"
-                    android:padding="@dimen/padding_micro"
+                    android:padding="@dimen/padding_large"
                     android:src="@drawable/pub_speech_close"
                     android:visibility="gone" />
             </RelativeLayout>

@@ -10,6 +10,7 @@ import android.widget.TextView;
 
 import com.donutcn.memo.R;
 import com.donutcn.memo.base.BaseMemoFragment;
+import com.donutcn.memo.entity.BriefContent;
 import com.donutcn.memo.fragment.api.FetchContent;
 import com.donutcn.memo.presenter.MemoPresenter;
 import com.donutcn.memo.activity.SearchActivity;
@@ -23,11 +24,11 @@ import org.greenrobot.eventbus.Subscribe;
 
 import java.util.ArrayList;
 
-public class RecommendFragment extends BaseMemoFragment implements FetchContent {
+public class RecommendFragment extends BaseMemoFragment {
 
     @Override
     public void initMemoPresenter() {
-        memoPresenter = new MemoPresenter(this, 1);
+        mMemoPresenter = new MemoPresenter(this, 1);
     }
 
     @Override
@@ -56,13 +57,13 @@ public class RecommendFragment extends BaseMemoFragment implements FetchContent 
         mAdapter = new MemoAdapter(mContext, mList, ItemLayoutType.AVATAR_IMG);
         mAdapter.setOnItemClickListener(this);
         mMemo_rv.setAdapter(mAdapter);
-        memoPresenter.refresh(mList);
+        mMemoPresenter.refresh(mList);
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        memoPresenter.refresh(mList);
+        mMemoPresenter.refresh(mList);
     }
 
     @Subscribe

@@ -69,6 +69,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
+                android:visibility="gone"
                 android:padding="@dimen/padding_text">
 
                 <TextView
@@ -88,6 +89,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
+                android:visibility="gone"
                 android:padding="@dimen/padding_text">
 
                 <TextView
@@ -201,6 +203,26 @@
 
                 <TextView
                     android:id="@+id/message_item_vote"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="全聚德" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/message_answer_container"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:padding="@dimen/padding_text"
+                android:visibility="gone">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="回答：" />
+
+                <TextView
+                    android:id="@+id/message_item_answer"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="全聚德" />

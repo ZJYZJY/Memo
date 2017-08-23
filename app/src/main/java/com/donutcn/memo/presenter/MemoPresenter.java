@@ -24,7 +24,7 @@ import retrofit2.Response;
 
 public class MemoPresenter {
 
-    private FetchContent fetchContent;
+    private FetchContent<BriefContent> fetchContent;
     private DeleteContent deleteContent;
     private int position;
 

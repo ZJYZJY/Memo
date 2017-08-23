@@ -37,14 +37,14 @@ import org.greenrobot.eventbus.EventBus;
 
 import java.util.List;
 
-public abstract class BaseMemoFragment extends BaseScrollFragment implements FetchContent,
+public abstract class BaseMemoFragment extends BaseScrollFragment implements FetchContent<BriefContent>,
         SwipeMenuCreator, OnSwipeMenuItemClickListener, OnItemClickListener,
         OnLoadmoreListener, OnRefreshListener {
 
     public SwipeMenuRecyclerView mMemo_rv;
     public SmartRefreshLayout mRefreshLayout;
 
-    public MemoPresenter memoPresenter;
+    public MemoPresenter mMemoPresenter;
     public MemoAdapter mAdapter;
     public List<BriefContent> mList;
     public Context mContext;
@@ -82,7 +82,7 @@ public abstract class BaseMemoFragment extends BaseScrollFragment implements Fet
                 if(lastVisibleItem + 5 >= mList.size() && mList.size() > 0){
                     if(!isLoadMore && canLoadMore){
                         isLoadMore = true;
-                        memoPresenter.loadMore(mList);
+                        mMemoPresenter.loadMore(mList);
                     }
                 }
             }
@@ -201,14 +201,14 @@ public abstract class BaseMemoFragment extends BaseScrollFragment implements Fet
 
     @Override
     public void onRefresh(RefreshLayout refreshlayout) {
-        memoPresenter.refresh(mList);
+        mMemoPresenter.refresh(mList);
     }
 
     @Override
     public void onLoadmore(RefreshLayout refreshlayout) {
         if(mList.size() > 0 && !isLoadMore && canLoadMore){
             isLoadMore = true;
-            memoPresenter.loadMore(mList);
+            mMemoPresenter.loadMore(mList);
         }
     }
 

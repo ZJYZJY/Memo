@@ -39,6 +39,10 @@ public class BriefMessage {
     private String time;
 
     @Expose
+    @SerializedName(FieldConfig.MESSAGE_DATE)
+    private String date;
+
+    @Expose
     @SerializedName(FieldConfig.MESSAGE_COUNT)
     private int newMsgCount;
 
@@ -62,6 +66,10 @@ public class BriefMessage {
         return time;
     }
 
+    public String getDate() {
+        return date;
+    }
+
     public int getNewMsgCount() {
         return newMsgCount;
     }
@@ -82,6 +90,7 @@ public class BriefMessage {
             json.put(FieldConfig.MESSAGE_TITLE, title);
             json.put(FieldConfig.MESSAGE_SUB_TITLE, subTitle);
             json.put(FieldConfig.MESSAGE_TIME, time);
+            json.put(FieldConfig.MESSAGE_DATE, date);
             json.put(FieldConfig.MESSAGE_COUNT, newMsgCount);
         } catch (JSONException e) {
             e.printStackTrace();

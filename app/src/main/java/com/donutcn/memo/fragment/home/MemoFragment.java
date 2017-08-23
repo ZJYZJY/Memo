@@ -39,11 +39,11 @@ import java.util.List;
 
 import static com.donutcn.memo.utils.FileCacheUtil.CONTENT_LIST_CACHE;
 
-public class MemoFragment extends BaseMemoFragment implements FetchContent, DeleteContent {
+public class MemoFragment extends BaseMemoFragment implements FetchContent<BriefContent>, DeleteContent {
 
     @Override
     public void initMemoPresenter() {
-        memoPresenter = new MemoPresenter(this, 0);
+        mMemoPresenter = new MemoPresenter(this, 0);
     }
 
     @Override
@@ -57,7 +57,7 @@ public class MemoFragment extends BaseMemoFragment implements FetchContent, Dele
         if(UserStatus.isLogin(mContext)){
             String cache = FileCacheUtil.getCache(mContext, CONTENT_LIST_CACHE, FileCacheUtil.CACHE_SHORT_TIMEOUT);
             if("".equals(cache))
-                memoPresenter.refresh(mList);
+                mMemoPresenter.refresh(mList);
             else{
                 List<BriefContent> temp = new Gson().fromJson(cache, new TypeToken<List<BriefContent>>(){}.getType());
                 mList.addAll(temp);
@@ -140,7 +140,7 @@ public class MemoFragment extends BaseMemoFragment implements FetchContent, Dele
                             .setPositiveButton(getString(R.string.dialog_publish_pos), new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
-                                    memoPresenter.deleteContent(mList, adapterPosition);
+                                    mMemoPresenter.deleteContent(mList, adapterPosition);
                                 }
                             })
                             .setNegativeButton(getString(R.string.dialog_publish_neg), null)
@@ -180,7 +180,7 @@ public class MemoFragment extends BaseMemoFragment implements FetchContent, Dele
     @Override
     public void onResume() {
         super.onResume();
-        memoPresenter.refresh(mList);
+        mMemoPresenter.refresh(mList);
     }
 
     @Subscribe

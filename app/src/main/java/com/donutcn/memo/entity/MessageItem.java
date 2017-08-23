@@ -1,6 +1,7 @@
 package com.donutcn.memo.entity;
 
 import com.donutcn.memo.constant.FieldConfig;
+import com.donutcn.memo.utils.StringUtil;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
@@ -58,6 +59,16 @@ public class MessageItem {
     @SerializedName(FieldConfig.REPLY_COMMENT)
     private String comment;
 
+    @Expose
+    @SerializedName(FieldConfig.REPLY_VOTE)
+    private String vote;
+
+    @Expose
+    @SerializedName(FieldConfig.REPLY_ANSWER)
+    private String answer;
+
+    private long timeStamp;
+
     public String getId() {
         return id;
     }
@@ -98,6 +109,24 @@ public class MessageItem {
         return resumeUrl;
     }
 
+    public String getComment() {
+        return comment;
+    }
+
+    public String getVote() {
+        return vote;
+    }
+
+    public String getAnswer() {
+        return answer;
+    }
+
+    public long getTimeStamp() {
+        // transfer 'ms' to 's'.
+        timeStamp =  StringUtil.string2Date(time).getTime() / 1000;
+        return timeStamp;
+    }
+
     public JSONObject toJson() {
         JSONObject json = new JSONObject();
         try {
@@ -111,7 +140,9 @@ public class MessageItem {
             json.put(FieldConfig.REPLY_WE_CHAT, weChat);
             json.put(FieldConfig.REPLY_RESUME, resume);
             json.put(FieldConfig.REPLY_RESUME_URL, resumeUrl);
-            json.put(FieldConfig.REPLY_COMMENT, resumeUrl);
+            json.put(FieldConfig.REPLY_COMMENT, comment);
+            json.put(FieldConfig.REPLY_VOTE, vote);
+            json.put(FieldConfig.REPLY_ANSWER, answer);
         } catch (JSONException e) {
             e.printStackTrace();
         }

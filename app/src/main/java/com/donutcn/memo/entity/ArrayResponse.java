@@ -29,7 +29,7 @@ public class ArrayResponse<E> extends Response<List<E>> {
     }
 
     /**
-     * used for user content list cache.
+     * used for user's content list cache.
      * @return string array of user content list.
      */
     @Override

@@ -2,7 +2,6 @@ package com.donutcn.memo.fragment.discover;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v7.util.DiffUtil;
 
 import com.donutcn.memo.adapter.MemoAdapter;
 import com.donutcn.memo.base.BaseMemoFragment;
@@ -22,7 +21,7 @@ public class FollowedFragment extends BaseMemoFragment {
 
     @Override
     public void initMemoPresenter() {
-        memoPresenter = new MemoPresenter(this, 3);
+        mMemoPresenter = new MemoPresenter(this, 3);
     }
 
     @Override

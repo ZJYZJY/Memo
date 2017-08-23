@@ -5,6 +5,7 @@ import android.content.Intent;
 
 import com.donutcn.memo.activity.MainActivity;
 import com.donutcn.memo.entity.BriefMessage;
+import com.donutcn.memo.entity.SyncInfoPackage;
 import com.donutcn.memo.event.ChangeRedDotEvent;
 import com.donutcn.memo.utils.LogUtil;
 import com.google.gson.Gson;
@@ -62,7 +63,8 @@ public class MemoPushReceiver extends XGPushBaseReceiver {
             EventBus.getDefault().postSticky(briefMsg);
             EventBus.getDefault().postSticky(new ChangeRedDotEvent(1, 0));
         } else if (title.equals(SYNC_INFO)) {
-
+            SyncInfoPackage pkg = gson.fromJson(content, SyncInfoPackage.class);
+            EventBus.getDefault().postSticky(pkg);
         }
     }
 

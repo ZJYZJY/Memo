@@ -22,6 +22,7 @@ import com.donutcn.memo.R;
 import com.donutcn.memo.adapter.ViewPagerAdapter;
 import com.donutcn.memo.constant.FieldConfig;
 import com.donutcn.memo.entity.SimpleResponse;
+import com.donutcn.memo.entity.SyncInfoPackage;
 import com.donutcn.memo.event.LoginStateEvent;
 import com.donutcn.memo.event.RequestRefreshEvent;
 import com.donutcn.memo.fragment.SplashFragment;
@@ -339,6 +340,20 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             return true;
         }
         return super.onKeyDown(keyCode, event);
+    }
+
+    /**
+     * receive the sync info event
+     * @param event
+     */
+    @Subscribe(sticky = true)
+    public void onSyncInfo(SyncInfoPackage event) {
+        switch (event.getType()){
+            case 0:
+            case 1:
+                UserStatus.getCurrentUser().follow(this, event.getUserId(), event.getType() == 1);
+                break;
+        }
     }
 
     @Subscribe(sticky = true)

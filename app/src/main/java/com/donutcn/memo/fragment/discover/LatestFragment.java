@@ -19,7 +19,7 @@ public class LatestFragment extends BaseMemoFragment {
 
     @Override
     public void initMemoPresenter() {
-        memoPresenter = new MemoPresenter(this, 2);
+        mMemoPresenter = new MemoPresenter(this, 2);
     }
 
     @Override

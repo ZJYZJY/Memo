@@ -9,14 +9,14 @@ import java.util.List;
  * Created by 73958 on 2017/8/21.
  */
 
-public interface FetchContent {
+public interface FetchContent<T> {
 
     /**
      * refresh content successfully
      *
      * @param list current list of {@link BriefContent}
      */
-    void refreshSuccess(List<BriefContent> list);
+    void refreshSuccess(List<T> list);
 
     /**
      * refresh content failed
@@ -31,7 +31,7 @@ public interface FetchContent {
      *
      * @param list current list of {@link BriefContent}
      */
-    void loadMoreSuccess(List<BriefContent> list);
+    void loadMoreSuccess(List<T> list);
 
     /**
      * load content failed
