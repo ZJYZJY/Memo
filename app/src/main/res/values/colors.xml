@@ -13,6 +13,16 @@
     <color name="border_gray">#dddddd</color>
     <color name="border_dark">#a1a1a1</color>
 
+    <color name="tintColor">#515151</color>
+    <color name="gray_100">#FAFAFA</color>
+    <color name="light_blue_500">#03A9F4</color>
+
+    <color name="black">#000000</color>
+    <color name="blue">#2196F3</color>
+    <color name="green">#4CAF50</color>
+    <color name="yellow">#FFEB3B</color>
+    <color name="red">#F44336</color>
+
     <!--gradual gray color-->
     <color name="text_light">#cdcdcd</color>
     <color name="textPrimary">#a09f9f</color>

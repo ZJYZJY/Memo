@@ -65,10 +65,12 @@ public class WindowUtils {
         imm.toggleSoftInput(0, InputMethodManager.HIDE_NOT_ALWAYS);
     }
 
-    public static void toggleKeyboard(Context context, View view, boolean show) {
-        InputMethodManager imm = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
+    public static void toggleKeyboard(Activity activity, boolean show) {
+        View view = activity.getCurrentFocus();
+        if (view == null) view = new View(activity);
+        InputMethodManager imm = (InputMethodManager) activity.getSystemService(Context.INPUT_METHOD_SERVICE);
         if(show){
-            imm.showSoftInput(view, 0);
+            imm.showSoftInput(view, InputMethodManager.SHOW_FORCED);
         }else {
             imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
         }

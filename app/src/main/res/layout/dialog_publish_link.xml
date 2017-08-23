@@ -1,14 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:paddingBottom="10dp"
+    android:paddingLeft="20dp"
+    android:paddingRight="20dp"
+    android:paddingTop="20dp">
 
-    <EditText android:id="@+id/publish_link_dialog"
+    <EditText
+        android:id="@+id/publish_title_dialog"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="20dp"
-        android:maxLines="1"
-        android:hint="@string/hint_publish_link_dialog">
-    </EditText>
+        android:hint="@string/hint_publish_title_dialog"
+        android:maxLines="1" />
+
+    <EditText
+        android:id="@+id/publish_link_dialog"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:hint="@string/hint_publish_link_dialog"
+        android:maxLines="1" />
 </LinearLayout>

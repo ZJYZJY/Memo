@@ -321,7 +321,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 mLogin.setText(getString(R.string.btn_register));
                 break;
             case R.id.login_btn:
-                WindowUtils.toggleKeyboard(this, v, false);
+                WindowUtils.toggleKeyboard(this, false);
                 if(mToLogin.isChecked())
                     attemptToLogin();
                 else

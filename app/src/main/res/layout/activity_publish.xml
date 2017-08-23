@@ -2,6 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:id="@+id/publish_container"
     android:fitsSystemWindows="true"
     android:orientation="vertical">
 
@@ -45,7 +46,7 @@
                 android:layout_height="@dimen/px_line"
                 android:background="@color/border_gray" />
 
-            <jp.wasabeef.richeditor.RichEditor
+            <com.tencent.smtt.sdk.WebView
                 android:id="@+id/et_publish_content"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
@@ -158,15 +159,15 @@
                         android:scaleType="centerInside"
                         android:src="@drawable/ic_insert_link" />
 
-                    <ImageButton
-                        android:id="@+id/clear"
-                        android:layout_width="@dimen/bottom_item_width"
-                        android:layout_height="match_parent"
-                        android:background="?android:selectableItemBackground"
-                        android:contentDescription="@null"
-                        android:padding="@dimen/padding_medium"
-                        android:scaleType="centerInside"
-                        android:src="@drawable/ic_format_clear" />
+                    <!--<ImageButton-->
+                        <!--android:id="@+id/clear"-->
+                        <!--android:layout_width="@dimen/bottom_item_width"-->
+                        <!--android:layout_height="match_parent"-->
+                        <!--android:background="?android:selectableItemBackground"-->
+                        <!--android:contentDescription="@null"-->
+                        <!--android:padding="@dimen/padding_medium"-->
+                        <!--android:scaleType="centerInside"-->
+                        <!--android:src="@drawable/ic_format_clear" />-->
                 </LinearLayout>
             </HorizontalScrollView>
         </LinearLayout>
@@ -302,5 +303,11 @@
                     android:visibility="gone" />
             </RelativeLayout>
         </LinearLayout>
+
+        <FrameLayout
+            android:id="@+id/fl_action"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            />
     </LinearLayout>
 </LinearLayout>

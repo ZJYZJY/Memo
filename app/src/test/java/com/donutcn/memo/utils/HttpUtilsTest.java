@@ -15,15 +15,15 @@ import java.util.ArrayList;
  */
 public class HttpUtilsTest {
 
-    @Test
-    public void completeInfoTest(){
-        ArrayList<String> list = new ArrayList<>();
-        list.add("投票1");
-        list.add("投票2");
-        list.add("投票3");
-        list.add("投票4");
-        HttpUtils.completeInfo("25", PublishType.RECRUIT, "field1", "field2", "field3", false, 1, 1, list, false);
-    }
+//    @Test
+//    public void completeInfoTest(){
+//        ArrayList<String> list = new ArrayList<>();
+//        list.add("投票1");
+//        list.add("投票2");
+//        list.add("投票3");
+//        list.add("投票4");
+//        HttpUtils.completeInfo("25", PublishType.RECRUIT, "field1", "field2", "field3", false, 1, 1, list, false);
+//    }
 
     @Test
     public void matchContactsTest(){

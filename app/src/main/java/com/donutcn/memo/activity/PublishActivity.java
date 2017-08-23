@@ -1,14 +1,17 @@
 package com.donutcn.memo.activity;
 
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.support.annotation.IdRes;
 import android.support.annotation.NonNull;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.Editable;
@@ -20,8 +23,8 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.GridView;
-import android.widget.HorizontalScrollView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
@@ -30,6 +33,14 @@ import android.widget.SimpleAdapter;
 import android.widget.TextView;
 
 import com.donutcn.memo.R;
+import com.donutcn.memo.editor.EditorAction;
+import com.donutcn.memo.editor.EditorActionImpl;
+import com.donutcn.memo.editor.EditorMenuFragment;
+import com.donutcn.memo.editor.MRichEditorCallback;
+import com.donutcn.memo.editor.interfaces.OnActionPerformListener;
+import com.donutcn.memo.editor.interfaces.OnReceiveJSValue;
+import com.donutcn.memo.editor.keyboard.KeyboardHeightObserver;
+import com.donutcn.memo.editor.keyboard.KeyboardHeightProvider;
 import com.donutcn.memo.entity.ContentResponse;
 import com.donutcn.memo.entity.SimpleResponse;
 import com.donutcn.memo.event.FinishCompressEvent;
@@ -45,6 +56,8 @@ import com.donutcn.memo.utils.StringUtil;
 import com.donutcn.memo.utils.ToastUtil;
 import com.donutcn.memo.utils.UserStatus;
 import com.donutcn.memo.utils.WindowUtils;
+import com.even.mricheditor.ActionType;
+import com.even.mricheditor.RichEditorCallback;
 import com.google.gson.internal.LinkedTreeMap;
 import com.iflytek.cloud.ErrorCode;
 import com.iflytek.cloud.InitListener;
@@ -53,6 +66,9 @@ import com.iflytek.cloud.RecognizerResult;
 import com.iflytek.cloud.SpeechConstant;
 import com.iflytek.cloud.SpeechError;
 import com.iflytek.cloud.SpeechRecognizer;
+import com.tencent.smtt.sdk.WebChromeClient;
+import com.tencent.smtt.sdk.WebView;
+import com.tencent.smtt.sdk.WebViewClient;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -67,7 +83,6 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import jp.wasabeef.richeditor.RichEditor;
 import me.iwf.photopicker.PhotoPicker;
 import me.iwf.photopicker.PhotoPreview;
 import me.shihao.library.XRadioGroup;
@@ -76,17 +91,26 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import top.zibin.luban.Luban;
 
-public class PublishActivity extends AppCompatActivity implements View.OnClickListener {
+@SuppressLint({ "JavascriptInterface", "SetJavaScriptEnabled" })
+public class PublishActivity extends AppCompatActivity implements View.OnClickListener, KeyboardHeightObserver {
 
     private TextView mPublishType;
     private EditText mTitle;
-    private RichEditor mContent;
+    private WebView mContent;
     private Button mPublishBtn;
     private LinearLayout mAddPic, mTypeSet, mTemplate, mSpeech;
     private View mTools;
     private ImageView mKeyboard, mSpeechClose;
     private ProgressDialog mPublishDialog;
     private ProgressDialog mSpeechDialog;
+
+    private FrameLayout flAction;
+    /** The keyboard height provider */
+    private KeyboardHeightProvider keyboardHeightProvider;
+    private EditorAction mEditorAction;
+    private RichEditorCallback mRichEditorCallback;
+
+    private EditorMenuFragment mEditorMenuFragment;
 
     private SpeechRecognizer mIat;
     // use HashMap to store the result.
@@ -117,10 +141,11 @@ public class PublishActivity extends AppCompatActivity implements View.OnClickLi
         setContentView(R.layout.activity_publish);
         WindowUtils.setToolBarButton(this, R.string.btn_publish_finish);
         WindowUtils.setStatusBarColor(this, R.color.colorPrimary, true);
+        mContext = this;
+
         mSelectedType = mContentTypes[0];
         initView();
         setUpRichTextEditor();
-        mContext = this;
         onNewIntent(getIntent());
 
         mIat = SpeechRecognizer.createRecognizer(this, mInitListener);
@@ -158,9 +183,8 @@ public class PublishActivity extends AppCompatActivity implements View.OnClickLi
         mPublishBtn = (Button) findViewById(R.id.toolbar_with_btn);
         mPublishType = (TextView) findViewById(R.id.publish_spinner);
         mTitle = (EditText) findViewById(R.id.et_publish_title);
-        mContent = (RichEditor) findViewById(R.id.et_publish_content);
+        mContent = (WebView) findViewById(R.id.et_publish_content);
 
-        mContent.setOnTextChangeListener(mContentTextChangeListener);
         mTitle.addTextChangedListener(mTextWatcher);
 
         mAddPic = (LinearLayout) findViewById(R.id.pub_add_pic);
@@ -182,21 +206,40 @@ public class PublishActivity extends AppCompatActivity implements View.OnClickLi
         mKeyboard.setOnClickListener(this);
 
         // type setting tools.
-        findViewById(R.id.bold).setOnClickListener(this);
-        findViewById(R.id.italic).setOnClickListener(this);
-        findViewById(R.id.underline).setOnClickListener(this);
-        findViewById(R.id.strikethrough).setOnClickListener(this);
-        findViewById(R.id.bullet).setOnClickListener(this);
-        findViewById(R.id.quote).setOnClickListener(this);
-        findViewById(R.id.link).setOnClickListener(this);
-        findViewById(R.id.clear).setOnClickListener(this);
+        flAction = (FrameLayout) findViewById(R.id.fl_action);
     }
 
     public void setUpRichTextEditor() {
-        mContent.setPlaceholder(getString(R.string.hint_publish_content));
-        mContent.setPadding(8, 8, 8, 8);
-        mContent.setEditorFontSize(16);
-        mContent.setEditorFontColor(getResources().getColor(R.color.textPrimaryDark));
+        mEditorMenuFragment = new EditorMenuFragment();
+        mEditorMenuFragment.setActionPerformListener(new PerformAction());
+        FragmentManager fm = getSupportFragmentManager();
+        fm.beginTransaction()
+                .add(R.id.fl_action, mEditorMenuFragment, EditorMenuFragment.class.getName())
+                .commit();
+        keyboardHeightProvider = new KeyboardHeightProvider(this);
+        findViewById(R.id.publish_container).post(new Runnable() {
+            @Override public void run() {
+                keyboardHeightProvider.start();
+            }
+        });
+        mContent.setWebViewClient(new WebViewClient() {
+            @Override public void onPageStarted(WebView view, String url, Bitmap favicon) {
+                super.onPageStarted(view, url, favicon);
+            }
+
+            @Override public boolean shouldOverrideUrlLoading(WebView view, String url) {
+                view.loadUrl(url);
+                return true;
+            }
+        });
+
+        mContent.setWebChromeClient(new WebChromeClient());
+        mContent.getSettings().setJavaScriptEnabled(true);
+        mContent.getSettings().setDomStorageEnabled(true);
+        mRichEditorCallback = new MRichEditorCallback();
+        mContent.addJavascriptInterface(mRichEditorCallback, "MRichEditor");
+        mContent.loadUrl("file:///android_asset/richEditor.html");
+        mEditorAction = new EditorActionImpl(mContent);
     }
 
     public void pullContentInfo(String id) {
@@ -213,7 +256,7 @@ public class PublishActivity extends AppCompatActivity implements View.OnClickLi
                         // unEscape the \" to "
                         mTitleStr = mTitleStr.replace("\\\"", "\"");
                         mContentStr = mContentStr.replace("\\\"", "\"");
-                        mContent.setHtml(mContentStr);
+                        mEditorAction.insertHtml(mContentStr);
                         if (!mSelectedType.equals(mContentTypes[0])
                                 && !mSelectedType.equals(mContentTypes[1])
                                 && !mSelectedType.equals(mContentTypes[5])) {
@@ -286,6 +329,7 @@ public class PublishActivity extends AppCompatActivity implements View.OnClickLi
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.toolbar_with_btn:
+                mContentStr = mRichEditorCallback.getHtml();
                 if (TextUtils.isEmpty(mTitleStr)) {
                     ToastUtil.show(this, "标题不能为空");
                     return;
@@ -293,7 +337,7 @@ public class PublishActivity extends AppCompatActivity implements View.OnClickLi
                     ToastUtil.show(this, "内容不能为空");
                     return;
                 }
-                WindowUtils.toggleKeyboard(this, v, false);
+                WindowUtils.toggleKeyboard(this, false);
                 mPublishDialog.show();
                 // if in edit mode, same image will not be reuploaded.
                 selectedPhotos = StringUtil.getImgSrcList(mContentStr);
@@ -344,8 +388,12 @@ public class PublishActivity extends AppCompatActivity implements View.OnClickLi
                         .start(this);
                 break;
             case R.id.pub_type_setting:
-                mTools.setVisibility(mTools.getVisibility() == View.VISIBLE
-                        ? View.GONE : View.VISIBLE);
+                if (flAction.getVisibility() == View.GONE) {
+                    WindowUtils.toggleKeyboard(this, false);
+                    flAction.setVisibility(View.VISIBLE);
+                } else {
+                    flAction.setVisibility(View.GONE);
+                }
                 break;
             case R.id.pub_template:
                 break;
@@ -357,31 +405,6 @@ public class PublishActivity extends AppCompatActivity implements View.OnClickLi
                 break;
             case R.id.pub_keyboard_toggle:
                 WindowUtils.toggleKeyboard(this);
-                break;
-            // type setting tools onClick listener.
-            case R.id.bold:
-                mContent.setBold();
-                break;
-            case R.id.italic:
-                mContent.setItalic();
-                break;
-            case R.id.underline:
-                mContent.setUnderline();
-                break;
-            case R.id.strikethrough:
-                mContent.setStrikeThrough();
-                break;
-            case R.id.bullet:
-                mContent.setBullets();
-                break;
-            case R.id.quote:
-                mContent.setBlockquote();
-                break;
-            case R.id.link:
-                showLinkDialog();
-                break;
-            case R.id.clear:
-                mContent.removeFormat();
                 break;
         }
     }
@@ -495,7 +518,7 @@ public class PublishActivity extends AppCompatActivity implements View.OnClickLi
                     mAddPic.performClick();
                 } else {
                     mTitle.requestFocus();
-                    WindowUtils.toggleKeyboard(mContext, rootView, true);
+                    WindowUtils.toggleKeyboard(PublishActivity.this, true);
                 }
             }
         });
@@ -549,18 +572,20 @@ public class PublishActivity extends AppCompatActivity implements View.OnClickLi
     private void showLinkDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this).setCancelable(false);
         View view = getLayoutInflater().inflate(R.layout.dialog_publish_link, null, false);
-        final EditText editText = (EditText) view.findViewById(R.id.publish_link_dialog);
+        final EditText editText1 = (EditText) view.findViewById(R.id.publish_title_dialog);
+        final EditText editText2 = (EditText) view.findViewById(R.id.publish_link_dialog);
         builder.setView(view)
                 .setTitle(R.string.dialog_publish_title)
                 .setPositiveButton(R.string.btn_dialog_ok, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        String link = editText.getText().toString().trim();
+                        String title = editText1.getText().toString().trim();
+                        String link = editText2.getText().toString().trim();
                         if (TextUtils.isEmpty(link)) {
                             return;
                         }
                         link = getResources().getText(R.string.hint_publish_link_dialog) + link;
-                        mContent.insertLink(link, null);
+                        mEditorAction.createLink(title, link);
                     }
                 })
                 .setNegativeButton(R.string.btn_dialog_cancel, null)
@@ -569,7 +594,7 @@ public class PublishActivity extends AppCompatActivity implements View.OnClickLi
     }
 
     private boolean isContentEmpty() {
-        return mTitleStr.equals("") && (mContentStr.equals("") || mContentStr.equals("<br>"));
+        return mTitleStr.equals("") && ("".equals(mContentStr) || "<br>".equals(mContentStr));
     }
 
     public void startSpeech() {
@@ -580,17 +605,6 @@ public class PublishActivity extends AppCompatActivity implements View.OnClickLi
 //        mIatDialog.setListener(mRecognizerDialogListener);
 //        mIatDialog.show();
     }
-
-    private RichEditor.OnTextChangeListener mContentTextChangeListener = new RichEditor.OnTextChangeListener() {
-        @Override
-        public void onTextChange(String text) {
-            if(text != null){
-                mContentStr = text;
-            } else {
-                mContentStr = "";
-            }
-        }
-    };
 
     private TextWatcher mTextWatcher = new TextWatcher() {
         @Override
@@ -628,7 +642,7 @@ public class PublishActivity extends AppCompatActivity implements View.OnClickLi
         if (mContent.isFocused()) {
             StringBuilder builder = new StringBuilder(mContentStr);
             builder.append(resultBuilder.toString());
-            mContent.setHtml(builder.toString());
+            mEditorAction.insertHtml(mContentStr);
         }
 //        else if(mTitle.isFocused()){
 //            String str = mTitleStr + resultBuilder.toString();
@@ -670,7 +684,7 @@ public class PublishActivity extends AppCompatActivity implements View.OnClickLi
             mSpeechDialog.setMessage("正在识别...");
             printResult(recognizerResult);
             if(isLast){
-                mContentTextChangeListener.onTextChange(mContent.getHtml());
+//                mContentTextChangeListener.onTextChange(mContent.getHtml());
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
@@ -711,6 +725,17 @@ public class PublishActivity extends AppCompatActivity implements View.OnClickLi
         mIat.setParameter(SpeechConstant.ASR_PTT, "0");
     }
 
+    @Override
+    public void onKeyboardHeightChanged(int height, int orientation) {
+        if (height != 0) {
+            flAction.setVisibility(View.GONE);
+            ViewGroup.LayoutParams params = flAction.getLayoutParams();
+            params.height = height;
+            flAction.setLayoutParams(params);
+        } else if (flAction.getVisibility() != View.VISIBLE) {
+            flAction.setVisibility(View.GONE);
+        }
+    }
 
     /**
      * select photo callback.
@@ -734,7 +759,8 @@ public class PublishActivity extends AppCompatActivity implements View.OnClickLi
             if (photos != null) {
                 selectedPhotos.addAll(photos);
                 for(int i = 0; i < selectedPhotos.size(); i++){
-                    mContent.insertImage(selectedPhotos.get(i), "image");
+//                    mContent.insertImage(selectedPhotos.get(i), "image");
+                    mEditorAction.insertImage(selectedPhotos.get(i));
                 }
             }
         }
@@ -744,15 +770,19 @@ public class PublishActivity extends AppCompatActivity implements View.OnClickLi
      * store the draft of publish content before exit this activity.
      */
     private void storeDraft() {
+        mContentStr = mRichEditorCallback.getHtml();
         if (!isContentEmpty()) {
             new AlertDialog.Builder(this)
                     .setMessage(getString(R.string.dialog_publish_exit_msg))
                     .setPositiveButton(getString(R.string.dialog_publish_pos), new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
+                            mEditorAction.refreshHtml();
+                            mContentStr = mRichEditorCallback.getHtml();
                             SpfsUtils.write(mContext, SpfsUtils.CACHE, "publishType", mSelectedType);
                             SpfsUtils.write(mContext, SpfsUtils.CACHE, "publishTitle", mTitleStr);
                             SpfsUtils.write(mContext, SpfsUtils.CACHE, "publishContent", mContentStr);
+                            LogUtil.d("store_draft", mContentStr);
                             finish();
                         }
                     })
@@ -815,10 +845,12 @@ public class PublishActivity extends AppCompatActivity implements View.OnClickLi
                     mSelectedType = SpfsUtils.readString(this, SpfsUtils.CACHE, "publishType", mSelectedType);
                     mTitleStr = SpfsUtils.readString(this, SpfsUtils.CACHE, "publishTitle", "");
                     mContentStr = SpfsUtils.readString(this, SpfsUtils.CACHE, "publishContent", "");
+                    LogUtil.d("read_draft", mContentStr);
                     if (!isContentEmpty()) {
                         mPublishType.setText(mSelectedType);
                         mTitle.setText(mTitleStr);
-                        mContent.setHtml(mContentStr);
+                        mContent.requestFocus();
+                        mEditorAction.insertHtml(mContentStr);
                     } else {
                         getWindow().getDecorView().postDelayed(showGreeting, 200);
                     }
@@ -834,6 +866,21 @@ public class PublishActivity extends AppCompatActivity implements View.OnClickLi
     }
 
     @Override
+    protected void onPause() {
+        super.onPause();
+        keyboardHeightProvider.setKeyboardHeightObserver(null);
+        if (flAction.getVisibility() == View.INVISIBLE) {
+            flAction.setVisibility(View.GONE);
+        }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        keyboardHeightProvider.setKeyboardHeightObserver(this);
+    }
+
+    @Override
     protected void onStop() {
         EventBus.getDefault().unregister(this);
         super.onStop();
@@ -845,11 +892,214 @@ public class PublishActivity extends AppCompatActivity implements View.OnClickLi
         mContent.clearCache(true);
         mContent.clearHistory();
         mContent.destroy();
+        keyboardHeightProvider.close();
 
         if (null != mIat) {
             // release connection when exit.
             mIat.cancel();
             mIat.destroy();
+        }
+    }
+
+    /**
+     * editor menu ui callback
+     */
+    private class MRichEditorCallback extends RichEditorCallback {
+
+        @Override
+        public String getHtml() {
+            mEditorAction.refreshHtml();
+            try {
+                // waiting for callback 'returnHtml' to trigger.
+                Thread.sleep(30);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            return super.getHtml();
+        }
+
+        @Override
+        public void notifyFontStyleChange(ActionType type, final String value) {
+            switch (type) {
+                case FAMILY:
+                    mEditorMenuFragment.updateFontFamilyStates(value);
+                    break;
+                case SIZE:
+                    mEditorMenuFragment.updateFontStates(ActionType.SIZE, Double.valueOf(value));
+                    break;
+                case FORE_COLOR:
+                case BACK_COLOR:
+                    mEditorMenuFragment.updateFontColorStates(type, value);
+                    break;
+                case LINE_HEIGHT:
+                    mEditorMenuFragment.updateFontStates(ActionType.LINE_HEIGHT,
+                            Double.valueOf(value));
+                    break;
+                case JUSTIFY_LEFT:
+                case JUSTIFY_CENTER:
+                case JUSTIFY_RIGHT:
+                case JUSTIFY_FULL:
+                    mEditorMenuFragment.updateActionStates(ActionType.JUSTIFY_LEFT,
+                            type == ActionType.JUSTIFY_LEFT);
+                    mEditorMenuFragment.updateActionStates(ActionType.JUSTIFY_CENTER,
+                            type == ActionType.JUSTIFY_CENTER);
+                    mEditorMenuFragment.updateActionStates(ActionType.JUSTIFY_RIGHT,
+                            type == ActionType.JUSTIFY_RIGHT);
+                    mEditorMenuFragment.updateActionStates(ActionType.JUSTIFY_FULL,
+                            type == ActionType.JUSTIFY_FULL);
+                    break;
+                case BOLD:
+                case ITALIC:
+                case UNDERLINE:
+                case SUBSCRIPT:
+                case SUPERSCRIPT:
+                case STRIKETHROUGH:
+                    mEditorMenuFragment.updateActionStates(type, Boolean.valueOf(value));
+                    break;
+                case NORMAL:
+                case H1:
+                case H2:
+                case H3:
+                case H4:
+                case H5:
+                case H6:
+                case STYLE_NONE:
+                    mEditorMenuFragment.updateStyleStates(type);
+                    break;
+                case ORDERED:
+                case UNORDERED:
+                case LIST_STYLE_NONE:
+                    mEditorMenuFragment.updateActionStates(ActionType.UNORDERED, type == ActionType.UNORDERED);
+                    mEditorMenuFragment.updateActionStates(ActionType.ORDERED, type == ActionType.ORDERED);
+                    break;
+                default:
+                    break;
+            }
+        }
+    }
+
+    /**
+     * editor content apply
+     */
+    private class PerformAction implements OnActionPerformListener {
+
+        @Override
+        public void onActionPerform(ActionType type, Object... values) {
+            if (mEditorAction == null) {
+                return;
+            }
+
+            String value = null;
+            if (values != null && values.length > 0) {
+                value = (String) values[0];
+            }
+
+            switch (type) {
+                case SIZE:
+                    mEditorAction.fontSize(Double.valueOf(value));
+                    break;
+                case LINE_HEIGHT:
+                    mEditorAction.lineHeight(Double.valueOf(value));
+                    break;
+                case TEXT_COLOR:
+                    mEditorAction.foreColor(value);
+                    break;
+                case HIGHLIGHT:
+                    mEditorAction.backColor(value);
+                    break;
+                case FAMILY:
+                    mEditorAction.fontName(value);
+                    break;
+                case BOLD:
+                    mEditorAction.bold();
+                    break;
+                case ITALIC:
+                    mEditorAction.italic();
+                    break;
+                case UNDERLINE:
+                    mEditorAction.underline();
+                    break;
+                case SUBSCRIPT:
+                    mEditorAction.subscript();
+                    break;
+                case SUPERSCRIPT:
+                    mEditorAction.superscript();
+                    break;
+                case STRIKETHROUGH:
+                    mEditorAction.strikethrough();
+                    break;
+                case JUSTIFY_LEFT:
+                    mEditorAction.justifyLeft();
+                    break;
+                case JUSTIFY_CENTER:
+                    mEditorAction.justifyCenter();
+                    break;
+                case JUSTIFY_RIGHT:
+                    mEditorAction.justifyRight();
+                    break;
+                case JUSTIFY_FULL:
+                    mEditorAction.justifyFull();
+                    break;
+                case CODEVIEW:
+                    mEditorAction.codeReview();
+                    break;
+                case ORDERED:
+                    mEditorAction.insertOrderedList();
+                    break;
+                case UNORDERED:
+                    mEditorAction.insertUnorderedList();
+                    break;
+                case INDENT:
+                    mEditorAction.indent();
+                    break;
+                case OUTDENT:
+                    mEditorAction.outdent();
+                    break;
+                case IMAGE:
+                    PhotoPicker.builder()
+                            .setPhotoCount(9)
+                            .setShowCamera(true)
+                            .setPreviewEnabled(true)
+                            .start(PublishActivity.this);
+                    break;
+                case LINK:
+                    showLinkDialog();
+                    break;
+                case TABLE:
+                    break;
+                case LINE:
+                    mEditorAction.insertHorizontalRule();
+                    break;
+                case BLOCKQUOTE:
+                    mEditorAction.formatBlockquote();
+                    break;
+                case CODE_BLOCK:
+                    mEditorAction.formatBlockCode();
+                    break;
+                case NORMAL:
+                    mEditorAction.formatPara();
+                    break;
+                case H1:
+                    mEditorAction.formatH1();
+                    break;
+                case H2:
+                    mEditorAction.formatH2();
+                    break;
+                case H3:
+                    mEditorAction.formatH3();
+                    break;
+                case H4:
+                    mEditorAction.formatH4();
+                    break;
+                case H5:
+                    mEditorAction.formatH5();
+                    break;
+                case H6:
+                    mEditorAction.formatH6();
+                    break;
+                default:
+                    break;
+            }
         }
     }
 }

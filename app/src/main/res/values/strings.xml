@@ -44,6 +44,7 @@
     <string name="hint_login_password">密码</string>
     <string name="hint_publish_title">输入标题</string>
     <string name="hint_publish_content">开始愉快编写正文吧</string>
+    <string name="hint_publish_title_dialog">链接名称</string>
     <string name="hint_publish_link_dialog">http://</string>
     <string name="hint_input">请输入...</string>
     <string name="hint_search">搜索...</string>
@@ -181,4 +182,25 @@
     <string name="personal_center_feedback">意见反馈</string>
     <string name="personal_center_about">关于</string>
     <string name="personal_center_sign_out">退出登录</string>
+
+    <!--editor-->
+    <string name="font_size">Size</string>
+    <string name="font_color">Text Color</string>
+    <string name="font_spacing">Exact Spacing</string>
+    <string name="font_none">none</string>
+    <string name="font_highlight_color">Highlight</string>
+    <string name="font_default_text">AaBbCcDd</string>
+    <string name="font_style_normal">Normal</string>
+    <string name="font_style_heading_1">Heading 1</string>
+    <string name="font_style_heading_2">Heading 2</string>
+    <string name="font_style_heading_3">Heading 3</string>
+    <string name="font_insert">Insert</string>
+    <string name="edit_hyperlink">Edit Hyperlink</string>
+    <string name="address">Address:</string>
+    <string name="text_to_display">Text to display:</string>
+    <string name="ok">OK</string>
+    <string name="edit_table">Edit Table</string>
+    <string name="heading_4">Heading 4</string>
+    <string name="heading_5">Heading 5</string>
+    <string name="heading_6">Heading 6</string>
 </resources>
