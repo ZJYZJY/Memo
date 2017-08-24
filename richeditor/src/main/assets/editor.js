@@ -1,17 +1,18 @@
 var initSummernote = function(){
     $('#summernote').summernote({
         toolbar: [],
+        placeholder:'开始愉快编写正文吧',// 初始化字体大小在bootstrap.css中
         callbacks: {
             onInit: function(e) {
                 $("#summernote").summernote("fullscreen.toggle");
                 $('#summernote').summernote('fontName', 'Helvetica Neue');
-                $('#summernote').summernote({
-                        placeholder:'开始愉快编写正文吧'
-                    });
-                // 初始化字体大小在bootstrap.css中
             }
         }
     });
+}
+
+var destroy = function(){
+    $('#summernote').summernote('destroy');
 }
 
 var focus = function(){

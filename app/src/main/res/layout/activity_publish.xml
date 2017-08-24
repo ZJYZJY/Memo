@@ -46,18 +46,15 @@
                 android:layout_height="@dimen/px_line"
                 android:background="@color/border_gray" />
 
-            <com.tencent.smtt.sdk.WebView
+            <com.donutcn.memo.editor.RichEditor
                 android:id="@+id/et_publish_content"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:background="@drawable/edit_text_blank_bg"
                 android:gravity="start"
-                android:hint="@string/hint_publish_content"
                 android:lineSpacingExtra="@dimen/line_space_large"
-                android:padding="@dimen/padding_medium"
                 android:textColor="@color/textPrimaryDark"
-                android:textColorHint="@color/textPrimary"
-                android:textSize="14sp" />
+                android:textColorHint="@color/textPrimary" />
         </LinearLayout>
     </LinearLayout>
 

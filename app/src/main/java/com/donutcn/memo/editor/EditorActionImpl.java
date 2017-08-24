@@ -1,11 +1,5 @@
 package com.donutcn.memo.editor;
 
-import android.os.Build;
-
-import com.donutcn.memo.utils.LogUtil;
-import com.tencent.smtt.sdk.ValueCallback;
-import com.tencent.smtt.sdk.WebView;
-
 /**
  * com.donutcn.memo.editor
  * Created by 73958 on 2017/8/23.
@@ -13,233 +7,225 @@ import com.tencent.smtt.sdk.WebView;
 
 public class EditorActionImpl implements EditorAction {
 
-    private WebView mWebView;
+    private RichEditor mWebView;
 
-    public EditorActionImpl(WebView webView){
+    public EditorActionImpl(RichEditor webView){
         this.mWebView = webView;
     }
 
     @Override
     public void undo() {
-        load("javascript:undo()");
+        mWebView.exec("javascript:undo()");
     }
 
     @Override
     public void redo() {
-        load("javascript:redo()");
+        mWebView.exec("javascript:redo()");
     }
 
     @Override
     public void focus() {
-        load("javascript:focus()");
+        mWebView.exec("javascript:focus()");
     }
 
     @Override
     public void disable() {
-        load("javascript:disable()");
+        mWebView.exec("javascript:disable()");
     }
 
     @Override
     public void enable() {
-        load("javascript:enable()");
+        mWebView.exec("javascript:enable()");
     }
 
     /******************** Font ********************/
     @Override
     public void bold() {
-        load("javascript:bold()");
+        mWebView.exec("javascript:bold()");
     }
 
     @Override
     public void italic() {
-        load("javascript:italic()");
+        mWebView.exec("javascript:italic()");
     }
 
     @Override
     public void underline() {
-        load("javascript:underline()");
+        mWebView.exec("javascript:underline()");
     }
 
     @Override
     public void strikethrough() {
-        load("javascript:strikethrough()");
+        mWebView.exec("javascript:strikethrough()");
     }
 
     @Override
     public void superscript() {
-        load("javascript:superscript()");
+        mWebView.exec("javascript:superscript()");
     }
 
     @Override
     public void subscript() {
-        load("javascript:subscript()");
+        mWebView.exec("javascript:subscript()");
     }
 
     @Override
     public void backColor(String color) {
-        load("javascript:backColor('" + color + "')");
+        mWebView.exec("javascript:backColor('" + color + "')");
     }
 
     @Override
     public void foreColor(String color) {
-        load("javascript:foreColor('" + color + "')");
+        mWebView.exec("javascript:foreColor('" + color + "')");
     }
 
     @Override
     public void fontName(String fontName) {
-        load("javascript:fontName('" + fontName + "')");
+        mWebView.exec("javascript:fontName('" + fontName + "')");
     }
 
     @Override
     public void fontSize(double foreSize) {
-        load("javascript:fontSize(" + foreSize + ")");
+        mWebView.exec("javascript:fontSize(" + foreSize + ")");
     }
 
     /******************** Paragraph ********************/
     public void justifyLeft() {
-        load("javascript:justifyLeft()");
+        mWebView.exec("javascript:justifyLeft()");
     }
 
     @Override
     public void justifyRight() {
-        load("javascript:justifyRight()");
+        mWebView.exec("javascript:justifyRight()");
     }
 
     @Override
     public void justifyCenter() {
-        load("javascript:justifyCenter()");
+        mWebView.exec("javascript:justifyCenter()");
     }
 
     @Override
     public void justifyFull() {
-        load("javascript:justifyFull()");
+        mWebView.exec("javascript:justifyFull()");
     }
 
     @Override
     public void insertOrderedList() {
-        load("javascript:insertOrderedList()");
+        mWebView.exec("javascript:insertOrderedList()");
     }
 
     @Override
     public void insertUnorderedList() {
-        load("javascript:insertUnorderedList()");
+        mWebView.exec("javascript:insertUnorderedList()");
     }
 
     @Override
     public void indent() {
-        load("javascript:indent()");
+        mWebView.exec("javascript:indent()");
     }
 
     @Override
     public void outdent() {
-        load("javascript:outdent()");
+        mWebView.exec("javascript:outdent()");
     }
 
     @Override
     public void formatPara() {
-        load("javascript:formatPara()");
+        mWebView.exec("javascript:formatPara()");
     }
 
     @Override
     public void formatH1() {
-        load("javascript:formatH1()");
+        mWebView.exec("javascript:formatH1()");
     }
 
     @Override
     public void formatH2() {
-        load("javascript:formatH2()");
+        mWebView.exec("javascript:formatH2()");
     }
 
     @Override
     public void formatH3() {
-        load("javascript:formatH3()");
+        mWebView.exec("javascript:formatH3()");
     }
 
     @Override
     public void formatH4() {
-        load("javascript:formatH4()");
+        mWebView.exec("javascript:formatH4()");
     }
 
     @Override
     public void formatH5() {
-        load("javascript:formatH5()");
+        mWebView.exec("javascript:formatH5()");
     }
 
     @Override
     public void formatH6() {
-        load("javascript:formatH6()");
+        mWebView.exec("javascript:formatH6()");
     }
 
     @Override
     public void lineHeight(double lineHeight) {
-        load("javascript:lineHeight(" + lineHeight + ")");
+        mWebView.exec("javascript:lineHeight(" + lineHeight + ")");
     }
 
     @Override
     public void insertImage(String imageUrl) {
-        load("javascript:insertImage('" + imageUrl + "')");
+        mWebView.exec("javascript:insertImage('" + imageUrl + "')");
     }
 
     @Override
     public void insertText(String text) {
-        load("javascript:insertText('" + text + "')");
+        mWebView.exec("javascript:insertText('" + text + "')");
     }
 
     @Override
     public void createLink(String linkText, String linkUrl) {
-        load("javascript:createLink('" + linkText + "','" + linkUrl + "')");
+        mWebView.exec("javascript:createLink('" + linkText + "','" + linkUrl + "')");
     }
 
     @Override
     public void unlink() {
-        load("javascript:unlink()");
+        mWebView.exec("javascript:unlink()");
     }
 
     @Override
     public void codeReview() {
-        load("javascript:codeReview()");
+        mWebView.exec("javascript:codeReview()");
     }
 
     @Override
     public void insertTable(int colCount, int rowCount) {
-        load("javascript:insertTable('" + colCount + "x" + rowCount + "')");
+        mWebView.exec("javascript:insertTable('" + colCount + "x" + rowCount + "')");
     }
 
     @Override
     public void insertHorizontalRule() {
-        load("javascript:insertHorizontalRule()");
+        mWebView.exec("javascript:insertHorizontalRule()");
     }
 
     @Override
     public void formatBlockquote() {
-        load("javascript:formatBlock('blockquote')");
+        mWebView.exec("javascript:formatBlock('blockquote')");
     }
 
     @Override
     public void formatBlockCode() {
-        load("javascript:formatBlock('pre')");
+        mWebView.exec("javascript:formatBlock('pre')");
     }
 
     @Override
     public void insertHtml(String html) {
-        load("javascript:pasteHTML('" + html + "')");
+        mWebView.exec("javascript:pasteHTML('" + html + "');");
     }
 
     @Override
     public void refreshHtml() {
-        load("javascript:refreshHTML()");
+        mWebView.exec("javascript:refreshHTML()");
     }
 
-    private void load(String trigger) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-            this.mWebView.evaluateJavascript(trigger, new ValueCallback<String>() {
-                @Override
-                public void onReceiveValue(String s) {
-                    LogUtil.d(s);
-                }
-            });
-        } else {
-            this.mWebView.loadUrl(trigger);
-        }
+    @Override
+    public void destroy(){
+        mWebView.exec("javascript:destroy()");
     }
 }

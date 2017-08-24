@@ -68,10 +68,10 @@ public class MemoAdapter extends BasePublishAdapter<MemoAdapter.DefaultViewHolde
     public void onViewRecycled(DefaultViewHolder holder) {
         super.onViewRecycled(holder);
         holder.mContainer.setVisibility(View.GONE);
+        holder.mContentPic1.setVisibility(View.INVISIBLE);
+        holder.mContentPic2.setVisibility(View.INVISIBLE);
         Glide.clear(holder.mContentPic1);
         Glide.clear(holder.mContentPic2);
-        holder.mContentPic1.setBackgroundColor(mContext.getResources().getColor(R.color.white));
-        holder.mContentPic2.setBackgroundColor(mContext.getResources().getColor(R.color.white));
     }
 
     @Override
@@ -98,11 +98,13 @@ public class MemoAdapter extends BasePublishAdapter<MemoAdapter.DefaultViewHolde
         url1 = list.get(position).getImage1();
         if(!url0.equals("")){
             holder.mContainer.setVisibility(View.VISIBLE);
-            glide.load(url0).into(holder.mContentPic1);
+            holder.mContentPic1.setVisibility(View.VISIBLE);
+            glide.load(url0).placeholder(R.color.background_gray).into(holder.mContentPic1);
         }
         if(!url1.equals("")){
             holder.mContainer.setVisibility(View.VISIBLE);
-            glide.load(url1).into(holder.mContentPic2);
+            holder.mContentPic2.setVisibility(View.VISIBLE);
+            glide.load(url1).placeholder(R.color.background_gray).into(holder.mContentPic2);
         }
         String iconUrl = list.get(position).getUserIcon();
         if(mLayoutType == ItemLayoutType.AVATAR_IMG){

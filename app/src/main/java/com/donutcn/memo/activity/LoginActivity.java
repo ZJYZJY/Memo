@@ -164,7 +164,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         // check the login state.
         loginState = UserStatus.isLogin(getApplicationContext());
         // delay 3s to remove the splash fragment.
-        mSplashHandler.postDelayed(showMainPage, 500);
+        mSplashHandler.postDelayed(showMainPage, 3000);
     }
 
     private void removeSplashFragment(){
@@ -407,6 +407,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
     @Override
     protected void onDestroy() {
+        mSplashHandler.removeCallbacks(showMainPage);
         super.onDestroy();
         UMShareAPI.get(this).release();
     }

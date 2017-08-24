@@ -1,7 +1,5 @@
 package com.donutcn.memo.editor;
 
-import com.even.mricheditor.RichEditorCallback;
-
 /**
  * com.donutcn.memo.editor
  * Created by 73958 on 2017/8/23.
@@ -94,4 +92,6 @@ public interface EditorAction {
     void insertHtml(String html);
 
     void refreshHtml();
+
+    void destroy();
 }

@@ -6,7 +6,6 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.support.annotation.IdRes;
@@ -36,9 +35,8 @@ import com.donutcn.memo.R;
 import com.donutcn.memo.editor.EditorAction;
 import com.donutcn.memo.editor.EditorActionImpl;
 import com.donutcn.memo.editor.EditorMenuFragment;
-import com.donutcn.memo.editor.MRichEditorCallback;
+import com.donutcn.memo.editor.RichEditor;
 import com.donutcn.memo.editor.interfaces.OnActionPerformListener;
-import com.donutcn.memo.editor.interfaces.OnReceiveJSValue;
 import com.donutcn.memo.editor.keyboard.KeyboardHeightObserver;
 import com.donutcn.memo.editor.keyboard.KeyboardHeightProvider;
 import com.donutcn.memo.entity.ContentResponse;
@@ -66,9 +64,6 @@ import com.iflytek.cloud.RecognizerResult;
 import com.iflytek.cloud.SpeechConstant;
 import com.iflytek.cloud.SpeechError;
 import com.iflytek.cloud.SpeechRecognizer;
-import com.tencent.smtt.sdk.WebChromeClient;
-import com.tencent.smtt.sdk.WebView;
-import com.tencent.smtt.sdk.WebViewClient;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -96,7 +91,7 @@ public class PublishActivity extends AppCompatActivity implements View.OnClickLi
 
     private TextView mPublishType;
     private EditText mTitle;
-    private WebView mContent;
+    private RichEditor mContent;
     private Button mPublishBtn;
     private LinearLayout mAddPic, mTypeSet, mTemplate, mSpeech;
     private View mTools;
@@ -123,6 +118,7 @@ public class PublishActivity extends AppCompatActivity implements View.OnClickLi
     private String mSelectedType;
     private String mTitleStr = "";
     private String mContentStr = "";
+    private String mTemp = "";
     private String mContentId;
     private boolean mEditMode;
     private static final String HOST = "http://otu6v4c72.bkt.clouddn.com/";
@@ -154,8 +150,6 @@ public class PublishActivity extends AppCompatActivity implements View.OnClickLi
         mPublishDialog.setMessage("正在上传中...");
 
         mSpeechDialog = new ProgressDialog(this);
-
-//        getWindow().getDecorView().postDelayed(showGreeting, 200);
     }
 
     private Runnable showGreeting = new Runnable() {
@@ -183,7 +177,7 @@ public class PublishActivity extends AppCompatActivity implements View.OnClickLi
         mPublishBtn = (Button) findViewById(R.id.toolbar_with_btn);
         mPublishType = (TextView) findViewById(R.id.publish_spinner);
         mTitle = (EditText) findViewById(R.id.et_publish_title);
-        mContent = (WebView) findViewById(R.id.et_publish_content);
+        mContent = (RichEditor) findViewById(R.id.et_publish_content);
 
         mTitle.addTextChangedListener(mTextWatcher);
 
@@ -222,23 +216,9 @@ public class PublishActivity extends AppCompatActivity implements View.OnClickLi
                 keyboardHeightProvider.start();
             }
         });
-        mContent.setWebViewClient(new WebViewClient() {
-            @Override public void onPageStarted(WebView view, String url, Bitmap favicon) {
-                super.onPageStarted(view, url, favicon);
-            }
 
-            @Override public boolean shouldOverrideUrlLoading(WebView view, String url) {
-                view.loadUrl(url);
-                return true;
-            }
-        });
-
-        mContent.setWebChromeClient(new WebChromeClient());
-        mContent.getSettings().setJavaScriptEnabled(true);
-        mContent.getSettings().setDomStorageEnabled(true);
         mRichEditorCallback = new MRichEditorCallback();
         mContent.addJavascriptInterface(mRichEditorCallback, "MRichEditor");
-        mContent.loadUrl("file:///android_asset/richEditor.html");
         mEditorAction = new EditorActionImpl(mContent);
     }
 
@@ -594,7 +574,7 @@ public class PublishActivity extends AppCompatActivity implements View.OnClickLi
     }
 
     private boolean isContentEmpty() {
-        return mTitleStr.equals("") && ("".equals(mContentStr) || "<br>".equals(mContentStr));
+        return mTitleStr.equals("") && ("".equals(mContentStr) || "<p><br></p>".equals(mContentStr));
     }
 
     public void startSpeech() {
@@ -638,12 +618,9 @@ public class PublishActivity extends AppCompatActivity implements View.OnClickLi
         for (String key : mIatResults.keySet()) {
             resultBuilder.append(mIatResults.get(key));
         }
-
-        if (mContent.isFocused()) {
-            StringBuilder builder = new StringBuilder(mContentStr);
-            builder.append(resultBuilder.toString());
-            mEditorAction.insertHtml(mContentStr);
-        }
+        StringBuilder builder = new StringBuilder(mTemp);
+        builder.append(resultBuilder.toString());
+        mEditorAction.insertHtml(builder.toString());
 //        else if(mTitle.isFocused()){
 //            String str = mTitleStr + resultBuilder.toString();
 //            mTitle.setText(str);
@@ -666,6 +643,12 @@ public class PublishActivity extends AppCompatActivity implements View.OnClickLi
 
         @Override
         public void onBeginOfSpeech() {
+            mContentStr = mRichEditorCallback.getHtml();
+            if ("<p><br></p>".equals(mContentStr)) {
+                mContentStr = "";
+            }
+            // 因为printResult()会执行多次，所以赋值mTemp不会造成重复识别语音
+            mTemp = mContentStr;
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
@@ -684,7 +667,6 @@ public class PublishActivity extends AppCompatActivity implements View.OnClickLi
             mSpeechDialog.setMessage("正在识别...");
             printResult(recognizerResult);
             if(isLast){
-//                mContentTextChangeListener.onTextChange(mContent.getHtml());
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
@@ -696,6 +678,7 @@ public class PublishActivity extends AppCompatActivity implements View.OnClickLi
 
         @Override
         public void onError(SpeechError speechError) {
+            mSpeechDialog.dismiss();
             LogUtil.e(speechError.getPlainDescription(true));
         }
 
@@ -777,8 +760,6 @@ public class PublishActivity extends AppCompatActivity implements View.OnClickLi
                     .setPositiveButton(getString(R.string.dialog_publish_pos), new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
-                            mEditorAction.refreshHtml();
-                            mContentStr = mRichEditorCallback.getHtml();
                             SpfsUtils.write(mContext, SpfsUtils.CACHE, "publishType", mSelectedType);
                             SpfsUtils.write(mContext, SpfsUtils.CACHE, "publishTitle", mTitleStr);
                             SpfsUtils.write(mContext, SpfsUtils.CACHE, "publishContent", mContentStr);
@@ -849,7 +830,6 @@ public class PublishActivity extends AppCompatActivity implements View.OnClickLi
                     if (!isContentEmpty()) {
                         mPublishType.setText(mSelectedType);
                         mTitle.setText(mTitleStr);
-                        mContent.requestFocus();
                         mEditorAction.insertHtml(mContentStr);
                     } else {
                         getWindow().getDecorView().postDelayed(showGreeting, 200);
@@ -889,6 +869,7 @@ public class PublishActivity extends AppCompatActivity implements View.OnClickLi
     @Override
     protected void onDestroy() {
         super.onDestroy();
+//        mEditorAction.destroy();
         mContent.clearCache(true);
         mContent.clearHistory();
         mContent.destroy();
