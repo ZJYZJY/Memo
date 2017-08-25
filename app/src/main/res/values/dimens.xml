@@ -24,6 +24,7 @@
     <dimen name="item_decoration_height">2px</dimen>
 
     <!--icon size-->
+    <dimen name="icon_login">64dp</dimen>
     <dimen name="icon_item_user">54dp</dimen>
     <dimen name="icon_item_img">64dp</dimen>
     <dimen name="icon_author">64dp</dimen>
@@ -71,6 +72,7 @@
     <dimen name="small_switch_width">36dp</dimen>
     <dimen name="dialog_reply_editor_height">96dp</dimen>
     <dimen name="dialog_reply_btn_height">32dp</dimen>
+    <dimen name="personal_item_height">40dp</dimen>
 
     <dimen name="tr_head_height">48dp</dimen>
     <dimen name="tr_max_head_height">192dp</dimen>

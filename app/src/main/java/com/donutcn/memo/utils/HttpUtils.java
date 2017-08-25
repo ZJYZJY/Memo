@@ -259,6 +259,9 @@ public class HttpUtils {
         @GET(APIPath.VERIFY_CONTENT)
         Call<SimpleResponse> verifyContentById(@Path("id") String id);
 
+        @POST(APIPath.TIP_OFF_CONTENT)
+        Call<SimpleResponse> tipOff(@Body RequestBody info);
+
         /**
          * cookie test.
          */
@@ -448,7 +451,6 @@ public class HttpUtils {
         }
         RequestBody request = RequestBody
                 .create(okhttp3.MediaType.parse("application/json; charset=utf-8"), json.toString());
-//        System.out.println(json.toString());
         return create().matchContacts(request);
     }
 
@@ -489,6 +491,20 @@ public class HttpUtils {
 
     public static Call<SimpleResponse> verifyContentById(String id){
         return create().verifyContentById(id);
+    }
+
+    public static Call<SimpleResponse> tipOff(String contentId, int type, String detail){
+        JSONObject json = new JSONObject();
+        try {
+            json.put(FieldConfig.CONTENT_ID, contentId);
+            json.put(FieldConfig.TIP_OFF_TYPE, type);
+            json.put(FieldConfig.TIP_OFF_DETAIL, detail);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        RequestBody request = RequestBody
+                .create(okhttp3.MediaType.parse("application/json; charset=utf-8"), json.toString());
+        return create().tipOff(request);
     }
 
     public static Call<SimpleResponse> test() {
@@ -576,7 +592,8 @@ public class HttpUtils {
                     }, new UploadOptions(null, null, false, new UpProgressHandler() {
                         @Override
                         public void progress(String key, double percent) {
-
+                            LogUtil.d(percent + "");
+                            listener.uploadProgress((int) (percent * 100), 100);
                         }
                     }, null));
         }

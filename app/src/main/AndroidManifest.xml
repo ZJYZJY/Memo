@@ -109,7 +109,19 @@
         <activity android:name=".activity.SearchActivity" />
         <activity android:name=".activity.CompletingPage" />
         <activity android:name=".activity.PersonalCenterActivity" />
-        <activity android:name=".activity.TipOffActivity" />
+        <activity android:name=".activity.TipOffActivity" >
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data
+                    android:host="ascexz.320.io"
+                    android:pathPrefix="/GoodPage/accuse"
+                    android:scheme="memo" />
+            </intent-filter>
+        </activity>
 
         <!-- tencent bugly upgrade -->
         <activity

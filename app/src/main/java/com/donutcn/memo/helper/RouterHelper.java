@@ -76,5 +76,6 @@ public class RouterHelper {
         public static final String FOLLOW_USER = "user/follow/{userId}/{action}";
         public static final String GET_USER_INFO = "index/app_myindex/{userId}";
         public static final String VERIFY_CONTENT = "index/verify_content/{id}";
+        public static final String TIP_OFF_CONTENT = "authorised/do_accuse";
     }
 }

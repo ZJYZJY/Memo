@@ -88,11 +88,13 @@
     <string name="btn_dialog_answer">提交回答</string>
 
     <!--dialog-->
+    <string name="dialog_tips_title">提示</string>
     <string name="dialog_publish_title">插入链接</string>
     <string name="dialog_publish_exit_msg">是否保存草稿</string>
     <string name="dialog_del_publish_content">确定要删除吗</string>
-    <string name="dialog_publish_pos">是</string>
-    <string name="dialog_publish_neg">否</string>
+    <string name="dialog_logout">你确定要退出吗</string>
+    <string name="dialog_pos">是</string>
+    <string name="dialog_neg">否</string>
     <string name="popup_main_complete_info">完善个人信息</string>
     <string name="popup_main_click">点击上传头像</string>
 
@@ -177,10 +179,12 @@
     <string name="share_success">信息发布成功！</string>
 
     <!--personal center item-->
-    <string name="personal_center_authentication">身份认证</string>
-    <string name="personal_center_notification_settings">通知设置</string>
+    <string name="personal_center_photo_watermark">照片水印</string>
+    <string name="personal_center_photo_watermark_sub">（照片印上您的昵称）</string>
+    <string name="personal_center_notification">消息通知</string>
+    <string name="personal_center_notification_sub">（接收应聘报名类的通知）</string>
     <string name="personal_center_feedback">意见反馈</string>
-    <string name="personal_center_about">关于</string>
+    <string name="personal_center_about">关于我们</string>
     <string name="personal_center_sign_out">退出登录</string>
 
     <!--editor-->
@@ -195,12 +199,12 @@
     <string name="font_style_heading_2">Heading 2</string>
     <string name="font_style_heading_3">Heading 3</string>
     <string name="font_insert">Insert</string>
-    <string name="edit_hyperlink">Edit Hyperlink</string>
-    <string name="address">Address:</string>
-    <string name="text_to_display">Text to display:</string>
-    <string name="ok">OK</string>
-    <string name="edit_table">Edit Table</string>
     <string name="heading_4">Heading 4</string>
     <string name="heading_5">Heading 5</string>
     <string name="heading_6">Heading 6</string>
+
+    <!--text-->
+    <string name="popup_content_share">分享</string>
+    <string name="popup_content_link">复制链接</string>
+    <string name="popup_content_tip_off">举报</string>
 </resources>

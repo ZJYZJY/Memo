@@ -172,6 +172,14 @@ public class EditorActionImpl implements EditorAction {
     @Override
     public void insertImage(String imageUrl) {
         mWebView.exec("javascript:insertImage('" + imageUrl + "')");
+        try {
+            Thread.sleep(70);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+//        insertHtml("<div style=\"text-align: center;\">" +
+//                "<span style=\"font-size: 12px\">请输入图片描述</span></div>");
+        insertText("请输入图片描述");
     }
 
     @Override

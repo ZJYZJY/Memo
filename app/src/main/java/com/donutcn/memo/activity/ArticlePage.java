@@ -1,7 +1,10 @@
 package com.donutcn.memo.activity;
 
+import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.support.annotation.LayoutRes;
 import android.support.design.widget.BottomSheetBehavior;
@@ -10,9 +13,11 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.PopupWindow;
 import android.widget.ProgressBar;
 import android.widget.ScrollView;
 import android.widget.TextView;
@@ -24,6 +29,7 @@ import com.donutcn.memo.constant.FieldConfig;
 import com.donutcn.memo.entity.SimpleResponse;
 import com.donutcn.memo.event.ChangeContentEvent;
 import com.donutcn.memo.helper.RouterHelper;
+import com.donutcn.memo.helper.ShareHelper;
 import com.donutcn.memo.type.PublishType;
 import com.donutcn.memo.utils.DensityUtils;
 import com.donutcn.memo.utils.HttpUtils;
@@ -59,6 +65,7 @@ public class ArticlePage extends AppCompatActivity implements View.OnClickListen
     private RequestManager glide;
     private Context mContext;
 
+    private String mTitle, mImageUrl, mContent;
     private String mContentId, mContentUrl, mNameStr, mIconUrl, mUserId;
     private int mUpvoteCount, mCommentCount;
     // comment height
@@ -88,6 +95,10 @@ public class ArticlePage extends AppCompatActivity implements View.OnClickListen
                         mContentUrl = response.body().getField(FieldConfig.CONTENT_URL);
                         mNameStr = response.body().getField(FieldConfig.USER_NICKNAME);
                         mIconUrl = response.body().getField(FieldConfig.USER_ICON_URL);
+                        mTitle = response.body().getField(FieldConfig.CONTENT_TITLE);
+                        mContent = response.body().getField(FieldConfig.CONTENT);
+                        mImageUrl = response.body().getField("picurl");
+
                         String type = response.body().getField(FieldConfig.CONTENT_TYPE);
                         mType = PublishType.getType(type);
                         mUpvoteCount = Integer.valueOf((String) response.body().getField(FieldConfig.CONTENT_UP_VOTE_COUNT));
@@ -187,9 +198,9 @@ public class ArticlePage extends AppCompatActivity implements View.OnClickListen
             public boolean shouldOverrideUrlLoading(WebView view, String url) {
                 Uri uri = Uri.parse(url);
                 if(url.startsWith(RouterHelper.getApiUri().toString())){
-//                    if(RouterHelper.confirmRequest(uri, "follow")){
-//                        UserStatus.getCurrentUser().follow(mContext, mUserId, true);
-//                    }
+                    if(RouterHelper.confirmRequest(uri, "accuse")){
+
+                    }
                     return false;
                 } else if (url.startsWith(RouterHelper.appScheme())) {
                     if (RouterHelper.confirmIntent(uri, "content")) {
@@ -198,6 +209,8 @@ public class ArticlePage extends AppCompatActivity implements View.OnClickListen
                         RouterHelper.openPageWithUri(mContext, uri, AuthorPage.class);
                     } else if(RouterHelper.confirmIntent(uri, "publish")){
                         RouterHelper.openPageWithUri(mContext, uri, PublishActivity.class);
+                    } else if(RouterHelper.confirmIntent(uri, "accuse")){
+                        RouterHelper.openPageWithUri(mContext, uri, TipOffActivity.class);
                     }
                     return true;
                 }
@@ -313,7 +326,39 @@ public class ArticlePage extends AppCompatActivity implements View.OnClickListen
     }
 
     public void onMoreOption(View view) {
-
+        View popView = getLayoutInflater().inflate(R.layout.popup_content_option, null);
+        TextView share = (TextView) popView.findViewById(R.id.content_share);
+        TextView link = (TextView) popView.findViewById(R.id.content_link);
+        TextView tipOff = (TextView) popView.findViewById(R.id.content_tip_off);
+        final PopupWindow popupWindow = new PopupWindow(popView,
+                DensityUtils.dp2px(this, 128), ViewGroup.LayoutParams.WRAP_CONTENT, true);
+        popupWindow.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        share.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                popupWindow.dismiss();
+                new ShareHelper(mContext).openShareBoard(mContentUrl, mTitle, mImageUrl, mContent);
+            }
+        });
+        link.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                popupWindow.dismiss();
+                ClipboardManager cm = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
+                cm.setText(mContentUrl.substring(0, mContentUrl.length() - 5));
+                ToastUtil.show(ArticlePage.this, "复制成功");
+            }
+        });
+        tipOff.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                popupWindow.dismiss();
+                Intent intent = new Intent(ArticlePage.this, TipOffActivity.class);
+                intent.putExtra("contentId", mContentId);
+                startActivity(intent);
+            }
+        });
+        popupWindow.showAsDropDown(view, -DensityUtils.dp2px(this, 16), 0);
     }
 
     public void onCloseDialog(View view) {

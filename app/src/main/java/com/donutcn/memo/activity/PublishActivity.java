@@ -318,15 +318,21 @@ public class PublishActivity extends AppCompatActivity implements View.OnClickLi
                     return;
                 }
                 WindowUtils.toggleKeyboard(this, false);
-                mPublishDialog.show();
                 // if in edit mode, same image will not be reuploaded.
                 selectedPhotos = StringUtil.getImgSrcList(mContentStr);
                 if(mSelectedType.equals(mContentTypes[0])
                         || mSelectedType.equals(mContentTypes[1])
                         || mSelectedType.equals(mContentTypes[5])){
                     if(selectedPhotos.size() == 0){
+                        mPublishDialog.show();
                         publishContent(null);
                     }else {
+                        mPublishDialog.setMessage("正在上传图片...");
+                        mPublishDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+                        mPublishDialog.setMax(100);
+                        // set progress 0
+                        mPublishDialog.incrementProgressBy(-mPublishDialog.getProgress());
+                        mPublishDialog.show();
                         final int count = selectedPhotos.size();
                         // compress the image files.
                         new Thread(new Runnable() {
@@ -394,7 +400,13 @@ public class PublishActivity extends AppCompatActivity implements View.OnClickLi
         if(event.isSuccess()){
             HttpUtils.upLoadImages(PublishActivity.this, photoFiles, new UploadCallback<String>() {
                 @Override
-                public void uploadProgress(int progress, int total) {
+                public void uploadProgress(final int progress, int total) {
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            mPublishDialog.setProgress(progress);
+                        }
+                    });
                 }
                 @Override
                 public void uploadAll(List<String> keys) {
@@ -408,7 +420,7 @@ public class PublishActivity extends AppCompatActivity implements View.OnClickLi
                 }
             });
         } else {
-            ToastUtil.show(this, "图片上传失败, 压缩错误");
+            ToastUtil.show(PublishActivity.this, "图片上传失败, 压缩错误");
         }
     }
 
@@ -757,7 +769,7 @@ public class PublishActivity extends AppCompatActivity implements View.OnClickLi
         if (!isContentEmpty()) {
             new AlertDialog.Builder(this)
                     .setMessage(getString(R.string.dialog_publish_exit_msg))
-                    .setPositiveButton(getString(R.string.dialog_publish_pos), new DialogInterface.OnClickListener() {
+                    .setPositiveButton(getString(R.string.dialog_pos), new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             SpfsUtils.write(mContext, SpfsUtils.CACHE, "publishType", mSelectedType);
@@ -767,7 +779,7 @@ public class PublishActivity extends AppCompatActivity implements View.OnClickLi
                             finish();
                         }
                     })
-                    .setNegativeButton(getString(R.string.dialog_publish_neg), new DialogInterface.OnClickListener() {
+                    .setNegativeButton(getString(R.string.dialog_neg), new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             SpfsUtils.clear(mContext, SpfsUtils.CACHE);

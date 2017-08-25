@@ -32,41 +32,59 @@
                 android:text="@string/title_activity_personal_center"
                 android:textColor="@color/white"
                 android:textSize="18sp" />
+
+            <ImageView
+                android:id="@+id/setting"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:background="?android:selectableItemBackground"
+                android:paddingBottom="@dimen/padding_medium"
+                android:paddingLeft="@dimen/padding_medium"
+                android:paddingRight="@dimen/padding_large"
+                android:paddingTop="@dimen/padding_medium"
+                android:src="@drawable/ic_setting" />
         </RelativeLayout>
 
-        <com.donutcn.widgetlib.widget.CircleImageView
-            android:id="@+id/personal_center_user_icon"
-            android:layout_width="@dimen/icon_personal_center_user"
-            android:layout_height="@dimen/icon_personal_center_user"
+        <LinearLayout
+            android:id="@+id/personal_center_edit_container"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_below="@+id/personal_center_toolbar"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="@dimen/margin_top_img"
-            android:src="@mipmap/user_default_icon" />
+            android:gravity="center_horizontal"
+            android:orientation="vertical">
 
-        <TextView
-            android:id="@+id/personal_center_user_name"
-            android:layout_width="@dimen/personal_signature_width"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/personal_center_user_icon"
-            android:layout_centerHorizontal="true"
-            android:gravity="center"
-            android:maxLines="1"
-            android:padding="@dimen/padding_medium"
-            android:text="landyne"
-            android:textColor="@color/white" />
+            <com.donutcn.widgetlib.widget.CircleImageView
+                android:id="@+id/personal_center_user_icon"
+                android:layout_width="@dimen/icon_personal_center_user"
+                android:layout_height="@dimen/icon_personal_center_user"
+                android:src="@mipmap/user_default_icon" />
 
-        <TextView
-            android:id="@+id/personal_center_user_signature"
-            android:layout_width="@dimen/personal_signature_width"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/personal_center_user_name"
-            android:layout_centerHorizontal="true"
-            android:ellipsize="end"
-            android:gravity="center"
-            android:maxLines="1"
-            android:paddingBottom="@dimen/padding_container"
-            android:text="还没有编辑个人签名"
-            android:textColor="@color/textPrimary" />
+            <TextView
+                android:id="@+id/personal_center_user_name"
+                android:layout_width="@dimen/personal_signature_width"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:maxLines="1"
+                android:padding="@dimen/padding_medium"
+                android:text="landyne"
+                android:textColor="@color/white" />
+
+            <TextView
+                android:id="@+id/personal_center_user_signature"
+                android:layout_width="@dimen/personal_signature_width"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:gravity="center"
+                android:maxLines="1"
+                android:paddingBottom="@dimen/padding_container"
+                android:text="还没有编辑个人签名"
+                android:textColor="@color/textPrimary" />
+        </LinearLayout>
     </RelativeLayout>
 
     <ScrollView
@@ -90,9 +108,9 @@
                 android:background="@color/border_dark" />
 
             <RelativeLayout
-                android:id="@+id/authentication"
+                android:id="@+id/photo_settings"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="@dimen/personal_item_height"
                 android:background="?android:selectableItemBackground"
                 android:paddingBottom="@dimen/padding_medium"
                 android:paddingLeft="@dimen/padding_large"
@@ -100,40 +118,47 @@
                 android:paddingTop="@dimen/padding_medium">
 
                 <TextView
+                    android:id="@+id/photo_title"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
-                    android:text="@string/personal_center_authentication"
+                    android:text="@string/personal_center_photo_watermark"
                     android:textColor="@color/textPrimaryDark"
                     android:textSize="15sp" />
 
-                <ImageView
-                    android:layout_width="@dimen/icon_normal_icon"
-                    android:layout_height="@dimen/icon_normal_icon"
+                <TextView
+                    android:id="@+id/photo_sub_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_toEndOf="@+id/photo_title"
+                    android:layout_toRightOf="@+id/photo_title"
+                    android:text="@string/personal_center_photo_watermark_sub"
+                    android:textColor="@color/textPrimary"
+                    android:textSize="15sp" />
+
+                <com.donutcn.widgetlib.widget.SwitchView
+                    android:id="@+id/photo_switch"
+                    android:layout_width="@dimen/small_switch_width"
+                    android:layout_height="wrap_content"
                     android:layout_alignParentEnd="true"
                     android:layout_alignParentRight="true"
+                    android:layout_marginEnd="@dimen/margin_medium"
+                    android:layout_marginRight="@dimen/margin_medium"
                     android:src="@drawable/forward_arrow" />
             </RelativeLayout>
 
             <View
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/px_line"
-                android:background="@color/border_dark" />
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/blank_item_divider"
-                android:background="@color/background_blank" />
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/px_line"
+                android:layout_marginLeft="@dimen/padding_large"
+                android:layout_marginStart="@dimen/padding_large"
                 android:background="@color/border_dark" />
 
             <RelativeLayout
-                android:id="@+id/notification_settings"
+                android:id="@+id/notification"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="@dimen/personal_item_height"
                 android:background="?android:selectableItemBackground"
                 android:paddingBottom="@dimen/padding_medium"
                 android:paddingLeft="@dimen/padding_large"
@@ -141,18 +166,33 @@
                 android:paddingTop="@dimen/padding_medium">
 
                 <TextView
+                    android:id="@+id/notification_title"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
-                    android:text="@string/personal_center_notification_settings"
+                    android:text="@string/personal_center_notification"
                     android:textColor="@color/textPrimaryDark"
                     android:textSize="15sp" />
 
-                <ImageView
-                    android:layout_width="@dimen/icon_normal_icon"
-                    android:layout_height="@dimen/icon_normal_icon"
+                <TextView
+                    android:id="@+id/notification_sub_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_toEndOf="@+id/notification_title"
+                    android:layout_toRightOf="@+id/notification_title"
+                    android:text="@string/personal_center_notification_sub"
+                    android:textColor="@color/textPrimary"
+                    android:textSize="15sp" />
+
+                <com.donutcn.widgetlib.widget.SwitchView
+                    android:id="@+id/notification_switch"
+                    android:layout_width="@dimen/small_switch_width"
+                    android:layout_height="wrap_content"
                     android:layout_alignParentEnd="true"
                     android:layout_alignParentRight="true"
+                    android:layout_marginEnd="@dimen/margin_medium"
+                    android:layout_marginRight="@dimen/margin_medium"
                     android:src="@drawable/forward_arrow" />
             </RelativeLayout>
 
@@ -166,7 +206,7 @@
             <RelativeLayout
                 android:id="@+id/feedback"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="@dimen/personal_item_height"
                 android:background="?android:selectableItemBackground"
                 android:paddingBottom="@dimen/padding_medium"
                 android:paddingLeft="@dimen/padding_large"
@@ -199,7 +239,7 @@
             <RelativeLayout
                 android:id="@+id/about"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="@dimen/personal_item_height"
                 android:background="?android:selectableItemBackground"
                 android:paddingBottom="@dimen/padding_medium"
                 android:paddingLeft="@dimen/padding_large"
@@ -218,21 +258,21 @@
                     android:id="@+id/version_number"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"
-                    android:layout_toLeftOf="@+id/about_arrow"
-                    android:layout_toStartOf="@+id/about_arrow"
                     android:paddingRight="@dimen/padding_medium"
                     android:text="1.10.16 (2245)"
                     android:textColor="@color/textPrimary"
                     android:textSize="15sp" />
 
-                <ImageView
-                    android:id="@+id/about_arrow"
-                    android:layout_width="@dimen/icon_normal_icon"
-                    android:layout_height="@dimen/icon_normal_icon"
-                    android:layout_alignParentEnd="true"
-                    android:layout_alignParentRight="true"
-                    android:src="@drawable/forward_arrow" />
+                <!--<ImageView-->
+                <!--android:id="@+id/about_arrow"-->
+                <!--android:layout_width="@dimen/icon_normal_icon"-->
+                <!--android:layout_height="@dimen/icon_normal_icon"-->
+                <!--android:layout_alignParentEnd="true"-->
+                <!--android:layout_alignParentRight="true"-->
+                <!--android:src="@drawable/forward_arrow" />-->
             </RelativeLayout>
 
             <View

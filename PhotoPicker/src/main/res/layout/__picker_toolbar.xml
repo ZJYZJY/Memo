@@ -29,14 +29,15 @@
         android:id="@+id/toolbar_with_btn"
         style="@style/Widget.AppCompat.Button.Borderless"
         android:layout_width="wrap_content"
-        android:gravity="right|center_vertical"
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
         android:layout_centerVertical="true"
         android:layout_marginEnd="8dp"
         android:layout_marginRight="8dp"
+        android:gravity="center"
         android:onClick="onAction"
         android:text="@string/__picker_done"
-        android:textColor="@color/__picker_text_orange" />
+        android:textColor="@color/__picker_text_orange"
+        android:textSize="16sp" />
 </RelativeLayout>

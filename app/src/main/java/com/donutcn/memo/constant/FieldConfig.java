@@ -52,4 +52,7 @@ public class FieldConfig {
     public static final String REPLY_COMMENT = "comment";
     public static final String REPLY_VOTE = "vote";
     public static final String REPLY_ANSWER = "answer";
+
+    public static final String TIP_OFF_DETAIL = "content";
+    public static final String TIP_OFF_TYPE = "pid";
 }

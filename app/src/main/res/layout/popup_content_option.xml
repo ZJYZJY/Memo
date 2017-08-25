@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/text_box_bg"
+    android:padding="@dimen/padding_text"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/content_share"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="?android:selectableItemBackground"
+        android:padding="@dimen/padding_large"
+        android:text="@string/popup_content_share"
+        android:textColor="@color/textPrimaryDark"
+        android:textSize="15sp" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/px_line"
+        android:background="@color/border_gray" />
+
+    <TextView
+        android:id="@+id/content_link"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="?android:selectableItemBackground"
+        android:padding="@dimen/padding_large"
+        android:text="@string/popup_content_link"
+        android:textColor="@color/textPrimaryDark"
+        android:textSize="15sp" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/px_line"
+        android:background="@color/border_gray" />
+
+    <TextView
+        android:id="@+id/content_tip_off"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="?android:selectableItemBackground"
+        android:padding="@dimen/padding_large"
+        android:text="@string/popup_content_tip_off"
+        android:textColor="@color/textPrimaryDark"
+        android:textSize="15sp" />
+</LinearLayout>

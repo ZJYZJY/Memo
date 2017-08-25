@@ -12,56 +12,88 @@
         android:layout_height="@dimen/px_line"
         android:background="@color/border_gray" />
 
-    <View
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="@dimen/blank_item_divider" />
+        android:layout_height="match_parent">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:padding="@dimen/padding_container"
-        android:text="举报原因"
-        android:textSize="18sp" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:padding="@dimen/padding_container">
 
-    <RadioGroup
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/blank_item_divider" />
 
-        <!--<com.donutcn.widgetlib.widget.CheckBox-->
-            <!--android:layout_width="wrap_content"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--app:text="@string/completing_name_cb"-->
-            <!--app:textColor="@color/textPrimaryDark"/>-->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="@dimen/padding_container"
+                android:text="举报原因"
+                android:textSize="18sp" />
 
-        <RadioButton
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="@dimen/margin_small"
-            android:text="色情低俗"/>
+            <RadioGroup
+                android:id="@+id/tip_off_type"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
 
-        <RadioButton
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="@dimen/margin_small"
-            android:text="政治敏感"/>
+                <RadioButton
+                    android:id="@+id/tip_off_1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/margin_micro"
+                    android:text="色情低俗" />
 
-        <RadioButton
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="@dimen/margin_small"
-            android:text="违法犯罪"/>
+                <RadioButton
+                    android:id="@+id/tip_off_2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/margin_micro"
+                    android:text="政治敏感" />
 
-        <RadioButton
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="@dimen/margin_small"
-            android:text="侵权盗用"/>
+                <RadioButton
+                    android:id="@+id/tip_off_3"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/margin_micro"
+                    android:text="违法犯罪" />
 
-        <RadioButton
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="@dimen/margin_small"
-            android:text="其他"/>
-    </RadioGroup>
+                <RadioButton
+                    android:id="@+id/tip_off_4"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/margin_micro"
+                    android:text="侵权盗用" />
 
+                <RadioButton
+                    android:id="@+id/tip_off_5"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/margin_micro"
+                    android:text="其他" />
+            </RadioGroup>
+
+            <EditText
+                android:id="@+id/tip_off_detail"
+                android:layout_width="match_parent"
+                android:layout_height="96dp"
+                android:layout_marginTop="@dimen/margin_medium"
+                android:background="@drawable/edit_text_box_bg"
+                android:gravity="start"
+                android:hint="说明具体情况"
+                android:padding="@dimen/padding_small"
+                android:textSize="16sp" />
+
+            <Button
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:onClick="onSubmit"
+                android:layout_marginTop="@dimen/margin_medium"
+                android:background="@drawable/selector_radius_blue_btn"
+                android:text="@string/btn_dialog_submit"
+                android:textColor="@color/white"
+                android:textSize="16sp" />
+        </LinearLayout>
+    </ScrollView>
 </LinearLayout>

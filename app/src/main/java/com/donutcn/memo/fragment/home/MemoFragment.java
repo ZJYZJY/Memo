@@ -137,13 +137,13 @@ public class MemoFragment extends BaseMemoFragment implements FetchContent<Brief
                 case 2:
                     new AlertDialog.Builder(mContext)
                             .setMessage(getString(R.string.dialog_del_publish_content))
-                            .setPositiveButton(getString(R.string.dialog_publish_pos), new DialogInterface.OnClickListener() {
+                            .setPositiveButton(getString(R.string.dialog_pos), new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
                                     mMemoPresenter.deleteContent(mList, adapterPosition);
                                 }
                             })
-                            .setNegativeButton(getString(R.string.dialog_publish_neg), null)
+                            .setNegativeButton(getString(R.string.dialog_neg), null)
                             .setCancelable(true)
                             .show();
                     break;

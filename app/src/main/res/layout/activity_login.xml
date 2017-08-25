@@ -26,19 +26,20 @@
 
             <ImageView
                 android:id="@+id/logo"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="@dimen/icon_login"
+                android:layout_height="@dimen/icon_login"
                 android:layout_gravity="center_horizontal"
-                android:background="@drawable/ic_logo" />
+                android:layout_margin="@dimen/margin_medium"
+                android:background="@mipmap/ic_launcher" />
 
-            <TextView
-                android:id="@+id/slogan"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:padding="@dimen/padding_large"
-                android:text="@string/app_slogan"
-                android:textColor="@color/textPrimary" />
+            <!--<TextView-->
+                <!--android:id="@+id/slogan"-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_gravity="center_horizontal"-->
+                <!--android:padding="@dimen/padding_large"-->
+                <!--android:text="@string/app_slogan"-->
+                <!--android:textColor="@color/textPrimary" />-->
 
             <RadioGroup
                 android:id="@+id/login_or_register"
