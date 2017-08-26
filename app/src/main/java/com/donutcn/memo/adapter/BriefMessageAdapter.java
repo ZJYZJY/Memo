@@ -11,10 +11,13 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.RequestManager;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.donutcn.memo.R;
 import com.donutcn.memo.entity.BriefMessage;
-import com.donutcn.memo.listener.OnItemClickListener;
+import com.donutcn.memo.interfaces.OnItemClickListener;
 import com.donutcn.memo.type.PublishType;
+import com.hyphenate.chat.EMClient;
+import com.hyphenate.chat.EMConversation;
 import com.yanzhenjie.recyclerview.swipe.SwipeMenuAdapter;
 
 import java.util.List;
@@ -71,7 +74,11 @@ public class BriefMessageAdapter extends SwipeMenuAdapter<BriefMessageAdapter.Vi
         PublishType type = PublishType.getType(list.get(position).getType());
         if(type == null){
             // private letter
-            glide.load(list.get(position).getType()).centerCrop().into(holder.mImage);
+            glide.load(list.get(position).getType())
+                    .diskCacheStrategy(DiskCacheStrategy.ALL)
+                    .placeholder(R.mipmap.user_default_icon)
+                    .centerCrop()
+                    .into(holder.mImage);
         } else {
             int count = list.get(position).getNewMsgCount();
             if(count > 0){
@@ -113,7 +120,7 @@ public class BriefMessageAdapter extends SwipeMenuAdapter<BriefMessageAdapter.Vi
         }
     }
 
-    class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+    class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, View.OnLongClickListener {
         ImageView mImage;
         TextView mTitle;
         TextView mSubTitle;
@@ -124,6 +131,7 @@ public class BriefMessageAdapter extends SwipeMenuAdapter<BriefMessageAdapter.Vi
         public ViewHolder(View itemView) {
             super(itemView);
             itemView.setOnClickListener(this);
+            itemView.setOnLongClickListener(this);
             mImage = (ImageView) itemView.findViewById(R.id.message_item_icon);
             mTitle = (TextView) itemView.findViewById(R.id.message_item_title);
             mSubTitle = (TextView) itemView.findViewById(R.id.message_item_subtitle);
@@ -137,7 +145,20 @@ public class BriefMessageAdapter extends SwipeMenuAdapter<BriefMessageAdapter.Vi
                 mOnItemClickListener.onItemClick(getAdapterPosition());
                 // hide the red dot when click the message item.
                 mBadge.hide(false);
+                EMConversation conversation = EMClient.getInstance().chatManager()
+                        .getConversation(list.get(getAdapterPosition()).getId());
+                //指定会话消息未读数清零
+                if(conversation != null)
+                    conversation.markAllMessagesAsRead();
             }
+        }
+
+        @Override
+        public boolean onLongClick(View v) {
+            int index = getAdapterPosition();
+            list.remove(index);
+            notifyItemRemoved(index);
+            return false;
         }
     }
 

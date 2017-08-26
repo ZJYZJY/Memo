@@ -13,7 +13,7 @@ import com.donutcn.memo.adapter.MessageDetailAdapter;
 import com.donutcn.memo.entity.MessageItem;
 import com.donutcn.memo.fragment.api.DeleteContent;
 import com.donutcn.memo.fragment.api.FetchContent;
-import com.donutcn.memo.listener.OnItemClickListener;
+import com.donutcn.memo.interfaces.OnItemClickListener;
 import com.donutcn.memo.presenter.MessagePresenter;
 import com.donutcn.memo.utils.ToastUtil;
 import com.donutcn.memo.utils.WindowUtils;

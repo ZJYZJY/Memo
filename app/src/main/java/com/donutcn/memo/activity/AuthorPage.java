@@ -20,7 +20,7 @@ import com.donutcn.memo.entity.BriefContent;
 import com.donutcn.memo.entity.SimpleResponse;
 import com.donutcn.memo.event.ChangeContentEvent;
 import com.donutcn.memo.helper.LoginHelper;
-import com.donutcn.memo.listener.OnItemClickListener;
+import com.donutcn.memo.interfaces.OnItemClickListener;
 import com.donutcn.memo.type.ItemLayoutType;
 import com.donutcn.memo.utils.CollectionUtil;
 import com.donutcn.memo.utils.HttpUtils;
@@ -51,7 +51,7 @@ public class AuthorPage extends AppCompatActivity implements OnItemClickListener
     private RequestManager glide;
     private List<BriefContent> mList;
     private LinkedTreeMap mUserInfo;
-    private String mUserId;
+    private String mUserId, mUserName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -164,6 +164,11 @@ public class AuthorPage extends AppCompatActivity implements OnItemClickListener
                 if(LoginHelper.ifRequestLogin(this, "请先登录")){
                     return;
                 }
+                Intent intent = new Intent(AuthorPage.this, ChatActivity.class);
+                intent.putExtra("username", mUserName);
+                intent.putExtra("name", (String) mUserInfo.get(FieldConfig.USER_NICKNAME));
+                intent.putExtra("avatar", (String) mUserInfo.get(FieldConfig.USER_ICON_URL));
+                startActivity(intent);
                 break;
         }
     }
@@ -184,6 +189,7 @@ public class AuthorPage extends AppCompatActivity implements OnItemClickListener
         String signature = (String) mUserInfo.get(FieldConfig.USER_SIGNATURE);
         mAuthorSign.setText(signature == null ? getString(R.string.author_page_not_signature) : signature);
         glide.load((String) mUserInfo.get(FieldConfig.USER_ICON_URL)).centerCrop().into(mUserIcon);
+        mUserName = (String) mUserInfo.get(FieldConfig.USER_NAME);
 
         try {
             mList = CollectionUtil.covertLinkedTreeMap(data, BriefContent.class);

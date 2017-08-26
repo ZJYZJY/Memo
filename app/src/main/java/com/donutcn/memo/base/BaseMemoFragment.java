@@ -20,7 +20,7 @@ import com.donutcn.memo.activity.ArticlePage;
 import com.donutcn.memo.adapter.MemoAdapter;
 import com.donutcn.memo.entity.BriefContent;
 import com.donutcn.memo.helper.ShareHelper;
-import com.donutcn.memo.listener.OnItemClickListener;
+import com.donutcn.memo.interfaces.OnItemClickListener;
 import com.donutcn.memo.view.ListViewDecoration;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;

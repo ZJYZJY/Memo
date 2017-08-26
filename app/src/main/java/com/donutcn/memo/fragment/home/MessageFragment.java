@@ -4,22 +4,24 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v7.util.DiffUtil;
 import android.support.v7.widget.LinearLayoutManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.donutcn.memo.R;
+import com.donutcn.memo.activity.AuthorPage;
+import com.donutcn.memo.activity.ChatActivity;
 import com.donutcn.memo.activity.MessageDetail;
 import com.donutcn.memo.adapter.BriefMessageAdapter;
 import com.donutcn.memo.base.BaseScrollFragment;
+import com.donutcn.memo.constant.FieldConfig;
 import com.donutcn.memo.entity.BriefMessage;
 import com.donutcn.memo.event.ChangeRedDotEvent;
 import com.donutcn.memo.event.RequestRefreshEvent;
-import com.donutcn.memo.listener.OnItemClickListener;
+import com.donutcn.memo.interfaces.OnItemClickListener;
+import com.donutcn.memo.type.PublishType;
 import com.donutcn.memo.utils.FileCacheUtil;
-import com.donutcn.memo.utils.MessageDiffUtil;
 import com.donutcn.memo.view.ListViewDecoration;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -113,12 +115,21 @@ public class MessageFragment extends BaseScrollFragment {
         public void onItemClick(int position) {
             EventBus.getDefault().postSticky(new ChangeRedDotEvent(1, -1));
             clearRedDot(mList.get(position).getId());
-            Intent intent = new Intent(mContext, MessageDetail.class);
-            intent.putExtra("messageId", mList.get(position).getId());
-            intent.putExtra("type", mList.get(position).getType());
-            intent.putExtra("title", mList.get(position).getTitle());
-            intent.putExtra("date", mList.get(position).getDate());
-            startActivity(intent);
+            int length = mList.get(position).getType().length();
+            if(length > 5 || length == 0){
+                Intent intent = new Intent(mContext, ChatActivity.class);
+                intent.putExtra("username", mList.get(position).getId());
+                intent.putExtra("name", mList.get(position).getTitle());
+                intent.putExtra("avatar", mList.get(position).getType());
+                startActivity(intent);
+            } else {
+                Intent intent = new Intent(mContext, MessageDetail.class);
+                intent.putExtra("messageId", mList.get(position).getId());
+                intent.putExtra("type", mList.get(position).getType());
+                intent.putExtra("title", mList.get(position).getTitle());
+                intent.putExtra("date", mList.get(position).getDate());
+                startActivity(intent);
+            }
         }
     };
 
@@ -171,9 +182,12 @@ public class MessageFragment extends BaseScrollFragment {
             mList.add(0, event);
         } else {
             int msgCount = msg.getNewMsgCount();
-            event.setNewMsgCount(event.getNewMsgCount() + msgCount);
+            msg.setNewMsgCount(event.getNewMsgCount() + msgCount);
             mList.remove(msg);
-            mList.add(0, event);
+            msg.setType(event.getType());
+            msg.setSubTitle(event.getSubTitle());
+            msg.setTime(event.getTime());
+            mList.add(0, msg);
         }
 //        DiffUtil.calculateDiff(new MessageDiffUtil(old, mList), true).dispatchUpdatesTo(mAdapter);
         mAdapter.notifyDataSetChanged();

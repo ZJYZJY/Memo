@@ -17,7 +17,7 @@ import android.widget.TextView;
 
 import com.donutcn.memo.R;
 import com.donutcn.memo.event.FinishEditVoteItemsEvent;
-import com.donutcn.memo.listener.OnTextChangerListener;
+import com.donutcn.memo.interfaces.OnTextChangerListener;
 import com.donutcn.memo.utils.ToastUtil;
 
 import org.greenrobot.eventbus.EventBus;

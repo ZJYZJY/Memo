@@ -43,7 +43,7 @@ import com.donutcn.memo.entity.ContentResponse;
 import com.donutcn.memo.entity.SimpleResponse;
 import com.donutcn.memo.event.FinishCompressEvent;
 import com.donutcn.memo.helper.LoginHelper;
-import com.donutcn.memo.listener.UploadCallback;
+import com.donutcn.memo.interfaces.UploadCallback;
 import com.donutcn.memo.type.PublishType;
 import com.donutcn.memo.utils.HttpUtils;
 import com.donutcn.memo.utils.LogUtil;

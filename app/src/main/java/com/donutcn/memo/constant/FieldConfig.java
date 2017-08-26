@@ -10,6 +10,7 @@ public class FieldConfig {
     public static final String REQUEST_HEADER = "requestType:android-app";
 
     public static final String USER_ID = "user_id";
+    public static final String USER_IM_TOKEN = "token";
     public static final String USER_ICON_URL = "head_portrait";
     public static final String USER_GENDER = "sex";
     public static final String USER_NAME = "username";
@@ -41,7 +42,8 @@ public class FieldConfig {
     public static final String MESSAGE_DATE = "date";
     public static final String MESSAGE_COUNT = "msg_count";
 
-    public static final String REPLY_ID = "reply_id";
+    public static final String REPLY_ID = "message_id";
+    public static final String COMMENT_ID = "comment_id";
     public static final String REPLY_TIME = "time";
     public static final String REPLY_REAL_NAME = "real_name";
     public static final String REPLY_PHONE = "phone";

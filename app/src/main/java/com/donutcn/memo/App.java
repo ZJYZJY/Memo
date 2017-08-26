@@ -1,12 +1,12 @@
 package com.donutcn.memo;
 
-import android.app.Application;
 import android.content.Context;
+import android.support.multidex.MultiDexApplication;
 import android.text.TextUtils;
 
-import com.donutcn.memo.DaoMaster;
-import com.donutcn.memo.DaoSession;
 import com.donutcn.memo.utils.HttpUtils;
+import com.hyphenate.chat.EMClient;
+import com.hyphenate.chat.EMOptions;
 import com.iflytek.cloud.SpeechConstant;
 import com.iflytek.cloud.SpeechUtility;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
@@ -39,7 +39,7 @@ import java.io.IOException;
  * Created by 73958 on 2017/7/9.
  */
 
-public class App extends Application {
+public class App extends MultiDexApplication {
 
     private DaoSession daoSession;
 
@@ -60,8 +60,10 @@ public class App extends Application {
         HttpUtils.create(getApplicationContext());
         //开启信鸽的日志输出
         XGPushConfig.enableDebug(this, true);
-//        XGPushConfig.setAccessId(getApplicationContext(), 2100265112);
-//        XGPushConfig.setAccessKey(getApplicationContext(), "A95K4WQ6E2QU");
+        //初始化环信
+        EMOptions options = new EMOptions();
+        EMClient.getInstance().init(this, options);
+        EMClient.getInstance().setDebugMode(true);
 
         RichText.initCacheDir(this);
         SpeechUtility.createUtility(this, SpeechConstant.APPID + "=5996d5cb");

@@ -13,7 +13,7 @@ import com.donutcn.memo.R;
 import com.donutcn.memo.adapter.SearchListAdapter;
 import com.donutcn.memo.entity.ArrayResponse;
 import com.donutcn.memo.entity.BriefContent;
-import com.donutcn.memo.listener.OnItemClickListener;
+import com.donutcn.memo.interfaces.OnItemClickListener;
 import com.donutcn.memo.utils.HttpUtils;
 import com.donutcn.memo.utils.ToastUtil;
 import com.donutcn.memo.utils.WindowUtils;

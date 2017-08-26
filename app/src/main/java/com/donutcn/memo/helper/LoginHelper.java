@@ -10,6 +10,9 @@ import com.donutcn.memo.utils.LogUtil;
 import com.donutcn.memo.utils.SpfsUtils;
 import com.donutcn.memo.utils.ToastUtil;
 import com.donutcn.memo.utils.UserStatus;
+import com.hyphenate.EMCallBack;
+import com.hyphenate.chat.EMClient;
+import com.tencent.android.tpush.XGPushManager;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -25,19 +28,54 @@ import static com.donutcn.memo.utils.UserStatus.getCurrentUser;
 
 public class LoginHelper {
 
-    public static void login(Context context, int loginType, Map<String, String> data) {
+    public static void login(final Context context, int loginType, final Map<String, String> data) {
         SpfsUtils.write(context, SpfsUtils.USER, "loginFlag", true);
         SpfsUtils.write(context, SpfsUtils.USER, "login_type", loginType);
-        if(data != null){
+//        EMClient.getInstance().loginWithToken(data.get(FieldConfig.USER_NAME),
+//                data.get(FieldConfig.USER_IM_TOKEN), new EMCallBack() {
+//            @Override
+//            public void onSuccess() {
+//
+//            }
+//
+//            @Override
+//            public void onError(int code, String error) {
+//                ToastUtil.show(context, error + "(" + code + ")");
+//            }
+//
+//            @Override
+//            public void onProgress(int progress, String status) {
+//            }
+//        });
+        EMClient.getInstance().login(data.get(FieldConfig.USER_NAME),
+                "12345678", new EMCallBack() {
+                    @Override
+                    public void onSuccess() {
+
+                    }
+
+                    @Override
+                    public void onError(int code, String error) {
+//                        ToastUtil.show(context, error + "(" + code + ")");
+                        LogUtil.e(error + "(" + code + ")");
+                    }
+
+                    @Override
+                    public void onProgress(int progress, String status) {
+                    }
+                });
+//        if(data != null){
             LogUtil.d("login_info", data.toString());
             writeUserPreference(context, data);
             UserStatus.setCurrentUser(data);
-        }
+//        }
         // post login event
         EventBus.getDefault().postSticky(new LoginStateEvent(LoginStateEvent.LOGIN, getCurrentUser()));
     }
 
     public static void logout(Context context) {
+        XGPushManager.registerPush(context, "*");
+        EMClient.getInstance().logout(false);
         UserStatus.clear(context);
         // post logout event
         EventBus.getDefault().postSticky(new LoginStateEvent(LoginStateEvent.LOGOUT, null));
@@ -91,6 +129,7 @@ public class LoginHelper {
         SpfsUtils.write(context, SpfsUtils.USER, "username", data.get(FieldConfig.USER_NAME));
         SpfsUtils.write(context, SpfsUtils.USER, "signature", data.get(FieldConfig.USER_SIGNATURE));
         SpfsUtils.write(context, SpfsUtils.USER, "follow", data.get(FieldConfig.USER_FOLLOW));
+        SpfsUtils.write(context, SpfsUtils.USER, "token", data.get(FieldConfig.USER_IM_TOKEN));
     }
 
     private static Map<String, String> readUserPreference(Context context){
@@ -113,6 +152,8 @@ public class LoginHelper {
                 context.getApplicationContext(), SpfsUtils.USER, "signature", ""));
         data.put(FieldConfig.USER_FOLLOW, SpfsUtils.readString(
                 context.getApplicationContext(), SpfsUtils.USER, "follow", ""));
+        data.put(FieldConfig.USER_IM_TOKEN, SpfsUtils.readString(
+                context.getApplicationContext(), SpfsUtils.USER, "token", ""));
         return data;
     }
 }

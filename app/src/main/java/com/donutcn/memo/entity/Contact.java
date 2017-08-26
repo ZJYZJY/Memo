@@ -1,12 +1,14 @@
 package com.donutcn.memo.entity;
 
 import com.donutcn.memo.constant.FieldConfig;
+import com.donutcn.memo.interfaces.Jsonify;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 import org.greenrobot.greendao.annotation.Entity;
 import org.greenrobot.greendao.annotation.Generated;
 import org.greenrobot.greendao.annotation.Id;
+import org.json.JSONObject;
 
 /**
  * com.donutcn.memo.entity
@@ -14,7 +16,7 @@ import org.greenrobot.greendao.annotation.Id;
  */
 
 @Entity
-public class Contact {
+public class Contact extends Jsonify {
 
     @Id
     @Expose
@@ -107,5 +109,10 @@ public class Contact {
 
     public void setLookUpKey(String lookUpKey) {
         this.lookUpKey = lookUpKey;
+    }
+
+    @Override
+    public JSONObject toJson() {
+        return null;
     }
 }

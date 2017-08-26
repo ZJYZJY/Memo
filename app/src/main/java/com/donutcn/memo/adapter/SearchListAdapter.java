@@ -10,7 +10,7 @@ import android.widget.TextView;
 
 import com.donutcn.memo.R;
 import com.donutcn.memo.entity.BriefContent;
-import com.donutcn.memo.listener.OnItemClickListener;
+import com.donutcn.memo.interfaces.OnItemClickListener;
 import com.yanzhenjie.recyclerview.swipe.SwipeMenuAdapter;
 import com.zzhoujay.richtext.RichText;
 

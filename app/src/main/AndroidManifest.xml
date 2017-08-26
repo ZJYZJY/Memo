@@ -39,6 +39,31 @@
         <meta-data
             android:name="BUGLY_APP_CHANNEL"
             android:value="Wandoujia" />
+        <!-- 设置环信应用的AppKey -->
+        <meta-data
+            android:name="EASEMOB_APPKEY"
+            android:value="1132170825178321#rrnote" />
+        <!-- 声明SDK所需的service SDK核心功能 -->
+        <service
+            android:name="com.hyphenate.chat.EMChatService"
+            android:exported="true" />
+        <service
+            android:name="com.hyphenate.chat.EMJobService"
+            android:exported="true"
+            android:permission="android.permission.BIND_JOB_SERVICE" />
+        <!-- 声明SDK所需的receiver -->
+        <receiver android:name="com.hyphenate.chat.EMMonitorReceiver">
+            <intent-filter>
+                <action android:name="android.intent.action.PACKAGE_REMOVED" />
+
+                <data android:scheme="package" />
+            </intent-filter>
+            <!-- 可选filter -->
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+                <action android:name="android.intent.action.USER_PRESENT" />
+            </intent-filter>
+        </receiver>
 
         <activity
             android:name=".activity.MainActivity"
@@ -109,7 +134,7 @@
         <activity android:name=".activity.SearchActivity" />
         <activity android:name=".activity.CompletingPage" />
         <activity android:name=".activity.PersonalCenterActivity" />
-        <activity android:name=".activity.TipOffActivity" >
+        <activity android:name=".activity.TipOffActivity">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
 
@@ -193,6 +218,7 @@
         <activity android:name=".activity.ResetPasswordPage" />
         <activity android:name=".activity.MessageDetail" />
         <activity android:name=".activity.EditInfoPage" />
+        <activity android:name=".activity.ChatActivity" />
 
         <receiver
             android:name=".receiver.MemoPushReceiver"

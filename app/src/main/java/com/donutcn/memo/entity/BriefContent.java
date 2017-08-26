@@ -1,6 +1,7 @@
 package com.donutcn.memo.entity;
 
 import com.donutcn.memo.constant.FieldConfig;
+import com.donutcn.memo.interfaces.Jsonify;
 import com.donutcn.memo.utils.StringUtil;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
@@ -13,7 +14,7 @@ import org.json.JSONObject;
  * Created by 73958 on 2017/8/1.
  */
 
-public class BriefContent {
+public class BriefContent extends Jsonify{
 
     @Expose
     @SerializedName(FieldConfig.CONTENT_ID)
@@ -177,6 +178,7 @@ public class BriefContent {
         return obj instanceof BriefContent && ((BriefContent) obj).getId().equals(this.id);
     }
 
+    @Override
     public JSONObject toJson() {
         JSONObject json = new JSONObject();
         try {

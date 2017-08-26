@@ -1,4 +1,4 @@
-package com.donutcn.memo.listener;
+package com.donutcn.memo.interfaces;
 
 /**
  * com.donutcn.memo.listener

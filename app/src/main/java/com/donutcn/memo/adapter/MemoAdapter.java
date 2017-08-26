@@ -12,7 +12,7 @@ import com.bumptech.glide.RequestManager;
 import com.donutcn.memo.R;
 import com.donutcn.memo.base.BasePublishAdapter;
 import com.donutcn.memo.entity.BriefContent;
-import com.donutcn.memo.listener.OnItemClickListener;
+import com.donutcn.memo.interfaces.OnItemClickListener;
 import com.donutcn.memo.type.ItemLayoutType;
 import com.donutcn.memo.type.PublishType;
 import com.donutcn.memo.utils.DynamicTimeFormat;

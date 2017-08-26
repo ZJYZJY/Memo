@@ -82,7 +82,7 @@ public class PersonalCenterActivity extends AppCompatActivity implements View.On
                         .setPositiveButton(getString(R.string.dialog_pos), new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-                                LoginHelper.logout(getApplicationContext());
+                                LoginHelper.logout(PersonalCenterActivity.this);
                             }
                         })
                         .setNegativeButton(getString(R.string.dialog_neg), null)

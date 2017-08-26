@@ -17,7 +17,7 @@ import com.donutcn.memo.R;
 import com.donutcn.memo.constant.FieldConfig;
 import com.donutcn.memo.entity.SimpleResponse;
 import com.donutcn.memo.event.LoginStateEvent;
-import com.donutcn.memo.listener.UploadCallback;
+import com.donutcn.memo.interfaces.UploadCallback;
 import com.donutcn.memo.utils.HttpUtils;
 import com.donutcn.memo.utils.LogUtil;
 import com.donutcn.memo.utils.ToastUtil;

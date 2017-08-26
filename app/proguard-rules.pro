@@ -163,3 +163,7 @@ public static final int *;
     java.lang.Object writeReplace();
     java.lang.Object readResolve();
 }
+
+# hyphenate
+-keep class com.hyphenate.** {*;}
+-dontwarn  com.hyphenate.**

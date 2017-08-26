@@ -1,6 +1,7 @@
 package com.donutcn.memo.entity;
 
 import com.donutcn.memo.constant.FieldConfig;
+import com.donutcn.memo.interfaces.Jsonify;
 import com.donutcn.memo.utils.StringUtil;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
@@ -13,11 +14,15 @@ import org.json.JSONObject;
  * Created by 73958 on 2017/8/13.
  */
 
-public class MessageItem {
+public class MessageItem extends Jsonify {
 
     @Expose
     @SerializedName(FieldConfig.REPLY_ID)
-    private String id;
+    private String messageId;
+
+    @Expose
+    @SerializedName(FieldConfig.COMMENT_ID)
+    private String commentId;
 
     @Expose
     @SerializedName(FieldConfig.USER_ICON_URL)
@@ -69,8 +74,16 @@ public class MessageItem {
 
     private long timeStamp;
 
-    public String getId() {
-        return id;
+    public boolean isMessage(){
+        return !(messageId == null || "".equals(messageId));
+    }
+
+    public String getMessageId() {
+        return messageId;
+    }
+
+    public String getCommentId() {
+        return commentId;
     }
 
     public String getIconUrl() {
@@ -127,10 +140,12 @@ public class MessageItem {
         return timeStamp;
     }
 
+    @Override
     public JSONObject toJson() {
         JSONObject json = new JSONObject();
         try {
-            json.put(FieldConfig.REPLY_ID, id);
+            json.put(FieldConfig.REPLY_ID, messageId);
+            json.put(FieldConfig.COMMENT_ID, commentId);
             json.put(FieldConfig.USER_ICON_URL, iconUrl);
             json.put(FieldConfig.USER_NICKNAME, name);
             json.put(FieldConfig.REPLY_TIME, time);

@@ -1,7 +1,6 @@
 package com.donutcn.memo.adapter;
 
 import android.content.Context;
-import android.support.annotation.IdRes;
 import android.support.v7.widget.RecyclerView;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -13,7 +12,7 @@ import android.widget.TextView;
 
 import com.donutcn.memo.R;
 import com.donutcn.memo.entity.MessageItem;
-import com.donutcn.memo.listener.OnItemClickListener;
+import com.donutcn.memo.interfaces.OnItemClickListener;
 import com.donutcn.memo.type.PublishType;
 import com.yanzhenjie.recyclerview.swipe.SwipeMenuAdapter;
 

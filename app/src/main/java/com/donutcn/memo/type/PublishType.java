@@ -11,12 +11,12 @@ public enum PublishType {
 
     ARTICLE("文章", "评论"),
     ALBUM("相册", "评论"),
-    ACTIVITY("活动", "报名"),
-    VOTE("投票", "投票"),
-    RECRUIT("招聘", "简历"),
-    QA("问答", "回答"),
-    RESERVE("预订", "预订"),
-    SALE("二手", "订单");
+    ACTIVITY("活动", "消息"),
+    VOTE("投票", "消息"),
+    RECRUIT("招聘", "消息"),
+    QA("问答", "消息"),
+    RESERVE("预订", "消息"),
+    SALE("二手", "消息");
 
     private String mType;
     private String mReply;

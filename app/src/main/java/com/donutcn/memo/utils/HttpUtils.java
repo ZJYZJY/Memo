@@ -10,7 +10,7 @@ import com.donutcn.memo.entity.ContentResponse;
 import com.donutcn.memo.entity.SimpleResponse;
 import com.donutcn.memo.helper.RouterHelper;
 import com.donutcn.memo.helper.RouterHelper.APIPath;
-import com.donutcn.memo.listener.UploadCallback;
+import com.donutcn.memo.interfaces.UploadCallback;
 import com.donutcn.memo.type.PublishType;
 import com.franmontiel.persistentcookiejar.ClearableCookieJar;
 import com.franmontiel.persistentcookiejar.PersistentCookieJar;
