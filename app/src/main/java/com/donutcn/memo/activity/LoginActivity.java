@@ -25,10 +25,10 @@ import com.donutcn.memo.helper.LoginHelper;
 import com.donutcn.memo.utils.CountDownTimerUtils;
 import com.donutcn.memo.utils.HttpUtils;
 import com.donutcn.memo.utils.LogUtil;
+import com.donutcn.memo.utils.StringUtil;
 import com.donutcn.memo.utils.ToastUtil;
 import com.donutcn.memo.utils.UserStatus;
 import com.donutcn.memo.utils.WindowUtils;
-import com.hyphenate.chat.EMClient;
 import com.umeng.socialize.UMAuthListener;
 import com.umeng.socialize.UMShareAPI;
 import com.umeng.socialize.bean.SHARE_MEDIA;
@@ -104,15 +104,14 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         @Override
         public void run() {
             if(loginState){
-                LoginHelper.autoLogin(LoginActivity.this);
-                HttpUtils.syncUserInfo().enqueue(new Callback<SimpleResponse>() {
+                HttpUtils.autoLogin().enqueue(new Callback<SimpleResponse>() {
                     @Override
                     public void onResponse(Call<SimpleResponse> call, Response<SimpleResponse> response) {
                         if (response.body() != null) {
                             LogUtil.d("sync", response.body().toString());
                             if(response.body().isOk()){
                                 LinkedHashMap data = response.body().getData();
-                                LoginHelper.syncUserInfo(LoginActivity.this, data);
+                                LoginHelper.autoLogin(LoginActivity.this, data);
                                 // if login with phone number.
                                 if(LoginHelper.loginType(LoginActivity.this) == UserStatus.PHONE_LOGIN){
                                     if("".equals(data.get(FieldConfig.USER_ICON_URL))
@@ -184,7 +183,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
     public void attemptToLogin() {
         final String username = mPhoneNum.getText().toString();
-        String password = mPassword.getText().toString();
+        final String password = mPassword.getText().toString();
         if(TextUtils.isEmpty(username)){
             ToastUtil.show(this, "手机号不能为空");
             return;
@@ -203,8 +202,10 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 if (response.body() != null && response.body().isOk()) {
                     if (response.body().isOk()) {
                         ToastUtil.show(LoginActivity.this, "登录成功");
+                        Map<String, String> data = response.body().getData();
+                        data.put("token", password);
                         LoginHelper.login(getApplicationContext(),
-                                UserStatus.PHONE_LOGIN, response.body().getData());
+                                UserStatus.PHONE_LOGIN, data);
                         Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                         startActivity(intent);
@@ -228,7 +229,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     public void attemptToRegister(){
         final String phoneNumber = mRegPhone.getText().toString();
         String authCode = mRegCode.getText().toString();
-        String password = mRegPassword.getText().toString();
+        final String password = mRegPassword.getText().toString();
         if (TextUtils.isEmpty(phoneNumber)) {
             ToastUtil.show(this, "手机号不能为空");
             return;
@@ -247,8 +248,10 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 if(response.body() != null){
                     if(response.body().isOk()){
                         ToastUtil.show(LoginActivity.this, "注册成功");
+                        Map<String, String> data = response.body().getData();
+                        data.put("token", password);
                         LoginHelper.login(getApplicationContext(),
-                                UserStatus.PHONE_LOGIN, response.body().getData());
+                                UserStatus.PHONE_LOGIN, data);
                         Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                         startActivity(intent);
@@ -358,10 +361,12 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 @Override
                 public void onResponse(Call<SimpleResponse> call, Response<SimpleResponse> response) {
                     mDialog.cancel();
-                    LogUtil.d("wechat_login", response.body().toString());
                     if(response.body() != null && response.body().isOk()){
+                        LogUtil.d("wechat_login", response.body().toString());
+                        Map<String, String> data = response.body().getData();
+                        data.put("token", StringUtil.getMD5(data.get("openid")));
                         LoginHelper.login(getApplicationContext(),
-                                UserStatus.WECHAT_LOGIN, response.body().getData());
+                                UserStatus.WECHAT_LOGIN, data);
                         ToastUtil.show(LoginActivity.this, "登录成功");
                         Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);

@@ -29,53 +29,52 @@ import static com.donutcn.memo.utils.UserStatus.getCurrentUser;
 public class LoginHelper {
 
     public static void login(final Context context, int loginType, final Map<String, String> data) {
+//        if(!UserStatus.isIMLogin(context)){
+            EMClient.getInstance().login(data.get(FieldConfig.USER_NAME),
+                    data.get(FieldConfig.USER_IM_TOKEN), new EMCallBack() {
+                        @Override
+                        public void onSuccess() {
+                            LogUtil.i("IM登录成功");
+                            SpfsUtils.write(context, SpfsUtils.USER, "loginFlag_IM", true);
+                            EMClient.getInstance().chatManager().loadAllConversations();
+                        }
+
+                        @Override
+                        public void onError(int code, String error) {
+                            LogUtil.e(error + "(" + code + ")");
+                        }
+
+                        @Override
+                        public void onProgress(int progress, String status) {
+                        }
+                    });
+//        }
+
         SpfsUtils.write(context, SpfsUtils.USER, "loginFlag", true);
         SpfsUtils.write(context, SpfsUtils.USER, "login_type", loginType);
-//        EMClient.getInstance().loginWithToken(data.get(FieldConfig.USER_NAME),
-//                data.get(FieldConfig.USER_IM_TOKEN), new EMCallBack() {
-//            @Override
-//            public void onSuccess() {
-//
-//            }
-//
-//            @Override
-//            public void onError(int code, String error) {
-//                ToastUtil.show(context, error + "(" + code + ")");
-//            }
-//
-//            @Override
-//            public void onProgress(int progress, String status) {
-//            }
-//        });
-        EMClient.getInstance().login(data.get(FieldConfig.USER_NAME),
-                "12345678", new EMCallBack() {
-                    @Override
-                    public void onSuccess() {
-
-                    }
-
-                    @Override
-                    public void onError(int code, String error) {
-//                        ToastUtil.show(context, error + "(" + code + ")");
-                        LogUtil.e(error + "(" + code + ")");
-                    }
-
-                    @Override
-                    public void onProgress(int progress, String status) {
-                    }
-                });
-//        if(data != null){
-            LogUtil.d("login_info", data.toString());
-            writeUserPreference(context, data);
-            UserStatus.setCurrentUser(data);
-//        }
+        LogUtil.d("login_info", data.toString());
+        writeUserPreference(context, data);
+        UserStatus.setCurrentUser(data);
         // post login event
-        EventBus.getDefault().postSticky(new LoginStateEvent(LoginStateEvent.LOGIN, getCurrentUser()));
+        LoginStateEvent loginStateEvent = new LoginStateEvent(LoginStateEvent.LOGIN, getCurrentUser());
+        EventBus.getDefault().postSticky(loginStateEvent);
     }
 
-    public static void logout(Context context) {
+    public static void logout(final Context context) {
         XGPushManager.registerPush(context, "*");
-        EMClient.getInstance().logout(false);
+        EMClient.getInstance().logout(false, new EMCallBack(){
+            @Override
+            public void onSuccess() {
+                LogUtil.i("IM注销成功");
+                SpfsUtils.write(context, SpfsUtils.USER, "loginFlag_IM", false);
+            }
+            @Override
+            public void onError(int code, String error) {
+                LogUtil.e(error + "(" + code + ")");
+            }
+            @Override
+            public void onProgress(int progress, String status) {}
+        });
         UserStatus.clear(context);
         // post logout event
         EventBus.getDefault().postSticky(new LoginStateEvent(LoginStateEvent.LOGOUT, null));
@@ -86,6 +85,7 @@ public class LoginHelper {
         context.startActivity(intent);
     }
 
+    @Deprecated
     public static void autoLogin(Context context) {
         int loginType = SpfsUtils.readInt(context.getApplicationContext(),
                 SpfsUtils.USER, "login_type", UserStatus.PHONE_LOGIN);
@@ -98,10 +98,11 @@ public class LoginHelper {
                 SpfsUtils.USER, "login_type", UserStatus.PHONE_LOGIN);
     }
 
-    public static void syncUserInfo(Context context, Map<String, String> data){
-        writeUserPreference(context, data);
-        UserStatus.setCurrentUser(data);
-        EventBus.getDefault().postSticky(new LoginStateEvent(LoginStateEvent.SYNC, getCurrentUser()));
+    public static void autoLogin(Context context, Map<String, String> data){
+        int loginType = SpfsUtils.readInt(context.getApplicationContext(),
+                SpfsUtils.USER, "login_type", UserStatus.PHONE_LOGIN);
+        login(context.getApplicationContext(), loginType, data);
+        EventBus.getDefault().postSticky(new LoginStateEvent(LoginStateEvent.LOGIN, getCurrentUser()));
     }
 
     public static boolean ifRequestLogin(Context context, String message) {

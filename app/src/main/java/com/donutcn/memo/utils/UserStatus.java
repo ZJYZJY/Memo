@@ -56,6 +56,10 @@ public class UserStatus {
         return SpfsUtils.readBoolean(context, SpfsUtils.USER, "loginFlag", false);
     }
 
+    public static boolean isIMLogin(Context context) {
+        return SpfsUtils.readBoolean(context, SpfsUtils.USER, "loginFlag_IM", false);
+    }
+
     public static void clear(Context context){
         USER = null;
         // clear cookies

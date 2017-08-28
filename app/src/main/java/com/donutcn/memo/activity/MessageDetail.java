@@ -15,6 +15,8 @@ import com.donutcn.memo.fragment.api.DeleteContent;
 import com.donutcn.memo.fragment.api.FetchContent;
 import com.donutcn.memo.interfaces.OnItemClickListener;
 import com.donutcn.memo.presenter.MessagePresenter;
+import com.donutcn.memo.type.PublishType;
+import com.donutcn.memo.utils.CollectionUtil;
 import com.donutcn.memo.utils.ToastUtil;
 import com.donutcn.memo.utils.WindowUtils;
 import com.donutcn.memo.view.ListViewDecoration;
@@ -36,9 +38,11 @@ public class MessageDetail extends AppCompatActivity implements OnItemClickListe
     private MessagePresenter mMsgPresenter;
     private SwipeMenuAdapter mAdapter;
     private List<MessageItem> mList;
+    private PublishType mType;
 
     public boolean isLoadMore = false;
     public boolean canLoadMore = true;
+    public final int PAGE_SIZE = 10;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,38 +50,40 @@ public class MessageDetail extends AppCompatActivity implements OnItemClickListe
         setContentView(R.layout.activity_message_detail);
         WindowUtils.setStatusBarColor(this, R.color.colorPrimary, true);
         String type = getIntent().getStringExtra("type");
-        WindowUtils.setToolBarTitle(this, "招聘");
+        WindowUtils.setToolBarTitle(this, type);
+        mType = PublishType.getType(type);
 
-        mMsgPresenter = new MessagePresenter(this);
-        String contetnId = getIntent().getStringExtra("messageId");
-        // Todo : http request, get the message list.
+        String contentId = getIntent().getStringExtra("messageId");
         String title = getIntent().getStringExtra("title");
         String date = getIntent().getStringExtra("date");
-        initView("360智能硬件招聘开始了", "2017-08-05");
+        int count = getIntent().getIntExtra("count", 0);
+        mMsgPresenter = new MessagePresenter(this, contentId);
 
         mList = new ArrayList<>();
-        mList.add(new MessageItem());
-        mList.add(new MessageItem());
-        mList.add(new MessageItem());
-        mList.add(new MessageItem());
-        mList.add(new MessageItem());
-        mAdapter = new MessageDetailAdapter(this, mList, type);
+        mAdapter = new MessageDetailAdapter(this, mList, type, count);
         ((MessageDetailAdapter)mAdapter).setOnItemClickListener(this);
-        mMsg_rv.setAdapter(mAdapter);
+        initView(contentId, title, date, count);
+
+        mRefreshLayout.autoRefresh(0);
     }
 
-    public void initView(String title, String date){
+    public void initView(final String contentId, String title, String date, int count){
         ((TextView) findViewById(R.id.detail_content_title)).setText(title);
         ((TextView) findViewById(R.id.detail_content_date)).setText(date);
         findViewById(R.id.detail_content_reference).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(MessageDetail.this, ArticlePage.class);
-                // Todo:pass the content id to ArticlePage.
-                intent.putExtra("contentId", "id");
+                intent.putExtra("contentId", contentId);
                 startActivity(intent);
             }
         });
+        TextView info = (TextView) findViewById(R.id.message_brief_info);
+        if(count != 0){
+            info.setText(getString(R.string.placeholder_new_reply, count, mType.getReply()));
+        } else {
+            info.setText(getString(R.string.placeholder_no_new_reply, mType.getReply()));
+        }
 
         mMsg_rv = (SwipeMenuRecyclerView) findViewById(R.id.recycler_view);
         mRefreshLayout = (SmartRefreshLayout) findViewById(R.id.swipe_layout);
@@ -91,7 +97,7 @@ public class MessageDetail extends AppCompatActivity implements OnItemClickListe
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                 super.onScrolled(recyclerView, dx, dy);
                 int lastVisibleItem = ((LinearLayoutManager)recyclerView.getLayoutManager()).findLastVisibleItemPosition();
-                if(lastVisibleItem + 5 >= mList.size() && mList.size() > 0){
+                if(lastVisibleItem + 5 >= mList.size() && mList.size() >= PAGE_SIZE){
                     if(!isLoadMore && canLoadMore){
                         isLoadMore = true;
                         mMsgPresenter.loadMore(mList);
@@ -99,6 +105,7 @@ public class MessageDetail extends AppCompatActivity implements OnItemClickListe
                 }
             }
         });
+        mMsg_rv.setAdapter(mAdapter);
     }
 
     private OnRefreshListener mRefreshListener = new OnRefreshListener() {
@@ -111,9 +118,12 @@ public class MessageDetail extends AppCompatActivity implements OnItemClickListe
     private OnLoadmoreListener mLoadmoreListener = new OnLoadmoreListener() {
         @Override
         public void onLoadmore(RefreshLayout refreshlayout) {
-            if(mList.size() > 0 && !isLoadMore && canLoadMore){
+            if(mList.size() >= PAGE_SIZE && !isLoadMore && canLoadMore){
                 isLoadMore = true;
                 mMsgPresenter.loadMore(mList);
+            } else if(!isLoadMore) {
+                mRefreshLayout.finishLoadmore();
+                mRefreshLayout.setLoadmoreFinished(true);
             }
         }
     };
@@ -129,6 +139,9 @@ public class MessageDetail extends AppCompatActivity implements OnItemClickListe
 
     @Override
     public void refreshSuccess(List<MessageItem> list) {
+        mList.addAll(0, list);
+        mList = CollectionUtil.removeDuplicateWithOrder(mList);
+        mAdapter.notifyDataSetChanged();
         mRefreshLayout.finishRefresh();
     }
 
@@ -146,7 +159,10 @@ public class MessageDetail extends AppCompatActivity implements OnItemClickListe
 
     @Override
     public void loadMoreSuccess(List<MessageItem> list) {
+        mList.addAll(mList.size(), list);
+        mAdapter.notifyDataSetChanged();
         mRefreshLayout.finishLoadmore();
+        isLoadMore = false;
     }
 
     @Override

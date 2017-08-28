@@ -2,6 +2,8 @@ package com.donutcn.memo.activity;
 
 import android.Manifest;
 import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Environment;
 import android.os.Handler;
 import android.support.annotation.NonNull;
@@ -29,6 +31,7 @@ import com.donutcn.memo.utils.ToastUtil;
 import com.donutcn.memo.utils.UserStatus;
 import com.donutcn.memo.utils.WindowUtils;
 import com.donutcn.memo.view.ChatView;
+import com.hyphenate.EMCallBack;
 import com.hyphenate.chat.EMClient;
 import com.hyphenate.chat.EMConversation;
 import com.hyphenate.chat.EMMessage;
@@ -36,6 +39,7 @@ import com.hyphenate.chat.EMTextMessageBody;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.io.File;
 import java.text.SimpleDateFormat;
@@ -83,9 +87,7 @@ public class ChatActivity extends AppCompatActivity implements ChatView.OnKeyboa
         mMyself = new ChatUser(UserStatus.getCurrentUser().getUsername(),
                 UserStatus.getCurrentUser().getName(),
                 UserStatus.getCurrentUser().getIconUrl());
-        mOther = new ChatUser(getIntent().getStringExtra("username"),
-                getIntent().getStringExtra("name"),
-                getIntent().getStringExtra("avatar"));
+        onNewIntent(getIntent());
 
         mChatView = (ChatView) findViewById(R.id.chat_view);
         mChatView.initModule();
@@ -112,6 +114,28 @@ public class ChatActivity extends AppCompatActivity implements ChatView.OnKeyboa
                 msg.setAttribute("avatar", mMyself.getAvatarFilePath());
                 msg.setAttribute("name", mMyself.getDisplayName());
                 EMClient.getInstance().chatManager().sendMessage(msg);
+                msg.setMessageStatusCallback(new EMCallBack() {
+                    @Override
+                    public void onSuccess() {
+
+                    }
+
+                    @Override
+                    public void onError(final int code, final String error) {
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                ToastUtil.show(ChatActivity.this, error + "(" + code + ")");
+                            }
+                        });
+                    }
+
+                    @Override
+                    public void onProgress(int progress, String status) {
+
+                    }
+                });
+
                 ChatMessage message = new ChatMessage(input.toString(), IMessage.MessageType.SEND_TEXT, mMyself);
                 mAdapter.addToStart(message, true);
                 BriefMessage briefMessage = new BriefMessage(msg.getUserName(),
@@ -497,8 +521,28 @@ public class ChatActivity extends AppCompatActivity implements ChatView.OnKeyboa
         return list;
     }
 
-    @Subscribe
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        String action = intent.getAction();
+        String username, name, avatar;
+        if(Intent.ACTION_VIEW.equals(action)){
+            Uri uri = intent.getData();
+            username = uri.getQueryParameter("username");
+            name = uri.getQueryParameter("name");
+            avatar = uri.getQueryParameter("avatar");
+        } else {
+            username = intent.getStringExtra("username");
+            name = intent.getStringExtra("name");
+            avatar = intent.getStringExtra("avatar");
+        }
+        mOther = new ChatUser(username, name, avatar);
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
     public void onReceiveChatMsg(ChatMessage message){
+        String avatar = message.getFromUser().getAvatarFilePath();
+        mOther.setAvatar(avatar);
         mAdapter.addToStart(message, true);
     }
 

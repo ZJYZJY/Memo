@@ -10,6 +10,9 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.RequestManager;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.donutcn.memo.R;
 import com.donutcn.memo.entity.MessageItem;
 import com.donutcn.memo.interfaces.OnItemClickListener;
@@ -30,15 +33,19 @@ public class MessageDetailAdapter extends SwipeMenuAdapter<MessageDetailAdapter.
 
     private List<MessageItem> list;
     private String type;
+    private int mUnreadCount;
     private Context mContext;
 
     private PublishType pType;
+    private RequestManager mGlide;
     private OnItemClickListener mOnItemClickListener;
 
-    public MessageDetailAdapter(Context context, List<MessageItem> list, String type) {
+    public MessageDetailAdapter(Context context, List<MessageItem> list, String type, int count) {
         this.mContext = context;
         this.list = list;
         this.type = type;
+        this.mUnreadCount = count;
+        mGlide = Glide.with(context);
         pType = PublishType.getType(type);
     }
 
@@ -55,21 +62,49 @@ public class MessageDetailAdapter extends SwipeMenuAdapter<MessageDetailAdapter.
     }
 
     @Override
+    public void onViewRecycled(ViewHolder holder) {
+        super.onViewRecycled(holder);
+        holder.view_comment.setVisibility(View.GONE);
+        holder.view_name.setVisibility(View.GONE);
+        holder.view_phone.setVisibility(View.GONE);
+        holder.view_vote.setVisibility(View.GONE);
+        holder.view_answer.setVisibility(View.GONE);
+        holder.view_weChat.setVisibility(View.GONE);
+        holder.view_email.setVisibility(View.GONE);
+        holder.view_resume.setVisibility(View.GONE);
+        holder.download.setVisibility(View.GONE);
+    }
+
+    @Override
     public void onBindViewHolder(MessageDetailAdapter.ViewHolder holder, int position) {
-        holder.badge
-                .setShowShadow(false)
-                .setBadgeGravity(Gravity.CENTER | Gravity.END)
-                .setGravityOffset(24, true)
-                .setBadgePadding(8, true)
-                .setBadgeText("新");
-        if(pType == null){
+        if(position < mUnreadCount){
+            holder.badge
+                    .setShowShadow(false)
+                    .setBadgeGravity(Gravity.CENTER | Gravity.END)
+                    .setGravityOffset(24, true)
+                    .setBadgePadding(8, true)
+                    .setBadgeText("新");
+        }
+        String iconUrl = list.get(position).getIconUrl();
+        if(iconUrl != null && !"".equals(iconUrl)){
+            mGlide.load(iconUrl).diskCacheStrategy(DiskCacheStrategy.ALL).centerCrop().into(holder.userIcon);
+        }
+        holder.name.setText(list.get(position).getName());
+        holder.time.setText(list.get(position).getTime().substring(0, 16) + " 提交");
+        if(list.get(position).getCommentId() != null){
             holder.view_comment.setVisibility(View.VISIBLE);
             holder.comment.setText(list.get(position).getComment());
         } else {
-            holder.view_name.setVisibility(View.VISIBLE);
-            holder.name.setText(list.get(position).getName());
-            holder.view_phone.setVisibility(View.VISIBLE);
-            holder.phone.setText(list.get(position).getPhone());
+            String realName = list.get(position).getRealName();
+            if(realName != null){
+                holder.view_name.setVisibility(View.VISIBLE);
+                holder.realName.setText(realName);
+            }
+            String phone = list.get(position).getPhone();
+            if(phone != null){
+                holder.view_phone.setVisibility(View.VISIBLE);
+                holder.phone.setText(phone);
+            }
             switch (pType){
                 case ARTICLE:
                 case ALBUM:
@@ -78,34 +113,35 @@ public class MessageDetailAdapter extends SwipeMenuAdapter<MessageDetailAdapter.
                     break;
                 case VOTE:
                     holder.view_vote.setVisibility(View.VISIBLE);
-                    holder.vote.setText(list.get(position).getVote());
+                    holder.vote.setText(list.get(position).getVote().replace("-", " "));
                     break;
                 case QA:
                     holder.view_answer.setVisibility(View.VISIBLE);
-                    holder.answer.setText(list.get(position).getVote());
+                    holder.answer.setText(list.get(position).getAnswer());
                     break;
                 case ACTIVITY:
                 case RESERVE:
-                    holder.view_weChat.setVisibility(View.VISIBLE);
                     String weChat = list.get(position).getWeChat();
-                    if(!"".equals(weChat)){
+                    if(weChat != null && !"".equals(weChat)){
+                        holder.view_weChat.setVisibility(View.VISIBLE);
                         holder.weChat.setText(weChat);
                     }
-                    holder.view_email.setVisibility(View.VISIBLE);
                     String email = list.get(position).getEmail();
-                    if(!"".equals(email)){
+                    if(email != null && !"".equals(email)){
+                        holder.view_email.setVisibility(View.VISIBLE);
                         holder.email.setText(email);
                     }
                     break;
                 case RECRUIT:
-                    holder.view_resume.setVisibility(View.VISIBLE);
-                    String resume = list.get(position).getWeChat();
-                    if(!"".equals(resume)){
-                        holder.weChat.setText(list.get(position).getName() + "的简历");
+                    String resume = list.get(position).getResume();
+                    if(resume != null && !"".equals(resume)){
+                        holder.download.setVisibility(View.VISIBLE);
+                        holder.view_resume.setVisibility(View.VISIBLE);
+                        holder.resume.setText(list.get(position).getName() + "的简历");
                     }
-                    holder.view_email.setVisibility(View.VISIBLE);
                     String email1 = list.get(position).getEmail();
-                    if(!"".equals(email1)){
+                    if (email1 != null && !"".equals(email1)){
+                        holder.view_email.setVisibility(View.VISIBLE);
                         holder.email.setText(email1);
                     }
                     break;
@@ -117,7 +153,7 @@ public class MessageDetailAdapter extends SwipeMenuAdapter<MessageDetailAdapter.
 
     @Override
     public int getItemCount() {
-        return list == null ? 1 : list.size() + 1;
+        return list == null ? 0 : list.size();
     }
 
     public void setOnItemClickListener(OnItemClickListener onItemClickListener) {

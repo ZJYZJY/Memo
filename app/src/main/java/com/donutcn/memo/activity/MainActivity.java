@@ -17,6 +17,7 @@ import android.widget.PopupWindow;
 import android.widget.ProgressBar;
 
 import com.bumptech.glide.Glide;
+import com.donutcn.memo.IMService;
 import com.donutcn.memo.R;
 import com.donutcn.memo.adapter.ViewPagerAdapter;
 import com.donutcn.memo.constant.FieldConfig;
@@ -39,10 +40,13 @@ import com.donutcn.memo.utils.ToastUtil;
 import com.donutcn.memo.utils.UserStatus;
 import com.donutcn.memo.utils.WindowUtils;
 import com.donutcn.widgetlib.widget.CheckableImageButton;
+import com.hyphenate.EMConnectionListener;
+import com.hyphenate.EMError;
 import com.hyphenate.EMMessageListener;
 import com.hyphenate.chat.EMClient;
 import com.hyphenate.chat.EMMessage;
 import com.hyphenate.chat.EMTextMessageBody;
+import com.hyphenate.util.NetUtils;
 import com.tencent.android.tpush.XGIOperateCallback;
 import com.tencent.android.tpush.XGPushManager;
 import com.umeng.socialize.UMShareAPI;
@@ -81,6 +85,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private List<File> mIconFile;
     private BriefMessage mMessage;
+    private Intent serviceIntent;
 
     private long mExitTime = 0;
     private int mDefaultItem;
@@ -98,8 +103,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         if (getIntent().getBooleanExtra("unlogin", false)) {
             mDefaultItem = 1;
         } else {
+            serviceIntent = new Intent(MainActivity.this, IMService.class);
             boolean completeInfo = getIntent().getBooleanExtra("completeInfo", false);
-            EMClient.getInstance().chatManager().addMessageListener(msgListener);
+            startService(serviceIntent);
             if (completeInfo) {
                 getWindow().getDecorView().postDelayed(showInfoPopup, 200);
             }
@@ -116,6 +122,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         mDiscover.setOnClickListener(this);
 
         initViewPager();
+
     }
 
     private void initViewPager() {
@@ -322,66 +329,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         });
     }
 
-    EMMessageListener msgListener = new EMMessageListener() {
-
-        @Override
-        public void onMessageReceived(List<EMMessage> messages) {
-            mMessage = new BriefMessage();
-            mMessage.setNewMsgCount(messages.size());
-            //收到消息
-            for(final EMMessage msg : messages){
-                switch (msg.getType()){
-                    case TXT:
-                        final String message = ((EMTextMessageBody)msg.getBody()).getMessage();
-                        LogUtil.d("收到消息：" + message);
-                        // put avatar url in type
-                        String avatar = msg.getStringAttribute("avatar", "");
-                        String name = msg.getStringAttribute("name", "");
-                        mMessage.setType(avatar);
-                        mMessage.setTitle(name);
-                        mMessage.setSubTitle(message);
-                        mMessage.setId(msg.getUserName());
-                        mMessage.setTime(msg.getMsgTime());
-                        MainActivity.this.runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                EventBus.getDefault().postSticky(new ChangeRedDotEvent(1, 0));
-                                EventBus.getDefault().postSticky(mMessage);
-                                ChatUser user = new ChatUser(msg.getUserName(), mMessage.getTitle(), mMessage.getType());
-                                EventBus.getDefault().post(new ChatMessage(message, RECEIVE_TEXT, user, msg.getMsgTime()));
-                            }
-                        });
-                        break;
-                }
-            }
-
-        }
-
-        @Override
-        public void onCmdMessageReceived(List<EMMessage> messages) {
-            //收到透传消息
-        }
-
-        @Override
-        public void onMessageRead(List<EMMessage> messages) {
-            //收到已读回执
-        }
-
-        @Override
-        public void onMessageDelivered(List<EMMessage> message) {
-            //收到已送达回执
-        }
-        @Override
-        public void onMessageRecalled(List<EMMessage> messages) {
-            //消息被撤回
-        }
-
-        @Override
-        public void onMessageChanged(EMMessage message, Object change) {
-            //消息状态变动
-        }
-    };
-
     @Override
     public void onBackPressed() {
         if(splashFragment == null){
@@ -391,8 +338,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     @Override
     protected void onDestroy() {
-        EMClient.getInstance().chatManager().removeMessageListener(msgListener);
         EventBus.getDefault().unregister(this);
+        if(serviceIntent != null){
+            stopService(serviceIntent);
+        }
         super.onDestroy();
     }
 
@@ -432,7 +381,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public void onLoginStateEvent(LoginStateEvent event) {
         if (event.isLogin()) {
             // register push service
-            XGPushManager.registerPush(this,
+            XGPushManager.registerPush(getApplicationContext(),
                     UserStatus.getCurrentUser().getUserId(), new XGIOperateCallback() {
                 @Override
                 public void onSuccess(Object o, int i) {
@@ -446,6 +395,4 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             });
         }
     }
-
-
 }

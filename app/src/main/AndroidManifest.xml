@@ -51,6 +51,7 @@
             android:name="com.hyphenate.chat.EMJobService"
             android:exported="true"
             android:permission="android.permission.BIND_JOB_SERVICE" />
+        <service android:name=".IMService" />
         <!-- 声明SDK所需的receiver -->
         <receiver android:name="com.hyphenate.chat.EMMonitorReceiver">
             <intent-filter>
@@ -147,6 +148,22 @@
                     android:scheme="memo" />
             </intent-filter>
         </activity>
+        <activity android:name=".activity.ResetPasswordPage" />
+        <activity android:name=".activity.MessageDetail" />
+        <activity android:name=".activity.EditInfoPage" />
+        <activity android:name=".activity.ChatActivity" >
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data
+                    android:host="ascexz.320.io"
+                    android:pathPrefix="/GoodPage/message"
+                    android:scheme="memo" />
+            </intent-filter>
+        </activity>
 
         <!-- tencent bugly upgrade -->
         <activity
@@ -215,10 +232,6 @@
         <!-- android:excludeFromRecents="true" -->
         <!-- android:theme="@style/Theme.UMDefault" /> -->
         <!-- *************************    related to Share END **************************** -->
-        <activity android:name=".activity.ResetPasswordPage" />
-        <activity android:name=".activity.MessageDetail" />
-        <activity android:name=".activity.EditInfoPage" />
-        <activity android:name=".activity.ChatActivity" />
 
         <receiver
             android:name=".receiver.MemoPushReceiver"

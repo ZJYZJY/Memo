@@ -86,7 +86,7 @@ public class MemoPresenter {
                                         response.body().getMessage());
                             }
                         } else {
-                            fetchContent.loadMoreFail(500, "刷新失败，服务器未知错误");
+                            fetchContent.loadMoreFail(500, "加载失败，服务器未知错误");
                         }
                     }
 

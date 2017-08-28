@@ -32,6 +32,7 @@ import com.yanzhenjie.recyclerview.swipe.SwipeMenuRecyclerView;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -113,8 +114,6 @@ public class MessageFragment extends BaseScrollFragment {
     private OnItemClickListener mOnItemClickListener = new OnItemClickListener() {
         @Override
         public void onItemClick(int position) {
-            EventBus.getDefault().postSticky(new ChangeRedDotEvent(1, -1));
-            clearRedDot(mList.get(position).getId());
             int length = mList.get(position).getType().length();
             if(length > 5 || length == 0){
                 Intent intent = new Intent(mContext, ChatActivity.class);
@@ -125,11 +124,15 @@ public class MessageFragment extends BaseScrollFragment {
             } else {
                 Intent intent = new Intent(mContext, MessageDetail.class);
                 intent.putExtra("messageId", mList.get(position).getId());
+                intent.putExtra("count", mList.get(position).getNewMsgCount());
                 intent.putExtra("type", mList.get(position).getType());
                 intent.putExtra("title", mList.get(position).getTitle());
                 intent.putExtra("date", mList.get(position).getDate());
                 startActivity(intent);
             }
+            EventBus.getDefault().postSticky(new ChangeRedDotEvent(1, -1));
+            clearRedDot(mList.get(position).getId());
+            mAdapter.notifyItemChanged(position);
         }
     };
 
@@ -174,7 +177,7 @@ public class MessageFragment extends BaseScrollFragment {
      * receive new push message
      * @param event message object.
      */
-    @Subscribe(sticky = true)
+    @Subscribe(sticky = true, threadMode = ThreadMode.MAIN)
     public void onReceiveBriefMessage(BriefMessage event){
         BriefMessage msg = sameMessage(event.getId());
 //        List<BriefMessage> old = mList;

@@ -9,9 +9,9 @@
         android:id="@+id/message_user_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingTop="@dimen/padding_large"
         android:paddingLeft="@dimen/padding_large"
-        android:paddingRight="@dimen/padding_large">
+        android:paddingRight="@dimen/padding_large"
+        android:paddingTop="@dimen/padding_large">
 
         <com.donutcn.widgetlib.widget.CircleImageView
             android:id="@+id/message_item_icon"
@@ -69,8 +69,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:visibility="gone"
-                android:padding="@dimen/padding_text">
+                android:padding="@dimen/padding_text"
+                android:visibility="gone">
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -89,8 +89,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:visibility="gone"
-                android:padding="@dimen/padding_text">
+                android:padding="@dimen/padding_text"
+                android:visibility="gone">
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -110,8 +110,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:visibility="gone"
-                android:padding="@dimen/padding_text">
+                android:padding="@dimen/padding_text"
+                android:visibility="gone">
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -128,11 +128,11 @@
 
             <LinearLayout
                 android:id="@+id/message_resume_container"
-                android:visibility="gone"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:padding="@dimen/padding_text">
+                android:padding="@dimen/padding_text"
+                android:visibility="gone">
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -149,11 +149,11 @@
 
             <LinearLayout
                 android:id="@+id/message_email_container"
-                android:visibility="gone"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:padding="@dimen/padding_text">
+                android:padding="@dimen/padding_text"
+                android:visibility="gone">
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -245,6 +245,7 @@
             android:layout_height="match_parent"
             android:background="@drawable/selector_blue"
             android:text="下载"
-            android:textColor="@color/white" />
+            android:textColor="@color/white"
+            android:visibility="gone" />
     </LinearLayout>
 </LinearLayout>

@@ -7,6 +7,7 @@ import com.donutcn.memo.entity.ArrayResponse;
 import com.donutcn.memo.entity.BriefContent;
 import com.donutcn.memo.entity.Contact;
 import com.donutcn.memo.entity.ContentResponse;
+import com.donutcn.memo.entity.MessageItem;
 import com.donutcn.memo.entity.SimpleResponse;
 import com.donutcn.memo.helper.RouterHelper;
 import com.donutcn.memo.helper.RouterHelper.APIPath;
@@ -242,8 +243,8 @@ public class HttpUtils {
         @GET(APIPath.MODIFY_MY_CONTENT)
         Call<ContentResponse> modifyMyContent(@Path("id") String id);
 
-        @GET(APIPath.SYNC_USER_INFO)
-        Call<SimpleResponse> syncUserInfo();
+        @GET(APIPath.AUTO_LOGIN)
+        Call<SimpleResponse> autoLogin();
 
         @Headers(FieldConfig.REQUEST_HEADER)
         @POST(APIPath.MODIFY_USER_INFO)
@@ -261,6 +262,11 @@ public class HttpUtils {
 
         @POST(APIPath.TIP_OFF_CONTENT)
         Call<SimpleResponse> tipOff(@Body RequestBody info);
+
+        @GET(APIPath.GET_REPLY)
+        Call<ArrayResponse<MessageItem>> getReplyById(@Path("id") String contentId,
+                                          @Path("action") String action,
+                                          @Path("timestamp") long timeStamp);
 
         /**
          * cookie test.
@@ -462,8 +468,8 @@ public class HttpUtils {
         return create().modifyMyContent(id);
     }
 
-    public static Call<SimpleResponse> syncUserInfo(){
-        return create().syncUserInfo();
+    public static Call<SimpleResponse> autoLogin(){
+        return create().autoLogin();
     }
 
     public static Call<SimpleResponse> modifyUserInfo(Map<String, String> info){
@@ -505,6 +511,10 @@ public class HttpUtils {
         RequestBody request = RequestBody
                 .create(okhttp3.MediaType.parse("application/json; charset=utf-8"), json.toString());
         return create().tipOff(request);
+    }
+
+    public static Call<ArrayResponse<MessageItem>> getReplyById(String id, String action, long timeStamp){
+        return create().getReplyById(id, action, timeStamp);
     }
 
     public static Call<SimpleResponse> test() {

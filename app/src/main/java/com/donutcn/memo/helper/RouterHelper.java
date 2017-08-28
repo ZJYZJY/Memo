@@ -58,6 +58,7 @@ public class RouterHelper {
         public static final String REGISTER = "login/register";
         public static final String MODIFY_PASSWORD = "login/edituser";
         public static final String LOGOUT = "login/logout";
+        public static final String AUTO_LOGIN = "user/get_myinfo";
         public static final String GET_UPLOAD_TOKEN = "authorised/upload";
         public static final String PUBLISH_CONTENT = "authorised/create_article";
         public static final String GET_MY_CONTENT = "authorised/index/{action}/{timestamp}";
@@ -71,11 +72,11 @@ public class RouterHelper {
         public static final String MATCH_CONTACTS = "authorised/myfriend";
         public static final String DELETE_CONTENT = "authorised/delete_article/{id}";
         public static final String MODIFY_MY_CONTENT = "authorised/the_article/{id}";
-        public static final String SYNC_USER_INFO = "user/get_myinfo";
         public static final String MODIFY_USER_INFO = "user/edit_userinfo";
         public static final String FOLLOW_USER = "user/follow/{userId}/{action}";
         public static final String GET_USER_INFO = "index/app_myindex/{userId}";
         public static final String VERIFY_CONTENT = "index/verify_content/{id}";
         public static final String TIP_OFF_CONTENT = "authorised/do_accuse";
+        public static final String GET_REPLY = "authorised/messages/{id}/{action}/{timestamp}";
     }
 }

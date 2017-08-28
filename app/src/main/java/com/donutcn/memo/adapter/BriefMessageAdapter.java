@@ -120,7 +120,7 @@ public class BriefMessageAdapter extends SwipeMenuAdapter<BriefMessageAdapter.Vi
         }
     }
 
-    class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, View.OnLongClickListener {
+    class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         ImageView mImage;
         TextView mTitle;
         TextView mSubTitle;
@@ -131,7 +131,6 @@ public class BriefMessageAdapter extends SwipeMenuAdapter<BriefMessageAdapter.Vi
         public ViewHolder(View itemView) {
             super(itemView);
             itemView.setOnClickListener(this);
-            itemView.setOnLongClickListener(this);
             mImage = (ImageView) itemView.findViewById(R.id.message_item_icon);
             mTitle = (TextView) itemView.findViewById(R.id.message_item_title);
             mSubTitle = (TextView) itemView.findViewById(R.id.message_item_subtitle);
@@ -151,14 +150,6 @@ public class BriefMessageAdapter extends SwipeMenuAdapter<BriefMessageAdapter.Vi
                 if(conversation != null)
                     conversation.markAllMessagesAsRead();
             }
-        }
-
-        @Override
-        public boolean onLongClick(View v) {
-            int index = getAdapterPosition();
-            list.remove(index);
-            notifyItemRemoved(index);
-            return false;
         }
     }
 

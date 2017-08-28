@@ -9,9 +9,9 @@ import com.donutcn.memo.entity.User;
 
 public class LoginStateEvent {
 
-    public static int LOGIN = 0;
-    public static int SYNC = 1;
-    public static int LOGOUT = 2;
+    public static final int LOGIN = 0;
+    public static final int SYNC = 1;
+    public static final int LOGOUT = 2;
 
     private int state;
     private User user;

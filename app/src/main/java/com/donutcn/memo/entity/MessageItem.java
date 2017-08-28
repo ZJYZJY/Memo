@@ -57,10 +57,6 @@ public class MessageItem extends Jsonify {
     private String resume;
 
     @Expose
-    @SerializedName(FieldConfig.REPLY_RESUME_URL)
-    private String resumeUrl;
-
-    @Expose
     @SerializedName(FieldConfig.REPLY_COMMENT)
     private String comment;
 
@@ -118,10 +114,6 @@ public class MessageItem extends Jsonify {
         return resume;
     }
 
-    public String getResumeUrl() {
-        return resumeUrl;
-    }
-
     public String getComment() {
         return comment;
     }
@@ -154,7 +146,6 @@ public class MessageItem extends Jsonify {
             json.put(FieldConfig.REPLY_EMAIL, email);
             json.put(FieldConfig.REPLY_WE_CHAT, weChat);
             json.put(FieldConfig.REPLY_RESUME, resume);
-            json.put(FieldConfig.REPLY_RESUME_URL, resumeUrl);
             json.put(FieldConfig.REPLY_COMMENT, comment);
             json.put(FieldConfig.REPLY_VOTE, vote);
             json.put(FieldConfig.REPLY_ANSWER, answer);

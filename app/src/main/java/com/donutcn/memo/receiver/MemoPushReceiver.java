@@ -53,6 +53,7 @@ public class MemoPushReceiver extends XGPushBaseReceiver {
     public void onTextMessage(Context context, XGPushTextMessage pushMsg) {
         String title = pushMsg.getTitle();
         String content = pushMsg.getContent();
+        LogUtil.d(content);
         Gson gson = new GsonBuilder()
                 .excludeFieldsWithoutExposeAnnotation()
                 .create();

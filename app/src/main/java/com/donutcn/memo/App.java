@@ -63,7 +63,7 @@ public class App extends MultiDexApplication {
         //初始化环信
         EMOptions options = new EMOptions();
         EMClient.getInstance().init(this, options);
-        EMClient.getInstance().setDebugMode(true);
+        EMClient.getInstance().setDebugMode(false);
 
         RichText.initCacheDir(this);
         SpeechUtility.createUtility(this, SpeechConstant.APPID + "=5996d5cb");

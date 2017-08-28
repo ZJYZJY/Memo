@@ -18,6 +18,8 @@ import com.donutcn.memo.utils.ToastUtil;
 import com.donutcn.memo.utils.UserStatus;
 import com.donutcn.memo.utils.WindowUtils;
 
+import java.util.Map;
+
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -94,7 +96,7 @@ public class ResetPasswordPage extends AppCompatActivity implements View.OnClick
     public void attemptToRegister(){
         final String phoneNumber = mPhone.getText().toString();
         String authCode = mMsgCode.getText().toString();
-        String password = mPassword.getText().toString();
+        final String password = mPassword.getText().toString();
         if (TextUtils.isEmpty(phoneNumber)) {
             ToastUtil.show(this, "手机号不能为空");
             return;
@@ -114,8 +116,10 @@ public class ResetPasswordPage extends AppCompatActivity implements View.OnClick
                 if(response.body() != null){
                     if(response.body().isOk()){
                         ToastUtil.show(ResetPasswordPage.this, "重置密码成功");
+                        Map<String, String> data = response.body().getData();
+                        data.put("token", password);
                         LoginHelper.login(getApplicationContext(),
-                                UserStatus.PHONE_LOGIN, response.body().getData());
+                                UserStatus.PHONE_LOGIN, data);
                         Intent intent = new Intent(ResetPasswordPage.this, MainActivity.class);
                         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                         startActivity(intent);

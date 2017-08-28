@@ -48,8 +48,7 @@ public class FriendListAdapter extends RecyclerView.Adapter<FriendListAdapter.Vi
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
         holder.username.setText(list.get(position).getName());
-        String iconUrl = "";
-        iconUrl = list.get(position).getAvatar();
+        String iconUrl = list.get(position).getAvatar();
         if(iconUrl != null && !iconUrl.equals("")){
             Glide.with(mContext).load(iconUrl).into(holder.avatar);
         }

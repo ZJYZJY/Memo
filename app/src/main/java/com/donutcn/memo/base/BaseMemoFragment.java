@@ -50,6 +50,7 @@ public abstract class BaseMemoFragment extends BaseScrollFragment implements Fet
     public Context mContext;
     public boolean isLoadMore = false;
     public boolean canLoadMore = true;
+    public final int PAGE_SIZE = 10;
 
     @Override
     public void onAttach(Context context) {
@@ -79,7 +80,7 @@ public abstract class BaseMemoFragment extends BaseScrollFragment implements Fet
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                 super.onScrolled(recyclerView, dx, dy);
                 int lastVisibleItem = ((LinearLayoutManager)recyclerView.getLayoutManager()).findLastVisibleItemPosition();
-                if(lastVisibleItem + 5 >= mList.size() && mList.size() > 0){
+                if(lastVisibleItem + 5 >= mList.size() && mList.size() >= PAGE_SIZE){
                     if(!isLoadMore && canLoadMore){
                         isLoadMore = true;
                         mMemoPresenter.loadMore(mList);
@@ -206,9 +207,12 @@ public abstract class BaseMemoFragment extends BaseScrollFragment implements Fet
 
     @Override
     public void onLoadmore(RefreshLayout refreshlayout) {
-        if(mList.size() > 0 && !isLoadMore && canLoadMore){
+        if(mList.size() >= PAGE_SIZE && !isLoadMore && canLoadMore){
             isLoadMore = true;
             mMemoPresenter.loadMore(mList);
+        } else if(!isLoadMore) {
+            mRefreshLayout.finishLoadmore();
+            mRefreshLayout.setLoadmoreFinished(true);
         }
     }
 

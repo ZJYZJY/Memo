@@ -24,6 +24,7 @@ import com.flyco.tablayout.listener.OnTabSelectListener;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 public class HomeFragment extends Fragment implements OnTabSelectListener {
 
@@ -100,7 +101,7 @@ public class HomeFragment extends Fragment implements OnTabSelectListener {
         super.onDestroy();
     }
 
-    @Subscribe(sticky = true)
+    @Subscribe(sticky = true, threadMode = ThreadMode.MAIN)
     public void onChangeRedDotEvent(ChangeRedDotEvent event){
         if(event.getDotPosition() == 0){
             memoCount = memoCount + event.getCount();

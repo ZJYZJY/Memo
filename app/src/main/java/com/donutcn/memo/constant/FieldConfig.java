@@ -44,13 +44,12 @@ public class FieldConfig {
 
     public static final String REPLY_ID = "message_id";
     public static final String COMMENT_ID = "comment_id";
-    public static final String REPLY_TIME = "time";
+    public static final String REPLY_TIME = "create_time";
     public static final String REPLY_REAL_NAME = "real_name";
     public static final String REPLY_PHONE = "phone";
     public static final String REPLY_EMAIL = "email";
     public static final String REPLY_WE_CHAT = "we_chat";
     public static final String REPLY_RESUME = "resume";
-    public static final String REPLY_RESUME_URL = "resume_url";
     public static final String REPLY_COMMENT = "comment";
     public static final String REPLY_VOTE = "vote";
     public static final String REPLY_ANSWER = "answer";

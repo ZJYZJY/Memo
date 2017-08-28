@@ -16,6 +16,22 @@ public class ChatUser implements IUser {
         this.avatar = avatar;
     }
 
+    public void setUserId(String userId) {
+        this.userId = userId;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setAvatar(String avatar) {
+        this.avatar = avatar;
+    }
+
     @Override
     public String getId() {
         return userId;
