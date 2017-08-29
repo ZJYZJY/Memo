@@ -118,7 +118,7 @@ public class MemoPresenter {
             @Override
             public void onFailure(Call<SimpleResponse> call, Throwable t) {
                 t.printStackTrace();
-                deleteContent.deleteFail(508, "连接失败，请检查你的网络连接");
+                deleteContent.deleteFail(408, "连接失败，请检查你的网络连接");
             }
         });
     }

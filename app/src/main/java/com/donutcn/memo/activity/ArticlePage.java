@@ -1,11 +1,15 @@
 package com.donutcn.memo.activity;
 
+import android.annotation.TargetApi;
+import android.app.Activity;
+import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
+import android.os.Build;
 import android.support.annotation.LayoutRes;
 import android.support.design.widget.BottomSheetBehavior;
 import android.support.design.widget.BottomSheetDialog;
@@ -25,7 +29,7 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.RequestManager;
 import com.donutcn.memo.R;
-import com.donutcn.memo.constant.FieldConfig;
+import com.donutcn.memo.constant.FieldConstant;
 import com.donutcn.memo.entity.SimpleResponse;
 import com.donutcn.memo.event.ChangeContentEvent;
 import com.donutcn.memo.helper.RouterHelper;
@@ -39,6 +43,7 @@ import com.donutcn.memo.utils.UserStatus;
 import com.donutcn.memo.utils.WindowUtils;
 import com.tencent.smtt.sdk.CookieManager;
 import com.tencent.smtt.sdk.CookieSyncManager;
+import com.tencent.smtt.sdk.ValueCallback;
 import com.tencent.smtt.sdk.WebChromeClient;
 import com.tencent.smtt.sdk.WebSettings;
 import com.tencent.smtt.sdk.WebView;
@@ -63,6 +68,8 @@ public class ArticlePage extends AppCompatActivity implements View.OnClickListen
 
     private PublishType mType = PublishType.ARTICLE;
     private RequestManager glide;
+    private ValueCallback mUploadMessage;
+    private ValueCallback mUploadMessageAboveL;
     private Context mContext;
 
     private String mTitle, mImageUrl, mContent;
@@ -70,6 +77,8 @@ public class ArticlePage extends AppCompatActivity implements View.OnClickListen
     private int mUpvoteCount, mCommentCount;
     // comment height
     private int commentHeight;
+
+    private static final int FILE_CHOOSER_RESULT_CODE = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -91,18 +100,18 @@ public class ArticlePage extends AppCompatActivity implements View.OnClickListen
             public void onResponse(Call<SimpleResponse> call, Response<SimpleResponse> response) {
                 if(response.body() != null){
                     if(response.body().isOk()){
-                        mUserId = response.body().getField(FieldConfig.USER_ID);
-                        mContentUrl = response.body().getField(FieldConfig.CONTENT_URL);
-                        mNameStr = response.body().getField(FieldConfig.USER_NICKNAME);
-                        mIconUrl = response.body().getField(FieldConfig.USER_ICON_URL);
-                        mTitle = response.body().getField(FieldConfig.CONTENT_TITLE);
-                        mContent = response.body().getField(FieldConfig.CONTENT);
+                        mUserId = response.body().getField(FieldConstant.USER_ID);
+                        mContentUrl = response.body().getField(FieldConstant.CONTENT_URL);
+                        mNameStr = response.body().getField(FieldConstant.USER_NICKNAME);
+                        mIconUrl = response.body().getField(FieldConstant.USER_ICON_URL);
+                        mTitle = response.body().getField(FieldConstant.CONTENT_TITLE);
+                        mContent = response.body().getField(FieldConstant.CONTENT);
                         mImageUrl = response.body().getField("picurl");
 
-                        String type = response.body().getField(FieldConfig.CONTENT_TYPE);
+                        String type = response.body().getField(FieldConstant.CONTENT_TYPE);
                         mType = PublishType.getType(type);
-                        mUpvoteCount = Integer.valueOf((String) response.body().getField(FieldConfig.CONTENT_UP_VOTE_COUNT));
-                        mCommentCount = Integer.valueOf((String) response.body().getField(FieldConfig.CONTENT_COMM_COUNT));
+                        mUpvoteCount = Integer.valueOf((String) response.body().getField(FieldConstant.CONTENT_UP_VOTE_COUNT));
+                        mCommentCount = Integer.valueOf((String) response.body().getField(FieldConstant.CONTENT_COMM_COUNT));
                         initView();
                         showContent();
                     } else if(response.body().notFound()){
@@ -123,8 +132,6 @@ public class ArticlePage extends AppCompatActivity implements View.OnClickListen
                 ToastUtil.show(ArticlePage.this, "连接失败，请检查你的网络");
             }
         });
-
-
     }
 
     public void initView() {
@@ -227,6 +234,34 @@ public class ArticlePage extends AppCompatActivity implements View.OnClickListen
                     progressBar.setVisibility(View.VISIBLE);
                     progressBar.setProgress(i);
                 }
+            }
+
+            @Override
+            public boolean onShowFileChooser(WebView webView, ValueCallback<Uri[]> valueCallback, FileChooserParams fileChooserParams) {
+                LogUtil.d("选择文件5.0+");
+                mUploadMessageAboveL = valueCallback;
+                Intent i = new Intent(Intent.ACTION_GET_CONTENT);
+                i.addCategory(Intent.CATEGORY_OPENABLE);
+                i.setType("application/msword;" +
+                        "application/vnd.openxmlformats-officedocument.wordprocessingml.document;" +
+                        "application/pdf");
+                startActivityForResult(Intent.createChooser(i,
+                        "File Chooser"), FILE_CHOOSER_RESULT_CODE);
+                return true;
+            }
+
+            @Override
+            public void openFileChooser(ValueCallback<Uri> valueCallback, String s, String s1) {
+                super.openFileChooser(valueCallback, s, s1);
+                LogUtil.d("选择文件");
+                mUploadMessage = valueCallback;
+                Intent i = new Intent(Intent.ACTION_GET_CONTENT);
+                i.addCategory(Intent.CATEGORY_OPENABLE);
+                i.setType("application/msword;" +
+                        "application/vnd.openxmlformats-officedocument.wordprocessingml.document;" +
+                        "application/pdf");
+                startActivityForResult(Intent.createChooser(i,
+                        "File Chooser"), FILE_CHOOSER_RESULT_CODE);
             }
         });
         webView.loadUrl(mContentUrl);
@@ -413,5 +448,47 @@ public class ArticlePage extends AppCompatActivity implements View.OnClickListen
             case R.id.interactive_info_submit://submit info
                 break;
         }
+    }
+
+    @SuppressWarnings("unchecked")
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == FILE_CHOOSER_RESULT_CODE) {
+            if (null == mUploadMessage && null == mUploadMessageAboveL)
+                return;
+            Uri result = data == null || resultCode != RESULT_OK ? null : data.getData();
+            if (mUploadMessageAboveL != null) {
+                onActivityResultAboveL(requestCode, resultCode, data);
+            } else if (mUploadMessage != null) {
+                mUploadMessage.onReceiveValue(result);
+                mUploadMessage = null;
+            }
+        }
+    }
+
+    @SuppressWarnings("unchecked")
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
+    private void onActivityResultAboveL(int requestCode, int resultCode, Intent intent) {
+        if (requestCode != FILE_CHOOSER_RESULT_CODE || mUploadMessageAboveL == null)
+            return;
+        Uri[] results = null;
+        if (resultCode == Activity.RESULT_OK) {
+            if (intent != null) {
+                String dataString = intent.getDataString();
+                ClipData clipData = intent.getClipData();
+                if (clipData != null) {
+                    results = new Uri[clipData.getItemCount()];
+                    for (int i = 0; i < clipData.getItemCount(); i++) {
+                        ClipData.Item item = clipData.getItemAt(i);
+                        results[i] = item.getUri();
+                    }
+                }
+                if (dataString != null)
+                    results = new Uri[]{Uri.parse(dataString)};
+            }
+        }
+        mUploadMessageAboveL.onReceiveValue(results);
+        mUploadMessageAboveL = null;
     }
 }

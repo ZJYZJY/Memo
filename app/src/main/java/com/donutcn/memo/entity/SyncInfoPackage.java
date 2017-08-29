@@ -1,6 +1,6 @@
 package com.donutcn.memo.entity;
 
-import com.donutcn.memo.constant.FieldConfig;
+import com.donutcn.memo.constant.FieldConstant;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
@@ -15,7 +15,7 @@ public class SyncInfoPackage {
     private int type;
 
     @Expose
-    @SerializedName(FieldConfig.USER_ID)
+    @SerializedName(FieldConstant.USER_ID)
     private String userId;
 
     public int getType() {

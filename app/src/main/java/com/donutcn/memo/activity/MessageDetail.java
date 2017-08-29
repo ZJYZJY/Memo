@@ -11,15 +11,20 @@ import android.widget.TextView;
 import com.donutcn.memo.R;
 import com.donutcn.memo.adapter.MessageDetailAdapter;
 import com.donutcn.memo.entity.MessageItem;
+import com.donutcn.memo.event.ItemActionClickEvent;
 import com.donutcn.memo.fragment.api.DeleteContent;
 import com.donutcn.memo.fragment.api.FetchContent;
 import com.donutcn.memo.interfaces.OnItemClickListener;
 import com.donutcn.memo.presenter.MessagePresenter;
 import com.donutcn.memo.type.PublishType;
 import com.donutcn.memo.utils.CollectionUtil;
+import com.donutcn.memo.utils.FileCacheUtil;
+import com.donutcn.memo.utils.LogUtil;
 import com.donutcn.memo.utils.ToastUtil;
 import com.donutcn.memo.utils.WindowUtils;
 import com.donutcn.memo.view.ListViewDecoration;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnLoadmoreListener;
@@ -27,10 +32,16 @@ import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
 import com.yanzhenjie.recyclerview.swipe.SwipeMenuAdapter;
 import com.yanzhenjie.recyclerview.swipe.SwipeMenuRecyclerView;
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+
 import java.util.ArrayList;
 import java.util.List;
 
-public class MessageDetail extends AppCompatActivity implements OnItemClickListener, FetchContent<MessageItem>, DeleteContent {
+import static com.donutcn.memo.utils.FileCacheUtil.MESSAGE_ITEM_CACHE;
+
+public class MessageDetail extends AppCompatActivity implements OnItemClickListener,
+        FetchContent<MessageItem>, DeleteContent {
 
     private SwipeMenuRecyclerView mMsg_rv;
     private SmartRefreshLayout mRefreshLayout;
@@ -49,6 +60,8 @@ public class MessageDetail extends AppCompatActivity implements OnItemClickListe
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_message_detail);
         WindowUtils.setStatusBarColor(this, R.color.colorPrimary, true);
+
+        EventBus.getDefault().register(this);
         String type = getIntent().getStringExtra("type");
         WindowUtils.setToolBarTitle(this, type);
         mType = PublishType.getType(type);
@@ -63,8 +76,6 @@ public class MessageDetail extends AppCompatActivity implements OnItemClickListe
         mAdapter = new MessageDetailAdapter(this, mList, type, count);
         ((MessageDetailAdapter)mAdapter).setOnItemClickListener(this);
         initView(contentId, title, date, count);
-
-        mRefreshLayout.autoRefresh(0);
     }
 
     public void initView(final String contentId, String title, String date, int count){
@@ -105,6 +116,13 @@ public class MessageDetail extends AppCompatActivity implements OnItemClickListe
                 }
             }
         });
+        String cache = FileCacheUtil.getCache(this, MESSAGE_ITEM_CACHE, FileCacheUtil.CACHE_SHORT_TIMEOUT);
+        if("".equals(cache) || count > 0)
+            mRefreshLayout.autoRefresh(0);
+        else{
+            List<MessageItem> temp = new Gson().fromJson(cache, new TypeToken<List<MessageItem>>(){}.getType());
+            mList.addAll(temp);
+        }
         mMsg_rv.setAdapter(mAdapter);
     }
 
@@ -138,11 +156,18 @@ public class MessageDetail extends AppCompatActivity implements OnItemClickListe
     }
 
     @Override
+    protected void onDestroy() {
+        EventBus.getDefault().unregister(this);
+        super.onDestroy();
+    }
+
+    @Override
     public void refreshSuccess(List<MessageItem> list) {
         mList.addAll(0, list);
         mList = CollectionUtil.removeDuplicateWithOrder(mList);
         mAdapter.notifyDataSetChanged();
         mRefreshLayout.finishRefresh();
+        FileCacheUtil.setMessageItemCache(this, new Gson().toJson(mList));
     }
 
     @Override
@@ -163,6 +188,7 @@ public class MessageDetail extends AppCompatActivity implements OnItemClickListe
         mAdapter.notifyDataSetChanged();
         mRefreshLayout.finishLoadmore();
         isLoadMore = false;
+        FileCacheUtil.setMessageItemCache(this, new Gson().toJson(mList));
     }
 
     @Override
@@ -181,11 +207,27 @@ public class MessageDetail extends AppCompatActivity implements OnItemClickListe
 
     @Override
     public void deleteSuccess(int position) {
-
+        mList.remove(position);
+        mAdapter.notifyItemRemoved(position);
+        ToastUtil.show(this, "删除成功");
+        FileCacheUtil.setMessageItemCache(this, new Gson().toJson(mList));
     }
 
     @Override
     public void deleteFail(int code, String error) {
+        if(code == 401){
 
+        } else {
+            ToastUtil.show(this, error + "，" + code);
+        }
+    }
+
+    @Subscribe
+    public void onItemActionClickEvent(ItemActionClickEvent event){
+        if(event.type == 0){
+            mMsgPresenter.deleteContent(mList, event.position);
+        } else if(event.type == 1){
+
+        }
     }
 }

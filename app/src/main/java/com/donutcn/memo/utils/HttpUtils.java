@@ -2,7 +2,7 @@ package com.donutcn.memo.utils;
 
 import android.content.Context;
 
-import com.donutcn.memo.constant.FieldConfig;
+import com.donutcn.memo.constant.FieldConstant;
 import com.donutcn.memo.entity.ArrayResponse;
 import com.donutcn.memo.entity.BriefContent;
 import com.donutcn.memo.entity.Contact;
@@ -126,7 +126,7 @@ public class HttpUtils {
          *
          * @param user user info
          */
-        @Headers(FieldConfig.REQUEST_HEADER)
+        @Headers(FieldConstant.REQUEST_HEADER)
         @POST(APIPath.LOGIN)
         Call<SimpleResponse> login(@Body RequestBody user);
 
@@ -213,7 +213,7 @@ public class HttpUtils {
         /**
          * change the content access level.
          */
-        @Headers(FieldConfig.REQUEST_HEADER)
+        @Headers(FieldConstant.REQUEST_HEADER)
         @POST(APIPath.SET_CONTENT_PRIVATE)
         Call<SimpleResponse> setPrivate(@Body RequestBody content);
 
@@ -232,25 +232,25 @@ public class HttpUtils {
         /**
          * delete user publish content.
          */
-        @Headers(FieldConfig.REQUEST_HEADER)
+        @Headers(FieldConstant.REQUEST_HEADER)
         @GET(APIPath.DELETE_CONTENT)
         Call<SimpleResponse> deleteContent(@Path("id") String id);
 
         /**
          * modify user publish content.
          */
-        @Headers(FieldConfig.REQUEST_HEADER)
+        @Headers(FieldConstant.REQUEST_HEADER)
         @GET(APIPath.MODIFY_MY_CONTENT)
         Call<ContentResponse> modifyMyContent(@Path("id") String id);
 
         @GET(APIPath.AUTO_LOGIN)
         Call<SimpleResponse> autoLogin();
 
-        @Headers(FieldConfig.REQUEST_HEADER)
+        @Headers(FieldConstant.REQUEST_HEADER)
         @POST(APIPath.MODIFY_USER_INFO)
         Call<SimpleResponse> modifyUserInfo(@Body RequestBody info);
 
-        @Headers(FieldConfig.REQUEST_HEADER)
+        @Headers(FieldConstant.REQUEST_HEADER)
         @GET(APIPath.FOLLOW_USER)
         Call<SimpleResponse> follow(@Path("userId") String userId, @Path("action") int action);
 
@@ -268,6 +268,11 @@ public class HttpUtils {
                                           @Path("action") String action,
                                           @Path("timestamp") long timeStamp);
 
+        @GET(APIPath.DELETE_REPLY)
+        Call<SimpleResponse> deleteReply(@Path("content_id") String contentId,
+                                                      @Path("message_id") String messageId,
+                                                      @Path("type") String type);
+
         /**
          * cookie test.
          */
@@ -279,11 +284,11 @@ public class HttpUtils {
         JSONObject json = new JSONObject();
         try {
             if(loginType == UserStatus.PHONE_LOGIN){
-                json.put(FieldConfig.USER_NAME, data.get(FieldConfig.USER_NAME));
+                json.put(FieldConstant.USER_NAME, data.get(FieldConstant.USER_NAME));
                 json.put("password", data.get("password"));
             }else if(loginType == UserStatus.WECHAT_LOGIN){
-                json.put(FieldConfig.USER_OPEN_ID, data.get(FieldConfig.USER_OPEN_ID));
-                json.put(FieldConfig.USER_NICKNAME, data.get(FieldConfig.USER_NICKNAME));
+                json.put(FieldConstant.USER_OPEN_ID, data.get(FieldConstant.USER_OPEN_ID));
+                json.put(FieldConstant.USER_NICKNAME, data.get(FieldConstant.USER_NICKNAME));
                 json.put("gender", data.get("gender"));
                 json.put("iconurl", data.get("iconurl"));
             }
@@ -298,7 +303,7 @@ public class HttpUtils {
     public static Call<SimpleResponse> getVerifiedCode(String phoneNumber, String action) {
         JSONObject json = new JSONObject();
         try {
-            json.put(FieldConfig.USER_PHONE, phoneNumber);
+            json.put(FieldConstant.USER_PHONE, phoneNumber);
             json.put("action", action);
         } catch (JSONException e) {
             e.printStackTrace();
@@ -312,7 +317,7 @@ public class HttpUtils {
                                                   String password, int action) {
         JSONObject json = new JSONObject();
         try {
-            json.put(FieldConfig.USER_PHONE, phoneNumber);
+            json.put(FieldConstant.USER_PHONE, phoneNumber);
             json.put("authcode", authCode);
             json.put("password", password);
         } catch (JSONException e) {
@@ -330,7 +335,7 @@ public class HttpUtils {
     public static Call<SimpleResponse> logout(String phoneNumber) {
         JSONObject json = new JSONObject();
         try {
-            json.put(FieldConfig.USER_NAME, phoneNumber);
+            json.put(FieldConstant.USER_NAME, phoneNumber);
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -342,11 +347,11 @@ public class HttpUtils {
     public static Call<SimpleResponse> publishContent(String id, String title, String type, String content) {
         JSONObject json = new JSONObject();
         try {
-            json.put(FieldConfig.CONTENT_TITLE, title);
-            json.put(FieldConfig.CONTENT_TYPE, type);
-            json.put(FieldConfig.CONTENT, content);
+            json.put(FieldConstant.CONTENT_TITLE, title);
+            json.put(FieldConstant.CONTENT_TYPE, type);
+            json.put(FieldConstant.CONTENT, content);
             if(id !=null) {
-                json.put(FieldConfig.CONTENT_ID, id);
+                json.put(FieldConstant.CONTENT_ID, id);
             }
         } catch (JSONException e) {
             e.printStackTrace();
@@ -391,8 +396,8 @@ public class HttpUtils {
     public static Call<SimpleResponse> setPrivate(String id, int isPrivate) {
         JSONObject json = new JSONObject();
         try {
-            json.put(FieldConfig.CONTENT_ID, id);
-            json.put(FieldConfig.CONTENT_RIGHTS, isPrivate);
+            json.put(FieldConstant.CONTENT_ID, id);
+            json.put(FieldConstant.CONTENT_RIGHTS, isPrivate);
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -475,10 +480,10 @@ public class HttpUtils {
     public static Call<SimpleResponse> modifyUserInfo(Map<String, String> info){
         JSONObject json = new JSONObject();
         try {
-            json.put(FieldConfig.USER_NICKNAME, info.get(FieldConfig.USER_NICKNAME));
-            json.put(FieldConfig.USER_GENDER, info.get(FieldConfig.USER_GENDER));
-            json.put(FieldConfig.USER_ICON_URL, info.get(FieldConfig.USER_ICON_URL));
-            json.put(FieldConfig.USER_SIGNATURE, info.get(FieldConfig.USER_SIGNATURE));
+            json.put(FieldConstant.USER_NICKNAME, info.get(FieldConstant.USER_NICKNAME));
+            json.put(FieldConstant.USER_GENDER, info.get(FieldConstant.USER_GENDER));
+            json.put(FieldConstant.USER_ICON_URL, info.get(FieldConstant.USER_ICON_URL));
+            json.put(FieldConstant.USER_SIGNATURE, info.get(FieldConstant.USER_SIGNATURE));
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -502,9 +507,9 @@ public class HttpUtils {
     public static Call<SimpleResponse> tipOff(String contentId, int type, String detail){
         JSONObject json = new JSONObject();
         try {
-            json.put(FieldConfig.CONTENT_ID, contentId);
-            json.put(FieldConfig.TIP_OFF_TYPE, type);
-            json.put(FieldConfig.TIP_OFF_DETAIL, detail);
+            json.put(FieldConstant.CONTENT_ID, contentId);
+            json.put(FieldConstant.TIP_OFF_TYPE, type);
+            json.put(FieldConstant.TIP_OFF_DETAIL, detail);
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -515,6 +520,10 @@ public class HttpUtils {
 
     public static Call<ArrayResponse<MessageItem>> getReplyById(String id, String action, long timeStamp){
         return create().getReplyById(id, action, timeStamp);
+    }
+
+    public static Call<SimpleResponse> deleteReply(String contentId, String messageId, String type){
+        return create().deleteReply(contentId, messageId, type);
     }
 
     public static Call<SimpleResponse> test() {

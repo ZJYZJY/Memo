@@ -34,23 +34,19 @@ public class IMService extends Service {
     @Override
     public void onCreate() {
         super.onCreate();
-        LogUtil.d("onCreate() executed");
         EMClient.getInstance().chatManager().addMessageListener(msgListener);
-        //注册一个监听连接状态的listener
         EMClient.getInstance().addConnectionListener(mConnectionListener);
 
     }
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        LogUtil.d("onStartCommand() executed");
         return super.onStartCommand(intent, flags, startId);
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
-        LogUtil.d("onDestroy() executed");
         EMClient.getInstance().removeConnectionListener(mConnectionListener);
         EMClient.getInstance().chatManager().removeMessageListener(msgListener);
     }
@@ -117,7 +113,6 @@ public class IMService extends Service {
         }
     };
 
-    //实现ConnectionListener接口
     public EMConnectionListener mConnectionListener = new EMConnectionListener() {
 
         @Override

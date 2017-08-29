@@ -20,6 +20,8 @@ public class FileCacheUtil {
 
     public static final String MESSAGE_LIST_CACHE = "message_list.txt";//缓存文件
 
+    public static final String MESSAGE_ITEM_CACHE = "message_item.txt";//缓存文件
+
     public static final int CACHE_SHORT_TIMEOUT = 1000 * 60 * 10; // 10 minutes
 
     public static final int CACHE_LONG_TIMEOUT = 1000 * 60 * 60 * 24; // 24 * 60 minutes
@@ -34,6 +36,10 @@ public class FileCacheUtil {
 
     public static void setMessageListCache(Context context, String content) {
         setCache(context, content, MESSAGE_LIST_CACHE, MODE_PRIVATE);
+    }
+
+    public static void setMessageItemCache(Context context, String content) {
+        setCache(context, content, MESSAGE_ITEM_CACHE, MODE_PRIVATE);
     }
 
     /**

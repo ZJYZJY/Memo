@@ -84,10 +84,10 @@ public class DynamicTimeFormat extends SimpleDateFormat {
                 switch (temp) {
                     case 0:
                         if(Integer.valueOf(timePassFormat) == 0){
-                            if(today.get(Calendar.MILLISECOND) - other.get(Calendar.MILLISECOND) < 60){
+                            int min = today.get(Calendar.MINUTE) - other.get(Calendar.MINUTE);
+                            if(min == 0){
                                 toAppendTo.append("刚刚");
                             }else {
-                                int min = today.get(Calendar.MINUTE) - other.get(Calendar.MINUTE);
                                 toAppendTo.append(String.valueOf(min));
                                 toAppendTo.append("分钟前");
                             }

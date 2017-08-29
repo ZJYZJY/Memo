@@ -4,6 +4,7 @@ import android.content.Context;
 
 import com.donutcn.memo.entity.ArrayResponse;
 import com.donutcn.memo.entity.MessageItem;
+import com.donutcn.memo.entity.SimpleResponse;
 import com.donutcn.memo.fragment.api.DeleteContent;
 import com.donutcn.memo.fragment.api.FetchContent;
 import com.donutcn.memo.utils.HttpUtils;
@@ -96,6 +97,35 @@ public class MessagePresenter {
     }
 
     public void deleteContent(List<MessageItem> list, final int position){
-        deleteContent.deleteSuccess(position);
+        String replyId;
+        boolean isMessage = list.get(position).isMessage();
+        if(isMessage)
+            replyId = list.get(position).getMessageId();
+        else
+            replyId = list.get(position).getCommentId();
+
+        HttpUtils.deleteReply(contentId, replyId, isMessage ? "message_id" : "comment_id")
+                .enqueue(new Callback<SimpleResponse>() {
+            @Override
+            public void onResponse(Call<SimpleResponse> call, Response<SimpleResponse> response) {
+                if(response.body() != null){
+                    LogUtil.d("msg_del", response.body().toString());
+                    if(response.body().isOk()){
+                        deleteContent.deleteSuccess(position);
+                    } else {
+                        deleteContent.deleteFail(response.body().getCode(),
+                                response.body().getMessage());
+                    }
+                } else {
+                    deleteContent.deleteFail(500, "删除失败，服务器未知错误");
+                }
+            }
+
+            @Override
+            public void onFailure(Call<SimpleResponse> call, Throwable t) {
+                t.printStackTrace();
+                deleteContent.deleteFail(408, "连接失败，请检查你的网络连接");
+            }
+        });
     }
 }

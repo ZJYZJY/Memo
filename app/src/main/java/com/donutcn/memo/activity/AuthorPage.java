@@ -15,7 +15,7 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.RequestManager;
 import com.donutcn.memo.R;
 import com.donutcn.memo.adapter.MemoAdapter;
-import com.donutcn.memo.constant.FieldConfig;
+import com.donutcn.memo.constant.FieldConstant;
 import com.donutcn.memo.entity.BriefContent;
 import com.donutcn.memo.entity.SimpleResponse;
 import com.donutcn.memo.event.ChangeContentEvent;
@@ -52,6 +52,7 @@ public class AuthorPage extends AppCompatActivity implements OnItemClickListener
     private List<BriefContent> mList;
     private LinkedTreeMap mUserInfo;
     private String mUserId, mUserName;
+    private boolean isLoaded = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -80,6 +81,7 @@ public class AuthorPage extends AppCompatActivity implements OnItemClickListener
                         mUserInfo = (LinkedTreeMap) response.body().getData().get("user_info");
                         List<LinkedTreeMap> data = (List<LinkedTreeMap>) response.body().getData().get("article");
                         loadData(data);
+                        isLoaded = true;
                     } else if(response.body().unAuthorized()){
                         ToastUtil.show(AuthorPage.this, "登录授权过期，请重新登录");
                         LoginHelper.logout(AuthorPage.this);
@@ -117,6 +119,9 @@ public class AuthorPage extends AppCompatActivity implements OnItemClickListener
 
     @Override
     public void onClick(View v) {
+        if (!isLoaded) {
+            return;
+        }
         switch (v.getId()){
             case R.id.author_follow:
                 if(LoginHelper.ifRequestLogin(this, "请先登录")){
@@ -166,8 +171,8 @@ public class AuthorPage extends AppCompatActivity implements OnItemClickListener
                 }
                 Intent intent = new Intent(AuthorPage.this, ChatActivity.class);
                 intent.putExtra("username", mUserName);
-                intent.putExtra("name", (String) mUserInfo.get(FieldConfig.USER_NICKNAME));
-                intent.putExtra("avatar", (String) mUserInfo.get(FieldConfig.USER_ICON_URL));
+                intent.putExtra("name", (String) mUserInfo.get(FieldConstant.USER_NICKNAME));
+                intent.putExtra("avatar", (String) mUserInfo.get(FieldConstant.USER_ICON_URL));
                 startActivity(intent);
                 break;
         }
@@ -184,12 +189,12 @@ public class AuthorPage extends AppCompatActivity implements OnItemClickListener
     }
 
     public void loadData(List<LinkedTreeMap> data){
-        WindowUtils.setToolBarTitle(this, (String) mUserInfo.get(FieldConfig.USER_NICKNAME));
-        mAuthorName.setText((String) mUserInfo.get(FieldConfig.USER_NICKNAME));
-        String signature = (String) mUserInfo.get(FieldConfig.USER_SIGNATURE);
+        WindowUtils.setToolBarTitle(this, (String) mUserInfo.get(FieldConstant.USER_NICKNAME));
+        mAuthorName.setText((String) mUserInfo.get(FieldConstant.USER_NICKNAME));
+        String signature = (String) mUserInfo.get(FieldConstant.USER_SIGNATURE);
         mAuthorSign.setText(signature == null ? getString(R.string.author_page_not_signature) : signature);
-        glide.load((String) mUserInfo.get(FieldConfig.USER_ICON_URL)).centerCrop().into(mUserIcon);
-        mUserName = (String) mUserInfo.get(FieldConfig.USER_NAME);
+        glide.load((String) mUserInfo.get(FieldConstant.USER_ICON_URL)).centerCrop().into(mUserIcon);
+        mUserName = (String) mUserInfo.get(FieldConstant.USER_NAME);
 
         try {
             mList = CollectionUtil.covertLinkedTreeMap(data, BriefContent.class);

@@ -85,7 +85,7 @@
 
                 <data
                     android:host="ascexz.320.io"
-                    android:pathPrefix="/main"
+                    android:pathPrefix="/GoodPage/login"
                     android:scheme="memo" />
             </intent-filter>
         </activity>

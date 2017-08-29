@@ -18,7 +18,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.donutcn.memo.R;
-import com.donutcn.memo.constant.FieldConfig;
+import com.donutcn.memo.constant.FieldConstant;
 import com.donutcn.memo.entity.SimpleResponse;
 import com.donutcn.memo.fragment.SplashFragment;
 import com.donutcn.memo.helper.LoginHelper;
@@ -33,6 +33,7 @@ import com.umeng.socialize.UMAuthListener;
 import com.umeng.socialize.UMShareAPI;
 import com.umeng.socialize.bean.SHARE_MEDIA;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -114,8 +115,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                                 LoginHelper.autoLogin(LoginActivity.this, data);
                                 // if login with phone number.
                                 if(LoginHelper.loginType(LoginActivity.this) == UserStatus.PHONE_LOGIN){
-                                    if("".equals(data.get(FieldConfig.USER_ICON_URL))
-                                            || "".equals(data.get(FieldConfig.USER_NICKNAME))){
+                                    if("".equals(data.get(FieldConstant.USER_ICON_URL))
+                                            || "".equals(data.get(FieldConstant.USER_NICKNAME))){
                                         completeInfo = true;
                                     }
                                 }
@@ -199,7 +200,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             @Override
             public void onResponse(Call<SimpleResponse> call, Response<SimpleResponse> response) {
                 mDialog.cancel();
-                if (response.body() != null && response.body().isOk()) {
+                if (response.body() != null) {
                     if (response.body().isOk()) {
                         ToastUtil.show(LoginActivity.this, "登录成功");
                         Map<String, String> data = response.body().getData();
@@ -259,7 +260,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                         ToastUtil.show(LoginActivity.this, "注册失败，" + response.body().getMessage());
                     }
                 } else {
-                    ToastUtil.show(LoginActivity.this, "登录失败，服务器未知错误");
+                    ToastUtil.show(LoginActivity.this, "注册失败，服务器未知错误");
                 }
             }
 
@@ -287,7 +288,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                     if(response.body().isOk()){
                         authCodeTimer.start();
                         ToastUtil.show(LoginActivity.this, "验证码发送成功");
-                    }else {
+                    } else {
                         mMsgCode.setClickable(true);
                         mMsgCode.setBackgroundResource(R.drawable.selector_radius_blue_btn);
                         ToastUtil.show(LoginActivity.this, "验证码发送失败，" + response.body().getMessage());
@@ -371,7 +372,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                         Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                         startActivity(intent);
-                    }else {
+                    } else {
                         ToastUtil.show(LoginActivity.this, "登录失败");
                     }
                 }

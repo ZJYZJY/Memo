@@ -1,6 +1,6 @@
 package com.donutcn.memo.entity;
 
-import com.donutcn.memo.constant.FieldConfig;
+import com.donutcn.memo.constant.FieldConstant;
 import com.donutcn.memo.interfaces.Jsonify;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
@@ -20,7 +20,7 @@ import java.util.Date;
 public class BriefMessage extends Jsonify {
 
     @Expose
-    @SerializedName(FieldConfig.MESSAGE_ID)
+    @SerializedName(FieldConstant.MESSAGE_ID)
     private String id;
 
     /**
@@ -28,27 +28,27 @@ public class BriefMessage extends Jsonify {
      * else 'type' is {@link com.donutcn.memo.type.PublishType}
      */
     @Expose
-    @SerializedName(FieldConfig.MESSAGE_TYPE)
+    @SerializedName(FieldConstant.MESSAGE_TYPE)
     private String type;
 
     @Expose
-    @SerializedName(FieldConfig.MESSAGE_TITLE)
+    @SerializedName(FieldConstant.MESSAGE_TITLE)
     private String title;
 
     @Expose
-    @SerializedName(FieldConfig.MESSAGE_SUB_TITLE)
+    @SerializedName(FieldConstant.MESSAGE_SUB_TITLE)
     private String subTitle;
 
     @Expose
-    @SerializedName(FieldConfig.MESSAGE_TIME)
+    @SerializedName(FieldConstant.MESSAGE_TIME)
     private String time;
 
     @Expose
-    @SerializedName(FieldConfig.MESSAGE_DATE)
+    @SerializedName(FieldConstant.MESSAGE_DATE)
     private String date;
 
     @Expose
-    @SerializedName(FieldConfig.MESSAGE_COUNT)
+    @SerializedName(FieldConstant.MESSAGE_COUNT)
     private int newMsgCount;
 
     public BriefMessage(){}
@@ -140,13 +140,13 @@ public class BriefMessage extends Jsonify {
     public JSONObject toJson() {
         JSONObject json = new JSONObject();
         try {
-            json.put(FieldConfig.MESSAGE_ID, id);
-            json.put(FieldConfig.MESSAGE_TYPE, type);
-            json.put(FieldConfig.MESSAGE_TITLE, title);
-            json.put(FieldConfig.MESSAGE_SUB_TITLE, subTitle);
-            json.put(FieldConfig.MESSAGE_TIME, time);
-            json.put(FieldConfig.MESSAGE_DATE, date);
-            json.put(FieldConfig.MESSAGE_COUNT, newMsgCount);
+            json.put(FieldConstant.MESSAGE_ID, id);
+            json.put(FieldConstant.MESSAGE_TYPE, type);
+            json.put(FieldConstant.MESSAGE_TITLE, title);
+            json.put(FieldConstant.MESSAGE_SUB_TITLE, subTitle);
+            json.put(FieldConstant.MESSAGE_TIME, time);
+            json.put(FieldConstant.MESSAGE_DATE, date);
+            json.put(FieldConstant.MESSAGE_COUNT, newMsgCount);
         } catch (JSONException e) {
             e.printStackTrace();
         }

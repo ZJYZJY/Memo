@@ -12,7 +12,7 @@ import android.widget.EditText;
 
 import com.donutcn.memo.R;
 import com.donutcn.memo.adapter.VoteItemAdapter;
-import com.donutcn.memo.constant.FieldConfig;
+import com.donutcn.memo.constant.FieldConstant;
 import com.donutcn.memo.entity.SimpleResponse;
 import com.donutcn.memo.event.FinishEditVoteItemsEvent;
 import com.donutcn.memo.type.PublishType;
@@ -207,14 +207,14 @@ public class CompletingPage extends AppCompatActivity {
             public void onResponse(Call<SimpleResponse> call, Response<SimpleResponse> response) {
                 if (response.body() != null) {
                     if(response.body().isOk()){
-                        mContentId = String.valueOf(response.body().getField(FieldConfig.CONTENT_ID));
+                        mContentId = String.valueOf(response.body().getField(FieldConstant.CONTENT_ID));
                         Intent mShareIntent = new Intent(mContext, SocialShareActivity.class);
                         mShareIntent.putExtra("contentId", mContentId);
-                        mShareIntent.putExtra("contentUrl", String.valueOf(response.body().getField(FieldConfig.CONTENT_URL)));
-                        mShareIntent.putExtra("title", (String) response.body().getField(FieldConfig.CONTENT_TITLE));
-                        mShareIntent.putExtra("content", (String) response.body().getField(FieldConfig.CONTENT));
+                        mShareIntent.putExtra("contentUrl", String.valueOf(response.body().getField(FieldConstant.CONTENT_URL)));
+                        mShareIntent.putExtra("title", (String) response.body().getField(FieldConstant.CONTENT_TITLE));
+                        mShareIntent.putExtra("content", (String) response.body().getField(FieldConstant.CONTENT));
                         mShareIntent.putExtra("picUrl", (String) response.body().getField("picurl"));
-                        mShareIntent.putExtra("isPrivate", Integer.valueOf((String) response.body().getField(FieldConfig.CONTENT_RIGHTS)));
+                        mShareIntent.putExtra("isPrivate", Integer.valueOf((String) response.body().getField(FieldConstant.CONTENT_RIGHTS)));
                         completeInfo(mShareIntent);
                     }
                 } else {

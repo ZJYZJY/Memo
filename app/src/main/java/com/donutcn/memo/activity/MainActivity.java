@@ -20,13 +20,10 @@ import com.bumptech.glide.Glide;
 import com.donutcn.memo.IMService;
 import com.donutcn.memo.R;
 import com.donutcn.memo.adapter.ViewPagerAdapter;
-import com.donutcn.memo.constant.FieldConfig;
+import com.donutcn.memo.constant.FieldConstant;
 import com.donutcn.memo.entity.BriefMessage;
-import com.donutcn.memo.entity.ChatMessage;
-import com.donutcn.memo.entity.ChatUser;
 import com.donutcn.memo.entity.SimpleResponse;
 import com.donutcn.memo.entity.SyncInfoPackage;
-import com.donutcn.memo.event.ChangeRedDotEvent;
 import com.donutcn.memo.event.LoginStateEvent;
 import com.donutcn.memo.event.RequestRefreshEvent;
 import com.donutcn.memo.fragment.SplashFragment;
@@ -40,13 +37,6 @@ import com.donutcn.memo.utils.ToastUtil;
 import com.donutcn.memo.utils.UserStatus;
 import com.donutcn.memo.utils.WindowUtils;
 import com.donutcn.widgetlib.widget.CheckableImageButton;
-import com.hyphenate.EMConnectionListener;
-import com.hyphenate.EMError;
-import com.hyphenate.EMMessageListener;
-import com.hyphenate.chat.EMClient;
-import com.hyphenate.chat.EMMessage;
-import com.hyphenate.chat.EMTextMessageBody;
-import com.hyphenate.util.NetUtils;
 import com.tencent.android.tpush.XGIOperateCallback;
 import com.tencent.android.tpush.XGPushManager;
 import com.umeng.socialize.UMShareAPI;
@@ -67,8 +57,6 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import top.zibin.luban.Luban;
 import top.zibin.luban.OnCompressListener;
-
-import static cn.jiguang.imui.commons.models.IMessage.MessageType.RECEIVE_TEXT;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -286,10 +274,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             public void uploadAll(List<String> keys) {
                 final Map<String, String> data = new HashMap<>();
                 if(keys != null){
-                    data.put(FieldConfig.USER_ICON_URL, HOST + keys.get(0) + strategy);
+                    data.put(FieldConstant.USER_ICON_URL, HOST + keys.get(0) + strategy);
                 }
                 if(!name.equals(UserStatus.getCurrentUser().getName())){
-                    data.put(FieldConfig.USER_NICKNAME, name);
+                    data.put(FieldConstant.USER_NICKNAME, name);
                 }
                 modifyInfo(data);
             }

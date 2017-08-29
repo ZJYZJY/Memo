@@ -10,17 +10,14 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.donutcn.memo.R;
-import com.donutcn.memo.activity.AuthorPage;
 import com.donutcn.memo.activity.ChatActivity;
 import com.donutcn.memo.activity.MessageDetail;
 import com.donutcn.memo.adapter.BriefMessageAdapter;
 import com.donutcn.memo.base.BaseScrollFragment;
-import com.donutcn.memo.constant.FieldConfig;
 import com.donutcn.memo.entity.BriefMessage;
 import com.donutcn.memo.event.ChangeRedDotEvent;
 import com.donutcn.memo.event.RequestRefreshEvent;
 import com.donutcn.memo.interfaces.OnItemClickListener;
-import com.donutcn.memo.type.PublishType;
 import com.donutcn.memo.utils.FileCacheUtil;
 import com.donutcn.memo.view.ListViewDecoration;
 import com.google.gson.Gson;

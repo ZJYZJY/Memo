@@ -15,9 +15,12 @@ import com.bumptech.glide.RequestManager;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.donutcn.memo.R;
 import com.donutcn.memo.entity.MessageItem;
+import com.donutcn.memo.event.ItemActionClickEvent;
 import com.donutcn.memo.interfaces.OnItemClickListener;
 import com.donutcn.memo.type.PublishType;
 import com.yanzhenjie.recyclerview.swipe.SwipeMenuAdapter;
+
+import org.greenrobot.eventbus.EventBus;
 
 import java.util.List;
 
@@ -196,6 +199,8 @@ public class MessageDetailAdapter extends SwipeMenuAdapter<MessageDetailAdapter.
 
             delete = (Button) itemView.findViewById(R.id.message_item_delete);
             download = (Button) itemView.findViewById(R.id.message_item_download);
+            delete.setOnClickListener(this);
+            download.setOnClickListener(this);
 
             view_name = itemView.findViewById(R.id.message_name_container);
             view_phone = itemView.findViewById(R.id.message_phone_container);
@@ -209,7 +214,14 @@ public class MessageDetailAdapter extends SwipeMenuAdapter<MessageDetailAdapter.
 
         @Override
         public void onClick(View v) {
-            if (mOnItemClickListener != null) {
+            if (mOnItemClickListener == null) {
+                return;
+            }
+            if (v == delete){
+                EventBus.getDefault().post(new ItemActionClickEvent(getAdapterPosition(), 0));
+            } else if(v == download){
+                EventBus.getDefault().post(new ItemActionClickEvent(getAdapterPosition(), 1));
+            } else {
                 mOnItemClickListener.onItemClick(getAdapterPosition());
             }
         }

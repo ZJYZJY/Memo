@@ -1,6 +1,6 @@
 package com.donutcn.memo.entity;
 
-import com.donutcn.memo.constant.FieldConfig;
+import com.donutcn.memo.constant.FieldConstant;
 import com.donutcn.memo.interfaces.Jsonify;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
@@ -20,21 +20,21 @@ public class Contact extends Jsonify {
 
     @Id
     @Expose
-    @SerializedName(FieldConfig.USER_ID)
+    @SerializedName(FieldConstant.USER_ID)
     private String userId; //id
 
     private String displayName;//姓名
 
     @Expose
-    @SerializedName(FieldConfig.USER_NICKNAME)
+    @SerializedName(FieldConstant.USER_NICKNAME)
     private String name;
 
     @Expose
-    @SerializedName(FieldConfig.USER_ICON_URL)
+    @SerializedName(FieldConstant.USER_ICON_URL)
     private String avatar;
 
     @Expose
-    @SerializedName(FieldConfig.USER_NAME)
+    @SerializedName(FieldConstant.USER_NAME)
     private String phoneNum; // 电话号码
     private String sortKey; // 排序用的
     private String lookUpKey;

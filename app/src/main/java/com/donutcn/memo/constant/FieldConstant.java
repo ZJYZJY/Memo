@@ -5,7 +5,7 @@ package com.donutcn.memo.constant;
  * Created by 73958 on 2017/8/18.
  */
 
-public class FieldConfig {
+public class FieldConstant {
 
     public static final String REQUEST_HEADER = "requestType:android-app";
 
