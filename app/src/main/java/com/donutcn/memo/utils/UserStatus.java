@@ -70,6 +70,7 @@ public class UserStatus {
         // clear local cache.
         FileCacheUtil.clear(context, FileCacheUtil.CONTENT_LIST_CACHE);
         FileCacheUtil.clear(context, FileCacheUtil.MESSAGE_LIST_CACHE);
+        FileCacheUtil.clear(context, FileCacheUtil.MESSAGE_ITEM_CACHE);
         // clear the local database.
         ((App)context.getApplicationContext()).getDaoSession().getContactDao().deleteAll();
     }

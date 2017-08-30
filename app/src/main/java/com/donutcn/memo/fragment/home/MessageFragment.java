@@ -14,11 +14,15 @@ import com.donutcn.memo.activity.ChatActivity;
 import com.donutcn.memo.activity.MessageDetail;
 import com.donutcn.memo.adapter.BriefMessageAdapter;
 import com.donutcn.memo.base.BaseScrollFragment;
+import com.donutcn.memo.entity.ArrayResponse;
 import com.donutcn.memo.entity.BriefMessage;
 import com.donutcn.memo.event.ChangeRedDotEvent;
 import com.donutcn.memo.event.RequestRefreshEvent;
 import com.donutcn.memo.interfaces.OnItemClickListener;
+import com.donutcn.memo.utils.CollectionUtil;
 import com.donutcn.memo.utils.FileCacheUtil;
+import com.donutcn.memo.utils.HttpUtils;
+import com.donutcn.memo.utils.ToastUtil;
 import com.donutcn.memo.view.ListViewDecoration;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -33,6 +37,10 @@ import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 import static com.donutcn.memo.utils.FileCacheUtil.MESSAGE_LIST_CACHE;
 
@@ -49,11 +57,6 @@ public class MessageFragment extends BaseScrollFragment {
     public void onAttach(Context context) {
         super.onAttach(context);
         mContext = context;
-    }
-
-    @Override
-    public void onStart() {
-        super.onStart();
     }
 
     @Override
@@ -82,7 +85,7 @@ public class MessageFragment extends BaseScrollFragment {
         mAdapter = new BriefMessageAdapter(mContext, mList);
         mAdapter.setOnItemClickListener(mOnItemClickListener);
         mMessage_rv.setAdapter(mAdapter);
-        String cache = FileCacheUtil.getCache(mContext, MESSAGE_LIST_CACHE, FileCacheUtil.CACHE_LONG_TIMEOUT);
+        String cache = FileCacheUtil.getCache(mContext, MESSAGE_LIST_CACHE, FileCacheUtil.CACHE_SHORT_TIMEOUT);
         if("".equals(cache))
             Refresh();
         else{
@@ -93,12 +96,33 @@ public class MessageFragment extends BaseScrollFragment {
     }
 
     public void Refresh() {
+        HttpUtils.getReplyList(mList.size() == 0 ? 0 : mList.get(0).getTimeStamp())
+                .enqueue(new Callback<ArrayResponse<BriefMessage>>() {
+            @Override
+            public void onResponse(Call<ArrayResponse<BriefMessage>> call,
+                                   Response<ArrayResponse<BriefMessage>> response) {
+                if(response.body() != null){
+                    if(response.body().isOk()){
+                        mList.addAll(0, response.body().getData());
+                        mList = CollectionUtil.removeDuplicateWithOrder(mList);
+                        mAdapter.notifyDataSetChanged();
+                        FileCacheUtil.setMessageListCache(mContext, new Gson().toJson(mList));
+                    } else {
+                        ToastUtil.show(mContext, response.body().getMessage());
+                    }
+                } else {
+                    ToastUtil.show(mContext, "服务器未知错误");
+                }
+                mRefreshLayout.finishRefresh();
+            }
 
-//        List<BriefMessage> old = mList;
-//        DiffUtil.calculateDiff(new MessageDiffUtil(old, mList), true).dispatchUpdatesTo(mAdapter);
-        mAdapter.notifyDataSetChanged();
-        mRefreshLayout.finishRefresh();
-        FileCacheUtil.setMessageListCache(mContext, new Gson().toJson(mList));
+            @Override
+            public void onFailure(Call<ArrayResponse<BriefMessage>> call, Throwable t) {
+                t.printStackTrace();
+                mRefreshLayout.finishRefresh();
+                ToastUtil.show(mContext, "消息列表连接失败");
+            }
+        });
     }
 
     private OnRefreshListener mRefreshListener = new OnRefreshListener() {
@@ -149,11 +173,6 @@ public class MessageFragment extends BaseScrollFragment {
             }
         }
         FileCacheUtil.setMessageListCache(mContext, new Gson().toJson(mList));
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
     }
 
     @Override

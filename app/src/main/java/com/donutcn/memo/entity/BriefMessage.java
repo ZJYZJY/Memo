@@ -2,6 +2,7 @@ package com.donutcn.memo.entity;
 
 import com.donutcn.memo.constant.FieldConstant;
 import com.donutcn.memo.interfaces.Jsonify;
+import com.donutcn.memo.utils.StringUtil;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
@@ -51,7 +52,10 @@ public class BriefMessage extends Jsonify {
     @SerializedName(FieldConstant.MESSAGE_COUNT)
     private int newMsgCount;
 
-    public BriefMessage(){}
+    private long timeStamp;
+
+    public BriefMessage() {
+    }
 
     public BriefMessage(String id, String type, String title, String subTitle, String time, int newMsgCount) {
         this.id = id;
@@ -92,7 +96,10 @@ public class BriefMessage extends Jsonify {
     }
 
     public String getDate() {
-        return date;
+        if(date != null)
+            return date;
+        else
+            return time.substring(0, 10);
     }
 
     public int getNewMsgCount() {
@@ -100,7 +107,7 @@ public class BriefMessage extends Jsonify {
     }
 
     public void setSubTitle(String subTitle) {
-        if(subTitle != null)
+        if (subTitle != null)
             this.subTitle = subTitle;
     }
 
@@ -109,7 +116,7 @@ public class BriefMessage extends Jsonify {
     }
 
     public void setType(String type) {
-        if(type != null)
+        if (type != null)
             this.type = type;
     }
 
@@ -118,7 +125,7 @@ public class BriefMessage extends Jsonify {
     }
 
     public void setTime(String time) {
-        if(time != null)
+        if (time != null)
             this.time = time;
     }
 
@@ -134,6 +141,12 @@ public class BriefMessage extends Jsonify {
 
     public void setNewMsgCount(int newMsgCount) {
         this.newMsgCount = newMsgCount;
+    }
+
+    public long getTimeStamp() {
+        // transfer 'ms' to 's'.
+        timeStamp = StringUtil.string2Date(time).getTime() / 1000;
+        return timeStamp;
     }
 
     @Override

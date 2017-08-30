@@ -38,9 +38,9 @@ public class FileCacheUtil {
         setCache(context, content, MESSAGE_LIST_CACHE, MODE_PRIVATE);
     }
 
-    public static void setMessageItemCache(Context context, String content) {
-        setCache(context, content, MESSAGE_ITEM_CACHE, MODE_PRIVATE);
-    }
+//    public static void setMessageItemCache(Context context, String content) {
+//        setCache(context, content, MESSAGE_ITEM_CACHE, MODE_PRIVATE);
+//    }
 
     /**
      * set cache.

@@ -5,6 +5,7 @@ import android.content.Context;
 import com.donutcn.memo.constant.FieldConstant;
 import com.donutcn.memo.entity.ArrayResponse;
 import com.donutcn.memo.entity.BriefContent;
+import com.donutcn.memo.entity.BriefMessage;
 import com.donutcn.memo.entity.Contact;
 import com.donutcn.memo.entity.ContentResponse;
 import com.donutcn.memo.entity.MessageItem;
@@ -76,6 +77,7 @@ public class HttpUtils {
                     .cookieJar(cookieJar)
                     .build();
             Gson gson = new GsonBuilder()
+                    .setLenient()
                     .excludeFieldsWithoutExposeAnnotation()
                     .create();
             instance = new Retrofit.Builder()
@@ -129,6 +131,7 @@ public class HttpUtils {
         @Headers(FieldConstant.REQUEST_HEADER)
         @POST(APIPath.LOGIN)
         Call<SimpleResponse> login(@Body RequestBody user);
+        @Headers(FieldConstant.REQUEST_HEADER)
 
         /**
          * request for message Verification Code.
@@ -267,6 +270,9 @@ public class HttpUtils {
         Call<ArrayResponse<MessageItem>> getReplyById(@Path("id") String contentId,
                                           @Path("action") String action,
                                           @Path("timestamp") long timeStamp);
+
+        @GET(APIPath.GET_REPLY_LIST)
+        Call<ArrayResponse<BriefMessage>> getReplyList(@Path("timestamp") long timeStamp);
 
         @GET(APIPath.DELETE_REPLY)
         Call<SimpleResponse> deleteReply(@Path("content_id") String contentId,
@@ -520,6 +526,10 @@ public class HttpUtils {
 
     public static Call<ArrayResponse<MessageItem>> getReplyById(String id, String action, long timeStamp){
         return create().getReplyById(id, action, timeStamp);
+    }
+
+    public static Call<ArrayResponse<BriefMessage>> getReplyList(long timeStamp){
+        return create().getReplyList(timeStamp);
     }
 
     public static Call<SimpleResponse> deleteReply(String contentId, String messageId, String type){

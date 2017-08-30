@@ -1,6 +1,12 @@
 package com.donutcn.memo.presenter;
 
+import android.app.DownloadManager;
+import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
+import android.database.Cursor;
+import android.net.Uri;
 
 import com.donutcn.memo.entity.ArrayResponse;
 import com.donutcn.memo.entity.MessageItem;
@@ -9,6 +15,7 @@ import com.donutcn.memo.fragment.api.DeleteContent;
 import com.donutcn.memo.fragment.api.FetchContent;
 import com.donutcn.memo.utils.HttpUtils;
 import com.donutcn.memo.utils.LogUtil;
+import com.donutcn.memo.utils.ToastUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,11 +33,13 @@ public class MessagePresenter {
 
     private FetchContent<MessageItem> fetchContent;
     private DeleteContent deleteContent;
+    private Context mContext;
     private String contentId;
 
     public MessagePresenter(Context context, String contentId){
         this.fetchContent = (FetchContent) context;
         this.deleteContent = (DeleteContent) context;
+        this.mContext = context;
         this.contentId = contentId;
     }
 
@@ -127,5 +136,51 @@ public class MessagePresenter {
                 deleteContent.deleteFail(408, "连接失败，请检查你的网络连接");
             }
         });
+    }
+
+    public void downloadResume(List<MessageItem> list, int position){
+        MessageItem messageItem = list.get(position);
+        String[] parts = messageItem.getResume().split("\\.");
+        String postfix = parts[parts.length -1];
+        //创建下载任务,downloadUrl就是下载链接
+        DownloadManager.Request request = new DownloadManager.Request(Uri.parse(messageItem.getResume()));
+        request.setDestinationInExternalPublicDir("/com.donutcn.memo/resume", messageItem.getRealName() + "的简历." + postfix);
+        // set cookies for download request
+        request.addRequestHeader("Cookie", HttpUtils.cookieHeader());
+        request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
+        request.setVisibleInDownloadsUi(true);
+
+        final DownloadManager downloadManager= (DownloadManager) mContext.getSystemService(Context.DOWNLOAD_SERVICE);
+        //将下载任务加入下载队列
+        final long taskId = downloadManager.enqueue(request);
+        ToastUtil.show(mContext, "开始下载...");
+        mContext.registerReceiver(new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                DownloadManager.Query query = new DownloadManager.Query();
+                query.setFilterById(taskId);//筛选下载任务，传入任务ID，可变参数
+                Cursor c = downloadManager.query(query);
+                if (c.moveToFirst()) {
+                    int status = c.getInt(c.getColumnIndex(DownloadManager.COLUMN_STATUS));
+                    switch (status) {
+                        case DownloadManager.STATUS_PAUSED:
+                            LogUtil.i(">>>下载暂停");
+                        case DownloadManager.STATUS_PENDING:
+                            LogUtil.i(">>>下载延迟");
+                        case DownloadManager.STATUS_RUNNING:
+                            LogUtil.i(">>>正在下载");
+                            break;
+                        case DownloadManager.STATUS_SUCCESSFUL:
+                            LogUtil.i(">>>下载完成");
+                            ToastUtil.show(mContext, "下载完成");
+                            break;
+                        case DownloadManager.STATUS_FAILED:
+                            LogUtil.e(">>>下载失败");
+                            ToastUtil.show(mContext, "下载失败");
+                            break;
+                    }
+                }
+            }
+        }, new IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE));
     }
 }

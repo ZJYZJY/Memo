@@ -19,7 +19,6 @@ import com.donutcn.memo.presenter.MessagePresenter;
 import com.donutcn.memo.type.PublishType;
 import com.donutcn.memo.utils.CollectionUtil;
 import com.donutcn.memo.utils.FileCacheUtil;
-import com.donutcn.memo.utils.LogUtil;
 import com.donutcn.memo.utils.ToastUtil;
 import com.donutcn.memo.utils.WindowUtils;
 import com.donutcn.memo.view.ListViewDecoration;
@@ -167,7 +166,7 @@ public class MessageDetail extends AppCompatActivity implements OnItemClickListe
         mList = CollectionUtil.removeDuplicateWithOrder(mList);
         mAdapter.notifyDataSetChanged();
         mRefreshLayout.finishRefresh();
-        FileCacheUtil.setMessageItemCache(this, new Gson().toJson(mList));
+//        FileCacheUtil.setMessageItemCache(this, new Gson().toJson(mList));
     }
 
     @Override
@@ -188,7 +187,7 @@ public class MessageDetail extends AppCompatActivity implements OnItemClickListe
         mAdapter.notifyDataSetChanged();
         mRefreshLayout.finishLoadmore();
         isLoadMore = false;
-        FileCacheUtil.setMessageItemCache(this, new Gson().toJson(mList));
+//        FileCacheUtil.setMessageItemCache(this, new Gson().toJson(mList));
     }
 
     @Override
@@ -210,7 +209,7 @@ public class MessageDetail extends AppCompatActivity implements OnItemClickListe
         mList.remove(position);
         mAdapter.notifyItemRemoved(position);
         ToastUtil.show(this, "删除成功");
-        FileCacheUtil.setMessageItemCache(this, new Gson().toJson(mList));
+//        FileCacheUtil.setMessageItemCache(this, new Gson().toJson(mList));
     }
 
     @Override
@@ -227,7 +226,7 @@ public class MessageDetail extends AppCompatActivity implements OnItemClickListe
         if(event.type == 0){
             mMsgPresenter.deleteContent(mList, event.position);
         } else if(event.type == 1){
-
+            mMsgPresenter.downloadResume(mList, event.position);
         }
     }
 }

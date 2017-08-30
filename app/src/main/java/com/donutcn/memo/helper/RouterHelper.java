@@ -78,6 +78,7 @@ public class RouterHelper {
         public static final String VERIFY_CONTENT = "index/verify_content/{id}";
         public static final String TIP_OFF_CONTENT = "authorised/do_accuse";
         public static final String GET_REPLY = "authorised/messages/{id}/{action}/{timestamp}";
+        public static final String GET_REPLY_LIST = "authorised/message_list/down/{timestamp}";
         public static final String DELETE_REPLY = "authorised/delete_reply/{content_id}/{message_id}/{type}";
     }
 }
