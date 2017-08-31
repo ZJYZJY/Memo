@@ -8,8 +8,8 @@ android {
         applicationId "com.donutcn.memo"
         minSdkVersion 16
         targetSdkVersion 25
-        versionCode 7
-        versionName "1.5"
+        versionCode 8
+        versionName "1.6"
         multiDexEnabled true
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         ndk {
@@ -78,7 +78,8 @@ dependencies {
     compile files('libs/Sunflower.jar')
     compile project(':widgetlib')
     compile project(':PhotoPicker')
-    compile project(':richeditor')
+    //    compile project(':richeditor')
+
     //    compile 'com.scwang.smartrefresh:SmartRefreshHeader:1.0.3-alpha-3'//use custom header
     compile files('libs/tbs_sdk_v2.5.0.1037_36880_minsize.jar')
     compile files('libs/umeng_shareboard_widget.jar')
@@ -115,8 +116,9 @@ dependencies {
     compile 'com.jakewharton:butterknife:8.8.0'
     compile 'com.github.CymChad:BaseRecyclerViewAdapterHelper:2.9.27'
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
-        compile 'com.android.support:multidex:1.0.1'
+    compile 'com.android.support:multidex:1.0.1'
     testCompile 'junit:junit:4.12'
     testCompile 'org.json:json:20140107'
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.8.0'
+    compile project(':richeditor')
 }

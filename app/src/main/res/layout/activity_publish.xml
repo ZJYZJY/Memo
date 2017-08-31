@@ -46,7 +46,7 @@
                 android:layout_height="@dimen/px_line"
                 android:background="@color/border_gray" />
 
-            <com.donutcn.memo.editor.RichEditor
+            <jp.wasabeef.richeditor.RichEditor
                 android:id="@+id/et_publish_content"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
@@ -300,11 +300,5 @@
                     android:visibility="gone" />
             </RelativeLayout>
         </LinearLayout>
-
-        <FrameLayout
-            android:id="@+id/fl_action"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            />
     </LinearLayout>
 </LinearLayout>

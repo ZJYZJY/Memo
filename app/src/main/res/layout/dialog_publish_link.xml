@@ -3,17 +3,15 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:paddingBottom="10dp"
     android:paddingLeft="20dp"
-    android:paddingRight="20dp"
-    android:paddingTop="20dp">
+    android:paddingRight="20dp">
 
-    <EditText
-        android:id="@+id/publish_title_dialog"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="@string/hint_publish_title_dialog"
-        android:maxLines="1" />
+    <!--<EditText-->
+        <!--android:id="@+id/publish_title_dialog"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:hint="@string/hint_publish_title_dialog"-->
+        <!--android:maxLines="1" />-->
 
     <EditText
         android:id="@+id/publish_link_dialog"

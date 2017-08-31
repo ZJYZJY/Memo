@@ -34,7 +34,7 @@ public class FieldConstant {
     public static final String CONTENT_IMG_URL1 = "url1";
     public static final String CONTENT_IMG_URL2 = "url2";
 
-    public static final String MESSAGE_ID = "id";
+    public static final String MESSAGE_ID = "article_id";
     public static final String MESSAGE_TYPE = "type";
     public static final String MESSAGE_TITLE = "title";
     public static final String MESSAGE_SUB_TITLE = "sub_title";
