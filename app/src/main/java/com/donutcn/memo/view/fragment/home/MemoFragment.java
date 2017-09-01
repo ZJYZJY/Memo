@@ -1,4 +1,4 @@
-package com.donutcn.memo.fragment.home;
+package com.donutcn.memo.view.fragment.home;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -9,11 +9,11 @@ import android.support.annotation.Nullable;
 import android.view.ViewGroup;
 
 import com.donutcn.memo.base.BaseMemoFragment;
-import com.donutcn.memo.fragment.api.DeleteContent;
-import com.donutcn.memo.fragment.api.FetchContent;
+import com.donutcn.memo.view.api.DeleteContent;
+import com.donutcn.memo.view.api.FetchContent;
 import com.donutcn.memo.presenter.MemoPresenter;
-import com.donutcn.memo.activity.ArticlePage;
-import com.donutcn.memo.activity.PublishActivity;
+import com.donutcn.memo.view.activity.ArticlePage;
+import com.donutcn.memo.view.activity.PublishActivity;
 import com.donutcn.memo.entity.BriefContent;
 import com.donutcn.memo.event.ChangeContentEvent;
 import com.donutcn.memo.event.RequestRefreshEvent;

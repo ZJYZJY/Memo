@@ -1,4 +1,4 @@
-package com.donutcn.memo.fragment.home;
+package com.donutcn.memo.view.fragment.home;
 
 import android.content.Context;
 import android.content.Intent;
@@ -14,7 +14,7 @@ import android.widget.ImageView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.RequestManager;
 import com.donutcn.memo.R;
-import com.donutcn.memo.activity.PersonalCenterActivity;
+import com.donutcn.memo.view.activity.PersonalCenterActivity;
 import com.donutcn.memo.adapter.TabFragmentPagerAdapter;
 import com.donutcn.memo.event.LoginStateEvent;
 import com.donutcn.memo.event.ChangeRedDotEvent;

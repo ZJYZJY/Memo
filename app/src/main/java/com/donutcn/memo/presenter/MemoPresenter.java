@@ -5,8 +5,8 @@ import android.support.v4.app.Fragment;
 import com.donutcn.memo.entity.ArrayResponse;
 import com.donutcn.memo.entity.BriefContent;
 import com.donutcn.memo.entity.SimpleResponse;
-import com.donutcn.memo.fragment.api.DeleteContent;
-import com.donutcn.memo.fragment.api.FetchContent;
+import com.donutcn.memo.view.api.DeleteContent;
+import com.donutcn.memo.view.api.FetchContent;
 import com.donutcn.memo.utils.HttpUtils;
 import com.donutcn.memo.utils.LogUtil;
 

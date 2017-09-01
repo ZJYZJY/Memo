@@ -1,4 +1,4 @@
-package com.donutcn.memo.fragment.api;
+package com.donutcn.memo.view.api;
 
 import com.donutcn.memo.entity.BriefContent;
 

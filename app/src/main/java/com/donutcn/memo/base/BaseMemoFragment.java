@@ -12,11 +12,11 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.donutcn.memo.R;
-import com.donutcn.memo.fragment.api.FetchContent;
+import com.donutcn.memo.view.api.FetchContent;
 import com.donutcn.memo.presenter.MemoPresenter;
 import com.donutcn.memo.utils.CollectionUtil;
 import com.donutcn.memo.utils.ToastUtil;
-import com.donutcn.memo.activity.ArticlePage;
+import com.donutcn.memo.view.activity.ArticlePage;
 import com.donutcn.memo.adapter.MemoAdapter;
 import com.donutcn.memo.entity.BriefContent;
 import com.donutcn.memo.helper.ShareHelper;

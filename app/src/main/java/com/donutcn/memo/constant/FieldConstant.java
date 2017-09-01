@@ -15,7 +15,7 @@ public class FieldConstant {
     public static final String USER_GENDER = "sex";
     public static final String USER_NAME = "username";
     public static final String USER_NICKNAME = "name";
-    public static final String USER_OPEN_ID = "open_id";
+    public static final String USER_OPEN_ID = "openid";
     public static final String USER_PHONE = "tel_number";
     public static final String USER_SIGNATURE = "self_introduction";
     public static final String USER_EMAIL = "email";
@@ -34,7 +34,7 @@ public class FieldConstant {
     public static final String CONTENT_IMG_URL1 = "url1";
     public static final String CONTENT_IMG_URL2 = "url2";
 
-    public static final String MESSAGE_ID = "article_id";
+    public static final String MESSAGE_ID = "id";
     public static final String MESSAGE_TYPE = "type";
     public static final String MESSAGE_TITLE = "title";
     public static final String MESSAGE_SUB_TITLE = "sub_title";

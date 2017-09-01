@@ -77,7 +77,7 @@ public class HttpUtils {
                     .cookieJar(cookieJar)
                     .build();
             Gson gson = new GsonBuilder()
-                    .setLenient()
+//                    .setLenient()
                     .excludeFieldsWithoutExposeAnnotation()
                     .create();
             instance = new Retrofit.Builder()
@@ -131,7 +131,6 @@ public class HttpUtils {
         @Headers(FieldConstant.REQUEST_HEADER)
         @POST(APIPath.LOGIN)
         Call<SimpleResponse> login(@Body RequestBody user);
-        @Headers(FieldConstant.REQUEST_HEADER)
 
         /**
          * request for message Verification Code.

@@ -1,4 +1,4 @@
-package com.donutcn.memo.activity;
+package com.donutcn.memo.view.activity;
 
 import android.Manifest;
 import android.content.Context;
@@ -100,24 +100,27 @@ public class ChatActivity extends AppCompatActivity implements ChatView.OnKeyboa
         mChatView.setOnTouchListener(this);
         mChatView.setMenuClickListener(new OnMenuClickListener() {
             @Override
-            public boolean onSendTextMessage(CharSequence input) {
+            public boolean onSendTextMessage(final CharSequence input) {
                 if (input.length() == 0) {
                     return false;
                 }
                 //创建一条文本消息
                 EMMessage msg = EMMessage.createTxtSendMessage(input.toString(), mOther.getId());
                 LogUtil.d("toUsername:" + mOther.getId() + "\nmessage:" + input.toString());
-                ToastUtil.show(ChatActivity.this, "toUsername:" + mOther.getId() + "\nmessage:" + input.toString());
                 //发送消息
-                String avatar = mMyself.getAvatarFilePath();
-                String name = mMyself.getDisplayName();
                 msg.setAttribute("avatar", mMyself.getAvatarFilePath());
                 msg.setAttribute("name", mMyself.getDisplayName());
                 EMClient.getInstance().chatManager().sendMessage(msg);
                 msg.setMessageStatusCallback(new EMCallBack() {
                     @Override
                     public void onSuccess() {
-
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                ToastUtil.show(ChatActivity.this, "toUsername:" + mOther.getId() +
+                                        "\nmessage:" + input.toString());
+                            }
+                        });
                     }
 
                     @Override

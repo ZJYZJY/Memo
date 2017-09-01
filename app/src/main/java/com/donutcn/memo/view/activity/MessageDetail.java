@@ -1,4 +1,4 @@
-package com.donutcn.memo.activity;
+package com.donutcn.memo.view.activity;
 
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
@@ -12,8 +12,8 @@ import com.donutcn.memo.R;
 import com.donutcn.memo.adapter.MessageDetailAdapter;
 import com.donutcn.memo.entity.MessageItem;
 import com.donutcn.memo.event.ItemActionClickEvent;
-import com.donutcn.memo.fragment.api.DeleteContent;
-import com.donutcn.memo.fragment.api.FetchContent;
+import com.donutcn.memo.view.api.DeleteContent;
+import com.donutcn.memo.view.api.FetchContent;
 import com.donutcn.memo.interfaces.OnItemClickListener;
 import com.donutcn.memo.presenter.MessagePresenter;
 import com.donutcn.memo.type.PublishType;

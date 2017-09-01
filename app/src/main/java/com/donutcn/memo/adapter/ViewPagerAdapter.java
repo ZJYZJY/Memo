@@ -4,11 +4,7 @@ import android.content.Context;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
-import android.support.v7.app.AppCompatActivity;
 import android.view.ViewGroup;
-
-import com.donutcn.memo.fragment.discover.DiscoverFragment;
-import com.donutcn.memo.fragment.home.HomeFragment;
 
 import java.util.ArrayList;
 import java.util.List;

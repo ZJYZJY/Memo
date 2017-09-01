@@ -1,4 +1,4 @@
-package com.donutcn.memo.activity;
+package com.donutcn.memo.view.activity;
 
 import android.content.Context;
 import android.content.Intent;

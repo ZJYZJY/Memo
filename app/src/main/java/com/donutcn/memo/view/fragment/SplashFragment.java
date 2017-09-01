@@ -1,4 +1,4 @@
-package com.donutcn.memo.fragment;
+package com.donutcn.memo.view.fragment;
 
 import android.content.Context;
 import android.os.Bundle;

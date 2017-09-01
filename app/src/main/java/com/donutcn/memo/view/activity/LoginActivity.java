@@ -1,4 +1,4 @@
-package com.donutcn.memo.activity;
+package com.donutcn.memo.view.activity;
 
 import android.app.FragmentTransaction;
 import android.app.ProgressDialog;
@@ -20,7 +20,7 @@ import android.widget.Toast;
 import com.donutcn.memo.R;
 import com.donutcn.memo.constant.FieldConstant;
 import com.donutcn.memo.entity.SimpleResponse;
-import com.donutcn.memo.fragment.SplashFragment;
+import com.donutcn.memo.view.fragment.SplashFragment;
 import com.donutcn.memo.helper.LoginHelper;
 import com.donutcn.memo.utils.CountDownTimerUtils;
 import com.donutcn.memo.utils.HttpUtils;
@@ -33,7 +33,6 @@ import com.umeng.socialize.UMAuthListener;
 import com.umeng.socialize.UMShareAPI;
 import com.umeng.socialize.bean.SHARE_MEDIA;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -57,6 +56,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
     private CountDownTimerUtils authCodeTimer;
     private Handler mSplashHandler = new Handler();
+    private boolean mRemoveSplash = true;
 
     private boolean loginState;
     private boolean completeInfo = false;
@@ -130,12 +130,11 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                                 LoginHelper.logout(LoginActivity.this);
                             } else {
                                 ToastUtil.show(LoginActivity.this, response.body().getMessage());
-                                removeSplashFragment();
                             }
                         } else {
                             ToastUtil.show(LoginActivity.this, "连接失败，服务器未知错误");
-                            removeSplashFragment();
                         }
+                        removeSplashFragment();
                     }
 
                     @Override
@@ -169,8 +168,9 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     }
 
     private void removeSplashFragment(){
-        if (splashFragment == null)
+        if (!mRemoveSplash || splashFragment == null) {
             return;
+        }
         // remove splash fragment.
         final FragmentTransaction transaction = getFragmentManager().beginTransaction();
         transaction.remove(splashFragment);
@@ -204,7 +204,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                     if (response.body().isOk()) {
                         ToastUtil.show(LoginActivity.this, "登录成功");
                         Map<String, String> data = response.body().getData();
-                        data.put("token", password);
+                        data.put(FieldConstant.USER_IM_TOKEN, password);
                         LoginHelper.login(getApplicationContext(),
                                 UserStatus.PHONE_LOGIN, data);
                         Intent intent = new Intent(LoginActivity.this, MainActivity.class);
@@ -250,7 +250,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                     if(response.body().isOk()){
                         ToastUtil.show(LoginActivity.this, "注册成功");
                         Map<String, String> data = response.body().getData();
-                        data.put("token", password);
+                        data.put(FieldConstant.USER_IM_TOKEN, password);
                         LoginHelper.login(getApplicationContext(),
                                 UserStatus.PHONE_LOGIN, data);
                         Intent intent = new Intent(LoginActivity.this, MainActivity.class);
@@ -357,17 +357,18 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             //授权开始的回调
         }
         @Override
-        public void onComplete(SHARE_MEDIA platform, int action, Map<String, String> data) {
+        public void onComplete(SHARE_MEDIA platform, int action, final Map<String, String> data) {
             HttpUtils.login(UserStatus.WECHAT_LOGIN, data).enqueue(new Callback<SimpleResponse>() {
                 @Override
                 public void onResponse(Call<SimpleResponse> call, Response<SimpleResponse> response) {
                     mDialog.cancel();
                     if(response.body() != null && response.body().isOk()){
                         LogUtil.d("wechat_login", response.body().toString());
-                        Map<String, String> data = response.body().getData();
-                        data.put("token", StringUtil.getMD5(data.get("openid")));
-                        LoginHelper.login(getApplicationContext(),
-                                UserStatus.WECHAT_LOGIN, data);
+                        Map<String, String> info = response.body().getData();
+                        info.put(FieldConstant.USER_NAME, data.get(FieldConstant.USER_OPEN_ID));
+                        info.put(FieldConstant.USER_IM_TOKEN,
+                                StringUtil.getMD5(data.get(FieldConstant.USER_OPEN_ID)));
+                        LoginHelper.login(getApplicationContext(), UserStatus.WECHAT_LOGIN, info);
                         ToastUtil.show(LoginActivity.this, "登录成功");
                         Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
@@ -410,6 +411,12 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     public void onSkipSplash(View view) {
         mSplashHandler.removeCallbacks(showMainPage);
         getWindow().getDecorView().post(showMainPage);
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        mRemoveSplash = false;
+        super.onSaveInstanceState(outState);
     }
 
     @Override

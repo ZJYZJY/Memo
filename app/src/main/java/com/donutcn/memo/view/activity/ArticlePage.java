@@ -1,4 +1,4 @@
-package com.donutcn.memo.activity;
+package com.donutcn.memo.view.activity;
 
 import android.annotation.TargetApi;
 import android.app.Activity;
@@ -190,7 +190,6 @@ public class ArticlePage extends AppCompatActivity implements View.OnClickListen
         WebSettings settings = webView.getSettings();
         settings.setJavaScriptEnabled(true);
         settings.setUserAgent(settings.getUserAgentString() + "app/Memo");
-        LogUtil.d(settings.getUserAgentString());
         // 设置加载进来的页面自适应手机屏幕
         settings.setUseWideViewPort(true);
         settings.setLoadWithOverviewMode(true);
@@ -238,7 +237,7 @@ public class ArticlePage extends AppCompatActivity implements View.OnClickListen
 
             @Override
             public boolean onShowFileChooser(WebView webView, ValueCallback<Uri[]> valueCallback, FileChooserParams fileChooserParams) {
-                LogUtil.d("选择文件5.0+");
+                LogUtil.d("choose file 5.0+");
                 mUploadMessageAboveL = valueCallback;
                 Intent i = new Intent(Intent.ACTION_GET_CONTENT);
                 i.addCategory(Intent.CATEGORY_OPENABLE);
@@ -253,7 +252,7 @@ public class ArticlePage extends AppCompatActivity implements View.OnClickListen
             @Override
             public void openFileChooser(ValueCallback<Uri> valueCallback, String s, String s1) {
                 super.openFileChooser(valueCallback, s, s1);
-                LogUtil.d("选择文件");
+                LogUtil.d("choose file");
                 mUploadMessage = valueCallback;
                 Intent i = new Intent(Intent.ACTION_GET_CONTENT);
                 i.addCategory(Intent.CATEGORY_OPENABLE);

@@ -3,7 +3,7 @@ package com.donutcn.memo.helper;
 import android.content.Context;
 import android.content.Intent;
 
-import com.donutcn.memo.activity.LoginActivity;
+import com.donutcn.memo.view.activity.LoginActivity;
 import com.donutcn.memo.constant.FieldConstant;
 import com.donutcn.memo.event.LoginStateEvent;
 import com.donutcn.memo.utils.LogUtil;

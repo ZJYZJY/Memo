@@ -67,10 +67,10 @@
         </receiver>
 
         <activity
-            android:name=".activity.MainActivity"
+            android:name=".view.activity.MainActivity"
             android:launchMode="singleTop" />
         <activity
-            android:name=".activity.LoginActivity"
+            android:name=".view.activity.LoginActivity"
             android:launchMode="singleTop">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -90,7 +90,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".activity.PublishActivity"
+            android:name=".view.activity.PublishActivity"
             android:launchMode="singleTop"
             android:windowSoftInputMode="adjustResize">
             <intent-filter>
@@ -105,8 +105,8 @@
                     android:scheme="memo" />
             </intent-filter>
         </activity>
-        <activity android:name=".activity.SocialShareActivity" />
-        <activity android:name=".activity.ArticlePage">
+        <activity android:name=".view.activity.SocialShareActivity" />
+        <activity android:name=".view.activity.ArticlePage">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
 
@@ -119,7 +119,7 @@
                     android:scheme="memo" />
             </intent-filter>
         </activity>
-        <activity android:name=".activity.AuthorPage">
+        <activity android:name=".view.activity.AuthorPage">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
 
@@ -132,10 +132,10 @@
                     android:scheme="memo" />
             </intent-filter>
         </activity>
-        <activity android:name=".activity.SearchActivity" />
-        <activity android:name=".activity.CompletingPage" />
-        <activity android:name=".activity.PersonalCenterActivity" />
-        <activity android:name=".activity.TipOffActivity">
+        <activity android:name=".view.activity.SearchActivity" />
+        <activity android:name=".view.activity.CompletingPage" />
+        <activity android:name=".view.activity.PersonalCenterActivity" />
+        <activity android:name=".view.activity.TipOffActivity">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
 
@@ -148,10 +148,10 @@
                     android:scheme="memo" />
             </intent-filter>
         </activity>
-        <activity android:name=".activity.ResetPasswordPage" />
-        <activity android:name=".activity.MessageDetail" />
-        <activity android:name=".activity.EditInfoPage" />
-        <activity android:name=".activity.ChatActivity" >
+        <activity android:name=".view.activity.ResetPasswordPage" />
+        <activity android:name=".view.activity.MessageDetail" />
+        <activity android:name=".view.activity.EditInfoPage" />
+        <activity android:name=".view.activity.ChatActivity" >
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
 

@@ -1,4 +1,4 @@
-package com.donutcn.memo.activity;
+package com.donutcn.memo.view.activity;
 
 import android.content.Intent;
 import android.graphics.Color;
@@ -26,9 +26,9 @@ import com.donutcn.memo.entity.SimpleResponse;
 import com.donutcn.memo.entity.SyncInfoPackage;
 import com.donutcn.memo.event.LoginStateEvent;
 import com.donutcn.memo.event.RequestRefreshEvent;
-import com.donutcn.memo.fragment.SplashFragment;
-import com.donutcn.memo.fragment.discover.DiscoverFragment;
-import com.donutcn.memo.fragment.home.HomeFragment;
+import com.donutcn.memo.view.fragment.SplashFragment;
+import com.donutcn.memo.view.fragment.discover.DiscoverFragment;
+import com.donutcn.memo.view.fragment.home.HomeFragment;
 import com.donutcn.memo.helper.LoginHelper;
 import com.donutcn.memo.interfaces.UploadCallback;
 import com.donutcn.memo.utils.HttpUtils;

@@ -40,10 +40,16 @@ public class BriefMessage extends Jsonify {
     @SerializedName(FieldConstant.MESSAGE_SUB_TITLE)
     private String subTitle;
 
+    /**
+     * last reply time.
+     */
     @Expose
     @SerializedName(FieldConstant.MESSAGE_TIME)
     private String time;
 
+    /**
+     * content publish date.
+     */
     @Expose
     @SerializedName(FieldConstant.MESSAGE_DATE)
     private String date;
@@ -96,10 +102,7 @@ public class BriefMessage extends Jsonify {
     }
 
     public String getDate() {
-        if(date != null)
-            return date;
-        else
-            return time.substring(0, 10);
+        return date;
     }
 
     public int getNewMsgCount() {

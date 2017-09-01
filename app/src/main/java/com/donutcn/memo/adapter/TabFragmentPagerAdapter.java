@@ -5,12 +5,12 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
-import com.donutcn.memo.fragment.discover.FollowedFragment;
-import com.donutcn.memo.fragment.discover.LatestFragment;
-import com.donutcn.memo.fragment.discover.FriendsFragment;
-import com.donutcn.memo.fragment.discover.RecommendFragment;
-import com.donutcn.memo.fragment.home.MemoFragment;
-import com.donutcn.memo.fragment.home.MessageFragment;
+import com.donutcn.memo.view.fragment.discover.FollowedFragment;
+import com.donutcn.memo.view.fragment.discover.LatestFragment;
+import com.donutcn.memo.view.fragment.discover.FriendsFragment;
+import com.donutcn.memo.view.fragment.discover.RecommendFragment;
+import com.donutcn.memo.view.fragment.home.MemoFragment;
+import com.donutcn.memo.view.fragment.home.MessageFragment;
 
 public class TabFragmentPagerAdapter extends FragmentPagerAdapter {
 

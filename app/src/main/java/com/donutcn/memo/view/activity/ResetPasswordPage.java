@@ -1,4 +1,4 @@
-package com.donutcn.memo.activity;
+package com.donutcn.memo.view.activity;
 
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
@@ -10,6 +10,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.donutcn.memo.R;
+import com.donutcn.memo.constant.FieldConstant;
 import com.donutcn.memo.entity.SimpleResponse;
 import com.donutcn.memo.helper.LoginHelper;
 import com.donutcn.memo.utils.CountDownTimerUtils;
@@ -117,7 +118,7 @@ public class ResetPasswordPage extends AppCompatActivity implements View.OnClick
                     if(response.body().isOk()){
                         ToastUtil.show(ResetPasswordPage.this, "重置密码成功");
                         Map<String, String> data = response.body().getData();
-                        data.put("token", password);
+                        data.put(FieldConstant.USER_IM_TOKEN, password);
                         LoginHelper.login(getApplicationContext(),
                                 UserStatus.PHONE_LOGIN, data);
                         Intent intent = new Intent(ResetPasswordPage.this, MainActivity.class);

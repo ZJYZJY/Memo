@@ -1,4 +1,4 @@
-package com.donutcn.memo.fragment.home;
+package com.donutcn.memo.view.fragment.home;
 
 import android.content.Context;
 import android.content.Intent;
@@ -10,8 +10,8 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.donutcn.memo.R;
-import com.donutcn.memo.activity.ChatActivity;
-import com.donutcn.memo.activity.MessageDetail;
+import com.donutcn.memo.view.activity.ChatActivity;
+import com.donutcn.memo.view.activity.MessageDetail;
 import com.donutcn.memo.adapter.BriefMessageAdapter;
 import com.donutcn.memo.base.BaseScrollFragment;
 import com.donutcn.memo.entity.ArrayResponse;
@@ -22,6 +22,7 @@ import com.donutcn.memo.interfaces.OnItemClickListener;
 import com.donutcn.memo.utils.CollectionUtil;
 import com.donutcn.memo.utils.FileCacheUtil;
 import com.donutcn.memo.utils.HttpUtils;
+import com.donutcn.memo.utils.LogUtil;
 import com.donutcn.memo.utils.ToastUtil;
 import com.donutcn.memo.view.ListViewDecoration;
 import com.google.gson.Gson;
@@ -102,6 +103,7 @@ public class MessageFragment extends BaseScrollFragment {
             public void onResponse(Call<ArrayResponse<BriefMessage>> call,
                                    Response<ArrayResponse<BriefMessage>> response) {
                 if(response.body() != null){
+                    LogUtil.d(response.body().toString());
                     if(response.body().isOk()){
                         mList.addAll(0, response.body().getData());
                         mList = CollectionUtil.removeDuplicateWithOrder(mList);

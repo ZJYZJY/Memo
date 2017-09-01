@@ -1,4 +1,4 @@
-package com.donutcn.memo.fragment.discover;
+package com.donutcn.memo.view.fragment.discover;
 
 import android.app.ProgressDialog;
 import android.content.AsyncQueryHandler;
@@ -18,7 +18,7 @@ import android.view.ViewGroup;
 
 import com.donutcn.memo.App;
 import com.donutcn.memo.R;
-import com.donutcn.memo.activity.AuthorPage;
+import com.donutcn.memo.view.activity.AuthorPage;
 import com.donutcn.memo.adapter.FriendListAdapter;
 import com.donutcn.memo.base.BaseScrollFragment;
 import com.donutcn.memo.entity.ArrayResponse;

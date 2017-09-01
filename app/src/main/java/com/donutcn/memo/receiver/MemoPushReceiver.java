@@ -3,7 +3,7 @@ package com.donutcn.memo.receiver;
 import android.content.Context;
 import android.content.Intent;
 
-import com.donutcn.memo.activity.MainActivity;
+import com.donutcn.memo.view.activity.MainActivity;
 import com.donutcn.memo.entity.BriefMessage;
 import com.donutcn.memo.entity.SyncInfoPackage;
 import com.donutcn.memo.event.ChangeRedDotEvent;

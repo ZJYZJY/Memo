@@ -15,6 +15,7 @@ import com.hyphenate.EMMessageListener;
 import com.hyphenate.chat.EMClient;
 import com.hyphenate.chat.EMMessage;
 import com.hyphenate.chat.EMTextMessageBody;
+import com.hyphenate.util.NetUtils;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -126,10 +127,11 @@ public class IMService extends Service {
             } else if (error == EMError.USER_LOGIN_ANOTHER_DEVICE) {
                 LogUtil.e("显示帐号在其他设备登录");
             } else {
-//                        if (NetUtils.hasNetwork(MainActivity.this)) {
-//                            LogUtil.e("连接不到聊天服务器");
-//                        } else {
-                LogUtil.e("当前网络不可用，请检查网络设置");
+                if (NetUtils.hasNetwork(getApplicationContext())) {
+                    LogUtil.e("连接不到聊天服务器");
+                } else {
+                    LogUtil.e("当前网络不可用，请检查网络设置");
+                }
             }
         }
     };
