@@ -46,7 +46,7 @@
                 android:layout_height="@dimen/px_line"
                 android:background="@color/border_gray" />
 
-            <jp.wasabeef.richeditor.RichEditor
+            <com.donutcn.memo.editor.RichEditor
                 android:id="@+id/et_publish_content"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"

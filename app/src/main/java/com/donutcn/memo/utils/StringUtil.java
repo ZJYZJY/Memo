@@ -1,5 +1,7 @@
 package com.donutcn.memo.utils;
 
+import android.util.Base64;
+
 import java.io.UnsupportedEncodingException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -92,5 +94,25 @@ public class StringUtil {
             hex.append(Integer.toHexString(b & 0xFF));
         }
         return hex.toString();
+    }
+
+    /**
+     * BASE64加密
+     */
+    public static String encryptBASE64(String key) {
+        if (key == null || key.length() < 1) {
+            return "";
+        }
+        return new String(Base64.encode(key.getBytes(), Base64.URL_SAFE));
+    }
+
+    /**
+     * BASE64解密
+     */
+    public static String decryptBASE64(String key) {
+        if (key == null || key.length() < 1) {
+            return "";
+        }
+        return new String(Base64.decode(key, Base64.URL_SAFE));
     }
 }

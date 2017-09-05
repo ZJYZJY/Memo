@@ -11,6 +11,7 @@ public class SpfsUtils {
     public static final String ROOT_NAME = "memo";
     public static final String CACHE = "_cache";
     public static final String USER = "_user";
+    public static final String SETTING = "_setting";
 
     public static void write(Context context, String key, Object value) {
         write(context, "", key, value);

@@ -5,7 +5,7 @@
       <module fileurl="file://$PROJECT_DIR$/Memo.iml" filepath="$PROJECT_DIR$/Memo.iml" />
       <module fileurl="file://$PROJECT_DIR$/PhotoPicker/PhotoPicker.iml" filepath="$PROJECT_DIR$/PhotoPicker/PhotoPicker.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
-      <module fileurl="file://$PROJECT_DIR$/richeditor/richeditor.iml" filepath="$PROJECT_DIR$/richeditor/richeditor.iml" />
+      <module fileurl="file://$PROJECT_DIR$/libqrcode/libqrcode.iml" filepath="$PROJECT_DIR$/libqrcode/libqrcode.iml" />
       <module fileurl="file://$PROJECT_DIR$/widgetlib/widgetlib.iml" filepath="$PROJECT_DIR$/widgetlib/widgetlib.iml" />
     </modules>
   </component>

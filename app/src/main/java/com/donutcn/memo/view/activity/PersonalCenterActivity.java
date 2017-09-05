@@ -16,6 +16,7 @@ import com.donutcn.memo.R;
 import com.donutcn.memo.entity.User;
 import com.donutcn.memo.event.LoginStateEvent;
 import com.donutcn.memo.helper.LoginHelper;
+import com.donutcn.memo.utils.SpfsUtils;
 import com.donutcn.memo.utils.WindowUtils;
 import com.donutcn.widgetlib.widget.SwitchView;
 import com.tencent.bugly.beta.Beta;
@@ -60,6 +61,9 @@ public class PersonalCenterActivity extends AppCompatActivity implements View.On
         mAbout.setOnClickListener(this);
         mLogout.setOnClickListener(this);
         findViewById(R.id.personal_center_edit_container).setOnClickListener(this);
+        if(SpfsUtils.readBoolean(this, SpfsUtils.SETTING, "showWaterMark", false)){
+            mPhotoMark.toggleSwitch(true);
+        }
         mPhotoMark.setOnStateChangedListener(this);
         mNotify.setOnStateChangedListener(this);
     }
@@ -139,8 +143,10 @@ public class PersonalCenterActivity extends AppCompatActivity implements View.On
 
     private void setPhotoMark(final boolean isMark, final SwitchView view) {
         if (isMark) {
+            SpfsUtils.write(this, SpfsUtils.SETTING, "showWaterMark", false);
             view.toggleSwitch(false);
         } else {
+            SpfsUtils.write(this, SpfsUtils.SETTING, "showWaterMark", true);
             view.toggleSwitch(true);
         }
     }

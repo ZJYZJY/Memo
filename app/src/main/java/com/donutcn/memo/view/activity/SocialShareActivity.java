@@ -142,6 +142,10 @@ public class SocialShareActivity extends AppCompatActivity implements View.OnCli
                 new ShareHelper(this).shareWeibo(mUMWeb);
                 break;
             case R.id.share_iv6:
+                Intent shareIntent = new Intent(SocialShareActivity.this, ShareImageActivity.class);
+                shareIntent.putExtra("content", content);
+                shareIntent.putExtra("url", contentUrl.substring(0, contentUrl.length() - 5));
+                startActivity(shareIntent);
                 break;
             case R.id.share_iv7:
                 ClipboardManager cm = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);

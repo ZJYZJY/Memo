@@ -72,6 +72,7 @@ public class ArticlePage extends AppCompatActivity implements View.OnClickListen
     private ValueCallback mUploadMessageAboveL;
     private Context mContext;
 
+    private boolean isReady = false;
     private String mTitle, mImageUrl, mContent;
     private String mContentId, mContentUrl, mNameStr, mIconUrl, mUserId;
     private int mUpvoteCount, mCommentCount;
@@ -230,6 +231,7 @@ public class ArticlePage extends AppCompatActivity implements View.OnClickListen
                     progressBar.setVisibility(View.GONE);
                 }
                 else{
+                    isReady = true;
                     progressBar.setVisibility(View.VISIBLE);
                     progressBar.setProgress(i);
                 }
@@ -360,8 +362,12 @@ public class ArticlePage extends AppCompatActivity implements View.OnClickListen
     }
 
     public void onMoreOption(View view) {
+        if (!isReady) {
+            return;
+        }
         View popView = getLayoutInflater().inflate(R.layout.popup_content_option, null);
         TextView share = (TextView) popView.findViewById(R.id.content_share);
+        TextView image = (TextView) popView.findViewById(R.id.content_img);
         TextView link = (TextView) popView.findViewById(R.id.content_link);
         TextView tipOff = (TextView) popView.findViewById(R.id.content_tip_off);
         final PopupWindow popupWindow = new PopupWindow(popView,
@@ -372,6 +378,16 @@ public class ArticlePage extends AppCompatActivity implements View.OnClickListen
             public void onClick(View v) {
                 popupWindow.dismiss();
                 new ShareHelper(mContext).openShareBoard(mContentUrl, mTitle, mImageUrl, mContent);
+            }
+        });
+        image.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                popupWindow.dismiss();
+                Intent intent = new Intent(ArticlePage.this, ShareImageActivity.class);
+                intent.putExtra("content", mContent);
+                intent.putExtra("url", mContentUrl.substring(0, mContentUrl.length() - 5));
+                startActivity(intent);
             }
         });
         link.setOnClickListener(new View.OnClickListener() {

@@ -67,7 +67,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import jp.wasabeef.richeditor.RichEditor;
+import com.donutcn.memo.editor.RichEditor;
 import me.iwf.photopicker.PhotoPicker;
 import me.iwf.photopicker.PhotoPreview;
 import me.shihao.library.XRadioGroup;
@@ -102,9 +102,8 @@ public class PublishActivity extends AppCompatActivity implements View.OnClickLi
     private String mContentStr = "";
     private String mTemp = "";
     private String mContentId;
-    private boolean mEditMode;
     private static final String HOST = "http://otu6v4c72.bkt.clouddn.com/";
-    private static final String strategy = "?imageMogr2/auto-orient/thumbnail/!60p/format/jpg" +
+    private String strategy = "?imageMogr2/auto-orient/thumbnail/!60p/format/jpg" +
             "/interlace/1/blur/1x0/quality/50|imageslim";
     private Context mContext;
     // gridView adapter.
@@ -199,6 +198,12 @@ public class PublishActivity extends AppCompatActivity implements View.OnClickLi
         mContent.setEditorFontColor(getResources().getColor(R.color.textPrimaryDark));
     }
 
+    public void setWaterMark(){
+        String mWaterMark = "|watermark/2/text/" + StringUtil.encryptBASE64(UserStatus.getCurrentUser().getName() + " - 人人记")
+                + "/font/6buR5L2T/fontsize/240/fill/I0ZGRkZGRg==/dissolve/100/gravity/SouthEast/dx/10/dy/10";
+        strategy = strategy + mWaterMark;
+    }
+
     public void pullContentInfo(String id) {
         HttpUtils.modifyMyContent(id).enqueue(new Callback<ContentResponse>() {
             @Override
@@ -240,6 +245,10 @@ public class PublishActivity extends AppCompatActivity implements View.OnClickLi
             return;
         }
         if(keys != null && keys.size() == selectedPhotos.size()){
+            // use the user's nickname for watermark.
+            if(SpfsUtils.readBoolean(this, SpfsUtils.SETTING, "showWaterMark", false)){
+                setWaterMark();
+            }
             for(int i = 0; i < selectedPhotos.size(); i++){
                 mContentStr = mContentStr.replace(selectedPhotos.get(i),
                 HOST + keys.get(i) + strategy);
@@ -259,7 +268,7 @@ public class PublishActivity extends AppCompatActivity implements View.OnClickLi
                         openSharePage(String.valueOf(response.body().getField("article_id")),
                                 (String) response.body().getField("url"),
                                 (String) response.body().getField("title"),
-                                (String) response.body().getField("content"),
+                                mContentStr,
                                 (String) response.body().getField("picurl"),
                                 Integer.valueOf((String) response.body().getField("is_private")));
                     } else if(response.body().unAuthorized()){
@@ -424,6 +433,7 @@ public class PublishActivity extends AppCompatActivity implements View.OnClickLi
         intent.putExtra("contentUrl", contentUrl);
         intent.putExtra("title", title);
         intent.putExtra("content", content);
+        intent.putExtra("totalContent", mContentStr);
         intent.putExtra("picUrl", picUrl);
         intent.putExtra("isPrivate", isPrivate);
         startActivity(intent);
@@ -437,7 +447,8 @@ public class PublishActivity extends AppCompatActivity implements View.OnClickLi
         }
         intent.putExtra("title", mTitleStr);
         intent.putExtra("type", PublishType.getType(mSelectedType));
-        intent.putExtra("content", mContentStr);
+        intent.putExtra("content", mContentStr.substring(0, 100));
+        intent.putExtra("totalContent", mContentStr);
         startActivity(intent);
     }
 
@@ -702,7 +713,7 @@ public class PublishActivity extends AppCompatActivity implements View.OnClickLi
     };
 
     public void setParam() {
-        // clear parameter.
+        // clearState parameter.
         mIat.setParameter(SpeechConstant.PARAMS, null);
 
         mIat.setParameter(SpeechConstant.ENGINE_TYPE, SpeechConstant.TYPE_CLOUD);
@@ -813,7 +824,7 @@ public class PublishActivity extends AppCompatActivity implements View.OnClickLi
             mSelectedType = PublishType.values()[index].toString();
             mPublishType.setText(mSelectedType);
         } else {
-            mEditMode = intent.getBooleanExtra("editMode", false);
+            boolean mEditMode = intent.getBooleanExtra("editMode", false);
             if(mEditMode){
                 mContentId = intent.getStringExtra("contentId");
                 pullContentInfo(mContentId);

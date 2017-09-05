@@ -62,16 +62,16 @@ public class UserStatus {
 
     public static void clear(Context context){
         USER = null;
-        // clear cookies
+        // clearState cookies
         HttpUtils.clearCookies();
         // remove login flag
         SpfsUtils.clear(context, SpfsUtils.CACHE);
         SpfsUtils.clear(context, SpfsUtils.USER);
-        // clear local cache.
+        // clearState local cache.
         FileCacheUtil.clear(context, FileCacheUtil.CONTENT_LIST_CACHE);
         FileCacheUtil.clear(context, FileCacheUtil.MESSAGE_LIST_CACHE);
         FileCacheUtil.clear(context, FileCacheUtil.MESSAGE_ITEM_CACHE);
-        // clear the local database.
+        // clearState the local database.
         ((App)context.getApplicationContext()).getDaoSession().getContactDao().deleteAll();
     }
 }

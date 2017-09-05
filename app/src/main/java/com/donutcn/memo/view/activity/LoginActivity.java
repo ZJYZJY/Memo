@@ -25,7 +25,6 @@ import com.donutcn.memo.helper.LoginHelper;
 import com.donutcn.memo.utils.CountDownTimerUtils;
 import com.donutcn.memo.utils.HttpUtils;
 import com.donutcn.memo.utils.LogUtil;
-import com.donutcn.memo.utils.StringUtil;
 import com.donutcn.memo.utils.ToastUtil;
 import com.donutcn.memo.utils.UserStatus;
 import com.donutcn.memo.utils.WindowUtils;
@@ -127,14 +126,15 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                                 // check if the cookie is out of date.
                                 LogUtil.e("unAuthorized", response.body().toString());
                                 ToastUtil.show(LoginActivity.this, "登录授权过期，请重新登录");
-                                LoginHelper.logout(LoginActivity.this);
+                                LoginHelper.clearState(LoginActivity.this);
                             } else {
+                                removeSplashFragment();
                                 ToastUtil.show(LoginActivity.this, response.body().getMessage());
                             }
                         } else {
+                            removeSplashFragment();
                             ToastUtil.show(LoginActivity.this, "连接失败，服务器未知错误");
                         }
-                        removeSplashFragment();
                     }
 
                     @Override
@@ -178,7 +178,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         splashFragment = null;
         mLoginContainer.setVisibility(View.VISIBLE);
         findViewById(R.id.splash_container).setVisibility(View.GONE);
-        // clear flag full screen.
+        // clearState flag full screen.
         getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
     }
 
@@ -366,8 +366,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                         LogUtil.d("wechat_login", response.body().toString());
                         Map<String, String> info = response.body().getData();
                         info.put(FieldConstant.USER_NAME, data.get(FieldConstant.USER_OPEN_ID));
-                        info.put(FieldConstant.USER_IM_TOKEN,
-                                StringUtil.getMD5(data.get(FieldConstant.USER_OPEN_ID)));
+                        info.put(FieldConstant.USER_IM_TOKEN, data.get(FieldConstant.USER_OPEN_ID));
                         LoginHelper.login(getApplicationContext(), UserStatus.WECHAT_LOGIN, info);
                         ToastUtil.show(LoginActivity.this, "登录成功");
                         Intent intent = new Intent(LoginActivity.this, MainActivity.class);
@@ -441,6 +440,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             // show splash fragment.
             showSplashFragment();
         }else {
+            mSplashHandler.removeCallbacks(showMainPage);
             removeSplashFragment();
         }
     }

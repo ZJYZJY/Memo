@@ -8,8 +8,8 @@ android {
         applicationId "com.donutcn.memo"
         minSdkVersion 16
         targetSdkVersion 25
-        versionCode 8
-        versionName "1.6"
+        versionCode 9
+        versionName "1.7"
         multiDexEnabled true
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         ndk {
@@ -78,28 +78,24 @@ dependencies {
     compile files('libs/Sunflower.jar')
     compile project(':widgetlib')
     compile project(':PhotoPicker')
-    //    compile project(':richeditor')
-
     //    compile 'com.scwang.smartrefresh:SmartRefreshHeader:1.0.3-alpha-3'//use custom header
     compile files('libs/tbs_sdk_v2.5.0.1037_36880_minsize.jar')
     compile files('libs/umeng_shareboard_widget.jar')
     compile files('libs/umeng_social_shareboard.jar')
+    compile project(':libqrcode')
     compile 'com.qiniu:qiniu-android-sdk:7.3.8'
     compile 'com.umeng.analytics:analytics:latest.integration'
     compile 'com.tencent.bugly:crashreport_upgrade:latest.release'
     compile 'com.tencent.bugly:nativecrashreport:latest.release'
-    //信鸽的版本
     compile 'com.tencent.xinge:xinge:3.1.8-alpha'
-    //wup包 如果和其他腾讯系的sdk 发生wup冲突，这个依赖可不添加
     compile 'com.tencent.wup:wup:1.0.0.E-alpha'
-    //mid包
     compile 'com.tencent.mid:mid:3.72.4-alpha'
-    // 环信
     compile 'com.hyphenate:hyphenate-sdk-lite:3.3.4'
     compile 'cn.jiguang.imui:messagelist:0.4.6'
     compile 'cn.jiguang.imui:chatinput:0.4.6'
     compile 'com.android.support:appcompat-v7:25.3.1'
     compile 'com.android.support:design:25.3.1'
+    compile 'com.android.support:cardview-v7:25.3.1'
     compile 'com.android.support:support-v4:25.3.1'
     compile 'com.flyco.tablayout:FlycoTabLayout_Lib:2.1.2@aar'
     compile 'q.rorbin:badgeview:1.1.2'
@@ -120,5 +116,4 @@ dependencies {
     testCompile 'junit:junit:4.12'
     testCompile 'org.json:json:20140107'
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.8.0'
-    compile project(':richeditor')
 }

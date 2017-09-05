@@ -212,7 +212,7 @@ public class CompletingPage extends AppCompatActivity {
                         mShareIntent.putExtra("contentId", mContentId);
                         mShareIntent.putExtra("contentUrl", String.valueOf(response.body().getField(FieldConstant.CONTENT_URL)));
                         mShareIntent.putExtra("title", (String) response.body().getField(FieldConstant.CONTENT_TITLE));
-                        mShareIntent.putExtra("content", (String) response.body().getField(FieldConstant.CONTENT));
+                        mShareIntent.putExtra("content", mContentStr);
                         mShareIntent.putExtra("picUrl", (String) response.body().getField("picurl"));
                         mShareIntent.putExtra("isPrivate", Integer.valueOf((String) response.body().getField(FieldConstant.CONTENT_RIGHTS)));
                         completeInfo(mShareIntent);

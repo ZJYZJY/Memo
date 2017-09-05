@@ -30,6 +30,9 @@ public class LoginHelper {
 
     public static void login(final Context context, int loginType, final Map<String, String> data) {
         if(!UserStatus.isIMLogin(context)){
+            if(data.get(FieldConstant.USER_IM_TOKEN) == null || data.get(FieldConstant.USER_NAME) == null){
+                return;
+            }
             EMClient.getInstance().login(data.get(FieldConstant.USER_NAME),
                     data.get(FieldConstant.USER_IM_TOKEN), new EMCallBack() {
                         @Override
@@ -60,7 +63,7 @@ public class LoginHelper {
         EventBus.getDefault().postSticky(loginStateEvent);
     }
 
-    public static void logout(final Context context) {
+    public static void clearState(final Context context){
         XGPushManager.registerPush(context, "*");
         EMClient.getInstance().logout(false, new EMCallBack(){
             @Override
@@ -78,6 +81,10 @@ public class LoginHelper {
         UserStatus.clear(context);
         // post logout event
         EventBus.getDefault().postSticky(new LoginStateEvent(LoginStateEvent.LOGOUT, null));
+    }
+
+    public static void logout(Context context) {
+        clearState(context);
         // go back to LoginActivity
         Intent intent = new Intent(context, LoginActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
