@@ -433,7 +433,6 @@ public class PublishActivity extends AppCompatActivity implements View.OnClickLi
         intent.putExtra("contentUrl", contentUrl);
         intent.putExtra("title", title);
         intent.putExtra("content", content);
-        intent.putExtra("totalContent", mContentStr);
         intent.putExtra("picUrl", picUrl);
         intent.putExtra("isPrivate", isPrivate);
         startActivity(intent);
@@ -447,8 +446,7 @@ public class PublishActivity extends AppCompatActivity implements View.OnClickLi
         }
         intent.putExtra("title", mTitleStr);
         intent.putExtra("type", PublishType.getType(mSelectedType));
-        intent.putExtra("content", mContentStr.substring(0, 100));
-        intent.putExtra("totalContent", mContentStr);
+        intent.putExtra("content", mContentStr);
         startActivity(intent);
     }
 

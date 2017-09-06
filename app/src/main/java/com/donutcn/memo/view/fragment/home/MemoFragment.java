@@ -173,7 +173,7 @@ public class MemoFragment extends BaseMemoFragment implements FetchContent<Brief
     public void onItemClick(int position) {
         Intent intent = new Intent(mContext, ArticlePage.class);
         intent.putExtra("contentId", mList.get(position).getId());
-        intent.putExtra("self", true);
+        intent.putExtra("selfPublish", true);
         startActivity(intent);
     }
 

@@ -72,6 +72,7 @@ public class ArticlePage extends AppCompatActivity implements View.OnClickListen
     private ValueCallback mUploadMessageAboveL;
     private Context mContext;
 
+    private boolean selfPublish;
     private boolean isReady = false;
     private String mTitle, mImageUrl, mContent;
     private String mContentId, mContentUrl, mNameStr, mIconUrl, mUserId;
@@ -136,8 +137,8 @@ public class ArticlePage extends AppCompatActivity implements View.OnClickListen
     }
 
     public void initView() {
-        boolean self = getIntent().getBooleanExtra("self", false);
-        if (self) {
+        selfPublish = getIntent().getBooleanExtra("selfPublish", false);
+        if (selfPublish) {
             mIconUrl = UserStatus.getCurrentUser().getIconUrl();
             mNameStr = UserStatus.getCurrentUser().getName();
         }
@@ -367,9 +368,13 @@ public class ArticlePage extends AppCompatActivity implements View.OnClickListen
         }
         View popView = getLayoutInflater().inflate(R.layout.popup_content_option, null);
         TextView share = (TextView) popView.findViewById(R.id.content_share);
+        TextView edit = (TextView) popView.findViewById(R.id.content_edit);
         TextView image = (TextView) popView.findViewById(R.id.content_img);
         TextView link = (TextView) popView.findViewById(R.id.content_link);
         TextView tipOff = (TextView) popView.findViewById(R.id.content_tip_off);
+        if(!selfPublish){
+            popView.findViewById(R.id.edit_option).setVisibility(View.GONE);
+        }
         final PopupWindow popupWindow = new PopupWindow(popView,
                 DensityUtils.dp2px(this, 128), ViewGroup.LayoutParams.WRAP_CONTENT, true);
         popupWindow.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
@@ -380,11 +385,22 @@ public class ArticlePage extends AppCompatActivity implements View.OnClickListen
                 new ShareHelper(mContext).openShareBoard(mContentUrl, mTitle, mImageUrl, mContent);
             }
         });
+        edit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                popupWindow.dismiss();
+                Intent intent = new Intent(mContext, PublishActivity.class);
+                intent.putExtra("editMode", true);
+                intent.putExtra("contentId", mContentId);
+                startActivity(intent);
+            }
+        });
         image.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 popupWindow.dismiss();
                 Intent intent = new Intent(ArticlePage.this, ShareImageActivity.class);
+                intent.putExtra("title", mTitle);
                 intent.putExtra("content", mContent);
                 intent.putExtra("url", mContentUrl.substring(0, mContentUrl.length() - 5));
                 startActivity(intent);

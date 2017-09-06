@@ -205,6 +205,7 @@
 
     <!--text-->
     <string name="popup_content_share">分享</string>
+    <string name="popup_content_edit">编辑</string>
     <string name="popup_content_image">生成分享图片</string>
     <string name="popup_content_link">复制链接</string>
     <string name="popup_content_tip_off">举报</string>

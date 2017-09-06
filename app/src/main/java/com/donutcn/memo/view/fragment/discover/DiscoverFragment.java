@@ -142,7 +142,7 @@ public class DiscoverFragment extends Fragment implements OnTabSelectListener {
             if(iconUrl == null || iconUrl.equals("")){
                 mUserCenter_iv.setImageResource(R.mipmap.user_default_icon);
             }else {
-                glide.load(iconUrl).centerCrop().into(mUserCenter_iv);
+                glide.load(iconUrl).error(R.mipmap.user_default_icon).centerCrop().into(mUserCenter_iv);
             }
         } else {
             mUserCenter_iv.setImageResource(R.drawable.mine);

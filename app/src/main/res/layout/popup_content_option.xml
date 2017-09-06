@@ -21,6 +21,28 @@
         android:layout_height="@dimen/px_line"
         android:background="@color/border_gray" />
 
+    <LinearLayout
+        android:id="@+id/edit_option"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/content_edit"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="?android:selectableItemBackground"
+            android:padding="@dimen/padding_large"
+            android:text="@string/popup_content_edit"
+            android:textColor="@color/textPrimaryDark"
+            android:textSize="15sp" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/px_line"
+            android:background="@color/border_gray" />
+    </LinearLayout>
+
     <TextView
         android:id="@+id/content_img"
         android:layout_width="match_parent"

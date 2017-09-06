@@ -143,6 +143,7 @@ public class SocialShareActivity extends AppCompatActivity implements View.OnCli
                 break;
             case R.id.share_iv6:
                 Intent shareIntent = new Intent(SocialShareActivity.this, ShareImageActivity.class);
+                shareIntent.putExtra("title", title);
                 shareIntent.putExtra("content", content);
                 shareIntent.putExtra("url", contentUrl.substring(0, contentUrl.length() - 5));
                 startActivity(shareIntent);
@@ -212,6 +213,11 @@ public class SocialShareActivity extends AppCompatActivity implements View.OnCli
         intent.putExtra("contentId", contentId);
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         startActivity(intent);
+    }
+
+    @Override
+    public void onBackPressed() {
+        findViewById(R.id.toolbar_with_btn).performClick();
     }
 
     @Override
