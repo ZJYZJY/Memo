@@ -278,6 +278,12 @@ public class HttpUtils {
                                                       @Path("message_id") String messageId,
                                                       @Path("type") String type);
 
+        @GET(APIPath.ENABLE_NOTIFICATION)
+        Call<SimpleResponse> enableNotification(@Path("enable") int enable);
+
+        @POST(APIPath.SUGGEST_FEEDBACK)
+        Call<SimpleResponse> feedback(@Body RequestBody info);
+
         /**
          * cookie test.
          */
@@ -533,6 +539,23 @@ public class HttpUtils {
 
     public static Call<SimpleResponse> deleteReply(String contentId, String messageId, String type){
         return create().deleteReply(contentId, messageId, type);
+    }
+
+    public static Call<SimpleResponse> enableNotification(int enable){
+        return create().enableNotification(enable);
+    }
+
+    public static Call<SimpleResponse> feedback(String detail, String contact) {
+        JSONObject json = new JSONObject();
+        try {
+            json.put(FieldConstant.FEEDBACK_DETAIL, detail);
+            json.put(FieldConstant.FEEDBACK_CONTACT, contact);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        RequestBody request = RequestBody
+                .create(okhttp3.MediaType.parse("application/json; charset=utf-8"), json.toString());
+        return create().feedback(request);
     }
 
     public static Call<SimpleResponse> test() {

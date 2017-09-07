@@ -246,7 +246,8 @@
             </intent-filter>
         </receiver>
 
-        <activity android:name=".view.activity.ShareImageActivity"></activity>
+        <activity android:name=".view.activity.ShareImageActivity" />
+        <activity android:name=".view.activity.FeedBackActivity"></activity>
     </application>
 
 </manifest>

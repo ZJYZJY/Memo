@@ -25,7 +25,7 @@
 
     <!--icon size-->
     <dimen name="icon_login">64dp</dimen>
-    <dimen name="icon_item_user">54dp</dimen>
+    <dimen name="icon_item_user">42dp</dimen>
     <dimen name="icon_item_img">64dp</dimen>
     <dimen name="icon_author">64dp</dimen>
     <dimen name="icon_author_badge">24dp</dimen>

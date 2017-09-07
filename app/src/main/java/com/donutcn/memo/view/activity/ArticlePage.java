@@ -214,7 +214,11 @@ public class ArticlePage extends AppCompatActivity implements View.OnClickListen
                     if (RouterHelper.confirmIntent(uri, "content")) {
                         RouterHelper.openPageWithUri(mContext, uri, ArticlePage.class);
                     } else if (RouterHelper.confirmIntent(uri, "author")) {
-                        RouterHelper.openPageWithUri(mContext, uri, AuthorPage.class);
+                        String data = uri.toString();
+                        if(!(data.substring(data.lastIndexOf("/") + 1)
+                                .equals(UserStatus.getCurrentUser().getUserId()))){
+                            RouterHelper.openPageWithUri(mContext, uri, AuthorPage.class);
+                        }
                     } else if(RouterHelper.confirmIntent(uri, "publish")){
                         RouterHelper.openPageWithUri(mContext, uri, PublishActivity.class);
                     } else if(RouterHelper.confirmIntent(uri, "accuse")){
@@ -359,7 +363,7 @@ public class ArticlePage extends AppCompatActivity implements View.OnClickListen
     }
 
     public void onUploadResume(View view){
-        // Todo:upload resume.
+
     }
 
     public void onMoreOption(View view) {

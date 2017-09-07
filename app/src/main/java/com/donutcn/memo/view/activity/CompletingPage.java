@@ -1,5 +1,6 @@
 package com.donutcn.memo.view.activity;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
@@ -40,6 +41,7 @@ public class CompletingPage extends AppCompatActivity {
     private EditText field1, field2, field3;
     private CheckBox name, phone, extra1, extra2;
     private SwitchView apply;
+    private ProgressDialog mDialog;
 
     private Context mContext;
     private PublishType mContentType;
@@ -161,6 +163,9 @@ public class CompletingPage extends AppCompatActivity {
     }
 
     public void onFinish(View view) {
+        mDialog = new ProgressDialog(this);
+        mDialog.setMessage("正在上传中...");
+        mDialog.show();
         switch (mContentType) {
             case ACTIVITY:
             case RESERVE:
@@ -217,6 +222,7 @@ public class CompletingPage extends AppCompatActivity {
                         completeInfo(mShareIntent);
                     }
                 } else {
+                    mDialog.dismiss();
                     ToastUtil.show(mContext, "发布失败，服务器未知错误");
                 }
             }
@@ -224,6 +230,7 @@ public class CompletingPage extends AppCompatActivity {
             @Override
             public void onFailure(Call<SimpleResponse> call, Throwable t) {
                 t.printStackTrace();
+                mDialog.dismiss();
                 ToastUtil.show(mContext, "发布连接失败");
             }
         });
@@ -234,6 +241,7 @@ public class CompletingPage extends AppCompatActivity {
                 needExtra1, needExtra2, mVoteItems, isSingleVote, mEditMode).enqueue(new Callback<SimpleResponse>() {
             @Override
             public void onResponse(Call<SimpleResponse> call, Response<SimpleResponse> response) {
+                mDialog.dismiss();
                 if (response.body() != null) {
                     if(response.body().isOk()){
                         ToastUtil.show(mContext, "发布成功");
@@ -249,6 +257,7 @@ public class CompletingPage extends AppCompatActivity {
             @Override
             public void onFailure(Call<SimpleResponse> call, Throwable t) {
                 t.printStackTrace();
+                mDialog.dismiss();
                 ToastUtil.show(mContext, "完善连接失败");
             }
         });

@@ -103,8 +103,12 @@ public class SocialShareActivity extends AppCompatActivity implements View.OnCli
                             ToastUtil.show(SocialShareActivity.this, "设为公开");
                             view.toggleSwitch(true);
                         }
+                    } else {
+                        view.toggleSwitch(isPrivate);
+                        ToastUtil.show(SocialShareActivity.this, response.body().getMessage());
                     }
                 } else {
+                    view.toggleSwitch(isPrivate);
                     ToastUtil.show(SocialShareActivity.this, "设置失败");
                 }
             }
@@ -112,6 +116,7 @@ public class SocialShareActivity extends AppCompatActivity implements View.OnCli
             @Override
             public void onFailure(Call<SimpleResponse> call, Throwable t) {
                 t.printStackTrace();
+                view.toggleSwitch(isPrivate);
                 ToastUtil.show(SocialShareActivity.this, "设置连接失败");
             }
         });

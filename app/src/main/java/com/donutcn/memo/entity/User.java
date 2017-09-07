@@ -23,6 +23,7 @@ public class User {
     private String gender;
     private String iconUrl;
     private String signature;
+    private int notification;
     private List<String> followedUser;
 
     public User() {
@@ -104,6 +105,14 @@ public class User {
     public void setIconUrl(String iconUrl) {
         if (iconUrl != null)
             this.iconUrl = iconUrl;
+    }
+
+    public int getNotification() {
+        return notification;
+    }
+
+    public void setNotification(int enable) {
+        this.notification = enable;
     }
 
     public String getSignature() {

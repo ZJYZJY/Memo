@@ -20,6 +20,7 @@ public class FieldConstant {
     public static final String USER_SIGNATURE = "self_introduction";
     public static final String USER_EMAIL = "email";
     public static final String USER_FOLLOW = "follow";
+    public static final String USER_NOTIFICATION = "notification_enable";
 
     public static final String CONTENT_ID = "article_id";
     public static final String CONTENT_URL = "url";
@@ -56,4 +57,7 @@ public class FieldConstant {
 
     public static final String TIP_OFF_DETAIL = "content";
     public static final String TIP_OFF_TYPE = "pid";
+
+    public static final String FEEDBACK_DETAIL = "content";
+    public static final String FEEDBACK_CONTACT = "contact_way";
 }

@@ -80,5 +80,7 @@ public class RouterHelper {
         public static final String GET_REPLY = "authorised/messages/{id}/{action}/{timestamp}";
         public static final String GET_REPLY_LIST = "authorised/message_list/down/{timestamp}";
         public static final String DELETE_REPLY = "authorised/delete_reply/{content_id}/{message_id}/{type}";
+        public static final String ENABLE_NOTIFICATION = "user/notification_enable/{enable}";
+        public static final String SUGGEST_FEEDBACK = "user/suggest";
     }
 }

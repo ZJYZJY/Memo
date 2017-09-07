@@ -11,7 +11,9 @@ import android.webkit.WebView;
 
 import com.donutcn.memo.R;
 import com.donutcn.memo.helper.ShareHelper;
+import com.donutcn.memo.utils.LogUtil;
 import com.donutcn.memo.utils.ToastUtil;
+import com.donutcn.memo.utils.WindowUtils;
 import com.donutcn.memo.view.ShareImageView;
 import com.umeng.socialize.UMShareListener;
 import com.umeng.socialize.bean.SHARE_MEDIA;
@@ -23,17 +25,19 @@ public class ShareImageActivity extends AppCompatActivity {
     private ProgressDialog mDialog;
 
     private boolean hasSaved = false;
+    private String title, content;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.layout_share_view);
+        WindowUtils.setStatusBarColor(this, R.color.background_blank, true);
 
-        String title = getIntent().getStringExtra("title");
-        String content = getIntent().getStringExtra("content");
+        title = getIntent().getStringExtra("title");
+        content = getIntent().getStringExtra("content");
         String url = getIntent().getStringExtra("url");
+        LogUtil.d(content);
         mShareImageView = (ShareImageView) findViewById(R.id.share_container);
-        mShareImageView.initView();
         mShareImageView.setContent("<h2>" + title + "</h2>" + content);
         mShareImageView.setQRCode(url);
 
@@ -118,6 +122,7 @@ public class ShareImageActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        mShareImageView.destroy();
         if(mShareImage != null && !mShareImage.isRecycled()){
             mShareImage.recycle();
         }

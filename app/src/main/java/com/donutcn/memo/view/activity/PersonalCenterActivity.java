@@ -13,16 +13,24 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.RequestManager;
 import com.donutcn.memo.R;
+import com.donutcn.memo.entity.SimpleResponse;
 import com.donutcn.memo.entity.User;
 import com.donutcn.memo.event.LoginStateEvent;
 import com.donutcn.memo.helper.LoginHelper;
+import com.donutcn.memo.utils.HttpUtils;
 import com.donutcn.memo.utils.SpfsUtils;
+import com.donutcn.memo.utils.ToastUtil;
+import com.donutcn.memo.utils.UserStatus;
 import com.donutcn.memo.utils.WindowUtils;
 import com.donutcn.widgetlib.widget.SwitchView;
 import com.tencent.bugly.beta.Beta;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class PersonalCenterActivity extends AppCompatActivity implements View.OnClickListener, SwitchView.OnStateChangedListener {
 
@@ -57,6 +65,7 @@ public class PersonalCenterActivity extends AppCompatActivity implements View.On
         mLogout = (RelativeLayout) findViewById(R.id.log_out);
         mVersionNum = (TextView) findViewById(R.id.version_number);
 
+        mSetting.setOnClickListener(this);
         mFeedback.setOnClickListener(this);
         mAbout.setOnClickListener(this);
         mLogout.setOnClickListener(this);
@@ -71,10 +80,12 @@ public class PersonalCenterActivity extends AppCompatActivity implements View.On
     @Override
     public void onClick(View v) {
         switch (v.getId()){
+            case R.id.setting:
             case R.id.personal_center_edit_container:
                 startActivity(new Intent(this, EditInfoPage.class));
                 break;
             case R.id.feedback:
+                startActivity(new Intent(this, FeedBackActivity.class));
                 break;
             case R.id.about:
                 Beta.checkUpgrade();
@@ -110,6 +121,7 @@ public class PersonalCenterActivity extends AppCompatActivity implements View.On
             } else {
                 mSignature.setText("还没有编辑个人签名");
             }
+            mNotify.toggleSwitch(UserStatus.getCurrentUser().getNotification() == 1);
         }
     }
 
@@ -152,10 +164,34 @@ public class PersonalCenterActivity extends AppCompatActivity implements View.On
     }
 
     private void setNotification(final boolean isNotify, final SwitchView view) {
-        if (isNotify) {
-            view.toggleSwitch(false);
-        } else {
-            view.toggleSwitch(true);
-        }
+        HttpUtils.enableNotification(isNotify ? 0 : 1).enqueue(new Callback<SimpleResponse>() {
+            @Override
+            public void onResponse(Call<SimpleResponse> call, Response<SimpleResponse> response) {
+                if(response.body() != null){
+                    if(response.body().isOk()){
+                        if (isNotify) {
+                            view.toggleSwitch(false);
+                            ToastUtil.show(PersonalCenterActivity.this, "关闭通知成功");
+                        } else {
+                            view.toggleSwitch(true);
+                            ToastUtil.show(PersonalCenterActivity.this, "启用通知成功");
+                        }
+                    } else {
+                        view.toggleSwitch(isNotify);
+                        ToastUtil.show(PersonalCenterActivity.this, response.body().getMessage() + "");
+                    }
+                } else {
+                    view.toggleSwitch(isNotify);
+                    ToastUtil.show(PersonalCenterActivity.this, "设置失败，服务器未知错误");
+                }
+            }
+
+            @Override
+            public void onFailure(Call<SimpleResponse> call, Throwable t) {
+                t.printStackTrace();
+                view.toggleSwitch(isNotify);
+                ToastUtil.show(PersonalCenterActivity.this, "设置连接失败");
+            }
+        });
     }
 }

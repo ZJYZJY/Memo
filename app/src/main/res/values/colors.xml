@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!--<color name="colorPrimary">#FBFBFB</color>-->
-    <color name="colorPrimary">#f4f4f4</color>
+    <color name="colorPrimary">#FBFBFB</color>
+    <!--<color name="colorPrimary">#f4f4f4</color>-->
     <color name="colorPrimaryDark">#efefef</color>
     <color name="colorAccent">#3595FF</color>
 
@@ -10,7 +10,7 @@
     <color name="background_black_light">#41464b</color>
     <color name="background_black">#252a2f</color>
 
-    <color name="border_gray">#dddddd</color>
+    <color name="border_gray">#ebebeb</color>
     <color name="border_dark">#a1a1a1</color>
 
     <color name="tintColor">#515151</color>

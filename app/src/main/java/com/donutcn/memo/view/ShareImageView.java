@@ -9,6 +9,8 @@ import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.webkit.WebChromeClient;
+import android.webkit.WebView;
+import android.webkit.WebViewClient;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
@@ -31,7 +33,7 @@ public class ShareImageView extends RelativeLayout {
     private NoTouchScrollView mScrollView;
 
     private Context mContext;
-    private static final String SETUP_HTML = "file:///android_asset/editor.html";
+    private static final String SETUP_HTML = "file:///android_asset/share_view.html";
 
     public ShareImageView(Context context) {
         super(context);
@@ -48,19 +50,23 @@ public class ShareImageView extends RelativeLayout {
         this.mContext = context;
     }
 
-    public void initView(){
-        mContent = (RichEditor) findViewById(R.id.share_content);
-        mQRCode = (ImageView) findViewById(R.id.share_qr_code);
-        mScrollView = (NoTouchScrollView) findViewById(R.id.sv_share_container);
-
-        mContent.loadUrl(SETUP_HTML);
-    }
-
     public void setWebChromeClient(WebChromeClient webChromeClient){
         mContent.setWebChromeClient(webChromeClient);
     }
 
-    public void setContent(String content){
+    public void setContent(final String content){
+        mContent = (RichEditor) findViewById(R.id.share_content);
+        mQRCode = (ImageView) findViewById(R.id.share_qr_code);
+        mScrollView = (NoTouchScrollView) findViewById(R.id.sv_share_container);
+//        mContent.setWebViewClient(new WebViewClient(){
+//            @Override
+//            public void onPageFinished(WebView view, String url) {
+//                if(url.equalsIgnoreCase(SETUP_HTML)){
+//                    mContent.setHtml(content);
+//                }
+//            }
+//        });
+        mContent.loadUrl(SETUP_HTML);
         mContent.setHtml(content);
     }
 
@@ -86,5 +92,9 @@ public class ShareImageView extends RelativeLayout {
         Canvas canvas = new Canvas(bitmap);
         mScrollView.draw(canvas);
         return bitmap;
+    }
+
+    public void destroy(){
+        mContent.destroy();
     }
 }

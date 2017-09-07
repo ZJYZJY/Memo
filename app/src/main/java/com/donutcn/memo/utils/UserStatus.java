@@ -37,6 +37,7 @@ public class UserStatus {
         USER.setUsername(data.get(FieldConstant.USER_NAME));
         USER.setSignature(data.get(FieldConstant.USER_SIGNATURE));
         USER.setEmail(data.get(FieldConstant.USER_EMAIL));
+        USER.setNotification(Integer.valueOf(data.get(FieldConstant.USER_NOTIFICATION)));
         String str = data.get(FieldConstant.USER_FOLLOW);
         if(str != null && !str.equals("")) {
             String[] followed = str.split("-");

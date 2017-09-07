@@ -6,6 +6,7 @@
     <string name="title_activity_publish">发布好页</string>
     <string name="title_activity_share">返回编辑</string>
     <string name="title_activity_personal_center">个人中心</string>
+    <string name="title_activity_feed_back">意见反馈</string>
     <string name="title_activity_tip_off">举报</string>
     <string name="title_activity_reset_password">重置密码</string>
     <string name="title_activity_edit_info">编辑个人信息</string>
@@ -50,6 +51,8 @@
     <string name="hint_search">搜索...</string>
     <string name="hint_search_cancel">取消</string>
     <string name="hint_main_enter_name">请输入昵称</string>
+    <string name="hint_feedback_detail">遇到问题可以在这里反馈给我们，也可以联系客服</string>
+    <string name="hint_feedback_contact">请留下你的手机号：QQ/手机号</string>
 
     <string name="hint_completing_time">活动时间</string>
     <string name="hint_completing_place">举办地点</string>
@@ -84,6 +87,7 @@
     <string name="btn_dialog_ok">确定</string>
     <string name="btn_dialog_cancel">取消</string>
 
+    <string name="btn_feedback_submit">提交反馈</string>
     <string name="btn_dialog_submit">提交</string>
     <string name="btn_dialog_answer">提交回答</string>
 

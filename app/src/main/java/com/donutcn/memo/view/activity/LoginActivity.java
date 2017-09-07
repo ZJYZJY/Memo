@@ -338,7 +338,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 break;
             case R.id.enter_without_login:
                 Intent intent = new Intent(this, MainActivity.class);
-                intent.putExtra("showSplash", false);
                 intent.putExtra("unlogin", true);
                 startActivity(intent);
                 break;
@@ -441,6 +440,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             showSplashFragment();
         }else {
             mSplashHandler.removeCallbacks(showMainPage);
+            mRemoveSplash = true;
             removeSplashFragment();
         }
     }

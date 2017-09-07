@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
+    android:orientation="vertical">
+
+    <include layout="@layout/toolbar_without_btn" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/px_line"
+        android:background="@color/border_gray" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:padding="@dimen/padding_container">
+
+        <EditText
+            android:id="@+id/feedback_detail"
+            android:layout_width="match_parent"
+            android:layout_height="96dp"
+            android:background="@drawable/edit_text_box_bg"
+            android:gravity="start"
+            android:hint="@string/hint_feedback_detail"
+            android:padding="@dimen/padding_medium"
+            android:textSize="14sp" />
+
+        <EditText
+            android:id="@+id/feedback_contact"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_large"
+            android:background="@drawable/edit_text_box_bg"
+            android:hint="@string/hint_feedback_contact"
+            android:padding="@dimen/padding_medium"
+            android:textSize="14sp" />
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_large"
+            android:background="@drawable/selector_radius_blue_btn"
+            android:onClick="onSubmit"
+            android:text="@string/btn_feedback_submit"
+            android:textColor="@color/white"
+            android:textSize="15sp" />
+    </LinearLayout>
+</LinearLayout>

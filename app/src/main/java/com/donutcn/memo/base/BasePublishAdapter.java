@@ -22,12 +22,12 @@ public abstract class BasePublishAdapter<VH extends RecyclerView.ViewHolder> ext
     @Override
     public View onCreateContentView(ViewGroup parent, int viewType) {
         if(viewType == ITEM_NORMAL){
-            return LayoutInflater.from(parent.getContext()).inflate(R.layout.item_home_memo, parent, false);
+            return LayoutInflater.from(parent.getContext()).inflate(R.layout.item_memo, parent, false);
         }else {
             if (hasFooter)
                 return LayoutInflater.from(parent.getContext()).inflate(R.layout.item_footer, parent, false);
         }
-        return LayoutInflater.from(parent.getContext()).inflate(R.layout.item_home_memo, parent, false);
+        return LayoutInflater.from(parent.getContext()).inflate(R.layout.item_memo, parent, false);
     }
 
     @Override
