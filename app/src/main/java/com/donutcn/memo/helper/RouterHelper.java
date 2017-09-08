@@ -65,7 +65,7 @@ public class RouterHelper {
         public static final String GET_RECOMMEND = "index/index/{action}/{timestamp}";
         public static final String GET_FOLLOWED_CONTENT = "authorised/my_follow/{action}/{timestamp}";
         public static final String GET_LATEST_CONTENT = "index/latest/{action}/{timestamp}";
-        public static final String GET_FRIENDS_CONTENT = "index/friends/{action}/{timestamp}";
+        public static final String GET_FRIENDS_CONTENT = "authorised/my_friend_info/{action}/{timestamp}";
         public static final String SEARCH_CONTENT = "index/search";
         public static final String GET_CONTENT = "index/see_article/{id}";
         public static final String SET_CONTENT_PRIVATE = "authorised/is_private";

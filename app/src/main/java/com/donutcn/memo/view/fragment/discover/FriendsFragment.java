@@ -3,14 +3,12 @@ package com.donutcn.memo.view.fragment.discover;
 import android.app.ProgressDialog;
 import android.content.AsyncQueryHandler;
 import android.content.ContentResolver;
-import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v7.widget.LinearLayoutManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,9 +16,11 @@ import android.view.ViewGroup;
 
 import com.donutcn.memo.App;
 import com.donutcn.memo.R;
+import com.donutcn.memo.adapter.MemoAdapter;
+import com.donutcn.memo.base.BaseMemoFragment;
+import com.donutcn.memo.presenter.MemoPresenter;
+import com.donutcn.memo.type.ItemLayoutType;
 import com.donutcn.memo.view.activity.AuthorPage;
-import com.donutcn.memo.adapter.FriendListAdapter;
-import com.donutcn.memo.base.BaseScrollFragment;
 import com.donutcn.memo.entity.ArrayResponse;
 import com.donutcn.memo.entity.Contact;
 import com.donutcn.memo.ContactDao;
@@ -35,11 +35,7 @@ import com.donutcn.memo.utils.SpfsUtils;
 import com.donutcn.memo.utils.StringUtil;
 import com.donutcn.memo.utils.ToastUtil;
 import com.donutcn.memo.utils.UserStatus;
-import com.donutcn.memo.view.ListViewDecoration;
-import com.scwang.smartrefresh.layout.SmartRefreshLayout;
-import com.scwang.smartrefresh.layout.api.RefreshLayout;
-import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
-import com.yanzhenjie.recyclerview.swipe.SwipeMenuRecyclerView;
+import com.donutcn.memo.view.fragment.home.MemoFragment;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -53,22 +49,18 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class FriendsFragment extends BaseScrollFragment {
+public class FriendsFragment extends BaseMemoFragment {
 
-    private SwipeMenuRecyclerView mMemo_rv;
-    private SmartRefreshLayout mRefreshLayout;
     private View mContainer, mNoMatch;
 
-    private FriendListAdapter mAdapter;
     private static List<Contact> mTempList;
     private static List<Contact> mContactsList;
-    private Context mContext;
     private ContactDao mContactDao;
+    private boolean hasMatched;
 
     @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        mContext = context;
+    public void initMemoPresenter() {
+        mMemoPresenter = new MemoPresenter(this, 4);
     }
 
     @Override
@@ -76,12 +68,7 @@ public class FriendsFragment extends BaseScrollFragment {
         super.onCreate(savedInstanceState);
         DaoSession daoSession = ((App)mContext.getApplicationContext()).getDaoSession();
         mContactDao = daoSession.getContactDao();
-    }
-
-    @Override
-    public void onStart() {
-        super.onStart();
-        EventBus.getDefault().register(this);
+        hasMatched = SpfsUtils.readBoolean(mContext, SpfsUtils.USER, "match_contacts", false);
     }
 
     @Override
@@ -92,6 +79,7 @@ public class FriendsFragment extends BaseScrollFragment {
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
         view.findViewById(R.id.start_match).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -100,28 +88,21 @@ public class FriendsFragment extends BaseScrollFragment {
         });
         mContainer = view.findViewById(R.id.unmatch_container);
         mNoMatch = view.findViewById(R.id.no_matched_contact);
-
-        mMemo_rv = (SwipeMenuRecyclerView) view.findViewById(R.id.recycler_view);
-        setRecyclerView(mMemo_rv);
-        mRefreshLayout = (SmartRefreshLayout) view.findViewById(R.id.swipe_layout);
-        mRefreshLayout.setOnRefreshListener(mRefreshListener);
-        mRefreshLayout.setEnableLoadmore(false);
-
-        mMemo_rv.setLayoutManager(new LinearLayoutManager(mContext));
-        mMemo_rv.addItemDecoration(new ListViewDecoration(getContext(), R.dimen.item_decoration_height));
     }
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        EventBus.getDefault().register(this);
         mContactsList = new ArrayList<>();
-        // check the local database first.
-        if(SpfsUtils.readBoolean(mContext, SpfsUtils.USER, "match_contacts", false)){
+        mList = new ArrayList<>();
+        // check whether had been matched contact list.
+        if(hasMatched){
             mContactsList = mContactDao
                     .queryBuilder()
                     .orderAsc(ContactDao.Properties.SortKey)
                     .build().list();
-            mAdapter = new FriendListAdapter(mContext, mContactsList);
+            mAdapter = new MemoAdapter(mContext, mList, ItemLayoutType.AVATAR_IMG);
             mAdapter.setOnItemClickListener(mOnItemClickListener);
             mMemo_rv.setAdapter(mAdapter);
             if(mContactsList.size() > 0){
@@ -136,29 +117,6 @@ public class FriendsFragment extends BaseScrollFragment {
         }
     }
 
-    public void Refresh() {
-        mAdapter = new FriendListAdapter(mContext, mTempList);
-        mAdapter.setOnItemClickListener(mOnItemClickListener);
-
-        mMemo_rv.setAdapter(mAdapter);
-    }
-
-    private OnRefreshListener mRefreshListener = new OnRefreshListener() {
-        @Override
-        public void onRefresh(RefreshLayout refreshlayout) {
-            refreshlayout.finishRefresh(1000);
-        }
-    };
-
-    private OnItemClickListener mOnItemClickListener = new OnItemClickListener() {
-        @Override
-        public void onItemClick(int position) {
-            Intent intent = new Intent(mContext, AuthorPage.class);
-            intent.putExtra("userId", mContactsList.get(position).getUserId());
-            startActivity(intent);
-        }
-    };
-
     public void startMatch(){
         if(PermissionCheck.checkContactsPermission(this)){
             final ProgressDialog dialog = new ProgressDialog(mContext);
@@ -171,7 +129,7 @@ public class FriendsFragment extends BaseScrollFragment {
                 public void uploadProgress(int progress, int total) {}
                 @Override
                 public void uploadAll(List<Contact> list) {
-                    mAdapter = new FriendListAdapter(mContext, mContactsList);
+                    mAdapter = new MemoAdapter(mContext, mList, ItemLayoutType.AVATAR_IMG);
                     mAdapter.setOnItemClickListener(mOnItemClickListener);
                     mMemo_rv.setAdapter(mAdapter);
                     if(mContactsList.size() > 0){
@@ -184,6 +142,8 @@ public class FriendsFragment extends BaseScrollFragment {
                         mContainer.setVisibility(View.GONE);
                     }
                     dialog.dismiss();
+                    mRefreshLayout.autoRefresh(0);
+                    mMemoPresenter.refresh(mList);
                     SpfsUtils.write(mContext, SpfsUtils.USER, "match_contacts", true);
                     ToastUtil.show(mContext, "匹配完成");
                     // insert matched contact into database.
@@ -209,20 +169,18 @@ public class FriendsFragment extends BaseScrollFragment {
         }
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-    }
-
-    @Override
-    public void onStop() {
-        EventBus.getDefault().unregister(this);
-        super.onStop();
-    }
+    private OnItemClickListener mOnItemClickListener = new OnItemClickListener() {
+        @Override
+        public void onItemClick(int position) {
+            Intent intent = new Intent(mContext, AuthorPage.class);
+            intent.putExtra("userId", mContactsList.get(position).getUserId());
+            startActivity(intent);
+        }
+    };
 
     @Subscribe
     public void onRequestRefreshEvent(RequestRefreshEvent event){
-        if(event.getRefreshPosition() == 5){
+        if(event.getRefreshPosition() == 5 && hasMatched){
             mMemo_rv.scrollToPosition(0);
             mRefreshLayout.autoRefresh(0);
         }

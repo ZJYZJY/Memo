@@ -38,6 +38,7 @@ public class DiscoverFragment extends Fragment implements OnTabSelectListener {
     private long recommendRefresh = 0;
     private long latestRefresh = 0;
     private long followedRefresh = 0;
+    private long friendsRefresh = 0;
 
     @Override
     public void onAttach(Context context) {
@@ -109,6 +110,12 @@ public class DiscoverFragment extends Fragment implements OnTabSelectListener {
                 if (followedRefresh == 0 || System.currentTimeMillis() - followedRefresh > 3 * 60 * 1000) {
                     EventBus.getDefault().post(new RequestRefreshEvent(4));
                     followedRefresh = System.currentTimeMillis();
+                }
+                break;
+            case 3:
+                if (friendsRefresh == 0 || System.currentTimeMillis() - friendsRefresh > 3 * 60 * 1000) {
+                    EventBus.getDefault().post(new RequestRefreshEvent(5));
+                    friendsRefresh = System.currentTimeMillis();
                 }
                 break;
         }
