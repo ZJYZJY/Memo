@@ -199,6 +199,10 @@ public class HttpUtils {
         Call<ArrayResponse<BriefContent>> getLatestContent(@Path("action") String action,
                                                            @Path("timestamp") long timeStamp);
 
+        @GET(APIPath.GET_FRIENDS_CONTENT)
+        Call<ArrayResponse<BriefContent>> getFriendsContent(@Path("action") String action,
+                                                           @Path("timestamp") long timeStamp);
+
         /**
          * refresh recommend content.
          */
@@ -271,7 +275,7 @@ public class HttpUtils {
                                           @Path("timestamp") long timeStamp);
 
         @GET(APIPath.GET_REPLY_LIST)
-        Call<ArrayResponse<BriefMessage>> getReplyList(@Path("timestamp") long timeStamp);
+        Call<ArrayResponse<BriefMessage>> getReplyList();
 
         @GET(APIPath.DELETE_REPLY)
         Call<SimpleResponse> deleteReply(@Path("content_id") String contentId,
@@ -283,6 +287,9 @@ public class HttpUtils {
 
         @POST(APIPath.SUGGEST_FEEDBACK)
         Call<SimpleResponse> feedback(@Body RequestBody info);
+
+        @GET(APIPath.EXPORT_LIST)
+        Call<ArrayResponse<MessageItem>> getExportList(@Path("content_id") String contentId);
 
         /**
          * cookie test.
@@ -382,6 +389,8 @@ public class HttpUtils {
                 return create().getLatestContent(action, timeStamp);
             case 3:
                 return create().getFollowedContent(action, timeStamp);
+            case 4:
+                return create().getFriendsContent(action, timeStamp);
             default:
                 return null;
         }
@@ -533,8 +542,8 @@ public class HttpUtils {
         return create().getReplyById(id, action, timeStamp);
     }
 
-    public static Call<ArrayResponse<BriefMessage>> getReplyList(long timeStamp){
-        return create().getReplyList(timeStamp);
+    public static Call<ArrayResponse<BriefMessage>> getReplyList(){
+        return create().getReplyList();
     }
 
     public static Call<SimpleResponse> deleteReply(String contentId, String messageId, String type){
@@ -556,6 +565,10 @@ public class HttpUtils {
         RequestBody request = RequestBody
                 .create(okhttp3.MediaType.parse("application/json; charset=utf-8"), json.toString());
         return create().feedback(request);
+    }
+
+    public static Call<ArrayResponse<MessageItem>> getExportList(String contentId){
+        return create().getExportList(contentId);
     }
 
     public static Call<SimpleResponse> test() {

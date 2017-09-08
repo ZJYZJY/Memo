@@ -8,7 +8,7 @@
 
     <dimen name="toolbar_height">48dp</dimen>
     <dimen name="toolbar_tab_height">42dp</dimen>
-    <dimen name="toolbar_top_right_width">56dp</dimen>
+    <dimen name="toolbar_top_right_width">72dp</dimen>
     <dimen name="bottom_bar_height">48dp</dimen>
     <dimen name="bottom_item_width">36dp</dimen>
     <dimen name="publish_bottom_toolbar_height">42dp</dimen>
@@ -59,7 +59,7 @@
     <dimen name="margin_micro">2dp</dimen>
 
     <!--height & width-->
-    <dimen name="content_item_author_width">64dp</dimen>
+    <!--<dimen name="content_item_author_width">64dp</dimen>-->
     <dimen name="publish_type_width">108dp</dimen>
     <dimen name="publish_type_height">42dp</dimen>
     <dimen name="message_item_height">56dp</dimen>

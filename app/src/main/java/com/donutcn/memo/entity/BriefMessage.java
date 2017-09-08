@@ -55,8 +55,12 @@ public class BriefMessage extends Jsonify {
     private String date;
 
     @Expose
-    @SerializedName(FieldConstant.MESSAGE_COUNT)
+    @SerializedName(FieldConstant.MESSAGE_NEW_COUNT)
     private int newMsgCount;
+
+    @Expose
+    @SerializedName(FieldConstant.MESSAGE_TOTAL_COUNT)
+    private int replyCount;
 
     private long timeStamp;
 
@@ -146,6 +150,14 @@ public class BriefMessage extends Jsonify {
         this.newMsgCount = newMsgCount;
     }
 
+    public int getReplyCount() {
+        return replyCount;
+    }
+
+    public void setReplyCount(int replyCount) {
+        this.replyCount = replyCount;
+    }
+
     public long getTimeStamp() {
         // transfer 'ms' to 's'.
         timeStamp = StringUtil.string2Date(time).getTime() / 1000;
@@ -162,7 +174,8 @@ public class BriefMessage extends Jsonify {
             json.put(FieldConstant.MESSAGE_SUB_TITLE, subTitle);
             json.put(FieldConstant.MESSAGE_TIME, time);
             json.put(FieldConstant.MESSAGE_DATE, date);
-            json.put(FieldConstant.MESSAGE_COUNT, newMsgCount);
+            json.put(FieldConstant.MESSAGE_NEW_COUNT, newMsgCount);
+            json.put(FieldConstant.MESSAGE_TOTAL_COUNT, replyCount);
         } catch (JSONException e) {
             e.printStackTrace();
         }

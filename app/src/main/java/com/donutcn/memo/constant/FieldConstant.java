@@ -41,7 +41,8 @@ public class FieldConstant {
     public static final String MESSAGE_SUB_TITLE = "sub_title";
     public static final String MESSAGE_TIME = "time";
     public static final String MESSAGE_DATE = "date";
-    public static final String MESSAGE_COUNT = "msg_count";
+    public static final String MESSAGE_NEW_COUNT = "msg_count";
+    public static final String MESSAGE_TOTAL_COUNT = "reply_count";
 
     public static final String REPLY_ID = "message_id";
     public static final String COMMENT_ID = "comment_id";

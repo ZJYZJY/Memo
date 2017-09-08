@@ -65,6 +65,7 @@ public class RouterHelper {
         public static final String GET_RECOMMEND = "index/index/{action}/{timestamp}";
         public static final String GET_FOLLOWED_CONTENT = "authorised/my_follow/{action}/{timestamp}";
         public static final String GET_LATEST_CONTENT = "index/latest/{action}/{timestamp}";
+        public static final String GET_FRIENDS_CONTENT = "index/friends/{action}/{timestamp}";
         public static final String SEARCH_CONTENT = "index/search";
         public static final String GET_CONTENT = "index/see_article/{id}";
         public static final String SET_CONTENT_PRIVATE = "authorised/is_private";
@@ -78,9 +79,10 @@ public class RouterHelper {
         public static final String VERIFY_CONTENT = "index/verify_content/{id}";
         public static final String TIP_OFF_CONTENT = "authorised/do_accuse";
         public static final String GET_REPLY = "authorised/messages/{id}/{action}/{timestamp}";
-        public static final String GET_REPLY_LIST = "authorised/message_list/down/{timestamp}";
+        public static final String GET_REPLY_LIST = "authorised/message_list";
         public static final String DELETE_REPLY = "authorised/delete_reply/{content_id}/{message_id}/{type}";
         public static final String ENABLE_NOTIFICATION = "user/notification_enable/{enable}";
         public static final String SUGGEST_FEEDBACK = "user/suggest";
+        public static final String EXPORT_LIST = "authorised/export_data/{content_id}";
     }
 }

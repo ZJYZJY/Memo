@@ -55,7 +55,7 @@ import retrofit2.Response;
 
 public class FriendsFragment extends BaseScrollFragment {
 
-    private SwipeMenuRecyclerView mHaoYe_rv;
+    private SwipeMenuRecyclerView mMemo_rv;
     private SmartRefreshLayout mRefreshLayout;
     private View mContainer, mNoMatch;
 
@@ -101,14 +101,14 @@ public class FriendsFragment extends BaseScrollFragment {
         mContainer = view.findViewById(R.id.unmatch_container);
         mNoMatch = view.findViewById(R.id.no_matched_contact);
 
-        mHaoYe_rv = (SwipeMenuRecyclerView) view.findViewById(R.id.recycler_view);
-        setRecyclerView(mHaoYe_rv);
+        mMemo_rv = (SwipeMenuRecyclerView) view.findViewById(R.id.recycler_view);
+        setRecyclerView(mMemo_rv);
         mRefreshLayout = (SmartRefreshLayout) view.findViewById(R.id.swipe_layout);
         mRefreshLayout.setOnRefreshListener(mRefreshListener);
         mRefreshLayout.setEnableLoadmore(false);
 
-        mHaoYe_rv.setLayoutManager(new LinearLayoutManager(mContext));
-        mHaoYe_rv.addItemDecoration(new ListViewDecoration(getContext(), R.dimen.item_decoration_height));
+        mMemo_rv.setLayoutManager(new LinearLayoutManager(mContext));
+        mMemo_rv.addItemDecoration(new ListViewDecoration(getContext(), R.dimen.item_decoration_height));
     }
 
     @Override
@@ -123,7 +123,7 @@ public class FriendsFragment extends BaseScrollFragment {
                     .build().list();
             mAdapter = new FriendListAdapter(mContext, mContactsList);
             mAdapter.setOnItemClickListener(mOnItemClickListener);
-            mHaoYe_rv.setAdapter(mAdapter);
+            mMemo_rv.setAdapter(mAdapter);
             if(mContactsList.size() > 0){
                 mRefreshLayout.setVisibility(View.VISIBLE);
                 mNoMatch.setVisibility(View.GONE);
@@ -140,7 +140,7 @@ public class FriendsFragment extends BaseScrollFragment {
         mAdapter = new FriendListAdapter(mContext, mTempList);
         mAdapter.setOnItemClickListener(mOnItemClickListener);
 
-        mHaoYe_rv.setAdapter(mAdapter);
+        mMemo_rv.setAdapter(mAdapter);
     }
 
     private OnRefreshListener mRefreshListener = new OnRefreshListener() {
@@ -173,7 +173,7 @@ public class FriendsFragment extends BaseScrollFragment {
                 public void uploadAll(List<Contact> list) {
                     mAdapter = new FriendListAdapter(mContext, mContactsList);
                     mAdapter.setOnItemClickListener(mOnItemClickListener);
-                    mHaoYe_rv.setAdapter(mAdapter);
+                    mMemo_rv.setAdapter(mAdapter);
                     if(mContactsList.size() > 0){
                         mRefreshLayout.setVisibility(View.VISIBLE);
                         mNoMatch.setVisibility(View.GONE);
@@ -223,7 +223,7 @@ public class FriendsFragment extends BaseScrollFragment {
     @Subscribe
     public void onRequestRefreshEvent(RequestRefreshEvent event){
         if(event.getRefreshPosition() == 5){
-            mHaoYe_rv.scrollToPosition(0);
+            mMemo_rv.scrollToPosition(0);
             mRefreshLayout.autoRefresh(0);
         }
     }

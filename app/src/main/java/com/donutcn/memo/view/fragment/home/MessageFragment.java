@@ -97,8 +97,7 @@ public class MessageFragment extends BaseScrollFragment {
     }
 
     public void Refresh() {
-        HttpUtils.getReplyList(mList.size() == 0 ? 0 : mList.get(0).getTimeStamp())
-                .enqueue(new Callback<ArrayResponse<BriefMessage>>() {
+        HttpUtils.getReplyList().enqueue(new Callback<ArrayResponse<BriefMessage>>() {
             @Override
             public void onResponse(Call<ArrayResponse<BriefMessage>> call,
                                    Response<ArrayResponse<BriefMessage>> response) {
@@ -110,7 +109,7 @@ public class MessageFragment extends BaseScrollFragment {
                         mAdapter.notifyDataSetChanged();
                         FileCacheUtil.setMessageListCache(mContext, new Gson().toJson(mList));
                     } else {
-                        ToastUtil.show(mContext, response.body().getMessage());
+//                        ToastUtil.show(mContext, response.body().getMessage());
                     }
                 } else {
                     ToastUtil.show(mContext, "服务器未知错误");
@@ -175,6 +174,12 @@ public class MessageFragment extends BaseScrollFragment {
             }
         }
         FileCacheUtil.setMessageListCache(mContext, new Gson().toJson(mList));
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        Refresh();
     }
 
     @Override

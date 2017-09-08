@@ -21,7 +21,7 @@ public class UserStatus {
     public static int PHONE_LOGIN = 1000;
     public static int WECHAT_LOGIN = 2000;
 
-    private static User USER = null;
+    private static User USER = new User();
 
     private static int loginType;
 

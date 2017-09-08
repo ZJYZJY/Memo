@@ -8,10 +8,14 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.TextView;
 
+import com.donutcn.memo.entity.ArrayResponse;
+import com.donutcn.memo.utils.ExcelUtil;
 import com.donutcn.memo.R;
 import com.donutcn.memo.adapter.MessageDetailAdapter;
 import com.donutcn.memo.entity.MessageItem;
 import com.donutcn.memo.event.ItemActionClickEvent;
+import com.donutcn.memo.interfaces.OnWriteExcelListener;
+import com.donutcn.memo.utils.HttpUtils;
 import com.donutcn.memo.view.api.DeleteContent;
 import com.donutcn.memo.view.api.FetchContent;
 import com.donutcn.memo.interfaces.OnItemClickListener;
@@ -37,6 +41,13 @@ import org.greenrobot.eventbus.Subscribe;
 import java.util.ArrayList;
 import java.util.List;
 
+import jxl.write.Label;
+import jxl.write.WritableSheet;
+import jxl.write.WriteException;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
 import static com.donutcn.memo.utils.FileCacheUtil.MESSAGE_ITEM_CACHE;
 
 public class MessageDetail extends AppCompatActivity implements OnItemClickListener,
@@ -48,11 +59,17 @@ public class MessageDetail extends AppCompatActivity implements OnItemClickListe
     private MessagePresenter mMsgPresenter;
     private SwipeMenuAdapter mAdapter;
     private List<MessageItem> mList;
+    private List<MessageItem> mExportList;
     private PublishType mType;
 
+    private ExcelUtil mExcel;
+    private String mContentId;
+    private String mDate;
     public boolean isLoadMore = false;
     public boolean canLoadMore = true;
+
     public final int PAGE_SIZE = 10;
+    private final String[] EXCEL_LABELS = {"用户昵称", "姓名", "手机", "微信", "简历", "邮箱", "时间"};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,19 +82,25 @@ public class MessageDetail extends AppCompatActivity implements OnItemClickListe
         WindowUtils.setToolBarTitle(this, type);
         mType = PublishType.getType(type);
 
-        String contentId = getIntent().getStringExtra("messageId");
+        mContentId = getIntent().getStringExtra("messageId");
         String title = getIntent().getStringExtra("title");
-        String date = getIntent().getStringExtra("date");
+        mDate = getIntent().getStringExtra("date");
         int count = getIntent().getIntExtra("count", 0);
-        mMsgPresenter = new MessagePresenter(this, contentId);
+        mMsgPresenter = new MessagePresenter(this, mContentId);
 
         mList = new ArrayList<>();
         mAdapter = new MessageDetailAdapter(this, mList, type, count);
         ((MessageDetailAdapter)mAdapter).setOnItemClickListener(this);
-        initView(contentId, title, date, count);
+        initView(mContentId, title, mDate, count);
     }
 
     public void initView(final String contentId, String title, String date, int count){
+        if(mType == PublishType.ARTICLE
+                || mType == PublishType.ALBUM
+                || mType == PublishType.QA
+                || mType == PublishType.VOTE){
+            findViewById(R.id.toolbar_with_btn).setVisibility(View.GONE);
+        }
         ((TextView) findViewById(R.id.detail_content_title)).setText(title);
         ((TextView) findViewById(R.id.detail_content_date)).setText(date);
         findViewById(R.id.detail_content_reference).setOnClickListener(new View.OnClickListener() {
@@ -150,7 +173,7 @@ public class MessageDetail extends AppCompatActivity implements OnItemClickListe
 
     }
 
-    public void onBack(View view){
+    public void onBack(View view) {
         finish();
     }
 
@@ -158,6 +181,68 @@ public class MessageDetail extends AppCompatActivity implements OnItemClickListe
     protected void onDestroy() {
         EventBus.getDefault().unregister(this);
         super.onDestroy();
+    }
+
+    public void onExport(View view) {
+        String[] date = mDate.split(" ");
+        String[] formedDate = date[0].split("-");
+        final String name = formedDate[0] + "年" + formedDate[1] + "月" + formedDate[2] + "日人人记"
+                + mType.toString() + "汇总";
+        HttpUtils.getExportList(mContentId).enqueue(new Callback<ArrayResponse<MessageItem>>() {
+            @Override
+            public void onResponse(Call<ArrayResponse<MessageItem>> call,
+                                   Response<ArrayResponse<MessageItem>> response) {
+                if(response.body() != null){
+                    if(response.body().isOk()){
+                        mExportList = response.body().getData();
+                        if(mExportList != null && mExportList.size() > 0){
+                            try {
+                                exportReply(mExportList, name, mType.toString());
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                        } else {
+                            ToastUtil.show(MessageDetail.this, "导出失败，没有数据");
+                        }
+                    } else {
+                        ToastUtil.show(MessageDetail.this, response.body().getMessage());
+                    }
+                } else {
+                    ToastUtil.show(MessageDetail.this, "导出失败，服务器未知错误");
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ArrayResponse<MessageItem>> call, Throwable t) {
+                t.printStackTrace();
+                ToastUtil.show(MessageDetail.this, "导出失败，连接失败");
+            }
+        });
+    }
+
+    public void exportReply(List<MessageItem> data, String fileName, String sheetName) throws Exception {
+        mExcel = ExcelUtil.with(this)
+                .setData(data)
+                .setFileName(fileName)
+                .setSheetName(sheetName)
+                .setLabels(EXCEL_LABELS)
+                .setOnWriteExcelListener(new OnWriteExcelListener() {
+                    @Override
+                    public void onWriteExcel(WritableSheet sheet, List<MessageItem> list) throws WriteException {
+                        for (int i = 0; i < list.size(); i++) {
+                            MessageItem item = list.get(i);
+                            sheet.addCell(new Label(0, i + 1, item.getName()));
+                            sheet.addCell(new Label(1, i + 1, item.getRealName()));
+                            sheet.addCell(new Label(2, i + 1, item.getPhone()));
+                            sheet.addCell(new Label(3, i + 1, item.getWeChat()));
+                            sheet.addCell(new Label(4, i + 1, item.getResume()));
+                            sheet.addCell(new Label(5, i + 1, item.getEmail()));
+                            sheet.addCell(new Label(6, i + 1, item.getTime()));
+                            ToastUtil.show(MessageDetail.this, "导出成功");
+                        }
+                    }
+                })
+                .build();
     }
 
     @Override

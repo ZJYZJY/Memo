@@ -81,12 +81,13 @@ public class BriefMessageAdapter extends SwipeMenuAdapter<BriefMessageAdapter.Vi
                     .into(holder.mImage);
         } else {
             int count = list.get(position).getNewMsgCount();
+            int totalCount = list.get(position).getReplyCount();
             if(count > 0){
                 holder.mSubTitle.setText(mContext.getString(
                         R.string.placeholder_new_reply, count, type.getReply()));
             } else {
                 holder.mSubTitle.setText(mContext.getString(
-                        R.string.placeholder_no_new_reply, type.getReply()));
+                        R.string.placeholder_total_reply, totalCount, type.getReply()));
             }
             switch (type){
                 case ARTICLE:

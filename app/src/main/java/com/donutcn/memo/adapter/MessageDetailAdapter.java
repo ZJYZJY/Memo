@@ -140,7 +140,7 @@ public class MessageDetailAdapter extends SwipeMenuAdapter<MessageDetailAdapter.
                     if(resume != null && !"".equals(resume)){
                         holder.download.setVisibility(View.VISIBLE);
                         holder.view_resume.setVisibility(View.VISIBLE);
-                        holder.resume.setText(list.get(position).getName() + "的简历");
+                        holder.resume.setText(list.get(position).getRealName() + "的简历");
                     }
                     String email1 = list.get(position).getEmail();
                     if (email1 != null && !"".equals(email1)){
