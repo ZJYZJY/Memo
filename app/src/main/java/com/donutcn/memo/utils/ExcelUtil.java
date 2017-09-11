@@ -31,6 +31,7 @@ public class ExcelUtil {
 
     // 内存地址
     public static String root = getExternalStorageDirectory().getPath();
+    public static String PATH = getExternalStorageDirectory() + "/com.donutcn.memo/export/";
 
     private Context mContext;
     private String[] mLabels;
@@ -79,7 +80,7 @@ public class ExcelUtil {
 //            return null;
 //        }
         File file;
-        File dir = new File(getExternalStorageDirectory() + "/com.donutcn.memo/export/");
+        File dir = new File(PATH);
         file = new File(dir, mFileName + ".xls");
         if (!dir.exists()) {
             dir.mkdirs();

@@ -104,8 +104,9 @@ public class MessageFragment extends BaseScrollFragment {
                 if(response.body() != null){
                     LogUtil.d(response.body().toString());
                     if(response.body().isOk()){
+                        mList.clear();
                         mList.addAll(0, response.body().getData());
-                        mList = CollectionUtil.removeDuplicateWithOrder(mList);
+//                        mList = CollectionUtil.removeDuplicateWithOrder(mList);
                         mAdapter.notifyDataSetChanged();
                         FileCacheUtil.setMessageListCache(mContext, new Gson().toJson(mList));
                     } else {

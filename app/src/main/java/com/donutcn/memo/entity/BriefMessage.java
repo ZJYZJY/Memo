@@ -165,6 +165,19 @@ public class BriefMessage extends Jsonify {
     }
 
     @Override
+    public int hashCode() {
+        return this.id.hashCode();
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if(this == obj){
+            return true;
+        }
+        return obj instanceof BriefContent && ((BriefMessage) obj).getId().equals(this.id);
+    }
+
+    @Override
     public JSONObject toJson() {
         JSONObject json = new JSONObject();
         try {

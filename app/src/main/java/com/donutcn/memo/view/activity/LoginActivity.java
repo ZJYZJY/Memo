@@ -112,12 +112,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                             if(response.body().isOk()){
                                 LinkedHashMap data = response.body().getData();
                                 LoginHelper.autoLogin(LoginActivity.this, data);
-                                // if login with phone number.
-                                if(LoginHelper.loginType(LoginActivity.this) == UserStatus.PHONE_LOGIN){
-                                    if("".equals(data.get(FieldConstant.USER_ICON_URL))
-                                            || "".equals(data.get(FieldConstant.USER_NICKNAME))){
-                                        completeInfo = true;
-                                    }
+                                if(LoginHelper.loginType(LoginActivity.this) == UserStatus.PHONE_LOGIN) {
+                                    needToComplete(data);
                                 }
                                 Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                                 intent.putExtra("completeInfo", completeInfo);
@@ -182,6 +178,14 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
     }
 
+    public void needToComplete(Map<String, String> data) {
+        if ("".equals(data.get(FieldConstant.USER_ICON_URL))
+//                    || data.get(FieldConstant.USER_NAME).equals(data.get(FieldConstant.USER_NICKNAME))
+                || "".equals(data.get(FieldConstant.USER_NICKNAME))) {
+            completeInfo = true;
+        }
+    }
+
     public void attemptToLogin() {
         final String username = mPhoneNum.getText().toString();
         final String password = mPassword.getText().toString();
@@ -204,6 +208,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                     if (response.body().isOk()) {
                         ToastUtil.show(LoginActivity.this, "登录成功");
                         Map<String, String> data = response.body().getData();
+                        needToComplete(data);
                         data.put(FieldConstant.USER_IM_TOKEN, password);
                         LoginHelper.login(getApplicationContext(),
                                 UserStatus.PHONE_LOGIN, data);
@@ -250,6 +255,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                     if(response.body().isOk()){
                         ToastUtil.show(LoginActivity.this, "注册成功");
                         Map<String, String> data = response.body().getData();
+                        needToComplete(data);
                         data.put(FieldConstant.USER_IM_TOKEN, password);
                         LoginHelper.login(getApplicationContext(),
                                 UserStatus.PHONE_LOGIN, data);

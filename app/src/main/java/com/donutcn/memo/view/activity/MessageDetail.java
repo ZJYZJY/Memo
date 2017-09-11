@@ -238,7 +238,7 @@ public class MessageDetail extends AppCompatActivity implements OnItemClickListe
                             sheet.addCell(new Label(4, i + 1, item.getResume()));
                             sheet.addCell(new Label(5, i + 1, item.getEmail()));
                             sheet.addCell(new Label(6, i + 1, item.getTime()));
-                            ToastUtil.show(MessageDetail.this, "导出成功");
+                            ToastUtil.show(MessageDetail.this, "成功导出到" + ExcelUtil.PATH);
                         }
                     }
                 })

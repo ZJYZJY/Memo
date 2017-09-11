@@ -181,7 +181,7 @@ RE.setBlockquote = function() {
 }
 
 RE.insertImage = function(url, alt) {
-    var html = '<img src="' + url + '" alt="' + alt + '" /><div style="text-align:center"}>请输入图片描述</div>';
+    var html = '<img src="' + url + '" alt="' + alt + '" /><br><br><br>';
     RE.insertHTML(html);
 }
 

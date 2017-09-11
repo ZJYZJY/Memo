@@ -200,7 +200,7 @@ public class PublishActivity extends AppCompatActivity implements View.OnClickLi
 
     public void setWaterMark(){
         String mWaterMark = "|watermark/2/text/" + StringUtil.encryptBASE64(UserStatus.getCurrentUser().getName() + " - 人人记")
-                + "/font/6buR5L2T/fontsize/240/fill/I0ZGRkZGRg==/dissolve/100/gravity/SouthEast/dx/10/dy/10";
+                + "/font/6buR5L2T/fontsize/400/fill/I0ZGRkZGRg==/dissolve/100/gravity/SouthEast/dx/20/dy/20";
         strategy = strategy + mWaterMark;
     }
 
@@ -238,22 +238,7 @@ public class PublishActivity extends AppCompatActivity implements View.OnClickLi
         });
     }
 
-    public void publishContent(List<String> keys){
-        if(keys == null && selectedPhotos.size() > 0){
-            mPublishDialog.cancel();
-            ToastUtil.show(this, "找不到图片，请重新选择");
-            return;
-        }
-        if(keys != null && keys.size() == selectedPhotos.size()){
-            // use the user's nickname for watermark.
-            if(SpfsUtils.readBoolean(this, SpfsUtils.SETTING, "showWaterMark", false)){
-                setWaterMark();
-            }
-            for(int i = 0; i < selectedPhotos.size(); i++){
-                mContentStr = mContentStr.replace(selectedPhotos.get(i),
-                HOST + keys.get(i) + strategy);
-            }
-        }
+    public void publishContent(){
         // Escape the " to \"
 //        mTitleStr = mTitleStr.replace("\"", "\\\"");
 //        mContentStr = mContentStr.replace("\"", "\\\"");
@@ -305,47 +290,45 @@ public class PublishActivity extends AppCompatActivity implements View.OnClickLi
                 WindowUtils.toggleKeyboard(this, false);
                 // if in edit mode, same image will not be reuploaded.
                 selectedPhotos = StringUtil.getImgSrcList(mContentStr);
-                if(mSelectedType.equals(mContentTypes[0])
-                        || mSelectedType.equals(mContentTypes[1])
-                        || mSelectedType.equals(mContentTypes[5])){
-                    if(selectedPhotos.size() == 0){
+                if (selectedPhotos.size() == 0) {
+                    if(needToComplete()){
+                        startCompletePage();
+                        mPublishDialog.cancel();
+                    } else {
                         mPublishDialog.show();
-                        publishContent(null);
-                    }else {
-                        mPublishDialog.setMessage("正在上传图片...");
-                        mPublishDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
-                        mPublishDialog.setMax(100);
-                        // set progress 0
-                        mPublishDialog.incrementProgressBy(-mPublishDialog.getProgress());
-                        mPublishDialog.show();
-                        final int count = selectedPhotos.size();
-                        // compress the image files.
-                        new Thread(new Runnable() {
-                            @Override
-                            public void run() {
-                                for(int i = 0; i < selectedPhotos.size(); i++){
-                                    try {
-                                        File file = Luban.with(PublishActivity.this)
-                                                .load(new File(selectedPhotos.get(i)))
-                                                .get();
-                                        if(file != null){
-                                            photoFiles.add(file);
-                                        }
-                                    } catch (IOException e) {
-                                        e.printStackTrace();
+                        publishContent();
+                    }
+                } else {
+                    mPublishDialog.setMessage("正在上传图片...");
+                    mPublishDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+                    mPublishDialog.setMax(100);
+                    // set progress 0
+                    mPublishDialog.incrementProgressBy(-mPublishDialog.getProgress());
+                    mPublishDialog.show();
+                    final int count = selectedPhotos.size();
+                    // compress the image files.
+                    new Thread(new Runnable() {
+                        @Override
+                        public void run() {
+                            for (int i = 0; i < selectedPhotos.size(); i++) {
+                                try {
+                                    File file = Luban.with(PublishActivity.this)
+                                            .load(new File(selectedPhotos.get(i)))
+                                            .get();
+                                    if (file != null) {
+                                        photoFiles.add(file);
                                     }
-                                }
-                                if(count == photoFiles.size()){
-                                    EventBus.getDefault().post(new FinishCompressEvent(true));
-                                } else {
-                                    EventBus.getDefault().post(new FinishCompressEvent(false));
+                                } catch (IOException e) {
+                                    e.printStackTrace();
                                 }
                             }
-                        }).start();
-                    }
-                }else {
-                    startCompletePage();
-                    mPublishDialog.cancel();
+                            if (count == photoFiles.size()) {
+                                EventBus.getDefault().post(new FinishCompressEvent(true));
+                            } else {
+                                EventBus.getDefault().post(new FinishCompressEvent(false));
+                            }
+                        }
+                    }).start();
                 }
                 break;
             case R.id.publish_spinner_container:
@@ -412,7 +395,27 @@ public class PublishActivity extends AppCompatActivity implements View.OnClickLi
                 }
                 @Override
                 public void uploadAll(List<String> keys) {
-                    publishContent(keys);
+                    if(keys == null && selectedPhotos.size() > 0){
+                        mPublishDialog.cancel();
+                        ToastUtil.show(PublishActivity.this, "找不到图片，请重新选择");
+                        return;
+                    }
+                    if(keys != null && keys.size() == selectedPhotos.size()){
+                        // use the user's nickname for watermark.
+                        if(SpfsUtils.readBoolean(PublishActivity.this, SpfsUtils.SETTING, "showWaterMark", false)){
+                            setWaterMark();
+                        }
+                        for(int i = 0; i < selectedPhotos.size(); i++){
+                            mContentStr = mContentStr.replace(selectedPhotos.get(i),
+                                    HOST + keys.get(i) + strategy);
+                        }
+                    }
+                    if(needToComplete()){
+                        startCompletePage();
+                        mPublishDialog.cancel();
+                    } else {
+                        publishContent();
+                    }
                 }
 
                 @Override
@@ -424,6 +427,12 @@ public class PublishActivity extends AppCompatActivity implements View.OnClickLi
         } else {
             ToastUtil.show(PublishActivity.this, "图片上传失败, 压缩错误");
         }
+    }
+
+    public boolean needToComplete(){
+        return !mSelectedType.equals(mContentTypes[0])
+                && !mSelectedType.equals(mContentTypes[1])
+                && !mSelectedType.equals(mContentTypes[5]);
     }
 
     private void openSharePage(String contentId, String contentUrl, String title,

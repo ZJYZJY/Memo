@@ -20,6 +20,7 @@ import com.donutcn.memo.adapter.MemoAdapter;
 import com.donutcn.memo.base.BaseMemoFragment;
 import com.donutcn.memo.presenter.MemoPresenter;
 import com.donutcn.memo.type.ItemLayoutType;
+import com.donutcn.memo.view.activity.ArticlePage;
 import com.donutcn.memo.view.activity.AuthorPage;
 import com.donutcn.memo.entity.ArrayResponse;
 import com.donutcn.memo.entity.Contact;
@@ -172,8 +173,8 @@ public class FriendsFragment extends BaseMemoFragment {
     private OnItemClickListener mOnItemClickListener = new OnItemClickListener() {
         @Override
         public void onItemClick(int position) {
-            Intent intent = new Intent(mContext, AuthorPage.class);
-            intent.putExtra("userId", mContactsList.get(position).getUserId());
+            Intent intent = new Intent(mContext, ArticlePage.class);
+            intent.putExtra("contentId", mList.get(position).getId());
             startActivity(intent);
         }
     };
