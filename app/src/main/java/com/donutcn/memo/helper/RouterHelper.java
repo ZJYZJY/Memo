@@ -13,9 +13,8 @@ public class RouterHelper {
 
     private static final String APP_SCHEME = "memo";
     private static final String HTTP_SCHEME = "http";
-    private static final String HOST = "ascexz.320.io";
-    private static final String API_PATH = "/GoodPage/API/";
-    private static final String PATH = "/GoodPage/";
+    private static final String HOST = "www.rrnote.com";
+    private static final String API_PATH = "/API/";
 
     public static String scheme(){
         return HTTP_SCHEME;
@@ -34,7 +33,7 @@ public class RouterHelper {
     }
 
     public static Uri getBaseUri(){
-        return Uri.parse(HTTP_SCHEME + "://" + HOST + PATH);
+        return Uri.parse(HTTP_SCHEME + "://" + HOST);
     }
 
     public static boolean confirmIntent(Uri uri, String intent){

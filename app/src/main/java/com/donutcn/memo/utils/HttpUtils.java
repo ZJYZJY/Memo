@@ -305,7 +305,7 @@ public class HttpUtils {
                 json.put(FieldConstant.USER_NAME, data.get(FieldConstant.USER_NAME));
                 json.put("password", data.get("password"));
             }else if(loginType == UserStatus.WECHAT_LOGIN){
-                json.put(FieldConstant.USER_OPEN_ID, data.get(FieldConstant.USER_OPEN_ID));
+                json.put(FieldConstant.USER_UNION_ID, data.get(FieldConstant.USER_UNION_ID));
                 json.put(FieldConstant.USER_NICKNAME, data.get(FieldConstant.USER_NICKNAME));
                 json.put("gender", data.get("gender"));
                 json.put("iconurl", data.get("iconurl"));

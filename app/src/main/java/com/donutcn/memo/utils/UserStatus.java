@@ -29,7 +29,7 @@ public class UserStatus {
         if (USER == null)
             USER = new User();
         USER.setUserId(data.get(FieldConstant.USER_ID));
-        USER.setOpenId(data.get(FieldConstant.USER_OPEN_ID));
+        USER.setUnionId(data.get(FieldConstant.USER_UNION_ID));
         USER.setName(data.get(FieldConstant.USER_NICKNAME));
         USER.setGender(data.get(FieldConstant.USER_GENDER));
         USER.setIconUrl(data.get(FieldConstant.USER_ICON_URL));

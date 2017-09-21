@@ -15,7 +15,7 @@ import java.util.List;
 public class User {
 
     private String userId;
-    private String openId;
+    private String unionId;
     private String name;
     private String username;
     private String phone;
@@ -38,13 +38,13 @@ public class User {
             this.userId = userId;
     }
 
-    public String getOpenId() {
-        return openId;
+    public String getUnionId() {
+        return unionId;
     }
 
-    public void setOpenId(String openId) {
-        if (openId != null)
-            this.openId = openId;
+    public void setUnionId(String unionId) {
+        if (unionId != null)
+            this.unionId = unionId;
     }
 
     public String getName() {

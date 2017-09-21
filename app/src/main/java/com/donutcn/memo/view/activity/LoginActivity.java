@@ -370,8 +370,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                     if(response.body() != null && response.body().isOk()){
                         LogUtil.d("wechat_login", response.body().toString());
                         Map<String, String> info = response.body().getData();
-                        info.put(FieldConstant.USER_NAME, data.get(FieldConstant.USER_OPEN_ID));
-                        info.put(FieldConstant.USER_IM_TOKEN, data.get(FieldConstant.USER_OPEN_ID));
+                        info.put(FieldConstant.USER_NAME, data.get(FieldConstant.USER_UNION_ID));
+                        info.put(FieldConstant.USER_IM_TOKEN, data.get(FieldConstant.USER_UNION_ID));
                         LoginHelper.login(getApplicationContext(), UserStatus.WECHAT_LOGIN, info);
                         ToastUtil.show(LoginActivity.this, "登录成功");
                         Intent intent = new Intent(LoginActivity.this, MainActivity.class);
