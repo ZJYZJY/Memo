@@ -386,7 +386,7 @@ public class ArticlePage extends AppCompatActivity implements View.OnClickListen
             @Override
             public void onClick(View v) {
                 popupWindow.dismiss();
-                new ShareHelper(mContext).openShareBoard(mContentUrl, mTitle, mImageUrl, mContent);
+                new ShareHelper(mContext).openShareBoard(mContentUrl.substring(0, mContentUrl.length() - 5), mTitle, mImageUrl, mContent);
             }
         });
         edit.setOnClickListener(new View.OnClickListener() {

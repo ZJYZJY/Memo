@@ -204,7 +204,7 @@ public class SocialShareActivity extends AppCompatActivity implements View.OnCli
     }
 
     public void initWebMedia() {
-        mUMWeb = new UMWeb(contentUrl);
+        mUMWeb = new UMWeb(contentUrl.substring(0, contentUrl.length() - 5));
         mUMWeb.setTitle(title);
         if(picUrl != null && !picUrl.equals("")){
             mUMWeb.setThumb(new UMImage(this, picUrl));

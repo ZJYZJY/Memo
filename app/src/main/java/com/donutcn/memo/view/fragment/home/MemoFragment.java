@@ -122,8 +122,9 @@ public class MemoFragment extends BaseMemoFragment implements FetchContent<Brief
         if (direction == SwipeMenuRecyclerView.RIGHT_DIRECTION) {
             switch (menuPosition) {
                 case 0:
+                    String url = mList.get(adapterPosition).getUrl();
                     new ShareHelper(mContext).openShareBoard(
-                            mList.get(adapterPosition).getUrl(),
+                            url.substring(0, url.length() - 5),
                             mList.get(adapterPosition).getTitle(),
                             mList.get(adapterPosition).getImage0(),
                             mList.get(adapterPosition).getContent());
