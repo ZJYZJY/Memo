@@ -37,11 +37,12 @@ public class RouterHelper {
     }
 
     public static boolean confirmIntent(Uri uri, String intent){
-        return uri.getPathSegments().get(1).equals(intent);
+        return uri.getPathSegments().get(0).equals(intent);
     }
 
+    @Deprecated
     public static boolean confirmRequest(Uri uri, String request){
-        return uri.getPathSegments().get(3).equals(request);
+        return uri.getPathSegments().get(0).equals(request);
     }
 
     public static void openPageWithUri(Context context, Uri uri, Class<?> cls){

@@ -151,7 +151,8 @@ public class MessageFragment extends BaseScrollFragment {
                 intent.putExtra("type", mList.get(position).getType());
                 intent.putExtra("title", mList.get(position).getTitle());
                 intent.putExtra("date", mList.get(position).getDate());
-                startActivity(intent);
+                intent.putExtra("position", position);
+                startActivityForResult(intent, 0);
             }
             EventBus.getDefault().postSticky(new ChangeRedDotEvent(1, -1));
             clearRedDot(mList.get(position).getId());
@@ -175,6 +176,18 @@ public class MessageFragment extends BaseScrollFragment {
             }
         }
         FileCacheUtil.setMessageListCache(mContext, new Gson().toJson(mList));
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode == 0){
+            if(resultCode > 0){
+                mList.remove(resultCode);
+                mAdapter.notifyItemRemoved(resultCode);
+                FileCacheUtil.setMessageListCache(mContext, new Gson().toJson(mList));
+            }
+        }
     }
 
     @Override

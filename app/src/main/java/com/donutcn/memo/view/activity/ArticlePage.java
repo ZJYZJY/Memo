@@ -206,7 +206,7 @@ public class ArticlePage extends AppCompatActivity implements View.OnClickListen
             public boolean shouldOverrideUrlLoading(WebView view, String url) {
                 Uri uri = Uri.parse(url);
                 if(url.startsWith(RouterHelper.getApiUri().toString())){
-                    if(RouterHelper.confirmRequest(uri, "accuse")){
+                    if(RouterHelper.confirmIntent(uri, "accuse")){
 
                     }
                     return false;

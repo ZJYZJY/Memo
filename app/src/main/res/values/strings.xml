@@ -3,7 +3,7 @@
     <string name="app_slogan">人人都需要信息发布工具</string>
 
     <!--title-->
-    <string name="title_activity_publish">发布好页</string>
+    <string name="title_activity_publish">发布人人记</string>
     <string name="title_activity_share">返回编辑</string>
     <string name="title_activity_personal_center">个人中心</string>
     <string name="title_activity_feed_back">意见反馈</string>
@@ -40,7 +40,7 @@
     <string name="placeholder_total_reply">已收到%1$d个%2$s</string>
 
     <!--hint-->
-    <string name="hint_search_text_box">搜索 好页 里的信息</string>
+    <string name="hint_search_text_box">搜索 人人记 里的信息</string>
     <string name="hint_login_phone">手机号码</string>
     <string name="hint_login_message_code">短信验证码</string>
     <string name="hint_login_password">密码</string>

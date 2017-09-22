@@ -84,8 +84,8 @@
                 <category android:name="android.intent.category.BROWSABLE" />
 
                 <data
-                    android:host="ascexz.320.io"
-                    android:pathPrefix="/GoodPage/login"
+                    android:host="www.rrnote.com"
+                    android:pathPrefix="/login"
                     android:scheme="memo" />
             </intent-filter>
         </activity>
@@ -100,8 +100,8 @@
                 <category android:name="android.intent.category.BROWSABLE" />
 
                 <data
-                    android:host="ascexz.320.io"
-                    android:pathPrefix="/GoodPage/publish"
+                    android:host="www.rrnote.com"
+                    android:pathPrefix="/publish"
                     android:scheme="memo" />
             </intent-filter>
         </activity>
@@ -114,8 +114,8 @@
                 <category android:name="android.intent.category.BROWSABLE" />
 
                 <data
-                    android:host="ascexz.320.io"
-                    android:pathPrefix="/GoodPage/content"
+                    android:host="www.rrnote.com"
+                    android:pathPrefix="/content"
                     android:scheme="memo" />
             </intent-filter>
         </activity>
@@ -127,8 +127,8 @@
                 <category android:name="android.intent.category.BROWSABLE" />
 
                 <data
-                    android:host="ascexz.320.io"
-                    android:pathPrefix="/GoodPage/author"
+                    android:host="www.rrnote.com"
+                    android:pathPrefix="/author"
                     android:scheme="memo" />
             </intent-filter>
         </activity>
@@ -143,8 +143,8 @@
                 <category android:name="android.intent.category.BROWSABLE" />
 
                 <data
-                    android:host="ascexz.320.io"
-                    android:pathPrefix="/GoodPage/accuse"
+                    android:host="www.rrnote.com"
+                    android:pathPrefix="/accuse"
                     android:scheme="memo" />
             </intent-filter>
         </activity>
@@ -159,8 +159,8 @@
                 <category android:name="android.intent.category.BROWSABLE" />
 
                 <data
-                    android:host="ascexz.320.io"
-                    android:pathPrefix="/GoodPage/message"
+                    android:host="www.rrnote.com"
+                    android:pathPrefix="/message"
                     android:scheme="memo" />
             </intent-filter>
         </activity>

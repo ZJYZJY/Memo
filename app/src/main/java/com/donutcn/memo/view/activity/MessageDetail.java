@@ -92,6 +92,9 @@ public class MessageDetail extends AppCompatActivity implements OnItemClickListe
         mAdapter = new MessageDetailAdapter(this, mList, type, count);
         ((MessageDetailAdapter)mAdapter).setOnItemClickListener(this);
         initView(mContentId, title, mDate, count);
+        if(mList.size() == 0){
+            setResult(getIntent().getIntExtra("position", -1));
+        }
     }
 
     public void initView(final String contentId, String title, String date, int count){
@@ -269,6 +272,9 @@ public class MessageDetail extends AppCompatActivity implements OnItemClickListe
     @Override
     public void loadMoreSuccess(List<MessageItem> list) {
         mList.addAll(mList.size(), list);
+        if(mList.size() == 0){
+            setResult(getIntent().getIntExtra("position", -1));
+        }
         mAdapter.notifyDataSetChanged();
         mRefreshLayout.finishLoadmore();
         isLoadMore = false;
