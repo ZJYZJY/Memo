@@ -123,7 +123,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                                 // check if the cookie is out of date.
                                 LogUtil.e("unAuthorized", response.body().toString());
                                 ToastUtil.show(LoginActivity.this, "登录授权过期，请重新登录");
-                                LoginHelper.clearState(LoginActivity.this);
+                                UserStatus.clear(LoginActivity.this);
+                                removeSplashFragment();
                             } else {
                                 removeSplashFragment();
                                 ToastUtil.show(LoginActivity.this, response.body().getMessage());
