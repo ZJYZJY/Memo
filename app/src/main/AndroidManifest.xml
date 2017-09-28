@@ -247,7 +247,8 @@
         </receiver>
 
         <activity android:name=".view.activity.ShareImageActivity" />
-        <activity android:name=".view.activity.FeedBackActivity"></activity>
+        <activity android:name=".view.activity.FeedBackActivity" />
+        <activity android:name=".view.activity.TemplateActivity"></activity>
     </application>
 
 </manifest>

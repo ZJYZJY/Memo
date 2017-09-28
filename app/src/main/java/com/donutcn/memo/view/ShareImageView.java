@@ -9,6 +9,7 @@ import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.webkit.WebChromeClient;
+import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.ImageView;
@@ -33,7 +34,6 @@ public class ShareImageView extends RelativeLayout {
     private NoTouchScrollView mScrollView;
 
     private Context mContext;
-    private static final String SETUP_HTML = "file:///android_asset/share_view.html";
 
     public ShareImageView(Context context) {
         super(context);
@@ -54,19 +54,13 @@ public class ShareImageView extends RelativeLayout {
         mContent.setWebChromeClient(webChromeClient);
     }
 
-    public void setContent(final String content){
+    public void init(){
         mContent = (RichEditor) findViewById(R.id.share_content);
         mQRCode = (ImageView) findViewById(R.id.share_qr_code);
         mScrollView = (NoTouchScrollView) findViewById(R.id.sv_share_container);
-//        mContent.setWebViewClient(new WebViewClient(){
-//            @Override
-//            public void onPageFinished(WebView view, String url) {
-//                if(url.equalsIgnoreCase(SETUP_HTML)){
-//                    mContent.setHtml(content);
-//                }
-//            }
-//        });
-        mContent.loadUrl(SETUP_HTML);
+    }
+
+    public void setContent(final String content){
         mContent.setHtml(content);
     }
 

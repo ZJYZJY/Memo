@@ -193,7 +193,7 @@ public class MessageFragment extends BaseScrollFragment {
     @Override
     public void onResume() {
         super.onResume();
-        Refresh();
+//        Refresh();
     }
 
     @Override

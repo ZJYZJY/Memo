@@ -104,14 +104,32 @@
             android:layout_height="@dimen/px_line"
             android:background="@color/border_gray" />
 
-        <Button
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="@dimen/margin_small"
-            android:background="@drawable/selector_radius_blue_btn"
-            android:onClick="onShare"
-            android:text="分享"
-            android:textColor="@color/white"
-            android:textSize="16sp" />
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
+
+            <Button
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/margin_small"
+                android:background="@drawable/selector_radius_blue_btn"
+                android:onClick="onSave"
+                android:text="保存"
+                android:textColor="@color/white"
+                android:textSize="16sp" />
+
+            <Button
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/margin_small"
+                android:background="@drawable/selector_radius_blue_btn"
+                android:onClick="onShare"
+                android:text="分享"
+                android:textColor="@color/white"
+                android:textSize="16sp" />
+        </LinearLayout>
     </LinearLayout>
 </RelativeLayout>

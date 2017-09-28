@@ -84,5 +84,6 @@ public class RouterHelper {
         public static final String ENABLE_NOTIFICATION = "user/notification_enable/{enable}";
         public static final String SUGGEST_FEEDBACK = "user/suggest";
         public static final String EXPORT_LIST = "authorised/export_data/{content_id}";
+        public static final String PUBLISH_TEMPLATE = "authorised/template";
     }
 }

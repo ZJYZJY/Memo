@@ -82,6 +82,7 @@ dependencies {
     compile files('libs/umeng_shareboard_widget.jar')
     compile files('libs/umeng_social_shareboard.jar')
     compile project(':libqrcode')
+    compile files('libs/jxl.jar')
     compile 'com.qiniu:qiniu-android-sdk:7.3.8'
     compile 'com.umeng.analytics:analytics:latest.integration'
     compile 'com.tencent.bugly:crashreport_upgrade:latest.release'
@@ -115,5 +116,4 @@ dependencies {
     testCompile 'junit:junit:4.12'
     testCompile 'org.json:json:20140107'
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.8.0'
-    compile files('libs/jxl.jar')
 }

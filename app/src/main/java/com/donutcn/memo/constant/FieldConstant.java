@@ -61,4 +61,9 @@ public class FieldConstant {
 
     public static final String FEEDBACK_DETAIL = "content";
     public static final String FEEDBACK_CONTACT = "contact_way";
+
+    public static final String TEMPLATE_ID = "template_id";
+    public static final String TEMPLATE_TITLE = "title";
+    public static final String TEMPLATE_CONTENT = "content";
+    public static final String TEMPLATE_SHORT_CUT = "url";
 }

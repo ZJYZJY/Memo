@@ -181,9 +181,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT, true);
         mPopupWindow.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         mPopupWindow.setAnimationStyle(R.style.AnimPopup);
-        mPopupWindow.setClippingEnabled(false);
-        mPopupWindow.setInputMethodMode(PopupWindow.INPUT_METHOD_NEEDED);
-        mPopupWindow.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
+//        mPopupWindow.setClippingEnabled(false);
+        mPopupWindow.setFocusable(true);
+//        mPopupWindow.setInputMethodMode(PopupWindow.INPUT_METHOD_NEEDED);
+//        mPopupWindow.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
         mPopupWindow.setOnDismissListener(new PopupWindow.OnDismissListener() {
             @Override
             public void onDismiss() {
@@ -220,15 +221,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 mMainProgress.setVisibility(View.VISIBLE);
             }
         });
-
-        // close popup window
-        popWindowView.findViewById(R.id.completing_container).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mPopupWindow.dismiss();
-            }
-        });
-        mPopupWindow.showAtLocation(rootView, Gravity.CENTER, 0, 0);
+        mPopupWindow.showAtLocation(rootView, Gravity.BOTTOM, 0, 0);
     }
 
     @Override
@@ -322,6 +315,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     @Override
     public void onBackPressed() {
+        if(mPopupWindow != null && mPopupWindow.isShowing()){
+            mPopupWindow.dismiss();
+        }
         if(splashFragment == null){
             super.onBackPressed();
         }

@@ -10,6 +10,7 @@ import com.donutcn.memo.entity.Contact;
 import com.donutcn.memo.entity.ContentResponse;
 import com.donutcn.memo.entity.MessageItem;
 import com.donutcn.memo.entity.SimpleResponse;
+import com.donutcn.memo.entity.Template;
 import com.donutcn.memo.helper.RouterHelper;
 import com.donutcn.memo.helper.RouterHelper.APIPath;
 import com.donutcn.memo.interfaces.UploadCallback;
@@ -291,6 +292,9 @@ public class HttpUtils {
         @GET(APIPath.EXPORT_LIST)
         Call<ArrayResponse<MessageItem>> getExportList(@Path("content_id") String contentId);
 
+        @GET(APIPath.PUBLISH_TEMPLATE)
+        Call<ArrayResponse<Template>> getTemplateList();
+
         /**
          * cookie test.
          */
@@ -569,6 +573,10 @@ public class HttpUtils {
 
     public static Call<ArrayResponse<MessageItem>> getExportList(String contentId){
         return create().getExportList(contentId);
+    }
+
+    public static Call<ArrayResponse<Template>> getTemplateList(){
+        return create().getTemplateList();
     }
 
     public static Call<SimpleResponse> test() {

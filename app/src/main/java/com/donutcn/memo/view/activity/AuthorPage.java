@@ -124,6 +124,12 @@ public class AuthorPage extends AppCompatActivity implements OnItemClickListener
         }
         switch (v.getId()){
             case R.id.author_follow:
+                if(UserStatus.isLogin(getApplicationContext())){
+                    if(mUserId.equals(UserStatus.getCurrentUser().getUserId())){
+                        ToastUtil.show(AuthorPage.this, "不能关注自己");
+                        return;
+                    }
+                }
                 if(LoginHelper.ifRequestLogin(this, "请先登录")){
                     return;
                 }
@@ -166,6 +172,12 @@ public class AuthorPage extends AppCompatActivity implements OnItemClickListener
                 });
                 break;
             case R.id.author_message:
+                if(UserStatus.isLogin(getApplicationContext())){
+                    if(mUserId.equals(UserStatus.getCurrentUser().getUserId())){
+                        ToastUtil.show(AuthorPage.this, "不能私信自己");
+                        return;
+                    }
+                }
                 if(LoginHelper.ifRequestLogin(this, "请先登录")){
                     return;
                 }

@@ -111,6 +111,7 @@ public class PublishActivity extends AppCompatActivity implements View.OnClickLi
     private int[] icon = { R.drawable.icon_type_article, R.drawable.icon_type_album,
             R.drawable.icon_type_activity, R.drawable.icon_type_vote, R.drawable.icon_type_recruit,
             R.drawable.icon_type_qa, R.drawable.icon_type_reserve, R.drawable.icon_type_sale};
+    public static final int GET_TEMPLATE = 1000;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -345,6 +346,7 @@ public class PublishActivity extends AppCompatActivity implements View.OnClickLi
                 mTools.setVisibility(mTools.getVisibility() == View.VISIBLE ? View.GONE : View.VISIBLE);
                 break;
             case R.id.pub_template:
+                startActivityForResult(new Intent(PublishActivity.this, TemplateActivity.class), GET_TEMPLATE);
                 break;
             case R.id.pub_speech_input:
                 PermissionCheck permissionCheck = new PermissionCheck(this);
@@ -746,23 +748,27 @@ public class PublishActivity extends AppCompatActivity implements View.OnClickLi
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if (resultCode == RESULT_OK &&
-                (requestCode == PhotoPicker.REQUEST_CODE || requestCode == PhotoPreview.REQUEST_CODE)) {
+        if (resultCode == RESULT_OK) {
+            if (requestCode == GET_TEMPLATE) {
+                mContent.setHtml(data.getStringExtra("template"));
+            } else if (requestCode == PhotoPicker.REQUEST_CODE
+                    || requestCode == PhotoPreview.REQUEST_CODE) {
 
-            List<String> photos = null;
-            if (data != null) {
-                photos = data.getStringArrayListExtra(PhotoPicker.KEY_SELECTED_PHOTOS);
-                for(String s : photos){
-                    LogUtil.d("select_photo", s);
+                List<String> photos = null;
+                if (data != null) {
+                    photos = data.getStringArrayListExtra(PhotoPicker.KEY_SELECTED_PHOTOS);
+                    for (String s : photos) {
+                        LogUtil.d("select_photo", s);
+                    }
                 }
-            }
-            selectedPhotos.clear();
+                selectedPhotos.clear();
 
-            if (photos != null) {
-                selectedPhotos.addAll(photos);
-                mContent.focusEditor();
-                for(int i = 0; i < selectedPhotos.size(); i++){
-                    mContent.insertImage(selectedPhotos.get(i), "image");
+                if (photos != null) {
+                    selectedPhotos.addAll(photos);
+                    mContent.focusEditor();
+                    for (int i = 0; i < selectedPhotos.size(); i++) {
+                        mContent.insertImage(selectedPhotos.get(i), "image");
+                    }
                 }
             }
         }

@@ -5,6 +5,7 @@ import android.util.Base64;
 import java.io.UnsupportedEncodingException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -94,6 +95,11 @@ public class StringUtil {
             hex.append(Integer.toHexString(b & 0xFF));
         }
         return hex.toString();
+    }
+
+    public static String getFileNameWithDate(String tag){
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmss");
+        return tag + sdf.format(new Date());
     }
 
     /**

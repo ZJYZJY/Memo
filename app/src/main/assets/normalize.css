@@ -425,3 +425,13 @@ blockquote {
   border-left: 3px solid #ccc;
   background-color:#f1f1f1
 }
+
+/*
+ * complete info box.
+ */
+ .tie_adrs h4{
+     line-height: 25px;
+     padding: 20px;
+     border: 1px solid #949393;
+     border-radius: 5px;
+ }

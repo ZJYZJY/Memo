@@ -7,6 +7,7 @@
     <string name="title_activity_share">返回编辑</string>
     <string name="title_activity_personal_center">个人中心</string>
     <string name="title_activity_feed_back">意见反馈</string>
+    <string name="title_activity_template">发布模版</string>
     <string name="title_activity_tip_off">举报</string>
     <string name="title_activity_reset_password">重置密码</string>
     <string name="title_activity_edit_info">编辑个人信息</string>

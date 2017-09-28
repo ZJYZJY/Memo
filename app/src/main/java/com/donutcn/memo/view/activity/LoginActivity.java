@@ -66,11 +66,12 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         WindowUtils.setStatusBarColor(this, R.color.background_blank, true);
-        if(getIntent().getBooleanExtra("showSplash", true)){
-            // show splash fragment.
-            showSplashFragment();
-        }
+//        if(getIntent().getBooleanExtra("showSplash", true)){
+//            // show splash fragment.
+//            showSplashFragment();
+//        }
         initView();
+        onNewIntent(getIntent());
         mDialog = new ProgressDialog(this);
         mDialog.setMessage("正在登录中...");
     }
@@ -157,8 +158,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         // set flag full screen.
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
-        // check the login state.
-        loginState = UserStatus.isLogin(getApplicationContext());
         // delay 3s to remove the splash fragment.
         mSplashHandler.postDelayed(showMainPage, 3000);
     }
@@ -179,9 +178,9 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     }
 
     public void needToComplete(Map<String, String> data) {
-        if ("".equals(data.get(FieldConstant.USER_ICON_URL))
-//                    || data.get(FieldConstant.USER_NAME).equals(data.get(FieldConstant.USER_NICKNAME))
-                || "".equals(data.get(FieldConstant.USER_NICKNAME))) {
+        String iconUrl = data.get(FieldConstant.USER_ICON_URL);
+        String nickName = data.get(FieldConstant.USER_NICKNAME);
+        if (iconUrl == null || nickName == null || "".equals(iconUrl) || "".equals(nickName)) {
             completeInfo = true;
         }
     }
@@ -213,6 +212,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                         LoginHelper.login(getApplicationContext(),
                                 UserStatus.PHONE_LOGIN, data);
                         Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                        intent.putExtra("completeInfo", completeInfo);
                         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                         startActivity(intent);
                     } else {
@@ -260,6 +260,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                         LoginHelper.login(getApplicationContext(),
                                 UserStatus.PHONE_LOGIN, data);
                         Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                        intent.putExtra("completeInfo", completeInfo);
                         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                         startActivity(intent);
                     }else {
@@ -437,14 +438,18 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             finish();
         }
         mPhoneNum.setText("");
+        mPhoneNum.requestFocus();
         mPassword.setText("");
         mRegPhone.setText("");
         mRegPassword.setText("");
         mRegCode.setText("");
-        if(getIntent().getBooleanExtra("showSplash", false)){
+
+        // check the login state.
+        loginState = UserStatus.isLogin(getApplicationContext());
+        if (intent.getBooleanExtra("showSplash", true)) {
             // show splash fragment.
             showSplashFragment();
-        }else {
+        } else {
             mSplashHandler.removeCallbacks(showMainPage);
             mRemoveSplash = true;
             removeSplashFragment();

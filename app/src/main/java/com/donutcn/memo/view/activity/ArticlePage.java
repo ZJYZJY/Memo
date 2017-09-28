@@ -214,11 +214,11 @@ public class ArticlePage extends AppCompatActivity implements View.OnClickListen
                     if (RouterHelper.confirmIntent(uri, "content")) {
                         RouterHelper.openPageWithUri(mContext, uri, ArticlePage.class);
                     } else if (RouterHelper.confirmIntent(uri, "author")) {
-                        String data = uri.toString();
-                        if(!(data.substring(data.lastIndexOf("/") + 1)
-                                .equals(UserStatus.getCurrentUser().getUserId()))){
+//                        String data = uri.toString();
+//                        if(!(data.substring(data.lastIndexOf("/") + 1)
+//                                .equals(UserStatus.getCurrentUser().getUserId()))){
                             RouterHelper.openPageWithUri(mContext, uri, AuthorPage.class);
-                        }
+//                        }
                     } else if(RouterHelper.confirmIntent(uri, "publish")){
                         RouterHelper.openPageWithUri(mContext, uri, PublishActivity.class);
                     } else if(RouterHelper.confirmIntent(uri, "accuse")){
@@ -463,19 +463,19 @@ public class ArticlePage extends AppCompatActivity implements View.OnClickListen
             // top user icon.
             case R.id.author_info_container:
                 if(mUserId != null && !mUserId.equals("")){
-                    if(UserStatus.isLogin(this)){
-                        if(!mUserId.equals(UserStatus.getCurrentUser().getUserId())){
-                            Intent intent1 = new Intent(this, AuthorPage.class);
-                            intent1.putExtra("userId", mUserId);
-                            startActivity(intent1);
-                        } else {
-                            // Todo : open my own info page.
-                        }
-                    } else {
+//                    if(UserStatus.isLogin(this)){
+//                        if(!mUserId.equals(UserStatus.getCurrentUser().getUserId())){
+//                            Intent intent1 = new Intent(this, AuthorPage.class);
+//                            intent1.putExtra("userId", mUserId);
+//                            startActivity(intent1);
+//                        } else {
+//                            // Todo : open my own info page.
+//                        }
+//                    } else {
                         Intent intent1 = new Intent(this, AuthorPage.class);
                         intent1.putExtra("userId", mUserId);
                         startActivity(intent1);
-                    }
+//                    }
                 }
                 break;
             case R.id.interactive_reply_submit://submit reply
